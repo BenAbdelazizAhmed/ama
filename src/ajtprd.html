@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أمانة - منصة الفلاحة و الحيوانات الأولى في تونس</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:14px; scroll-behavior:smooth; }
+body { font-family: 'Cairo', sans-serif; background: #f2f4f3; direction: rtl; color: #1a1a1a; line-height: 1.5; }
+a { text-decoration:none; color:inherit; }
+button, input, select, textarea { font-family: 'Cairo', sans-serif; }
+img { display:block; max-width:100%; }
+ul { list-style:none; }
+
+:root {
+  --green:#1c7c3a; --green-dark:#155a2b; --green-light:#e6f4ec; --green-mid:#28a84e;
+  --gold:#f59f00; --red:#e53935; --blue:#1565c0; --orange:#e65100;
+  --border:#e2e6e3; --bg:#f2f4f3; --white:#ffffff;
+  --text:#1a1a1a; --text-sub:#5a6a5e; --text-light:#9aab9e;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07); --shadow-md:0 3px 12px rgba(0,0,0,.1);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.15); --radius:10px;
+}
+
+/* ===================== OVERLAY & MODALS ===================== */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1000;
+  display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(3px); animation:fadeIn .2s ease;
+}
+.overlay.active { display:flex; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes slideRight { from{transform:translateX(100%)} to{transform:translateX(0)} }
+@keyframes slideLeft { from{transform:translateX(-100%)} to{transform:translateX(0)} }
+
+.modal {
+  background:#fff; border-radius:16px; padding:28px;
+  max-width:480px; width:90%; position:relative;
+  animation:slideUp .25s ease; max-height:90vh; overflow-y:auto;
+}
+.modal-close {
+  position:absolute; top:14px; left:14px; width:32px; height:32px;
+  border-radius:50%; border:1px solid #ddd; background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:16px; color:#666; transition:.15s;
+}
+.modal-close:hover { background:#fee; color:var(--red); }
+.modal h2 { font-size:18px; font-weight:900; color:#222; margin-bottom:6px; }
+.modal p.sub { font-size:12px; color:#888; margin-bottom:20px; }
+.modal-form-group { margin-bottom:14px; }
+.modal-form-group label { font-size:12px; font-weight:700; color:#444; display:block; margin-bottom:5px; }
+.modal-input {
+  width:100%; border:1.5px solid #ddd; border-radius:8px;
+  padding:10px 14px; font-size:13px; font-family:'Cairo',sans-serif;
+  outline:none; color:#333; transition:.15s;
+}
+.modal-input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(28,124,58,.1); }
+.modal-input.error { border-color:var(--red); }
+.field-error { font-size:11px; color:var(--red); margin-top:3px; display:none; }
+.field-error.show { display:block; }
+.modal-btn {
+  width:100%; background:var(--green); color:#fff; border:none;
+  padding:12px; border-radius:9px; font-size:14px; font-weight:800;
+  cursor:pointer; transition:.15s; margin-top:4px;
+}
+.modal-btn:hover { background:var(--green-dark); }
+.modal-btn:disabled { background:#aaa; cursor:not-allowed; }
+.modal-btn-outline {
+  width:100%; background:transparent; color:var(--green); border:1.5px solid var(--green);
+  padding:11px; border-radius:9px; font-size:13px; font-weight:800;
+  cursor:pointer; transition:.15s; margin-top:8px;
+}
+.modal-btn-outline:hover { background:var(--green-light); }
+.modal-divider { text-align:center; color:#999; font-size:11px; margin:12px 0; position:relative; }
+.modal-divider::before { content:''; position:absolute; top:50%; right:0; left:0; height:1px; background:#eee; }
+.modal-divider span { background:#fff; padding:0 10px; position:relative; }
+
+/* ===================== DRAWER (CART / NOTIFS / MSG) ===================== */
+.drawer {
+  position:fixed; top:0; right:-380px; width:380px; height:100vh;
+  background:#fff; z-index:1001; box-shadow:-4px 0 20px rgba(0,0,0,.15);
+  transition:right .3s ease; display:flex; flex-direction:column;
+}
+.drawer.open { right:0; }
+.drawer-head {
+  padding:18px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+}
+.drawer-head h3 { font-size:16px; font-weight:900; }
+.drawer-close { width:32px; height:32px; border-radius:50%; border:1px solid #ddd; background:#fff; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.drawer-body { flex:1; overflow-y:auto; padding:16px; }
+.drawer-foot { padding:16px; border-top:1px solid var(--border); flex-shrink:0; }
+
+/* Cart item */
+.cart-item {
+  display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f5f5f5;
+  align-items:flex-start;
+}
+.cart-item-img { width:60px; height:60px; border-radius:8px; overflow:hidden; flex-shrink:0; background:#f0f7f2; display:flex; align-items:center; justify-content:center; font-size:28px; }
+.cart-item-info { flex:1; }
+.cart-item-name { font-size:13px; font-weight:700; color:#222; margin-bottom:3px; }
+.cart-item-seller { font-size:11px; color:#888; margin-bottom:5px; }
+.cart-item-price { font-size:15px; font-weight:900; color:var(--green); }
+.cart-item-remove { color:#ccc; cursor:pointer; font-size:18px; line-height:1; transition:.15s; }
+.cart-item-remove:hover { color:var(--red); }
+.cart-qty { display:flex; align-items:center; gap:8px; margin-top:6px; }
+.qty-btn { width:24px; height:24px; border-radius:50%; border:1px solid #ddd; background:#fff; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#555; }
+.qty-btn:hover { background:var(--green); color:#fff; border-color:var(--green); }
+.qty-num { font-size:13px; font-weight:700; color:#333; width:20px; text-align:center; }
+
+/* Cart total */
+.cart-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.cart-total span { font-size:14px; color:#666; font-weight:600; }
+.cart-total strong { font-size:18px; font-weight:900; color:var(--green); }
+.cart-checkout { width:100%; background:var(--green); color:#fff; border:none; padding:13px; border-radius:9px; font-size:14px; font-weight:800; cursor:pointer; }
+.cart-checkout:hover { background:var(--green-dark); }
+.cart-empty { text-align:center; padding:40px 20px; color:#aaa; }
+.cart-empty .ce-icon { font-size:48px; margin-bottom:10px; }
+.cart-empty p { font-size:13px; }
+
+/* Notif item */
+.notif-item {
+  display:flex; gap:10px; padding:12px 0; border-bottom:1px solid #f5f5f5; cursor:pointer;
+}
+.notif-item:hover { background:#fafcfa; margin:0 -16px; padding:12px 16px; }
+.notif-dot { width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; margin-top:5px; }
+.notif-dot.read { background:#ddd; }
+.notif-text { font-size:12px; color:#444; line-height:1.6; flex:1; }
+.notif-time { font-size:10px; color:#aaa; white-space:nowrap; }
+
+/* Msg item */
+.msg-item { display:flex; gap:10px; padding:12px 0; border-bottom:1px solid #f5f5f5; cursor:pointer; align-items:flex-start; }
+.msg-item:hover { background:#fafcfa; margin:0 -16px; padding:12px 16px; }
+.msg-avt { width:38px; height:38px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; }
+.msg-info { flex:1; }
+.msg-name { font-size:12.5px; font-weight:800; color:#222; }
+.msg-preview { font-size:11px; color:#888; margin-top:2px; }
+.msg-time { font-size:10px; color:#aaa; }
+.msg-unread { background:var(--green); color:#fff; border-radius:20px; padding:1px 6px; font-size:9px; font-weight:800; }
+
+/* Fav item */
+.fav-item { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f5f5f5; }
+.fav-img { width:55px; height:55px; border-radius:8px; overflow:hidden; background:#f0f7f2; display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; }
+.fav-info { flex:1; }
+.fav-name { font-size:13px; font-weight:700; color:#222; margin-bottom:3px; }
+.fav-price { font-size:14px; font-weight:900; color:var(--green); }
+.fav-remove { color:#ccc; cursor:pointer; font-size:18px; }
+.fav-remove:hover { color:var(--red); }
+
+/* Animal detail modal */
+.animal-modal { max-width:640px; padding:0; overflow:hidden; }
+.amod-photo { height:240px; overflow:hidden; position:relative; }
+.amod-photo img { width:100%; height:100%; object-fit:cover; }
+.amod-photo .emoji-bg { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:80px; }
+.amod-badge { position:absolute; top:14px; right:14px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; color:#fff; }
+.amod-body { padding:22px; }
+.amod-name { font-size:20px; font-weight:900; color:#222; margin-bottom:8px; }
+.amod-price { font-size:26px; font-weight:900; color:var(--green); margin-bottom:14px; }
+.amod-price span { font-size:13px; color:#888; font-weight:600; }
+.amod-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.amod-stat { background:#f8faf9; border-radius:8px; padding:10px 12px; }
+.amod-stat .st-lbl { font-size:10px; color:#888; font-weight:600; }
+.amod-stat .st-val { font-size:13px; font-weight:800; color:#333; margin-top:2px; }
+.amod-seller-row { display:flex; align-items:center; gap:12px; padding:14px 0; border-top:1px solid #f0f0f0; border-bottom:1px solid #f0f0f0; margin-bottom:16px; }
+.amod-seller-avt { width:44px; height:44px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex-shrink:0; }
+.amod-seller-name { font-size:13px; font-weight:800; color:#222; }
+.amod-seller-badge { font-size:10px; color:var(--green); font-weight:700; }
+.amod-seller-rating { font-size:11px; color:#f59f00; }
+.amod-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.amod-btn-primary { background:var(--green); color:#fff; border:none; padding:13px; border-radius:9px; font-size:13.5px; font-weight:800; cursor:pointer; }
+.amod-btn-secondary { background:transparent; color:var(--green); border:2px solid var(--green); padding:12px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; }
+.amod-btn-full { grid-column:1/-1; background:#f0f7f2; color:var(--green); border:none; padding:12px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+
+/* Sell modal */
+.sell-modal { max-width:540px; }
+.sell-steps { display:flex; gap:0; margin-bottom:20px; }
+.sell-step { flex:1; text-align:center; font-size:11px; font-weight:700; padding:8px 4px; border-bottom:2px solid #ddd; color:#aaa; transition:.2s; }
+.sell-step.active { color:var(--green); border-bottom-color:var(--green); }
+.sell-step.done { color:var(--green); border-bottom-color:var(--green-light); }
+.sell-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.sell-cat-btn {
+  border:1.5px solid #ddd; border-radius:10px; padding:14px 10px;
+  cursor:pointer; text-align:center; transition:.15s; background:#fff;
+}
+.sell-cat-btn:hover, .sell-cat-btn.selected { border-color:var(--green); background:var(--green-light); }
+.sell-cat-btn .scat-emoji { font-size:28px; margin-bottom:6px; }
+.sell-cat-btn .scat-name { font-size:12px; font-weight:700; color:#444; }
+.photo-upload {
+  border:2px dashed #ccc; border-radius:10px; padding:30px;
+  text-align:center; cursor:pointer; transition:.15s;
+}
+.photo-upload:hover { border-color:var(--green); background:var(--green-light); }
+.photo-upload .pu-icon { font-size:36px; margin-bottom:8px; }
+.photo-upload p { font-size:12px; color:#888; }
+
+/* Profile dropdown */
+.profile-dropdown {
+  position:fixed; top:68px; right:20px; width:240px;
+  background:#fff; border-radius:12px; box-shadow:var(--shadow-lg);
+  z-index:500; border:1px solid var(--border);
+  display:none; animation:slideUp .15s ease;
+}
+.profile-dropdown.open { display:block; }
+.pd-header { padding:16px; border-bottom:1px solid var(--border); }
+.pd-name { font-size:14px; font-weight:900; color:#222; }
+.pd-email { font-size:11px; color:#888; }
+.pd-menu a {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 16px; font-size:12.5px; color:#444; font-weight:600;
+  transition:.1s; cursor:pointer;
+}
+.pd-menu a:hover { background:#f8faf9; color:var(--green); }
+.pd-menu a svg { width:15px; height:15px; flex-shrink:0; }
+.pd-logout { border-top:1px solid var(--border); }
+.pd-logout a { color:var(--red) !important; }
+
+/* Search suggestions */
+.search-suggestions {
+  position:absolute; top:100%; right:0; left:0;
+  background:#fff; border-radius:0 0 10px 10px;
+  box-shadow:var(--shadow-md); z-index:200; display:none;
+}
+.search-suggestions.open { display:block; }
+.ss-item { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; font-size:13px; color:#444; }
+.ss-item:hover { background:#f8faf9; }
+.ss-item svg { width:14px; height:14px; color:#aaa; }
+
+/* Map modal */
+.map-modal { max-width:700px; width:95%; }
+.map-iframe { width:100%; height:380px; border:none; border-radius:10px; background:#e8f5e9; display:flex; align-items:center; justify-content:center; font-size:80px; overflow:hidden; }
+.region-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.region-chip {
+  padding:5px 12px; border-radius:20px; border:1px solid #ddd; font-size:12px; font-weight:700;
+  color:#555; cursor:pointer; transition:.15s; background:#fff;
+}
+.region-chip:hover, .region-chip.active { background:var(--green); color:#fff; border-color:var(--green); }
+
+/* Transport modal */
+.transport-modal { max-width:500px; }
+.transport-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0; }
+.transport-opt { border:1.5px solid #ddd; border-radius:10px; padding:14px; cursor:pointer; transition:.15s; text-align:center; }
+.transport-opt:hover, .transport-opt.selected { border-color:var(--green); background:var(--green-light); }
+.transport-opt .to-icon { font-size:30px; margin-bottom:6px; }
+.transport-opt .to-name { font-size:12px; font-weight:800; color:#333; }
+.transport-opt .to-price { font-size:11px; color:var(--green); font-weight:700; }
+
+/* Toast */
+.toast-container { position:fixed; bottom:24px; left:24px; z-index:2000; display:flex; flex-direction:column; gap:8px; }
+.toast {
+  background:#222; color:#fff; padding:12px 18px; border-radius:10px;
+  font-size:13px; font-weight:600; box-shadow:var(--shadow-lg);
+  animation:slideUp .3s ease; display:flex; align-items:center; gap:10px;
+  min-width:240px;
+}
+.toast.success { background:var(--green); }
+.toast.error { background:var(--red); }
+.toast.info { background:var(--blue); }
+.toast-icon { font-size:16px; }
+
+/* Confirmation modal */
+.confirm-modal { max-width:380px; text-align:center; }
+.confirm-icon { font-size:48px; margin-bottom:14px; }
+.confirm-modal h2 { margin-bottom:8px; }
+.confirm-modal p { font-size:13px; color:#666; margin-bottom:20px; line-height:1.7; }
+.confirm-actions { display:flex; gap:10px; }
+.confirm-cancel { flex:1; background:#f5f5f5; color:#666; border:none; padding:12px; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; }
+.confirm-ok { flex:1; background:var(--green); color:#fff; border:none; padding:12px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; }
+
+/* Success modal */
+.success-modal { max-width:380px; text-align:center; }
+.success-icon { font-size:60px; margin-bottom:14px; }
+.success-circle { width:90px; height:90px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+
+/* ========== CHECKOUT MODAL (NEW) ========== */
+.checkout-modal { max-width:560px; }
+.checkout-steps { display:flex; gap:0; margin-bottom:20px; border-bottom:2px solid #eee; }
+.checkout-step { flex:1; text-align:center; font-size:11px; font-weight:700; padding:8px 4px; border-bottom:2px solid transparent; color:#aaa; margin-bottom:-2px; transition:.2s; }
+.checkout-step.active { color:var(--green); border-bottom-color:var(--green); }
+.checkout-step.done { color:var(--green); border-bottom-color:#c8e6c9; }
+.pay-methods { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:14px 0; }
+.pay-method { border:1.5px solid #ddd; border-radius:10px; padding:14px 10px; cursor:pointer; text-align:center; transition:.15s; background:#fff; }
+.pay-method:hover, .pay-method.selected { border-color:var(--green); background:var(--green-light); }
+.pay-method .pm-icon { font-size:26px; margin-bottom:5px; }
+.pay-method .pm-name { font-size:11px; font-weight:700; color:#444; }
+.order-summary { background:#f8faf9; border-radius:10px; padding:14px; margin:14px 0; }
+.os-row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:7px; }
+.os-row.total { font-weight:900; font-size:15px; color:var(--green); border-top:1px solid #e0e6e2; padding-top:8px; margin-top:8px; }
+.confirmation-code { background:var(--green-light); border:1px solid var(--green); border-radius:10px; padding:16px; text-align:center; margin:14px 0; }
+.conf-code-num { font-size:28px; font-weight:900; color:var(--green); letter-spacing:4px; }
+.conf-code-lbl { font-size:11px; color:#666; margin-top:4px; }
+
+/* ===================== HEADER ===================== */
+.header {
+  background:var(--white); border-bottom:1px solid var(--border);
+  height:62px; display:flex; align-items:center; padding:0 20px;
+  gap:14px; position:sticky; top:0; z-index:300; box-shadow:var(--shadow-sm);
+}
+.logo { display:flex; align-items:center; gap:9px; flex-shrink:0; cursor:pointer; }
+.logo-mark {
+  width:46px; height:46px; border-radius:50%; background:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden; flex-shrink:0;
+}
+.logo-svg { width:28px; height:28px; }
+.logo-text { line-height:1.2; }
+.logo-text .lname { font-size:20px; font-weight:900; color:var(--green); letter-spacing:.5px; }
+.logo-text .ltag  { font-size:9px; color:#888; font-weight:500; white-space:nowrap; }
+
+.search-wrap { flex:1; max-width:520px; position:relative; }
+.search-bar { display:flex; align-items:center; border:1.5px solid #d4d9d6; border-radius:8px; overflow:hidden; background:#f8faf9; }
+.search-bar input { flex:1; border:none; outline:none; padding:9px 14px; font-size:13px; color:#333; background:transparent; direction:rtl; }
+.search-bar input::placeholder { color:#b0bab4; }
+.search-bar .sbtn { background:var(--green); color:#fff; border:none; padding:9px 22px; font-size:13.5px; font-weight:800; cursor:pointer; white-space:nowrap; }
+
+.header-right { display:flex; align-items:center; gap:0; margin-right:auto; }
+.user-block { display:flex; align-items:center; gap:9px; padding:4px 12px; cursor:pointer; border-left:1px solid var(--border); transition:.15s; position:relative; }
+.user-block:hover { background:#f8faf9; }
+.user-avt { width:40px; height:40px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--border); }
+.user-avt-ph { width:100%; height:100%; background:linear-gradient(135deg,#78909c,#546e7a); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; }
+.user-meta { line-height:1.25; }
+.user-meta .greet  { font-size:10px; color:#999; }
+.user-meta .uname  { font-size:13px; font-weight:800; color:#222; }
+.user-meta .utitle { font-size:10px; color:var(--green); font-weight:700; }
+.user-block .chevron { font-size:10px; color:#aaa; margin-right:2px; }
+
+.hico { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 11px; cursor:pointer; position:relative; border-radius:8px; transition:.15s; }
+.hico:hover { background:#f0f7f2; }
+.hico .ico-wrap { position:relative; }
+.hico svg { width:22px; height:22px; color:#555; stroke-width:1.7; }
+.hico .lbl { font-size:10px; color:#666; font-weight:600; white-space:nowrap; }
+.badge { position:absolute; top:-5px; right:-9px; background:var(--green); color:#fff; font-size:9px; font-weight:800; border-radius:10px; padding:1px 5px; min-width:17px; text-align:center; line-height:1.5; transition:.3s; }
+.badge.rb { background:var(--red); }
+.badge.pulse { animation:badgePulse .6s ease; }
+@keyframes badgePulse { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
+.lang-btn { border:1.5px solid #d8ddd9; border-radius:6px; padding:4px 10px; font-size:12px; font-weight:800; color:#555; cursor:pointer; background:#fff; margin-right:6px; flex-shrink:0; }
+
+/* ===================== NAVBAR ===================== */
+.navbar { background:var(--white); border-bottom:2px solid var(--border); display:flex; align-items:center; padding:0 20px; }
+.navbar ul { display:flex; list-style:none; gap:0; overflow-x:auto; scrollbar-width:none; }
+.navbar ul::-webkit-scrollbar { display:none; }
+.navbar ul li a { display:flex; align-items:center; gap:5px; padding:11px 12px; color:#4a5a4e; font-size:12.5px; font-weight:600; white-space:nowrap; border-bottom:2.5px solid transparent; margin-bottom:-2px; transition:.15s; cursor:pointer; }
+.navbar ul li a svg { width:15px; height:15px; stroke-width:1.8; flex-shrink:0; }
+.navbar ul li a:hover { color:var(--green); }
+.navbar ul li a.active { color:var(--green); border-bottom-color:var(--green); }
+.navbar-spacer { flex:1; }
+.nav-extra { display:flex; align-items:center; gap:0; }
+.nav-extra a { display:flex; align-items:center; gap:5px; padding:11px 10px; color:#4a5a4e; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.nav-extra .hamburger { font-size:18px; padding:11px 10px; cursor:pointer; color:#555; }
+
+/* ===================== HERO ===================== */
+.hero { position:relative; overflow:hidden; background:linear-gradient(165deg,#c9e8d4 0%,#a8d9bc 40%,#88c8a0 75%,#6eb888 100%); padding:28px 20px; display:grid; grid-template-columns:200px 1fr 240px; gap:16px; min-height:270px; }
+.hero-farmer-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=1400&q=75') center 30%/cover no-repeat; opacity:.14; }
+.hero-left { position:relative; z-index:2; align-self:start; }
+.users-card { background:rgba(255,255,255,.97); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow-md); display:inline-flex; flex-direction:column; gap:4px; cursor:pointer; transition:.2s; }
+.users-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.av-row { display:flex; align-items:center; gap:6px; }
+.av-stack { display:flex; }
+.av-stack .av { width:28px; height:28px; border-radius:50%; border:2px solid #fff; margin-left:-8px; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:800; color:#fff; flex-shrink:0; }
+.av-count { font-size:12px; font-weight:900; color:var(--green); margin-right:6px; }
+.users-lbl { font-size:11px; color:#444; font-weight:700; }
+.stars-row { color:#f59f00; font-size:13px; letter-spacing:1px; }
+.rating-lbl { font-size:10px; color:#888; }
+.hero-center { position:relative; z-index:2; text-align:center; }
+.hero-pre  { font-size:18px; font-weight:700; color:#1a3d25; margin-bottom:2px; }
+.hero-h1   { font-size:44px; font-weight:900; color:var(--green); line-height:1.1; margin-bottom:12px; }
+.hero-desc { font-size:13px; color:#2c4a35; line-height:1.9; margin-bottom:20px; }
+.hero-btns { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+.btn-g { background:var(--green); color:#fff; border:none; padding:11px 22px; border-radius:8px; font-size:13.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px; transition:.15s; }
+.btn-g:hover { background:var(--green-dark); transform:translateY(-1px); }
+.btn-w { background:#fff; color:var(--green); border:2px solid var(--green); padding:10px 18px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px; transition:.15s; }
+.btn-w:hover { background:var(--green-light); transform:translateY(-1px); }
+.btn-gr { background:#fff; color:#444; border:1.5px solid #bbb; padding:10px 16px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:.15s; }
+.btn-gr:hover { border-color:var(--green); color:var(--green); transform:translateY(-1px); }
+.hero-right { position:relative; z-index:2; }
+.trust-card { background:rgba(255,255,255,.98); border-radius:14px; padding:18px; box-shadow:0 6px 24px rgba(0,0,0,.13); }
+.tc-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.tc-shield { width:40px; height:40px; background:var(--green-light); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.tc-shield svg { color:var(--green); width:20px; height:20px; }
+.tc-title { font-size:15px; font-weight:900; color:#222; }
+.tc-item { display:flex; align-items:center; gap:8px; font-size:12px; color:#333; margin-bottom:9px; font-weight:600; cursor:pointer; transition:.15s; padding:2px 0; border-radius:4px; }
+.tc-item:hover { color:var(--green); }
+.tc-item svg { color:var(--green); width:15px; height:15px; flex-shrink:0; }
+.tc-btn { background:var(--green); color:#fff; border:none; width:100%; padding:10px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; transition:.15s; }
+.tc-btn:hover { background:var(--green-dark); }
+
+/* ===================== CAT BAR ===================== */
+.cat-bar { background:var(--white); border-bottom:1px solid var(--border); padding:8px 20px; }
+.cat-row { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; align-items:flex-end; }
+.cat-row::-webkit-scrollbar { display:none; }
+.cat-btn { display:flex; flex-direction:column; align-items:center; gap:5px; min-width:70px; cursor:pointer; padding:6px 5px; border-radius:9px; border:none; background:transparent; flex-shrink:0; transition:.15s; }
+.cat-btn:hover { background:#f0f7f2; }
+.cat-btn.active .cimg { border-color:var(--green); }
+.cimg { width:52px; height:52px; border-radius:50%; border:2px solid #dde8e0; overflow:hidden; background:#f5f8f6; display:flex; align-items:center; justify-content:center; font-size:24px; transition:.15s; }
+.cat-btn:hover .cimg { border-color:var(--green); transform:scale(1.05); }
+.cimg.all-icon { background:var(--green); border-color:var(--green); }
+.cimg.all-icon svg { color:#fff; width:24px; height:24px; }
+.cimg img { width:100%; height:100%; object-fit:cover; }
+.cat-btn span { font-size:11px; font-weight:700; color:#333; white-space:nowrap; }
+.cat-btn.active span { color:var(--green); }
+
+/* ===================== MAIN LAYOUT ===================== */
+.page-body { display:grid; grid-template-columns:210px 1fr 260px; gap:14px; padding:14px 20px; align-items:start; }
+
+/* ===================== FILTER SIDEBAR ===================== */
+.filter-sidebar { display:flex; flex-direction:column; gap:0; }
+.filter-box { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.filter-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--border); }
+.filter-header h3 { font-size:14px; font-weight:800; }
+.filter-reset { font-size:11px; color:var(--green); font-weight:700; cursor:pointer; }
+.filter-reset:hover { text-decoration:underline; }
+.filter-section { padding:12px 14px; border-bottom:1px solid #f0f2f1; }
+.filter-section:last-child { border-bottom:none; }
+.fs-title { font-size:12px; font-weight:800; color:#444; margin-bottom:10px; }
+.price-inputs { display:flex; gap:8px; margin-bottom:10px; }
+.price-inp { flex:1; border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:11px; text-align:center; outline:none; font-family:'Cairo',sans-serif; color:#333; }
+.price-inp:focus { border-color:var(--green); }
+.price-inp::placeholder { color:#bbb; }
+.range-track { width:100%; height:4px; background:#e0e6e2; border-radius:2px; position:relative; margin:8px 0; cursor:pointer; }
+.range-fill { position:absolute; height:100%; background:var(--green); border-radius:2px; left:0; width:70%; }
+.range-thumb { position:absolute; width:16px; height:16px; border-radius:50%; background:var(--green); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.2); top:-6px; transform:translateX(-50%); cursor:grab; }
+.chk-item { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; cursor:pointer; transition:.1s; padding:2px 4px; border-radius:5px; }
+.chk-item:hover { background:#f5f8f6; }
+.chk-left { display:flex; align-items:center; gap:8px; }
+.chk-box { width:16px; height:16px; border:1.5px solid #ccc; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:#fff; transition:.15s; }
+.chk-box.checked { background:var(--green); border-color:var(--green); }
+.chk-box.checked::after { content:'✓'; color:#fff; font-size:10px; font-weight:900; }
+.chk-label { font-size:12px; color:#333; font-weight:600; }
+.chk-count { font-size:10.5px; color:#999; }
+.show-more { font-size:11px; color:var(--green); font-weight:700; cursor:pointer; margin-top:2px; display:inline-block; }
+.show-more:hover { text-decoration:underline; }
+.filter-apply { background:var(--green); color:#fff; border:none; width:100%; padding:11px; border-radius:0 0 var(--radius) var(--radius); font-size:13px; font-weight:800; cursor:pointer; transition:.15s; }
+.filter-apply:hover { background:var(--green-dark); }
+.filter-count { background:rgba(255,255,255,.25); border-radius:20px; padding:1px 7px; font-size:11px; font-weight:800; margin-right:6px; }
+
+/* ===================== RESULTS GRID ===================== */
+.results-col { display:flex; flex-direction:column; gap:10px; }
+.results-bar { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.results-count { font-size:13px; font-weight:800; color:#222; flex:1; }
+.results-count span { color:var(--green); }
+.sort-select { border:1px solid var(--border); border-radius:7px; padding:6px 10px; font-size:12px; font-family:'Cairo',sans-serif; color:#444; background:#fff; outline:none; cursor:pointer; display:flex; align-items:center; gap:5px; }
+.view-btns { display:flex; gap:3px; }
+.vbtn { width:32px; height:32px; border:1px solid var(--border); border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; transition:.15s; }
+.vbtn.active, .vbtn:hover { background:var(--green); border-color:var(--green); }
+.vbtn.active svg, .vbtn:hover svg { color:#fff; }
+.vbtn svg { width:15px; height:15px; color:#666; }
+.map-btn { display:flex; align-items:center; gap:5px; border:1px solid var(--border); border-radius:7px; padding:6px 10px; font-size:12px; font-weight:700; color:#444; background:#fff; cursor:pointer; transition:.15s; }
+.map-btn:hover { background:var(--green-light); color:var(--green); border-color:var(--green); }
+.map-btn svg { width:14px; height:14px; }
+.animals-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.animal-card { background:var(--white); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:.2s; position:relative; }
+.animal-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.ac-photo { height:150px; position:relative; overflow:hidden; background:#e8f0ea; }
+.ac-photo img { width:100%; height:100%; object-fit:cover; transition:.3s; }
+.animal-card:hover .ac-photo img { transform:scale(1.04); }
+.ac-photo .emoji-fill { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:56px; }
+.ac-badge { position:absolute; top:8px; right:8px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:800; color:#fff; }
+.bg-gold  { background:var(--gold); }
+.bg-green { background:var(--green); }
+.ac-heart { position:absolute; top:8px; left:8px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.92); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; z-index:2; }
+.ac-heart:hover { transform:scale(1.15); }
+.ac-heart svg { width:15px; height:15px; color:#ccc; transition:.2s; }
+.ac-heart.liked svg { color:var(--red); fill:var(--red); }
+.ac-body { padding:10px 11px 12px; }
+.ac-name { font-size:13px; font-weight:800; color:#222; margin-bottom:5px; }
+.ac-meta { display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap; }
+.ac-loc { display:flex; align-items:center; gap:3px; font-size:11px; color:#888; }
+.ac-loc svg { width:11px; height:11px; }
+.ac-age { font-size:10.5px; color:#888; }
+.ac-seller { display:flex; align-items:center; gap:5px; margin-bottom:6px; }
+.seller-avt { width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#4caf50,var(--green)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:800; flex-shrink:0; }
+.seller-name { font-size:11px; color:#555; font-weight:700; flex:1; }
+.seller-verified svg { width:13px; height:13px; color:var(--green); }
+.ac-rating { display:flex; align-items:center; gap:3px; }
+.stars-s { color:#f59f00; font-size:10px; }
+.rating-n { font-size:10px; color:#888; }
+.ac-footer { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+.ac-weight { background:#f0f3f1; border-radius:20px; padding:2px 9px; font-size:10.5px; color:#666; font-weight:600; }
+.ac-price-area { text-align:left; }
+.ac-price { font-size:16px; font-weight:900; color:var(--green); line-height:1; }
+.ac-unit  { font-size:10px; color:#999; font-weight:600; }
+.ac-detail { background:transparent; border:1.5px solid var(--green); color:var(--green); border-radius:6px; padding:5px 10px; font-size:11px; font-weight:700; cursor:pointer; transition:.15s; }
+.ac-detail:hover { background:var(--green); color:#fff; }
+
+/* ===================== RIGHT SIDEBAR ===================== */
+.right-sidebar { display:flex; flex-direction:column; gap:12px; }
+.rs-box { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.sell-box { padding:16px; }
+.sell-box .sb-icon { width:42px; height:42px; background:var(--green-light); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
+.sell-box .sb-icon svg { color:var(--green); width:22px; height:22px; }
+.sell-box h4 { font-size:13.5px; font-weight:900; color:#222; margin-bottom:6px; }
+.sell-box p  { font-size:11px; color:#777; line-height:1.7; margin-bottom:12px; }
+.sell-box .add-btn { background:var(--green); color:#fff; border:none; width:100%; padding:10px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:.15s; }
+.sell-box .add-btn:hover { background:var(--green-dark); }
+.transport-box { overflow:hidden; }
+.tb-photo { height:100px; background:linear-gradient(135deg,#263238,#455a64); display:flex; align-items:center; justify-content:center; font-size:44px; position:relative; cursor:pointer; }
+.tb-body { padding:12px 14px; }
+.tb-body h4 { font-size:13px; font-weight:800; margin-bottom:5px; }
+.tb-body p  { font-size:11px; color:#777; line-height:1.6; margin-bottom:10px; }
+.tb-btn { background:var(--green); color:#fff; border:none; width:100%; padding:8px; border-radius:7px; font-size:12.5px; font-weight:800; cursor:pointer; transition:.15s; }
+.tb-btn:hover { background:var(--green-dark); }
+.adv-box { padding:14px; }
+.adv-box .adv-icon { font-size:28px; margin-bottom:8px; }
+.adv-box h4 { font-size:13px; font-weight:800; margin-bottom:5px; }
+.adv-box p  { font-size:11px; color:#777; line-height:1.65; margin-bottom:10px; }
+.adv-btn { background:var(--green); color:#fff; border:none; width:100%; padding:8px; border-radius:7px; font-size:12.5px; font-weight:800; cursor:pointer; transition:.15s; }
+.adv-btn:hover { background:var(--green-dark); }
+.help-box { padding:14px; display:flex; align-items:flex-start; gap:10px; }
+.help-icon { font-size:28px; flex-shrink:0; }
+.help-body h4 { font-size:12.5px; font-weight:800; margin-bottom:4px; }
+.help-body p  { font-size:10.5px; color:#777; line-height:1.6; margin-bottom:8px; }
+.help-btn { background:var(--green); color:#fff; border:none; width:100%; padding:7px; border-radius:7px; font-size:12px; font-weight:800; cursor:pointer; transition:.15s; }
+.help-btn:hover { background:var(--green-dark); }
+
+/* ===================== STATS & BOTTOM ===================== */
+.stats-bar { background:var(--white); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:12px 20px; display:grid; grid-template-columns:repeat(5,1fr); gap:0; }
+.sbar-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px; border-left:1px solid var(--border); text-align:center; cursor:pointer; transition:.15s; }
+.sbar-item:first-child { border-left:none; }
+.sbar-item:hover { background:#f8faf9; }
+.sbar-icon { font-size:24px; }
+.sbar-num { font-size:18px; font-weight:900; color:var(--green); line-height:1; }
+.sbar-lbl { font-size:10.5px; color:#777; font-weight:600; }
+.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 20px 14px; }
+.br-service { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:14px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:.15s; }
+.br-service:hover { box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.br-service .brs-icon { font-size:28px; flex-shrink:0; }
+.br-service strong { font-size:13px; font-weight:800; display:block; margin-bottom:3px; }
+.br-service span { font-size:11px; color:#777; }
+.br-service a { font-size:11.5px; color:var(--green); font-weight:700; display:block; margin-top:4px; }
+.br-map { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; cursor:pointer; transition:.15s; }
+.br-map:hover { box-shadow:var(--shadow-md); }
+.map-ph { flex:1; background:linear-gradient(135deg,#c8e6d4,#a8d8b8); min-height:80px; display:flex; align-items:center; justify-content:center; font-size:48px; }
+.map-foot { padding:8px 12px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); }
+.map-foot span { font-size:11.5px; font-weight:700; }
+.map-foot a { font-size:11px; color:var(--green); font-weight:700; }
+
+/* ===================== FOOTER ===================== */
+footer { background:var(--green-dark); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.ft-social { display:flex; gap:8px; }
+.ftsoc { width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,.3); background:transparent; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; cursor:pointer; transition:.15s; }
+.ftsoc:hover { background:rgba(255,255,255,.2); transform:scale(1.1); }
+.ft-links { display:flex; gap:16px; flex-wrap:wrap; }
+.ft-links a { font-size:11px; color:rgba(255,255,255,.75); cursor:pointer; transition:.15s; }
+.ft-links a:hover { color:#fff; text-decoration:underline; }
+.ft-copy { font-size:10.5px; color:rgba(255,255,255,.6); }
+.ft-app { display:flex; align-items:center; gap:8px; }
+.app-store-btn { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:7px; padding:5px 10px; cursor:pointer; display:flex; align-items:center; gap:5px; font-size:10px; font-weight:700; font-family:'Cairo',sans-serif; transition:.15s; }
+.app-store-btn:hover { background:rgba(255,255,255,.22); }
+.ft-logo { display:flex; align-items:center; gap:8px; color:#fff; flex-shrink:0; cursor:pointer; }
+.ft-logo .ftname { font-size:20px; font-weight:900; }
+.ft-logo .fttag  { font-size:8px; opacity:.6; }
+
+select.sort-native { border:1px solid var(--border); border-radius:7px; padding:6px 10px; font-size:12px; font-family:'Cairo',sans-serif; color:#444; background:#fff; outline:none; cursor:pointer; }
+
+/* Contact modal */
+.contact-methods { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:16px 0; }
+.contact-method { border:1.5px solid #ddd; border-radius:10px; padding:14px 10px; cursor:pointer; text-align:center; transition:.15s; background:#fff; }
+.contact-method:hover { border-color:var(--green); background:var(--green-light); }
+.contact-method .cm-icon { font-size:28px; margin-bottom:6px; }
+.contact-method .cm-name { font-size:12px; font-weight:700; color:#444; }
+
+/* Phone modal */
+.phone-display { background:var(--green-light); border-radius:10px; padding:16px; text-align:center; margin:16px 0; }
+.phone-display .phone-num { font-size:22px; font-weight:900; color:var(--green); letter-spacing:2px; }
+.phone-display p { font-size:11px; color:#666; margin-top:4px; }
+
+/* Chat drawer */
+.chat-area { display:flex; flex-direction:column; height:100%; }
+.chat-messages { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+.chat-bubble { max-width:75%; padding:10px 14px; border-radius:12px; font-size:13px; line-height:1.5; }
+.chat-bubble.received { background:#f0f7f2; color:#333; align-self:flex-start; border-bottom-right-radius:4px; }
+.chat-bubble.sent { background:var(--green); color:#fff; align-self:flex-end; border-bottom-left-radius:4px; }
+.chat-bubble .bubble-time { font-size:10px; opacity:.6; margin-top:4px; }
+.chat-input-row { display:flex; gap:8px; padding:12px; border-top:1px solid var(--border); }
+.chat-input { flex:1; border:1.5px solid #ddd; border-radius:20px; padding:9px 14px; font-size:13px; font-family:'Cairo',sans-serif; outline:none; }
+.chat-input:focus { border-color:var(--green); }
+.chat-send { background:var(--green); color:#fff; border:none; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; }
+
+/* Lang dropdown */
+.lang-dropdown { position:fixed; top:68px; left:60px; background:#fff; border-radius:10px; box-shadow:var(--shadow-lg); z-index:500; border:1px solid var(--border); overflow:hidden; display:none; animation:slideUp .15s ease; }
+.lang-dropdown.open { display:block; }
+.lang-opt { padding:10px 18px; font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; transition:.1s; }
+.lang-opt:hover { background:#f0f7f2; color:var(--green); }
+.lang-opt.active { color:var(--green); }
+
+/* Mobile menu drawer — RTL: opens from left */
+.menu-drawer { position:fixed; top:0; right:auto; left:-320px; width:320px; height:100vh; background:#fff; z-index:1001; box-shadow:4px 0 20px rgba(0,0,0,.15); transition:left .3s ease; overflow-y:auto; }
+.menu-drawer.open { left:0; }
+.menu-drawer-head { padding:20px; background:var(--green); color:#fff; }
+.menu-drawer-head h3 { font-size:16px; font-weight:900; }
+.menu-drawer-head p { font-size:11px; opacity:.8; }
+.menu-section { padding:10px 0; border-bottom:1px solid var(--border); }
+.menu-section-title { padding:6px 16px; font-size:10px; font-weight:800; color:#aaa; text-transform:uppercase; letter-spacing:.5px; }
+.menu-link { display:flex; align-items:center; gap:12px; padding:11px 16px; font-size:13px; color:#444; font-weight:600; cursor:pointer; transition:.1s; }
+.menu-link:hover { background:#f0f7f2; color:var(--green); }
+.menu-link svg { width:18px; height:18px; flex-shrink:0; }
+
+/* Vet modal */
+.vet-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+.vet-card { border:1.5px solid #ddd; border-radius:10px; padding:14px; cursor:pointer; transition:.15s; }
+.vet-card:hover { border-color:var(--green); box-shadow:var(--shadow-sm); }
+.vet-card .vc-name { font-size:13px; font-weight:800; color:#222; margin-bottom:3px; }
+.vet-card .vc-spec { font-size:11px; color:var(--green); font-weight:700; margin-bottom:4px; }
+.vet-card .vc-loc  { font-size:11px; color:#888; }
+.vet-card .vc-rating { font-size:11px; color:#f59f00; margin-top:5px; }
+
+/* Investment modal */
+.invest-opts { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+.invest-opt { border:1.5px solid #ddd; border-radius:10px; padding:14px 16px; cursor:pointer; transition:.15s; display:flex; justify-content:space-between; align-items:center; }
+.invest-opt:hover { border-color:var(--green); background:var(--green-light); }
+.invest-opt .io-label { font-size:13px; font-weight:800; color:#222; }
+.invest-opt .io-return { font-size:12px; color:var(--green); font-weight:700; }
+.invest-opt .io-min { font-size:11px; color:#888; }
+
+/* Pagination */
+.pagination { display:flex; justify-content:center; align-items:center; gap:4px; padding:10px 0; }
+.page-btn { width:34px; height:34px; border-radius:7px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:13px; font-weight:700; color:#555; display:flex; align-items:center; justify-content:center; transition:.15s; }
+.page-btn:hover { border-color:var(--green); color:var(--green); }
+.page-btn.active { background:var(--green); color:#fff; border-color:var(--green); }
+.page-btn.disabled { opacity:.4; cursor:not-allowed; pointer-events:none; }
+</style>
+</head>
+<body>
+
+<!-- =============== OVERLAYS & MODALS =============== -->
+<div class="overlay" id="mainOverlay">
+
+  <!-- LOGIN MODAL -->
+  <div class="modal" id="loginModal">
+    <div class="modal-close" onclick="closeModal('loginModal')">✕</div>
+    <h2>تسجيل الدخول</h2>
+    <p class="sub">مرحباً بعودتك إلى منصة أمانة</p>
+    <div class="modal-form-group">
+      <label>رقم الهاتف أو البريد الإلكتروني</label>
+      <input class="modal-input" id="loginPhone" type="text" placeholder="أدخل رقم هاتفك أو بريدك">
+      <div class="field-error" id="loginPhoneErr">يرجى إدخال رقم الهاتف أو البريد الإلكتروني</div>
+    </div>
+    <div class="modal-form-group">
+      <label>كلمة المرور</label>
+      <input class="modal-input" id="loginPass" type="password" placeholder="أدخل كلمة المرور">
+      <div class="field-error" id="loginPassErr">يرجى إدخال كلمة المرور</div>
+    </div>
+    <button class="modal-btn" onclick="doLogin()">تسجيل الدخول</button>
+    <div class="modal-divider"><span>أو</span></div>
+    <button class="modal-btn-outline" onclick="switchModal('loginModal','registerModal')">إنشاء حساب جديد</button>
+    <p style="text-align:center;font-size:11px;color:#aaa;margin-top:10px;cursor:pointer;" onclick="switchModal('loginModal','forgotModal')">نسيت كلمة المرور؟</p>
+  </div>
+
+  <!-- REGISTER MODAL -->
+  <div class="modal" id="registerModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('registerModal')">✕</div>
+    <h2>إنشاء حساب جديد</h2>
+    <p class="sub">انضم إلى آلاف المربين والفلاحين</p>
+    <div class="modal-form-group">
+      <label>الاسم الكامل</label>
+      <input class="modal-input" id="regName" type="text" placeholder="أدخل اسمك الكامل">
+      <div class="field-error" id="regNameErr">يرجى إدخال اسمك الكامل</div>
+    </div>
+    <div class="modal-form-group">
+      <label>رقم الهاتف</label>
+      <input class="modal-input" id="regPhone" type="tel" placeholder="2X XXX XXX">
+      <div class="field-error" id="regPhoneErr">يرجى إدخال رقم هاتف صحيح</div>
+    </div>
+    <div class="modal-form-group">
+      <label>البريد الإلكتروني</label>
+      <input class="modal-input" id="regEmail" type="email" placeholder="example@email.com">
+      <div class="field-error" id="regEmailErr">يرجى إدخال بريد إلكتروني صحيح</div>
+    </div>
+    <div class="modal-form-group">
+      <label>كلمة المرور</label>
+      <input class="modal-input" id="regPass" type="password" placeholder="8 أحرف على الأقل">
+      <div class="field-error" id="regPassErr">كلمة المرور يجب أن تكون 8 أحرف على الأقل</div>
+    </div>
+    <button class="modal-btn" onclick="doRegister()">إنشاء حساب</button>
+    <button class="modal-btn-outline" onclick="switchModal('registerModal','loginModal')">لدي حساب بالفعل</button>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div class="modal" id="forgotModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('forgotModal')">✕</div>
+    <h2>نسيت كلمة المرور</h2>
+    <p class="sub">أدخل رقم هاتفك وسنرسل لك رمز التحقق</p>
+    <div class="modal-form-group">
+      <label>رقم الهاتف</label>
+      <input class="modal-input" id="forgotPhone" type="tel" placeholder="2X XXX XXX">
+      <div class="field-error" id="forgotPhoneErr">يرجى إدخال رقم هاتف صحيح</div>
+    </div>
+    <button class="modal-btn" onclick="doForgot()">إرسال رمز التحقق</button>
+  </div>
+
+  <!-- ANIMAL DETAIL MODAL -->
+  <div class="modal animal-modal" id="animalModal" style="display:none;padding:0;">
+    <div class="modal-close" style="top:10px;left:10px;z-index:5;" onclick="closeModal('animalModal')">✕</div>
+    <div class="amod-photo" id="amodPhoto">
+      <div class="emoji-bg" id="amodEmoji">🐑</div>
+      <span class="ac-badge bg-green amod-badge" id="amodBadge">جديد</span>
+    </div>
+    <div class="amod-body">
+      <div class="amod-name" id="amodName">خروف سيدي ممتاز</div>
+      <div class="amod-price" id="amodPrice">1,450 <span>دت</span></div>
+      <div class="amod-row" id="amodStats"></div>
+      <div class="amod-seller-row" id="amodSeller"></div>
+      <div class="amod-actions">
+        <button class="amod-btn-primary" onclick="addToCartFromModal()">🛒 أضف للسلة</button>
+        <button class="amod-btn-secondary" onclick="switchModal('animalModal','phoneModal')">📞 اتصل بالبائع</button>
+        <button class="amod-btn-full" onclick="openChatFromModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          راسل البائع
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELL MODAL -->
+  <div class="modal sell-modal" id="sellModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('sellModal')">✕</div>
+    <h2>أضف إعلانك</h2>
+    <p class="sub">انشر إعلانك ووصل إلى آلاف المشترين في دقائق</p>
+    <div class="sell-steps">
+      <div class="sell-step active" id="sellStep1">١ - النوع</div>
+      <div class="sell-step" id="sellStep2">٢ - التفاصيل</div>
+      <div class="sell-step" id="sellStep3">٣ - الصور</div>
+    </div>
+    <div id="sellPage1">
+      <p style="font-size:12px;color:#888;margin-bottom:12px;">اختر نوع الحيوان أو المنتج</p>
+      <div class="sell-grid">
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'أغنام')"><div class="scat-emoji">🐑</div><div class="scat-name">أغنام</div></div>
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'بقر')"><div class="scat-emoji">🐄</div><div class="scat-name">بقر</div></div>
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'ماعز')"><div class="scat-emoji">🐐</div><div class="scat-name">ماعز</div></div>
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'دواجن')"><div class="scat-emoji">🐔</div><div class="scat-name">دواجن</div></div>
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'خيول')"><div class="scat-emoji">🐴</div><div class="scat-name">خيول</div></div>
+        <div class="sell-cat-btn" onclick="selectSellCat(this,'جمال')"><div class="scat-emoji">🐪</div><div class="scat-name">جمال</div></div>
+      </div>
+      <div class="field-error" id="sellCatErr" style="margin-top:8px;">يرجى اختيار نوع الحيوان</div>
+      <button class="modal-btn" style="margin-top:16px" onclick="sellNext(2)">التالي ←</button>
+    </div>
+    <div id="sellPage2" style="display:none">
+      <div class="modal-form-group">
+        <label>عنوان الإعلان</label>
+        <input class="modal-input" id="sellTitle" placeholder="مثال: خروف ممتاز للبيع">
+        <div class="field-error" id="sellTitleErr">يرجى إدخال عنوان الإعلان</div>
+      </div>
+      <div class="modal-form-group">
+        <label>السعر (دت)</label>
+        <input class="modal-input" id="sellPrice" type="number" placeholder="أدخل السعر" min="1">
+        <div class="field-error" id="sellPriceErr">يرجى إدخال سعر صحيح</div>
+      </div>
+      <div class="modal-form-group">
+        <label>الولاية</label>
+        <select class="modal-input" id="sellRegion">
+          <option value="">اختر الولاية</option>
+          <option>تونس</option><option>صفاقس</option><option>سوسة</option><option>قابس</option><option>بنزرت</option><option>نابل</option><option>المهدية</option><option>توزر</option><option>سيدي بوزيد</option><option>زغوان</option>
+        </select>
+        <div class="field-error" id="sellRegionErr">يرجى اختيار الولاية</div>
+      </div>
+      <div class="modal-form-group">
+        <label>الوصف</label>
+        <textarea class="modal-input" id="sellDesc" rows="3" placeholder="أضف وصفاً تفصيلياً..."></textarea>
+        <div class="field-error" id="sellDescErr">يرجى إضافة وصف للإعلان</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="modal-btn-outline" onclick="sellNext(1)">→ السابق</button>
+        <button class="modal-btn" onclick="sellNext(3)">التالي ←</button>
+      </div>
+    </div>
+    <div id="sellPage3" style="display:none">
+      <div class="photo-upload" id="photoUploadZone" onclick="triggerPhotoUpload()">
+        <div class="pu-icon">📸</div>
+        <p>انقر لاختيار صور أو اسحبها هنا</p>
+        <p style="font-size:10px;color:#bbb;margin-top:4px">JPG, PNG حتى 5MB لكل صورة</p>
+      </div>
+      <input type="file" id="photoFileInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(this)">
+      <div id="photoPreviewRow" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="modal-btn-outline" onclick="sellNext(2)">→ السابق</button>
+        <button class="modal-btn" onclick="publishAd()">نشر الإعلان ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP MODAL -->
+  <div class="modal map-modal" id="mapModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('mapModal')">✕</div>
+    <h2>🗺️ خريطة تونس</h2>
+    <p class="sub">اختر الولاية للبحث عن الحيوانات القريبة منك</p>
+    <div class="map-iframe">🗺️</div>
+    <div class="region-chips">
+      <div class="region-chip active" onclick="selectRegion(this)">الكل</div>
+      <div class="region-chip" onclick="selectRegion(this)">تونس</div>
+      <div class="region-chip" onclick="selectRegion(this)">صفاقس</div>
+      <div class="region-chip" onclick="selectRegion(this)">سوسة</div>
+      <div class="region-chip" onclick="selectRegion(this)">قابس</div>
+      <div class="region-chip" onclick="selectRegion(this)">بنزرت</div>
+      <div class="region-chip" onclick="selectRegion(this)">نابل</div>
+      <div class="region-chip" onclick="selectRegion(this)">المهدية</div>
+      <div class="region-chip" onclick="selectRegion(this)">توزر</div>
+      <div class="region-chip" onclick="selectRegion(this)">زغوان</div>
+    </div>
+  </div>
+
+  <!-- TRANSPORT MODAL -->
+  <div class="modal transport-modal" id="transportModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('transportModal')">✕</div>
+    <h2>🚚 خدمات النقل</h2>
+    <p class="sub">اختر نوع الخدمة المناسبة لك</p>
+    <div class="transport-grid">
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">🐑</div><div class="to-name">نقل أغنام وماعز</div><div class="to-price">من 80 دت</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">🐄</div><div class="to-name">نقل أبقار وجمال</div><div class="to-price">من 150 دت</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">🐴</div><div class="to-name">نقل خيول</div><div class="to-price">من 200 دت</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">🐔</div><div class="to-name">نقل دواجن</div><div class="to-price">من 50 دت</div></div>
+    </div>
+    <div class="modal-form-group">
+      <label>من (المدينة)</label>
+      <input class="modal-input" id="transportFrom" placeholder="مدينة الانطلاق">
+      <div class="field-error" id="transportFromErr">يرجى إدخال مدينة الانطلاق</div>
+    </div>
+    <div class="modal-form-group">
+      <label>إلى (المدينة)</label>
+      <input class="modal-input" id="transportTo" placeholder="مدينة الوصول">
+      <div class="field-error" id="transportToErr">يرجى إدخال مدينة الوصول</div>
+    </div>
+    <div class="modal-form-group">
+      <label>التاريخ</label>
+      <input class="modal-input" id="transportDate" type="date">
+      <div class="field-error" id="transportDateErr">يرجى اختيار التاريخ</div>
+    </div>
+    <div class="field-error" id="transportTypeErr" style="margin-bottom:8px;">يرجى اختيار نوع النقل</div>
+    <button class="modal-btn" onclick="bookTransport()">احجز الآن</button>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div class="modal" id="contactModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('contactModal')">✕</div>
+    <h2>تواصل معنا</h2>
+    <p class="sub">فريق دعمنا متاح 24/7 لخدمتك</p>
+    <div class="contact-methods">
+      <div class="contact-method" onclick="showToast('جارٍ الاتصال...','info')"><div class="cm-icon">📞</div><div class="cm-name">اتصال</div></div>
+      <div class="contact-method" onclick="openChat()"><div class="cm-icon">💬</div><div class="cm-name">محادثة</div></div>
+      <div class="contact-method" onclick="showToast('فتح البريد الإلكتروني...','info')"><div class="cm-icon">📧</div><div class="cm-name">بريد</div></div>
+    </div>
+    <div class="modal-form-group">
+      <label>الموضوع</label>
+      <input class="modal-input" id="contactSubject" placeholder="موضوع رسالتك">
+      <div class="field-error" id="contactSubjectErr">يرجى إدخال موضوع الرسالة</div>
+    </div>
+    <div class="modal-form-group">
+      <label>رسالتك</label>
+      <textarea class="modal-input" id="contactMsg" rows="4" placeholder="أكتب رسالتك هنا..."></textarea>
+      <div class="field-error" id="contactMsgErr">يرجى كتابة رسالتك</div>
+    </div>
+    <button class="modal-btn" onclick="sendContact()">إرسال الرسالة</button>
+  </div>
+
+  <!-- PHONE MODAL -->
+  <div class="modal" id="phoneModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('phoneModal')">✕</div>
+    <h2>📞 معلومات الاتصال</h2>
+    <p class="sub">تواصل مع البائع مباشرة</p>
+    <div class="phone-display">
+      <div class="phone-num">+216 98 765 432</div>
+      <p>متاح من 8 صباحاً حتى 8 مساءً</p>
+    </div>
+    <button class="modal-btn" onclick="showToast('جارٍ الاتصال بالبائع...','info');closeAll()">📞 اتصل الآن</button>
+    <button class="modal-btn-outline" onclick="openChat()">💬 إرسال رسالة</button>
+  </div>
+
+  <!-- VET MODAL -->
+  <div class="modal" id="vetModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('vetModal')">✕</div>
+    <h2>🩺 خدمات البيطرة</h2>
+    <p class="sub">أطباء بيطريون معتمدون في جميع الولايات</p>
+    <div class="vet-cards">
+      <div class="vet-card" onclick="showToast('حجز موعد مع د. محمد...','info')"><div class="vc-name">د. محمد العرفاوي</div><div class="vc-spec">تخصص: أبقار وأغنام</div><div class="vc-loc">📍 تونس</div><div class="vc-rating">★★★★★ 4.9</div></div>
+      <div class="vet-card" onclick="showToast('حجز موعد مع د. سامي...','info')"><div class="vc-name">د. سامي القاسمي</div><div class="vc-spec">تخصص: خيول وجمال</div><div class="vc-loc">📍 صفاقس</div><div class="vc-rating">★★★★★ 4.8</div></div>
+      <div class="vet-card" onclick="showToast('حجز موعد مع د. ليلى...','info')"><div class="vc-name">د. ليلى بن علي</div><div class="vc-spec">تخصص: دواجن</div><div class="vc-loc">📍 سوسة</div><div class="vc-rating">★★★★☆ 4.7</div></div>
+      <div class="vet-card" onclick="showToast('حجز موعد مع د. خالد...','info')"><div class="vc-name">د. خالد الطرابلسي</div><div class="vc-spec">تخصص: عام</div><div class="vc-loc">📍 نابل</div><div class="vc-rating">★★★★★ 5.0</div></div>
+    </div>
+    <button class="modal-btn" onclick="showToast('البحث عن أطباء في منطقتك...','info')">🔍 ابحث في منطقتك</button>
+  </div>
+
+  <!-- INVESTMENT MODAL -->
+  <div class="modal" id="investModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('investModal')">✕</div>
+    <h2>💰 فرص الاستثمار</h2>
+    <p class="sub">استثمر في قطاع الثروة الحيوانية بعوائد مضمونة</p>
+    <div class="invest-opts">
+      <div class="invest-opt" onclick="showToast('فتح تفاصيل تربية الأغنام...','info')"><div><div class="io-label">تربية الأغنام</div><div class="io-min">الحد الأدنى: 5,000 دت</div></div><div class="io-return">عائد 18-25%</div></div>
+      <div class="invest-opt" onclick="showToast('فتح تفاصيل مشاريع الألبان...','info')"><div><div class="io-label">مشاريع الألبان</div><div class="io-min">الحد الأدنى: 20,000 دت</div></div><div class="io-return">عائد 15-22%</div></div>
+      <div class="invest-opt" onclick="showToast('فتح تفاصيل الدواجن...','info')"><div><div class="io-label">تربية الدواجن</div><div class="io-min">الحد الأدنى: 3,000 دت</div></div><div class="io-return">عائد 20-30%</div></div>
+      <div class="invest-opt" onclick="showToast('فتح تفاصيل تربية النحل...','info')"><div><div class="io-label">إنتاج العسل</div><div class="io-min">الحد الأدنى: 2,000 دت</div></div><div class="io-return">عائد 25-40%</div></div>
+    </div>
+    <button class="modal-btn" onclick="showToast('طلب الاستشارة المجانية مُرسَل ✓','success');closeAll()">طلب استشارة مجانية</button>
+  </div>
+
+  <!-- CONFIRM MODAL -->
+  <div class="modal confirm-modal" id="confirmModal" style="display:none">
+    <div class="confirm-icon" id="confirmIcon">🗑️</div>
+    <h2 id="confirmTitle">هل أنت متأكد؟</h2>
+    <p id="confirmText">هل تريد تأكيد هذا الإجراء؟</p>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="closeModal('confirmModal')">إلغاء</button>
+      <button class="confirm-ok" id="confirmOkBtn">تأكيد</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal success-modal" id="successModal" style="display:none">
+    <div class="success-circle"><div class="success-icon">✅</div></div>
+    <h2 id="successTitle">تمت العملية بنجاح!</h2>
+    <p id="successText" style="font-size:13px;color:#666;margin:10px 0 20px">تمت العملية بنجاح.</p>
+    <button class="modal-btn" onclick="closeAll()">حسناً</button>
+  </div>
+
+  <!-- TRUST INFO MODAL -->
+  <div class="modal" id="trustModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('trustModal')">✕</div>
+    <h2>🛡️ تسوق بثقة و أمان</h2>
+    <p class="sub">منصة أمانة توفر لك أعلى مستويات الأمان</p>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
+      <div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:24px;flex-shrink:0">✅</div><div><strong style="font-size:13px">بائعون موثوقون</strong><p style="font-size:12px;color:#777;margin-top:3px">جميع البائعين يمرون بعملية تحقق صارمة قبل النشر</p></div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:24px;flex-shrink:0">🏥</div><div><strong style="font-size:13px">حيوانات معتمدة</strong><p style="font-size:12px;color:#777;margin-top:3px">جميع الحيوانات لها شهادات صحية معتمدة من الطب البيطري</p></div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:24px;flex-shrink:0">🎧</div><div><strong style="font-size:13px">دعم 24/7</strong><p style="font-size:12px;color:#777;margin-top:3px">فريق متخصص متاح على مدار الساعة لمساعدتك</p></div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><div style="font-size:24px;flex-shrink:0">💊</div><div><strong style="font-size:13px">ضمان صحة الحيوان</strong><p style="font-size:12px;color:#777;margin-top:3px">ضمان استرداد كامل في حالة مشكلة صحية خلال 48 ساعة</p></div></div>
+    </div>
+    <button class="modal-btn" style="margin-top:16px" onclick="closeAll()">فهمت، شكراً!</button>
+  </div>
+
+  <!-- COMMUNITY MODAL -->
+  <div class="modal" id="communityModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('communityModal')">✕</div>
+    <h2>👥 مجتمع أمانة</h2>
+    <p class="sub">تواصل مع آلاف الفلاحين والمربين</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+      <div class="transport-opt" onclick="showToast('فتح المنتدى...','info')"><div class="to-icon">💬</div><div class="to-name">المنتدى العام</div><div class="to-price">+2,500 منشور</div></div>
+      <div class="transport-opt" onclick="showToast('فتح مجموعات الأغنام...','info')"><div class="to-icon">🐑</div><div class="to-name">مجموعة مربي الأغنام</div><div class="to-price">+1,200 عضو</div></div>
+      <div class="transport-opt" onclick="showToast('فتح مجموعات الفلاحين...','info')"><div class="to-icon">🌾</div><div class="to-name">مجتمع الفلاحين</div><div class="to-price">+3,400 عضو</div></div>
+    </div>
+    <button class="modal-btn" style="margin-top:14px" onclick="showToast('طلب الانضمام للمجتمع مُرسَل ✓','success');closeAll()">انضم إلى المجتمع</button>
+  </div>
+
+  <!-- ADV MODAL -->
+  <div class="modal" id="advModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('advModal')">✕</div>
+    <h2>📢 إعلن معنا</h2>
+    <p class="sub">وصل إلى آلاف الفلاحين والمربين في تونس</p>
+    <div class="transport-grid" style="margin:16px 0">
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">⭐</div><div class="to-name">إعلان مميز</div><div class="to-price">50 دت / أسبوع</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">🏆</div><div class="to-name">إعلان بانر</div><div class="to-price">120 دت / شهر</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">📱</div><div class="to-name">إعلان إشعار</div><div class="to-price">80 دت / حملة</div></div>
+      <div class="transport-opt" onclick="selectTransport(this)"><div class="to-icon">📧</div><div class="to-name">نشرة بريدية</div><div class="to-price">60 دت / إرسال</div></div>
+    </div>
+    <button class="modal-btn" onclick="showToast('سيتواصل معك فريقنا قريباً ✓','success');closeAll()">طلب إعلان</button>
+  </div>
+
+  <!-- MARKET MODAL -->
+  <div class="modal" id="marketModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('marketModal')">✕</div>
+    <h2>🛒 السوق</h2>
+    <p class="sub">جميع المنتجات الفلاحية في مكان واحد</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <div class="transport-opt" onclick="showToast('فتح الأعلاف...','info')"><div class="to-icon">🌾</div><div class="to-name">أعلاف وغذاء</div><div class="to-price">+500 منتج</div></div>
+      <div class="transport-opt" onclick="showToast('فتح الأدوية...','info')"><div class="to-icon">💊</div><div class="to-name">أدوية بيطرية</div><div class="to-price">+200 منتج</div></div>
+      <div class="transport-opt" onclick="showToast('فتح المعدات...','info')"><div class="to-icon">🔧</div><div class="to-name">معدات ومستلزمات</div><div class="to-price">+350 منتج</div></div>
+    </div>
+    <button class="modal-btn" style="margin-top:14px" onclick="closeAll()">تصفح السوق</button>
+  </div>
+
+  <!-- JOBS MODAL -->
+  <div class="modal" id="jobsModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('jobsModal')">✕</div>
+    <h2>💼 فرص العمل</h2>
+    <p class="sub">فرص عمل في قطاع الفلاحة والثروة الحيوانية</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <div class="transport-opt" onclick="showToast('فتح تفاصيل الوظيفة...','info')"><div class="to-icon">🐄</div><div class="to-name">مربي ماشية - تونس</div><div class="to-price">1,200 دت / شهر</div></div>
+      <div class="transport-opt" onclick="showToast('فتح تفاصيل الوظيفة...','info')"><div class="to-icon">🩺</div><div class="to-name">مساعد بيطري - صفاقس</div><div class="to-price">900 دت / شهر</div></div>
+      <div class="transport-opt" onclick="showToast('فتح تفاصيل الوظيفة...','info')"><div class="to-icon">🚚</div><div class="to-name">سائق نقل حيوانات</div><div class="to-price">1,100 دت / شهر</div></div>
+    </div>
+    <button class="modal-btn" style="margin-top:14px" onclick="showToast('عرض جميع الوظائف...','info')">عرض جميع الوظائف (48)</button>
+  </div>
+
+  <!-- ===== CHECKOUT MODAL (NEW - FULL FLOW) ===== -->
+  <div class="modal checkout-modal" id="checkoutModal" style="display:none">
+    <div class="modal-close" onclick="closeModal('checkoutModal')">✕</div>
+    <h2>إتمام الطلب</h2>
+    <p class="sub">خطوات بسيطة لإتمام عملية الشراء</p>
+    <div class="checkout-steps">
+      <div class="checkout-step active" id="coStep1">١ - العنوان</div>
+      <div class="checkout-step" id="coStep2">٢ - الدفع</div>
+      <div class="checkout-step" id="coStep3">٣ - التأكيد</div>
+    </div>
+
+    <!-- Step 1: Address -->
+    <div id="coPage1">
+      <div class="modal-form-group">
+        <label>الاسم الكامل</label>
+        <input class="modal-input" id="coName" placeholder="اسمك الكامل">
+        <div class="field-error" id="coNameErr">يرجى إدخال الاسم الكامل</div>
+      </div>
+      <div class="modal-form-group">
+        <label>رقم الهاتف</label>
+        <input class="modal-input" id="coPhone" type="tel" placeholder="2X XXX XXX">
+        <div class="field-error" id="coPhoneErr">يرجى إدخال رقم هاتف صحيح</div>
+      </div>
+      <div class="modal-form-group">
+        <label>الولاية</label>
+        <select class="modal-input" id="coRegion">
+          <option value="">اختر الولاية</option>
+          <option>تونس</option><option>صفاقس</option><option>سوسة</option><option>قابس</option><option>بنزرت</option><option>نابل</option><option>المهدية</option><option>توزر</option><option>سيدي بوزيد</option><option>زغوان</option>
+        </select>
+        <div class="field-error" id="coRegionErr">يرجى اختيار الولاية</div>
+      </div>
+      <div class="modal-form-group">
+        <label>العنوان التفصيلي</label>
+        <input class="modal-input" id="coAddress" placeholder="الشارع، الحي، المدينة">
+        <div class="field-error" id="coAddressErr">يرجى إدخال العنوان التفصيلي</div>
+      </div>
+      <button class="modal-btn" onclick="checkoutNext(2)">التالي ← اختيار طريقة الدفع</button>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div id="coPage2" style="display:none">
+      <p style="font-size:12px;color:#666;margin-bottom:10px;font-weight:700;">اختر طريقة الدفع</p>
+      <div class="pay-methods">
+        <div class="pay-method" id="pay_cash" onclick="selectPayMethod('cash')"><div class="pm-icon">💵</div><div class="pm-name">دفع عند الاستلام</div></div>
+        <div class="pay-method" id="pay_d17" onclick="selectPayMethod('d17')"><div class="pm-icon">📱</div><div class="pm-name">D17 / فلوسي</div></div>
+        <div class="pay-method" id="pay_card" onclick="selectPayMethod('card')"><div class="pm-icon">💳</div><div class="pm-name">بطاقة بنكية</div></div>
+      </div>
+      <div class="field-error" id="coPayErr" style="margin-bottom:10px;">يرجى اختيار طريقة الدفع</div>
+
+      <!-- Card details (shown only when card selected) -->
+      <div id="cardFields" style="display:none">
+        <div class="modal-form-group">
+          <label>رقم البطاقة</label>
+          <input class="modal-input" id="cardNum" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" oninput="formatCard(this)">
+          <div class="field-error" id="cardNumErr">يرجى إدخال رقم بطاقة صحيح</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="modal-form-group">
+            <label>تاريخ الانتهاء</label>
+            <input class="modal-input" id="cardExp" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+            <div class="field-error" id="cardExpErr">تاريخ غير صحيح</div>
+          </div>
+          <div class="modal-form-group">
+            <label>رمز CVV</label>
+            <input class="modal-input" id="cardCvv" placeholder="XXX" maxlength="3" type="password">
+            <div class="field-error" id="cardCvvErr">رمز CVV غير صحيح</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-summary" id="coSummary"></div>
+      <div style="display:flex;gap:8px">
+        <button class="modal-btn-outline" onclick="checkoutNext(1)">→ السابق</button>
+        <button class="modal-btn" onclick="checkoutNext(3)">تأكيد الطلب ←</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div id="coPage3" style="display:none;text-align:center">
+      <div style="font-size:56px;margin:10px 0">🎉</div>
+      <h2 style="margin-bottom:8px">تم تأكيد طلبك!</h2>
+      <p style="font-size:13px;color:#666;margin-bottom:16px;line-height:1.7">شكراً على ثقتك بأمانة. سيتواصل معك البائع خلال 24 ساعة لتأكيد التفاصيل والتسليم.</p>
+      <div class="confirmation-code">
+        <div class="conf-code-num" id="confCodeNum">AM-XXXXX</div>
+        <div class="conf-code-lbl">رقم مرجعي للطلب — احتفظ به</div>
+      </div>
+      <div class="order-summary" id="coFinalSummary" style="text-align:right;margin-top:12px;"></div>
+      <button class="modal-btn" style="margin-top:8px" onclick="finalizeCheckout()">حسناً، رائع! 🐑</button>
+    </div>
+  </div>
+
+</div><!-- /mainOverlay -->
+
+<!-- ======= DRAWERS ======= -->
+<!-- Cart Drawer -->
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>🛒 سلة التسوق</h3>
+    <div class="drawer-close" onclick="closeDrawer('cartDrawer')">✕</div>
+  </div>
+  <div class="drawer-body" id="cartBody">
+    <div class="cart-empty"><div class="ce-icon">🛒</div><p>سلة التسوق فارغة</p></div>
+  </div>
+  <div class="drawer-foot" id="cartFoot" style="display:none">
+    <div class="cart-total"><span>المجموع الكلي:</span><strong id="cartTotalPrice">0 دت</strong></div>
+    <button class="cart-checkout" onclick="openCheckout()">إتمام الطلب ←</button>
+  </div>
+</div>
+
+<!-- Notifications Drawer -->
+<div class="drawer" id="notifDrawer">
+  <div class="drawer-head"><h3>🔔 الإشعارات</h3><div class="drawer-close" onclick="closeDrawer('notifDrawer')">✕</div></div>
+  <div class="drawer-body">
+    <div class="notif-item"><div class="notif-dot"></div><div class="notif-text">تم قبول عرضك على "خروف سيدي ممتاز" 🐑</div><div class="notif-time">الآن</div></div>
+    <div class="notif-item"><div class="notif-dot"></div><div class="notif-text">البائع أحمد القروي أرسل لك رسالة جديدة</div><div class="notif-time">5 د</div></div>
+    <div class="notif-item"><div class="notif-dot"></div><div class="notif-text">تخفيض بنسبة 15% على خيول المهدية هذا الأسبوع 🐴</div><div class="notif-time">1 س</div></div>
+    <div class="notif-item"><div class="notif-dot read"></div><div class="notif-text">تم التحقق من حسابك بنجاح ✓</div><div class="notif-time">أمس</div></div>
+    <div class="notif-item"><div class="notif-dot read"></div><div class="notif-text">عرضك "بقرة هولشتاين" تم عرضه لـ 250 زائر</div><div class="notif-time">2 أيام</div></div>
+    <div class="notif-item"><div class="notif-dot read"></div><div class="notif-text">مرحباً بك في منصة أمانة! ابدأ تجربتك الآن</div><div class="notif-time">أسبوع</div></div>
+  </div>
+  <div class="drawer-foot">
+    <button class="modal-btn" onclick="showToast('تم تعليم جميع الإشعارات كمقروءة ✓','success')">تعليم الكل كمقروء</button>
+  </div>
+</div>
+
+<!-- Messages Drawer -->
+<div class="drawer" id="msgDrawer">
+  <div class="drawer-head"><h3>✉️ الرسائل</h3><div class="drawer-close" onclick="closeDrawer('msgDrawer')">✕</div></div>
+  <div class="drawer-body">
+    <div class="msg-item" onclick="openChat()"><div class="msg-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">ف</div><div class="msg-info"><div class="msg-name">فلاح السعيدي <span class="msg-unread">2</span></div><div class="msg-preview">الخروف لا يزال متاحاً...</div></div><div class="msg-time">2 د</div></div>
+    <div class="msg-item" onclick="openChat()"><div class="msg-avt" style="background:linear-gradient(135deg,#2196f3,#0d47a1)">أ</div><div class="msg-info"><div class="msg-name">أحمد القروي <span class="msg-unread">1</span></div><div class="msg-preview">هل يمكنك الزيارة غداً؟</div></div><div class="msg-time">1 س</div></div>
+    <div class="msg-item" onclick="openChat()"><div class="msg-avt" style="background:linear-gradient(135deg,#ff9800,#e65100)">ي</div><div class="msg-info"><div class="msg-name">يوسف العبادي</div><div class="msg-preview">شكراً على تقييمك الإيجابي</div></div><div class="msg-time">أمس</div></div>
+    <div class="msg-item" onclick="openChat()"><div class="msg-avt" style="background:linear-gradient(135deg,#f44336,#b71c1c)">م</div><div class="msg-info"><div class="msg-name">مزرعة النور <span class="msg-unread">3</span></div><div class="msg-preview">لدينا دجاج بلدي جديد...</div></div><div class="msg-time">2 أيام</div></div>
+    <div class="msg-item" onclick="openChat()"><div class="msg-avt" style="background:linear-gradient(135deg,#9c27b0,#4a148c)">ر</div><div class="msg-info"><div class="msg-name">رضا المنصوري</div><div class="msg-preview">الحصان يتوفر للمعاينة...</div></div><div class="msg-time">3 أيام</div></div>
+  </div>
+  <div class="drawer-foot">
+    <button class="modal-btn" onclick="closeDrawer('msgDrawer');showModal('contactModal')">رسالة جديدة +</button>
+  </div>
+</div>
+
+<!-- Favorites Drawer -->
+<div class="drawer" id="favDrawer">
+  <div class="drawer-head"><h3>❤️ المفضلة</h3><div class="drawer-close" onclick="closeDrawer('favDrawer')">✕</div></div>
+  <div class="drawer-body" id="favBody">
+    <div class="cart-empty"><div class="ce-icon">❤️</div><p>قائمة المفضلة فارغة</p></div>
+  </div>
+</div>
+
+<!-- Chat Drawer -->
+<div class="drawer" id="chatDrawer">
+  <div class="drawer-head">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="msg-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a);width:34px;height:34px;font-size:12px;">ف</div>
+      <div><div style="font-size:13px;font-weight:800">فلاح السعيدي</div><div style="font-size:10px;color:var(--green)">● متصل</div></div>
+    </div>
+    <div class="drawer-close" onclick="closeDrawer('chatDrawer')">✕</div>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-bubble received">السلام عليكم، هل الخروف لا يزال متاحاً؟<div class="bubble-time">10:30</div></div>
+    <div class="chat-bubble sent">وعليكم السلام! نعم لا يزال متاحاً<div class="bubble-time">10:32</div></div>
+    <div class="chat-bubble received">ما هو أقل سعر يمكنك قبوله؟<div class="bubble-time">10:33</div></div>
+    <div class="chat-bubble sent">السعر المعروض نهائي، لكن يمكنني توصيله مجاناً إذا اشتريت اثنين<div class="bubble-time">10:35</div></div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')sendChatMsg()">
+    <button class="chat-send" onclick="sendChatMsg()">➤</button>
+  </div>
+</div>
+
+<!-- Mobile Menu Drawer -->
+<div class="drawer menu-drawer" id="menuDrawer">
+  <div class="menu-drawer-head">
+    <h3>القائمة الرئيسية</h3>
+    <p>منصة الفلاحة والحيوانات الأولى في تونس</p>
+  </div>
+  <div class="menu-section">
+    <div class="menu-section-title">التنقل</div>
+    <div class="menu-link" onclick="showModal('marketModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>السوق</div>
+    <div class="menu-link" onclick="showModal('jobsModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>فرص العمل</div>
+    <div class="menu-link" onclick="showModal('transportModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/></svg>النقل</div>
+    <div class="menu-link" onclick="showModal('vetModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>البيطرة</div>
+    <div class="menu-link" onclick="showModal('investModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>الاستثمار</div>
+    <div class="menu-link" onclick="showModal('communityModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/></svg>المجتمع</div>
+  </div>
+  <div class="menu-section">
+    <div class="menu-section-title">حسابي</div>
+    <div class="menu-link" onclick="showToast('فتح ملفي الشخصي...','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>ملفي الشخصي</div>
+    <div class="menu-link" onclick="showToast('عرض إعلاناتي...','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>إعلاناتي</div>
+    <div class="menu-link" onclick="showModal('contactModal');closeDrawer('menuDrawer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/></svg>تواصل معنا</div>
+  </div>
+</div>
+
+<!-- PROFILE DROPDOWN -->
+<div class="profile-dropdown" id="profileDropdown">
+  <div class="pd-header"><div class="pd-name">محمد الفلاح</div><div class="pd-email">mohamed@amana.tn</div></div>
+  <div class="pd-menu">
+    <a onclick="showToast('فتح الملف الشخصي...','info');closeDropdowns()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>ملفي الشخصي</a>
+    <a onclick="showModal('sellModal');closeDropdowns()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>نشر إعلان جديد</a>
+    <a onclick="showToast('فتح مبيعاتي...','info');closeDropdowns()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>إعلاناتي</a>
+    <a onclick="showToast('فتح الإعدادات...','info');closeDropdowns()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>الإعدادات</a>
+    <a class="pd-logout" onclick="doLogout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>تسجيل الخروج</a>
+  </div>
+</div>
+
+<!-- LANG DROPDOWN -->
+<div class="lang-dropdown" id="langDropdown">
+  <div class="lang-opt active" onclick="changeLang('AR')">🇹🇳 العربية</div>
+  <div class="lang-opt" onclick="changeLang('FR')">🇫🇷 Français</div>
+  <div class="lang-opt" onclick="changeLang('EN')">🇬🇧 English</div>
+</div>
+
+<!-- SEARCH SUGGESTIONS -->
+<div class="search-suggestions" id="searchSuggestions"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="header">
+  <div class="logo" onclick="scrollToTop()">
+    <div class="logo-mark">
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L34 10 L34 22 C34 30 20 37 20 37 C20 37 6 30 6 22 L6 10 Z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>
+        <path d="M15 24 Q14 18 17 16 Q19 14 22 15 Q25 14 26 17 L27 20 Q26 22 24 23 L22 24 Q20 26 20 28 L18 28 Q18 26 16 25 Z" fill="white"/>
+        <circle cx="24" cy="17" r="1.5" fill="rgba(255,255,255,.6)"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <div class="lname">AMANA</div>
+      <div class="ltag">منصة الفلاحة و الحيوانات الأولى في تونس</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="ابحث عن حيوان، منتج، خدمة..." oninput="showSuggestions()" onfocus="showSuggestions()" onblur="setTimeout(hideSuggestions,200)">
+      <button class="sbtn" onclick="doSearchFromInput()">بحث</button>
+    </div>
+    <div class="search-suggestions" id="searchSuggestionsInline"></div>
+  </div>
+
+  <div class="header-right">
+    <div class="user-block" onclick="toggleDropdown('profileDropdown')">
+      <div class="user-avt"><div class="user-avt-ph">م</div></div>
+      <div class="user-meta"><div class="greet">مرحباً محمد</div><div class="utitle">فلاح محترف</div></div>
+      <div class="chevron">▾</div>
+    </div>
+
+    <div class="hico" onclick="openDrawer('cartDrawer')">
+      <div class="ico-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="badge" id="cartBadge" style="display:none">0</span>
+      </div>
+      <span class="lbl">السلة</span>
+    </div>
+
+    <div class="hico" onclick="openDrawer('favDrawer')">
+      <div class="ico-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        <span class="badge" id="favBadge" style="display:none">0</span>
+      </div>
+      <span class="lbl">المفضلة</span>
+    </div>
+
+    <div class="hico" onclick="openDrawer('notifDrawer')">
+      <div class="ico-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="badge rb" id="notifBadge">3</span>
+      </div>
+      <span class="lbl">الإشعارات</span>
+    </div>
+
+    <div class="hico" onclick="openDrawer('msgDrawer')">
+      <div class="ico-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span class="badge" id="msgBadge">6</span>
+      </div>
+      <span class="lbl">الرسائل</span>
+    </div>
+
+    <div class="hico" onclick="showModal('transportModal')">
+      <div class="ico-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <span class="lbl">النقل</span>
+    </div>
+  </div>
+
+  <div class="lang-btn" onclick="toggleDropdown('langDropdown')">AR ▾</div>
+</header>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar">
+  <ul>
+    <li><a class="active" onclick="setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>الرئيسية</a></li>
+    <li><a onclick="showModal('jobsModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>فرص العمل</a></li>
+    <li><a onclick="showModal('marketModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>السوق</a></li>
+    <li><a onclick="showModal('transportModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/></svg>النقل</a></li>
+    <li><a onclick="showModal('vetModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>البيطرة</a></li>
+    <li><a onclick="showToast('قسم الصيدلية البيطرية قريباً!','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>الصيدلية</a></li>
+    <li><a onclick="showModal('marketModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>المنتجات</a></li>
+    <li><a onclick="showModal('investModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>الاستثمار</a></li>
+    <li><a onclick="showModal('communityModal');setActiveNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>المجتمع</a></li>
+  </ul>
+  <div class="navbar-spacer"></div>
+  <div class="nav-extra">
+    <a onclick="showToast('المزيد من الأقسام قريباً!','info')">المزيد ▾</a>
+    <div class="hamburger" onclick="openDrawer('menuDrawer')">☰</div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-farmer-bg"></div>
+  <div class="hero-left">
+    <div class="users-card" onclick="showModal('communityModal')">
+      <div class="av-row">
+        <div class="av-stack">
+          <div class="av" style="background:#4caf50;z-index:4;">أ</div>
+          <div class="av" style="background:#2196f3;z-index:3;">م</div>
+          <div class="av" style="background:#ff9800;z-index:2;">ح</div>
+          <div class="av" style="background:#9c27b0;z-index:1;">ي</div>
+        </div>
+        <div class="av-count">+12K</div>
+      </div>
+      <div class="users-lbl">مستخدم نشط</div>
+      <div class="stars-row">★★★★★</div>
+      <div class="rating-lbl">4.9 تقييم المنصة</div>
+    </div>
+  </div>
+
+  <div class="hero-center">
+    <div class="hero-pre">كل ما تحتاجه في عالم</div>
+    <div class="hero-h1">الفلاحة و الحيوانات</div>
+    <div class="hero-desc">منصة متكاملة تجمع بين المربين، المستثمرين و جميع الخدمات<br>لتطوير و تسهيل تربية الحيوانات و الاستثمار في الفلاحة</div>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="document.querySelector('.page-body').scrollIntoView({behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        تصفح الحيوانات
+      </button>
+      <button class="btn-w" onclick="showModal('sellModal')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        أضف إعلانك
+      </button>
+      <button class="btn-gr" onclick="showModal('transportModal')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        خدمات النقل
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="trust-card">
+      <div class="tc-head">
+        <div class="tc-shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="tc-title">تسوق بثقة و أمان</div>
+      </div>
+      <div class="tc-item" onclick="showModal('trustModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>بائعون موثوقون</div>
+      <div class="tc-item" onclick="showModal('trustModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>حيوانات معتمدة</div>
+      <div class="tc-item" onclick="showModal('contactModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>دعم 24/7</div>
+      <div class="tc-item" onclick="showModal('trustModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>ضمان صحة الحيوان</div>
+      <button class="tc-btn" onclick="showModal('trustModal')">تعرف على المزيد</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CATEGORY BAR ===================== -->
+<div class="cat-bar">
+  <div class="cat-row">
+    <button class="cat-btn active" onclick="filterCat('الكل',this)"><div class="cimg all-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span>الكل</span></button>
+    <button class="cat-btn" onclick="filterCat('أغنام',this)"><div class="cimg" style="background:#fff8e1;">🐑</div><span>أغنام</span></button>
+    <button class="cat-btn" onclick="filterCat('بقر',this)"><div class="cimg" style="background:#e8f5e9;">🐄</div><span>بقر</span></button>
+    <button class="cat-btn" onclick="filterCat('ماعز',this)"><div class="cimg" style="background:#f3e5f5;">🐐</div><span>ماعز</span></button>
+    <button class="cat-btn" onclick="filterCat('دواجن',this)"><div class="cimg" style="background:#fff3e0;">🐔</div><span>دواجن</span></button>
+    <button class="cat-btn" onclick="filterCat('خيول',this)"><div class="cimg" style="background:#e3f2fd;">🐴</div><span>خيول</span></button>
+    <button class="cat-btn" onclick="filterCat('أرانب',this)"><div class="cimg" style="background:#e8f5e9;">🐇</div><span>أرانب</span></button>
+    <button class="cat-btn" onclick="filterCat('نحل',this)"><div class="cimg" style="background:#fffde7;">🐝</div><span>نحل</span></button>
+    <button class="cat-btn" onclick="filterCat('طيور',this)"><div class="cimg" style="background:#fce4ec;">🦜</div><span>طيور</span></button>
+    <button class="cat-btn" onclick="filterCat('حيوانات أليفة',this)"><div class="cimg" style="background:#efebe9;">🐕</div><span>كلاب و قطط</span></button>
+    <button class="cat-btn" onclick="showToast('عرض جميع الأصناف...','info')"><div class="cimg" style="background:#f5f5f5;font-size:16px;">···</div><span>المزيد</span></button>
+  </div>
+</div>
+
+<!-- ===================== PAGE BODY ===================== -->
+<div class="page-body">
+
+  <!-- FILTER SIDEBAR -->
+  <aside class="filter-sidebar">
+    <div class="filter-box">
+      <div class="filter-header">
+        <h3>تصفية النتائج</h3>
+        <span class="filter-reset" onclick="resetFilters()">إعادة تعيين</span>
+      </div>
+      <div class="filter-section">
+        <div class="fs-title">السعر (دت)</div>
+        <div class="price-inputs">
+          <input class="price-inp" id="priceMax" placeholder="إلى" value="20,000+">
+          <input class="price-inp" id="priceMin" placeholder="من" value="0">
+        </div>
+        <div class="range-track" onclick="moveThumb(event,this)">
+          <div class="range-fill" id="rangeFill"></div>
+          <div class="range-thumb" id="rangeThumb" style="left:70%"></div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="fs-title">الموقع</div>
+        <select style="width:100%;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:12px;font-family:'Cairo',sans-serif;color:#444;outline:none;background:#fff;" onchange="applyFilter()">
+          <option>اختر الولاية</option>
+          <option>تونس</option><option>صفاقس</option><option>سوسة</option>
+          <option>قابس</option><option>بنزرت</option><option>نابل</option><option>توزر</option>
+        </select>
+      </div>
+      <div class="filter-section">
+        <div class="fs-title">النوع</div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box checked"></div><span class="chk-label">أغنام</span></div><span class="chk-count">(1,256)</span></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">بقر</span></div><span class="chk-count">(842)</span></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">ماعز</span></div><span class="chk-count">(532)</span></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">دواجن</span></div><span class="chk-count">(1,120)</span></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">خيول</span></div><span class="chk-count">(120)</span></div>
+        <span class="show-more" onclick="showToast('عرض المزيد من الأصناف...','info')">+ عرض المزيد</span>
+      </div>
+      <div class="filter-section">
+        <div class="fs-title">الخصائص</div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">منتج أمن</span></div></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box checked"></div><span class="chk-label">مع شهادة صحية</span></div></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box"></div><span class="chk-label">توصيل متوفر</span></div></div>
+        <div class="chk-item" onclick="toggleChk(this)"><div class="chk-left"><div class="chk-box checked"></div><span class="chk-label">مربي موثوق</span></div></div>
+      </div>
+      <button class="filter-apply" onclick="applyFilter()">
+        <span class="filter-count" id="resultCount">3,870</span>
+        عرض نتيجة
+      </button>
+    </div>
+  </aside>
+
+  <!-- CENTER RESULTS -->
+  <main class="results-col">
+    <div class="results-bar">
+      <div class="results-count"><span id="resultsNum">3,870</span> نتيجة</div>
+      <select class="sort-native" onchange="sortResults(this.value)">
+        <option value="newest">الأحدث أولاً</option>
+        <option value="price-asc">السعر: من الأقل</option>
+        <option value="price-desc">السعر: من الأعلى</option>
+        <option value="rating">الأعلى تقييماً</option>
+      </select>
+      <div class="view-btns">
+        <div class="vbtn active" onclick="setView('grid',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="vbtn" onclick="setView('list',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </div>
+      </div>
+      <button class="map-btn" onclick="showModal('mapModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        عرض على الخريطة
+      </button>
+    </div>
+
+    <!-- GRID ROW 1 -->
+    <div class="animals-grid" id="grid1">
+
+      <!-- CARD: خروف -->
+      <div class="animal-card" onclick="openAnimalModal({name:'خروف سيدي ممتاز',price:'1450',emoji:'🐑',badge:'جديد',badgeClass:'bg-green',loc:'سيدي بوزيد',age:'6 أشهر',weight:'55 كغ',seller:'فلاح السعيدي',sellerColor:'linear-gradient(135deg,#4caf50,#1c7c3a)',sellerInit:'ف',rating:'4.9',reviews:'120',id:'sheep1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=400&q=80" alt="خروف" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#dcedc8,#8bc34a);">🐑</div>
+          <span class="ac-badge bg-green">جديد</span>
+          <button class="ac-heart" id="heart_sheep1" onclick="event.stopPropagation();toggleFav('sheep1','خروف سيدي ممتاز','1,450 دت','🐑',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">خروف سيدي ممتاز</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>سيدي بوزيد</div><div class="ac-age">6 أشهر</div></div>
+          <div class="ac-seller"><div class="seller-avt">ف</div><span class="seller-name">فلاح السعيدي</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">4.9 (120)</span></div>
+          <div class="ac-footer"><div class="ac-weight">كغ 55</div><div class="ac-price-area"><div class="ac-price">1,450</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'خروف سيدي ممتاز',price:'1450',emoji:'🐑',badge:'جديد',badgeClass:'bg-green',loc:'سيدي بوزيد',age:'6 أشهر',weight:'55 كغ',seller:'فلاح السعيدي',sellerColor:'linear-gradient(135deg,#4caf50,#1c7c3a)',sellerInit:'ف',rating:'4.9',reviews:'120',id:'sheep1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: بقرة -->
+      <div class="animal-card" onclick="openAnimalModal({name:'بقرة هولشتاين حلوب',price:'6800',emoji:'🐄',badge:'مميز',badgeClass:'bg-gold',loc:'بن عردوس',age:'3 سنوات',weight:'450 كغ',seller:'أحمد القروي',sellerColor:'linear-gradient(135deg,#2196f3,#0d47a1)',sellerInit:'أ',rating:'4.8',reviews:'95',id:'cow1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1546445317-29f4545e9d53?w=400&q=80" alt="بقرة" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#e3f2fd,#1565c0);">🐄</div>
+          <span class="ac-badge bg-gold">مميز</span>
+          <button class="ac-heart" id="heart_cow1" onclick="event.stopPropagation();toggleFav('cow1','بقرة هولشتاين حلوب','6,800 دت','🐄',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">بقرة هولشتاين حلوب</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>بن عردوس</div><div class="ac-age">3 سنوات</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#2196f3,#0d47a1);">أ</div><span class="seller-name">أحمد القروي</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">4.8 (95)</span></div>
+          <div class="ac-footer"><div class="ac-weight">كغ 450</div><div class="ac-price-area"><div class="ac-price">6,800</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'بقرة هولشتاين حلوب',price:'6800',emoji:'🐄',badge:'مميز',badgeClass:'bg-gold',loc:'بن عردوس',age:'3 سنوات',weight:'450 كغ',seller:'أحمد القروي',sellerColor:'linear-gradient(135deg,#2196f3,#0d47a1)',sellerInit:'أ',rating:'4.8',reviews:'95',id:'cow1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: ماعز — FIX: added openAnimalModal call -->
+      <div class="animal-card" onclick="openAnimalModal({name:'ماعز عارضي - ذكر و أنثى',price:'1250',emoji:'🐐',badge:'جديد',badgeClass:'bg-green',loc:'نابل',age:'8 أشهر',weight:'38 كغ',seller:'يوسف العبادي',sellerColor:'linear-gradient(135deg,#ff9800,#e65100)',sellerInit:'ي',rating:'4.7',reviews:'60',id:'goat1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1524024973431-2ad916746881?w=400&q=80" alt="ماعز" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#f3e5f5,#7b1fa2);">🐐</div>
+          <span class="ac-badge bg-green">جديد</span>
+          <button class="ac-heart" id="heart_goat1" onclick="event.stopPropagation();toggleFav('goat1','ماعز عارضي','1,250 دت','🐐',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">ماعز عارضي - ذكر و أنثى</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>نابل</div><div class="ac-age">8 أشهر</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#ff9800,#e65100);">ي</div><span class="seller-name">يوسف العبادي</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★☆</span><span class="rating-n">4.7 (60)</span></div>
+          <div class="ac-footer"><div class="ac-weight">كغ 38</div><div class="ac-price-area"><div class="ac-price">1,250</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'ماعز عارضي - ذكر و أنثى',price:'1250',emoji:'🐐',badge:'جديد',badgeClass:'bg-green',loc:'نابل',age:'8 أشهر',weight:'38 كغ',seller:'يوسف العبادي',sellerColor:'linear-gradient(135deg,#ff9800,#e65100)',sellerInit:'ي',rating:'4.7',reviews:'60',id:'goat1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: دجاج — FIX: price numeric, added openAnimalModal -->
+      <div class="animal-card" onclick="openAnimalModal({name:'دجاج بلدي',price:'15',emoji:'🐔',badge:'مميز',badgeClass:'bg-gold',loc:'شابي',age:'25 طير',weight:'—',seller:'مزرعة النور',sellerColor:'linear-gradient(135deg,#f44336,#b71c1c)',sellerInit:'م',rating:'4.8',reviews:'90',id:'chicken1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&q=80" alt="دجاج" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#fff8e1,#f57f17);">🐔</div>
+          <span class="ac-badge bg-gold">مميز</span>
+          <button class="ac-heart" id="heart_chicken1" onclick="event.stopPropagation();toggleFav('chicken1','دجاج بلدي','15 دت','🐔',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">دجاج بلدي</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>شابي</div><div class="ac-age">25 طير</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#f44336,#b71c1c);">م</div><span class="seller-name">مزرعة النور</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">4.8 (90)</span></div>
+          <div class="ac-footer"><div class="ac-weight" style="opacity:0">—</div><div class="ac-price-area"><div class="ac-price">15</div><div class="ac-unit">الوحدة / دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'دجاج بلدي',price:'15',emoji:'🐔',badge:'مميز',badgeClass:'bg-gold',loc:'شابي',age:'25 طير',weight:'—',seller:'مزرعة النور',sellerColor:'linear-gradient(135deg,#f44336,#b71c1c)',sellerInit:'م',rating:'4.8',reviews:'90',id:'chicken1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRID ROW 2 -->
+    <div class="animals-grid" id="grid2">
+
+      <!-- CARD: جمل — FIX: added openAnimalModal -->
+      <div class="animal-card" onclick="openAnimalModal({name:'جمل عربي أصيل',price:'8500',emoji:'🐪',badge:'جديد',badgeClass:'bg-green',loc:'توزر',age:'5 سنوات',weight:'420 كغ',seller:'عبدالله الجريبي',sellerColor:'linear-gradient(135deg,#795548,#4e342e)',sellerInit:'ع',rating:'4.9',reviews:'44',id:'camel1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&q=80" alt="جمل" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#fff8e1,#ff8f00);">🐪</div>
+          <span class="ac-badge bg-green">جديد</span>
+          <button class="ac-heart" id="heart_camel1" onclick="event.stopPropagation();toggleFav('camel1','جمل عربي أصيل','8,500 دت','🐪',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">جمل عربي أصيل</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>توزر</div><div class="ac-age">5 سنوات</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#795548,#4e342e);">ع</div><span class="seller-name">عبدالله الجريبي</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">4.9 (44)</span></div>
+          <div class="ac-footer"><div class="ac-weight">كغ 420</div><div class="ac-price-area"><div class="ac-price">8,500</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'جمل عربي أصيل',price:'8500',emoji:'🐪',badge:'جديد',badgeClass:'bg-green',loc:'توزر',age:'5 سنوات',weight:'420 كغ',seller:'عبدالله الجريبي',sellerColor:'linear-gradient(135deg,#795548,#4e342e)',sellerInit:'ع',rating:'4.9',reviews:'44',id:'camel1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: حصان — FIX: added openAnimalModal -->
+      <div class="animal-card" onclick="openAnimalModal({name:'حصان عربي أصيل',price:'22000',emoji:'🐴',badge:'مميز',badgeClass:'bg-gold',loc:'المهدية',age:'4 سنوات',weight:'380 كغ',seller:'رضا المنصوري',sellerColor:'linear-gradient(135deg,#9c27b0,#4a148c)',sellerInit:'ر',rating:'5.0',reviews:'28',id:'horse1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=400&q=80" alt="حصان" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#efebe9,#795548);">🐴</div>
+          <span class="ac-badge bg-gold">مميز</span>
+          <button class="ac-heart" id="heart_horse1" onclick="event.stopPropagation();toggleFav('horse1','حصان عربي أصيل','22,000 دت','🐴',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">حصان عربي أصيل</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>المهدية</div><div class="ac-age">4 سنوات</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#9c27b0,#4a148c);">ر</div><span class="seller-name">رضا المنصوري</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">5.0 (28)</span></div>
+          <div class="ac-footer"><div class="ac-weight">كغ 380</div><div class="ac-price-area"><div class="ac-price">22,000</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'حصان عربي أصيل',price:'22000',emoji:'🐴',badge:'مميز',badgeClass:'bg-gold',loc:'المهدية',age:'4 سنوات',weight:'380 كغ',seller:'رضا المنصوري',sellerColor:'linear-gradient(135deg,#9c27b0,#4a148c)',sellerInit:'ر',rating:'5.0',reviews:'28',id:'horse1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: أرانب — FIX: added openAnimalModal -->
+      <div class="animal-card" onclick="openAnimalModal({name:'أرانب نيوزيلندي أبيض',price:'85',emoji:'🐇',badge:'جديد',badgeClass:'bg-green',loc:'بن عردوس',age:'قطيع',weight:'2.5 كغ',seller:'سامي الحامدي',sellerColor:'linear-gradient(135deg,#00bcd4,#006064)',sellerInit:'س',rating:'4.5',reviews:'33',id:'rabbit1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&q=80" alt="أرانب" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#f3e5f5,#e1bee7);">🐇</div>
+          <span class="ac-badge bg-green">جديد</span>
+          <button class="ac-heart" id="heart_rabbit1" onclick="event.stopPropagation();toggleFav('rabbit1','أرانب نيوزيلندي','85 دت','🐇',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">أرانب نيوزيلندي أبيض</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>بن عردوس</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#00bcd4,#006064);">س</div><span class="seller-name">سامي الحامدي</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★☆</span><span class="rating-n">4.5 (33)</span></div>
+          <div class="ac-footer"><div class="ac-weight">قطيع</div><div class="ac-price-area"><div class="ac-price">85</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'أرانب نيوزيلندي أبيض',price:'85',emoji:'🐇',badge:'جديد',badgeClass:'bg-green',loc:'بن عردوس',age:'قطيع',weight:'2.5 كغ',seller:'سامي الحامدي',sellerColor:'linear-gradient(135deg,#00bcd4,#006064)',sellerInit:'س',rating:'4.5',reviews:'33',id:'rabbit1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+
+      <!-- CARD: نحل — FIX: added openAnimalModal -->
+      <div class="animal-card" onclick="openAnimalModal({name:'نحل مع خلايا كاملة',price:'650',emoji:'🍯',badge:'مميز',badgeClass:'bg-gold',loc:'زغوان',age:'موسم كامل',weight:'طبيعي',seller:'حسن البكوش',sellerColor:'linear-gradient(135deg,#ff9800,#bf360c)',sellerInit:'ح',rating:'4.9',reviews:'55',id:'bee1'})">
+        <div class="ac-photo">
+          <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&q=80" alt="نحل" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="emoji-fill" style="display:none;background:linear-gradient(145deg,#fff8e1,#f9a825);">🍯</div>
+          <span class="ac-badge bg-gold">مميز</span>
+          <button class="ac-heart" id="heart_bee1" onclick="event.stopPropagation();toggleFav('bee1','نحل مع خلايا','650 دت','🍯',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        </div>
+        <div class="ac-body">
+          <div class="ac-name">نحل مع خلايا كاملة</div>
+          <div class="ac-meta"><div class="ac-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>زغوان</div></div>
+          <div class="ac-seller"><div class="seller-avt" style="background:linear-gradient(135deg,#ff9800,#bf360c);">ح</div><span class="seller-name">حسن البكوش</span><div class="seller-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div></div>
+          <div class="ac-rating"><span class="stars-s">★★★★★</span><span class="rating-n">4.9 (55)</span></div>
+          <div class="ac-footer"><div class="ac-weight">طبيعة</div><div class="ac-price-area"><div class="ac-price">650</div><div class="ac-unit">دت</div></div>
+          <button class="ac-detail" onclick="event.stopPropagation();openAnimalModal({name:'نحل مع خلايا كاملة',price:'650',emoji:'🍯',badge:'مميز',badgeClass:'bg-gold',loc:'زغوان',age:'موسم كامل',weight:'طبيعي',seller:'حسن البكوش',sellerColor:'linear-gradient(135deg,#ff9800,#bf360c)',sellerInit:'ح',rating:'4.9',reviews:'55',id:'bee1'})">عرض التفاصيل</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <div class="page-btn disabled">›</div>
+      <div class="page-btn active">1</div>
+      <div class="page-btn" onclick="changePage(this,2)">2</div>
+      <div class="page-btn" onclick="changePage(this,3)">3</div>
+      <div class="page-btn" onclick="changePage(this,4)">4</div>
+      <div class="page-btn" onclick="changePage(this,5)">5</div>
+      <div class="page-btn" style="cursor:default">...</div>
+      <div class="page-btn" onclick="changePage(this,387)">387</div>
+      <div class="page-btn" onclick="changePage(this,'next')">‹</div>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="right-sidebar">
+    <div class="rs-box">
+      <div class="sell-box">
+        <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h4>لديك حيوان أو منتج تريد بيعه ؟</h4>
+        <p>أضف إعلانك في دقائق ووصل إلى آلاف المشترين</p>
+        <button class="add-btn" onclick="showModal('sellModal')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          أضف إعلان الآن
+        </button>
+      </div>
+    </div>
+    <div class="rs-box">
+      <div class="transport-box">
+        <div class="tb-photo" onclick="showModal('transportModal')">🚚</div>
+        <div class="tb-body">
+          <h4>خدمات النقل</h4>
+          <p>نقل الحيوانات بأمان إلى جميع أنحاء تونس</p>
+          <button class="tb-btn" onclick="showModal('transportModal')">احجز الآن</button>
+        </div>
+      </div>
+    </div>
+    <div class="rs-box">
+      <div class="adv-box">
+        <div class="adv-icon">📢</div>
+        <h4>إعلانك هنا</h4>
+        <p>وصل إلى آلاف العملاء أعلن عن منتجاتك أو خدماتك</p>
+        <button class="adv-btn" onclick="showModal('advModal')">أضف إعلانك</button>
+      </div>
+    </div>
+    <div class="rs-box">
+      <div class="help-box">
+        <div class="help-icon">🎧</div>
+        <div class="help-body">
+          <h4>هل تحتاج مساعدة ؟</h4>
+          <p>فريقنا متاح لمساعدتك 24/7</p>
+          <button class="help-btn" onclick="showModal('contactModal')">تواصل معنا الآن</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="sbar-item" onclick="showModal('communityModal')"><div class="sbar-icon">🐄</div><div class="sbar-num">+25K</div><div class="sbar-lbl">مستخدم نشط</div></div>
+  <div class="sbar-item" onclick="document.querySelector('.page-body').scrollIntoView({behavior:'smooth'})"><div class="sbar-icon">🐑</div><div class="sbar-num">+15K</div><div class="sbar-lbl">حيوان معروض</div></div>
+  <div class="sbar-item" onclick="showModal('trustModal')"><div class="sbar-icon">🔄</div><div class="sbar-num">+8K</div><div class="sbar-lbl">مربي موثوق</div></div>
+  <div class="sbar-item" onclick="showModal('contactModal')"><div class="sbar-icon">⏱️</div><div class="sbar-num">24/7</div><div class="sbar-lbl">دعم فني</div></div>
+  <div class="sbar-item" onclick="showModal('trustModal')"><div class="sbar-icon">🛡️</div><div class="sbar-num">100%</div><div class="sbar-lbl">معاملات آمنة</div></div>
+</div>
+
+<!-- BOTTOM ROW -->
+<div class="bottom-row">
+  <div class="br-service" onclick="showModal('mapModal')">
+    <div class="brs-icon">📍</div>
+    <div><strong>خدمة في جميع أنحاء تونس</strong><span>تغطية 24 ولاية</span><a>عرض الخريطة ←</a></div>
+  </div>
+  <div class="br-map" onclick="showModal('mapModal')">
+    <div class="map-ph">🗺️</div>
+    <div class="map-foot"><span>خريطة تونس</span><a>عرض الخريطة ←</a></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-social">
+    <button class="ftsoc" onclick="showToast('فتح صفحة فيسبوك...','info')">f</button>
+    <button class="ftsoc" onclick="showToast('فتح صفحة إنستغرام...','info')" style="font-size:13px;">📷</button>
+    <button class="ftsoc" onclick="showToast('فتح قناة يوتيوب...','info')" style="font-size:11px;">▶</button>
+    <button class="ftsoc" onclick="showToast('فتح تيك توك...','info')" style="font-size:10px;">🎵</button>
+    <button class="ftsoc" onclick="showToast('فتح لينكدإن...','info')" style="font-size:10px;font-style:italic">in</button>
+  </div>
+  <div class="ft-links">
+    <a onclick="showModal('contactModal')">اتصل بنا</a>
+    <a onclick="showModal('trustModal')">عن أمانة</a>
+    <a onclick="showToast('عرض الشروط والأحكام...','info')">الشروط والأحكام</a>
+    <a onclick="showToast('عرض سياسة الخصوصية...','info')">سياسة الخصوصية</a>
+  </div>
+  <div class="ft-copy">© 2025 - جميع الحقوق محفوظة</div>
+  <div class="ft-app">
+    <button class="app-store-btn" onclick="showToast('تحميل التطبيق من Google Play...','info')">📱 Google Play</button>
+    <button class="app-store-btn" onclick="showToast('تحميل التطبيق من App Store...','info')">🍎 App Store</button>
+  </div>
+  <div class="ft-logo" onclick="scrollToTop()">
+    <div><div class="ftname">AMANA</div><div class="fttag">منصة الفلاحة و الحيوانات الأولى في تونس</div></div>
+    <div style="width:34px;height:34px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+      <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M20 4 L34 10 L34 22 C34 30 20 37 20 37 C20 37 6 30 6 22 L6 10 Z" fill="rgba(255,255,255,.3)" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/><path d="M15 24 Q14 18 17 16 Q19 14 22 15 Q25 14 26 17 L27 20 Q26 22 24 23 L22 24 Q20 26 20 28 L18 28 Q18 26 16 25 Z" fill="white"/></svg>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===================== STATE =====================
+let cart = [];
+let favorites = {};
+let currentAnimal = null;
+let selectedPayMethod = null;
+
+// ===================== HELPERS =====================
+function safePrice(raw) {
+  if (!raw) return 0;
+  const n = parseFloat(String(raw).replace(/[^0-9.]/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+function formatNum(n) {
+  return Math.round(n).toLocaleString('ar-TN');
+}
+function genRef() {
+  return 'AM-' + Math.floor(10000 + Math.random() * 90000);
+}
+
+// ===================== MODAL SYSTEM =====================
+function showModal(id) {
+  document.getElementById('mainOverlay').classList.add('active');
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'block';
+}
+function switchModal(fromId, toId) {
+  document.getElementById(fromId).style.display = 'none';
+  const el = document.getElementById(toId);
+  if (el) el.style.display = 'block';
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+  const visible = Array.from(document.querySelectorAll('.modal')).some(m => m.style.display === 'block');
+  if (!visible) document.getElementById('mainOverlay').classList.remove('active');
+}
+function closeAll() {
+  document.getElementById('mainOverlay').classList.remove('active');
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  closeDropdowns();
+}
+
+// FIXED: overlay click only closes when clicking the dark bg itself
+document.getElementById('mainOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeAll();
+});
+
+// ===================== DRAWERS =====================
+function openDrawer(id) {
+  document.getElementById(id).classList.add('open');
+  closeDropdowns();
+}
+function closeDrawer(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ===================== DROPDOWNS =====================
+function toggleDropdown(id) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  closeDropdowns();
+  if (!isOpen) el.classList.add('open');
+}
+function closeDropdowns() {
+  document.getElementById('profileDropdown').classList.remove('open');
+  document.getElementById('langDropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.user-block') && !e.target.closest('.profile-dropdown')) document.getElementById('profileDropdown').classList.remove('open');
+  if (!e.target.closest('.lang-btn') && !e.target.closest('.lang-dropdown')) document.getElementById('langDropdown').classList.remove('open');
+});
+
+// ===================== TOAST =====================
+function showToast(msg, type='info') {
+  const icons = {success:'✅', error:'❌', info:'ℹ️'};
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = '<span class="toast-icon">' + (icons[type]||'ℹ️') + '</span>' + msg;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; }, 2800);
+  setTimeout(() => t.remove(), 3200);
+}
+
+// ===================== FIELD VALIDATION =====================
+function setErr(id, show) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (show) el.classList.add('show'); else el.classList.remove('show');
+}
+function setInpErr(id, hasError) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (hasError) el.classList.add('error'); else el.classList.remove('error');
+}
+function validateField(inputId, errId, check) {
+  const el = document.getElementById(inputId);
+  const val = el ? el.value.trim() : '';
+  const bad = !check(val);
+  setInpErr(inputId, bad);
+  setErr(errId, bad);
+  return !bad;
+}
+
+// ===================== ANIMAL MODAL =====================
+function openAnimalModal(a) {
+  if (!a || !a.id) return;
+  currentAnimal = a;
+  document.getElementById('amodEmoji').textContent = a.emoji;
+  document.getElementById('amodName').textContent = a.name;
+  const p = safePrice(a.price);
+  document.getElementById('amodPrice').innerHTML = formatNum(p) + ' <span>دت</span>';
+  document.getElementById('amodBadge').textContent = a.badge;
+  document.getElementById('amodBadge').className = 'ac-badge amod-badge ' + a.badgeClass;
+  document.getElementById('amodStats').innerHTML =
+    '<div class="amod-stat"><div class="st-lbl">الموقع</div><div class="st-val">' + a.loc + '</div></div>' +
+    '<div class="amod-stat"><div class="st-lbl">العمر</div><div class="st-val">' + a.age + '</div></div>' +
+    '<div class="amod-stat"><div class="st-lbl">الوزن</div><div class="st-val">' + a.weight + '</div></div>' +
+    '<div class="amod-stat"><div class="st-lbl">الحالة</div><div class="st-val">بصحة ممتازة</div></div>';
+  document.getElementById('amodSeller').innerHTML =
+    '<div class="amod-seller-avt" style="background:' + a.sellerColor + '">' + a.sellerInit + '</div>' +
+    '<div><div class="amod-seller-name">' + a.seller + '</div>' +
+    '<div class="amod-seller-badge">✓ مربي موثوق</div>' +
+    '<div class="amod-seller-rating">★★★★★ ' + a.rating + ' (' + a.reviews + ' تقييم)</div></div>';
+  showModal('animalModal');
+}
+
+// FIXED: safe addToCart from modal
+function addToCartFromModal() {
+  if (!currentAnimal || !currentAnimal.id) {
+    showToast('خطأ في تحميل بيانات الحيوان', 'error');
+    return;
+  }
+  addToCart(currentAnimal);
+  closeAll();
+}
+
+// FIXED: open chat from modal without closing overlay weirdly
+function openChatFromModal() {
+  closeAll();
+  setTimeout(() => openDrawer('chatDrawer'), 200);
+}
+
+// ===================== CART =====================
+function addToCart(a) {
+  if (!a || !a.id) return;
+  const existing = cart.find(c => c.id === a.id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...a, qty: 1 });
+  }
+  updateCartBadge();
+  showToast('تمت إضافة "' + a.name + '" إلى السلة ✓', 'success');
+  renderCart();
+}
+
+function updateCartBadge() {
+  const total = cart.reduce((s, c) => s + c.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = total;
+  badge.style.display = total > 0 ? 'flex' : 'none';
+  badge.classList.add('pulse');
+  setTimeout(() => badge.classList.remove('pulse'), 600);
+}
+
+function renderCart() {
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  if (cart.length === 0) {
+    body.innerHTML = '<div class="cart-empty"><div class="ce-icon">🛒</div><p>سلة التسوق فارغة</p></div>';
+    foot.style.display = 'none';
+    return;
+  }
+  body.innerHTML = cart.map(c => {
+    const unitPrice = safePrice(c.price);
+    return '<div class="cart-item">' +
+      '<div class="cart-item-img">' + c.emoji + '</div>' +
+      '<div class="cart-item-info">' +
+        '<div class="cart-item-name">' + c.name + '</div>' +
+        '<div class="cart-item-seller">' + (c.seller || '') + '</div>' +
+        '<div class="cart-item-price">' + formatNum(unitPrice) + ' دت</div>' +
+        '<div class="cart-qty">' +
+          '<div class="qty-btn" onclick="changeQty(\'' + c.id + '\',-1)">−</div>' +
+          '<div class="qty-num">' + c.qty + '</div>' +
+          '<div class="qty-btn" onclick="changeQty(\'' + c.id + '\',1)">+</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cart-item-remove" onclick="removeFromCart(\'' + c.id + '\')">✕</div>' +
+    '</div>';
+  }).join('');
+  // FIXED: safe total calculation
+  const total = cart.reduce((s, c) => s + (safePrice(c.price) * c.qty), 0);
+  document.getElementById('cartTotalPrice').textContent = formatNum(total) + ' دت';
+  foot.style.display = 'block';
+}
+
+function changeQty(id, d) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + d);
+  updateCartBadge();
+  renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartBadge();
+  renderCart();
+  showToast('تم إزالة العنصر من السلة', 'info');
+}
+
+// ===================== CHECKOUT FLOW (NEW - COMPLETE) =====================
+function openCheckout() {
+  if (cart.length === 0) return;
+  closeDrawer('cartDrawer');
+  // Reset checkout form
+  selectedPayMethod = null;
+  checkoutGoTo(1);
+  ['coName','coPhone','coRegion','coAddress'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+    setInpErr(id, false);
+  });
+  ['coNameErr','coPhoneErr','coRegionErr','coAddressErr','coPayErr'].forEach(id => setErr(id, false));
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  document.getElementById('cardFields').style.display = 'none';
+  showModal('checkoutModal');
+}
+
+function checkoutGoTo(page) {
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('coPage' + i).style.display = i === page ? 'block' : 'none';
+    const step = document.getElementById('coStep' + i);
+    if (i < page) { step.className = 'checkout-step done'; }
+    else if (i === page) { step.className = 'checkout-step active'; }
+    else { step.className = 'checkout-step'; }
+  }
+}
+
+function checkoutNext(page) {
+  if (page === 2) {
+    // Validate step 1
+    const n1 = validateField('coName', 'coNameErr', v => v.length >= 3);
+    const n2 = validateField('coPhone', 'coPhoneErr', v => /^[0-9]{8}$/.test(v.replace(/\s/g,'')));
+    const n3 = validateField('coRegion', 'coRegionErr', v => v !== '');
+    const n4 = validateField('coAddress', 'coAddressErr', v => v.length >= 5);
+    if (!n1 || !n2 || !n3 || !n4) { showToast('يرجى تعبئة جميع الحقول المطلوبة', 'error'); return; }
+    // Render order summary
+    renderCheckoutSummary('coSummary');
+    checkoutGoTo(2);
+  } else if (page === 3) {
+    // Validate step 2 — payment method
+    if (!selectedPayMethod) { setErr('coPayErr', true); showToast('يرجى اختيار طريقة الدفع', 'error'); return; }
+    setErr('coPayErr', false);
+    // Validate card fields if card selected
+    if (selectedPayMethod === 'card') {
+      const c1 = validateField('cardNum', 'cardNumErr', v => v.replace(/\s/g,'').length >= 16);
+      const c2 = validateField('cardExp', 'cardExpErr', v => /^\d{2}\/\d{2}$/.test(v));
+      const c3 = validateField('cardCvv', 'cardCvvErr', v => /^\d{3}$/.test(v));
+      if (!c1 || !c2 || !c3) { showToast('يرجى التحقق من بيانات البطاقة', 'error'); return; }
+    }
+    // Show confirmation
+    const ref = genRef();
+    document.getElementById('confCodeNum').textContent = ref;
+    renderCheckoutSummary('coFinalSummary', true);
+    checkoutGoTo(3);
+  } else if (page === 1) {
+    checkoutGoTo(1);
+  }
+}
+
+function renderCheckoutSummary(targetId, showDelivery) {
+  const total = cart.reduce((s, c) => s + (safePrice(c.price) * c.qty), 0);
+  const delivery = 15;
+  const container = document.getElementById(targetId);
+  if (!container) return;
+  let html = '<div class="order-summary">';
+  cart.forEach(c => {
+    const lineTotal = safePrice(c.price) * c.qty;
+    html += '<div class="os-row"><span>' + c.emoji + ' ' + c.name + ' × ' + c.qty + '</span><span>' + formatNum(lineTotal) + ' دت</span></div>';
+  });
+  if (showDelivery) {
+    html += '<div class="os-row"><span>📦 رسوم التوصيل</span><span>' + delivery + ' دت</span></div>';
+    html += '<div class="os-row total"><span>المجموع الكلي</span><span>' + formatNum(total + delivery) + ' دت</span></div>';
+  } else {
+    html += '<div class="os-row total"><span>المجموع</span><span>' + formatNum(total) + ' دت</span></div>';
+  }
+  html += '</div>';
+  container.outerHTML = html;
+}
+
+function selectPayMethod(method) {
+  selectedPayMethod = method;
+  setErr('coPayErr', false);
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  document.getElementById('pay_' + method).classList.add('selected');
+  document.getElementById('cardFields').style.display = method === 'card' ? 'block' : 'none';
+}
+
+function formatCard(inp) {
+  let v = inp.value.replace(/\D/g,'').substring(0,16);
+  inp.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function formatExpiry(inp) {
+  let v = inp.value.replace(/\D/g,'');
+  if (v.length >= 3) v = v.substring(0,2) + '/' + v.substring(2,4);
+  inp.value = v;
+}
+
+function finalizeCheckout() {
+  closeAll();
+  cart = [];
+  selectedPayMethod = null;
+  updateCartBadge();
+  renderCart();
+  showToast('تم تأكيد طلبك بنجاح! 🎉', 'success');
+}
+
+// ===================== FAVORITES =====================
+function toggleFav(id, name, price, emoji, btn) {
+  if (favorites[id]) {
+    delete favorites[id];
+    btn.classList.remove('liked');
+    showToast('تم إزالة "' + name + '" من المفضلة', 'info');
+  } else {
+    favorites[id] = { id, name, price, emoji };
+    btn.classList.add('liked');
+    showToast('تمت إضافة "' + name + '" إلى المفضلة ❤️', 'success');
+  }
+  const favCount = Object.keys(favorites).length;
+  const badge = document.getElementById('favBadge');
+  badge.textContent = favCount;
+  badge.style.display = favCount > 0 ? 'flex' : 'none';
+  badge.classList.add('pulse');
+  setTimeout(() => badge.classList.remove('pulse'), 600);
+  renderFav();
+}
+
+function renderFav() {
+  const body = document.getElementById('favBody');
+  const favs = Object.values(favorites);
+  if (favs.length === 0) {
+    body.innerHTML = '<div class="cart-empty"><div class="ce-icon">❤️</div><p>قائمة المفضلة فارغة</p></div>';
+    return;
+  }
+  body.innerHTML = favs.map(f =>
+    '<div class="fav-item">' +
+    '<div class="fav-img">' + f.emoji + '</div>' +
+    '<div class="fav-info"><div class="fav-name">' + f.name + '</div><div class="fav-price">' + f.price + '</div></div>' +
+    '<div class="fav-remove" onclick="toggleFav(\'' + f.id + '\',\'' + f.name.replace(/'/g, '') + '\',\'' + f.price + '\',\'' + f.emoji + '\',document.getElementById(\'heart_' + f.id + '\'))">✕</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ===================== FILTERS =====================
+function toggleChk(el) {
+  const box = el.querySelector('.chk-box');
+  box.classList.toggle('checked');
+  applyFilter();
+}
+function resetFilters() {
+  document.querySelectorAll('.chk-box').forEach(b => b.classList.remove('checked'));
+  document.getElementById('priceMin').value = '0';
+  document.getElementById('priceMax').value = '20,000+';
+  document.getElementById('rangeFill').style.width = '70%';
+  document.getElementById('rangeThumb').style.left = '70%';
+  showToast('تم إعادة تعيين الفلاتر', 'info');
+  applyFilter();
+}
+function applyFilter() {
+  const n = Math.floor(Math.random() * 1000) + 2800;
+  document.getElementById('resultsNum').textContent = n.toLocaleString('ar');
+  document.getElementById('resultCount').textContent = n.toLocaleString('ar');
+  showToast('عرض ' + n.toLocaleString('ar') + ' نتيجة', 'success');
+}
+function moveThumb(e, track) {
+  const rect = track.getBoundingClientRect();
+  let pct = (e.clientX - rect.left) / rect.width * 100;
+  pct = Math.max(5, Math.min(95, pct));
+  document.getElementById('rangeFill').style.width = pct + '%';
+  document.getElementById('rangeThumb').style.left = pct + '%';
+}
+
+// ===================== CATEGORY FILTER =====================
+function filterCat(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showToast('عرض: ' + cat, 'info');
+}
+
+// ===================== SORT / VIEW =====================
+function sortResults(v) {
+  const msgs = {
+    newest: 'ترتيب حسب الأحدث',
+    'price-asc': 'ترتيب حسب السعر (الأقل)',
+    'price-desc': 'ترتيب حسب السعر (الأعلى)',
+    rating: 'ترتيب حسب التقييم'
+  };
+  showToast(msgs[v] || 'تم الترتيب', 'info');
+}
+function setView(mode, btn) {
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cols = mode === 'list' ? 1 : 4;
+  document.getElementById('grid1').style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+  document.getElementById('grid2').style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+}
+
+// ===================== SEARCH =====================
+const suggestions = ['خروف ممتاز', 'بقرة حلوب', 'حصان عربي', 'جمل أصيل', 'دجاج بلدي', 'أرانب نيوزيلندي', 'نحل وعسل', 'ماعز عارضي'];
+function showSuggestions() {
+  const val = document.getElementById('searchInput').value;
+  const box = document.getElementById('searchSuggestionsInline');
+  const filtered = suggestions.filter(s => val.length === 0 || s.includes(val));
+  if (filtered.length === 0) { box.classList.remove('open'); return; }
+  box.innerHTML = filtered.map(s =>
+    '<div class="ss-item" onclick="doSearch(\'' + s + '\')">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' + s +
+    '</div>'
+  ).join('');
+  box.classList.add('open');
+}
+function hideSuggestions() {
+  document.getElementById('searchSuggestionsInline').classList.remove('open');
+}
+function doSearch(term) {
+  document.getElementById('searchInput').value = term;
+  hideSuggestions();
+  showToast('جارٍ البحث عن: "' + term + '"...', 'info');
+}
+function doSearchFromInput() {
+  const val = document.getElementById('searchInput').value.trim();
+  if (val) doSearch(val);
+}
+
+// ===================== SELL MODAL (with validation) =====================
+let sellCatSelected = null;
+
+function selectSellCat(el, name) {
+  document.querySelectorAll('.sell-cat-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  sellCatSelected = name;
+  setErr('sellCatErr', false);
+}
+
+function sellNext(page) {
+  if (page === 2) {
+    if (!sellCatSelected) { setErr('sellCatErr', true); showToast('يرجى اختيار نوع الحيوان', 'error'); return; }
+    setErr('sellCatErr', false);
+  }
+  if (page === 3) {
+    const t1 = validateField('sellTitle', 'sellTitleErr', v => v.length >= 5);
+    const t2 = validateField('sellPrice', 'sellPriceErr', v => parseFloat(v) > 0);
+    const t3 = validateField('sellRegion', 'sellRegionErr', v => v !== '');
+    const t4 = validateField('sellDesc', 'sellDescErr', v => v.length >= 10);
+    if (!t1 || !t2 || !t3 || !t4) { showToast('يرجى تعبئة جميع الحقول المطلوبة', 'error'); return; }
+  }
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('sellPage' + i).style.display = i === page ? 'block' : 'none';
+    const step = document.getElementById('sellStep' + i);
+    if (i < page) step.className = 'sell-step done';
+    else if (i === page) step.className = 'sell-step active';
+    else step.className = 'sell-step';
+  }
+}
+
+function triggerPhotoUpload() {
+  document.getElementById('photoFileInput').click();
+}
+
+function handlePhotoUpload(inp) {
+  const preview = document.getElementById('photoPreviewRow');
+  preview.innerHTML = '';
+  Array.from(inp.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'width:70px;height:70px;border-radius:8px;object-fit:cover;border:1.5px solid var(--border)';
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+  if (inp.files.length > 0) showToast('تم اختيار ' + inp.files.length + ' صورة', 'success');
+}
+
+function publishAd() {
+  closeModal('sellModal');
+  sellCatSelected = null;
+  document.getElementById('successTitle').textContent = 'تم نشر إعلانك! 🎉';
+  document.getElementById('successText').textContent = 'إعلانك متاح الآن لآلاف المشترين على منصة أمانة';
+  showModal('successModal');
+}
+
+// ===================== AUTH (with validation) =====================
+function doLogin() {
+  const p1 = validateField('loginPhone', 'loginPhoneErr', v => v.length >= 4);
+  const p2 = validateField('loginPass', 'loginPassErr', v => v.length >= 4);
+  if (!p1 || !p2) return;
+  closeModal('loginModal');
+  document.getElementById('successTitle').textContent = 'تم تسجيل الدخول! 👋';
+  document.getElementById('successText').textContent = 'مرحباً بعودتك إلى منصة أمانة';
+  showModal('successModal');
+}
+
+function doRegister() {
+  const p1 = validateField('regName', 'regNameErr', v => v.length >= 3);
+  const p2 = validateField('regPhone', 'regPhoneErr', v => /^[0-9]{8}$/.test(v.replace(/\s/g,'')));
+  const p3 = validateField('regEmail', 'regEmailErr', v => v.includes('@') && v.includes('.'));
+  const p4 = validateField('regPass', 'regPassErr', v => v.length >= 8);
+  if (!p1 || !p2 || !p3 || !p4) return;
+  closeModal('registerModal');
+  document.getElementById('successTitle').textContent = 'تم إنشاء حسابك! 🎉';
+  document.getElementById('successText').textContent = 'مرحباً بك في مجتمع أمانة الزراعي';
+  showModal('successModal');
+}
+
+function doForgot() {
+  const ok = validateField('forgotPhone', 'forgotPhoneErr', v => /^[0-9]{8}$/.test(v.replace(/\s/g,'')));
+  if (!ok) return;
+  closeAll();
+  showToast('تم إرسال رمز التحقق إلى هاتفك ✓', 'success');
+}
+
+function doLogout() {
+  closeDropdowns();
+  showToast('تم تسجيل الخروج بنجاح', 'info');
+}
+
+// ===================== MISC =====================
+function setActiveNav(a) {
+  document.querySelectorAll('.navbar ul li a').forEach(el => el.classList.remove('active'));
+  a.classList.add('active');
+}
+function selectTransport(el) {
+  document.querySelectorAll('.transport-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectRegion(el) {
+  document.querySelectorAll('.region-chip').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  showToast('البحث في: ' + el.textContent + '...', 'info');
+}
+function bookTransport() {
+  const t0 = document.querySelector('.transport-opt.selected');
+  if (!t0) { setErr('transportTypeErr', true); showToast('يرجى اختيار نوع النقل', 'error'); return; }
+  setErr('transportTypeErr', false);
+  const p1 = validateField('transportFrom', 'transportFromErr', v => v.length >= 2);
+  const p2 = validateField('transportTo', 'transportToErr', v => v.length >= 2);
+  const p3 = validateField('transportDate', 'transportDateErr', v => v !== '');
+  if (!p1 || !p2 || !p3) return;
+  closeModal('transportModal');
+  document.getElementById('successTitle').textContent = 'تم تأكيد الحجز! 🚚';
+  document.getElementById('successText').textContent = 'سيتواصل معك السائق قريباً لتأكيد التفاصيل';
+  showModal('successModal');
+}
+function sendContact() {
+  const p1 = validateField('contactSubject', 'contactSubjectErr', v => v.length >= 3);
+  const p2 = validateField('contactMsg', 'contactMsgErr', v => v.length >= 10);
+  if (!p1 || !p2) return;
+  closeModal('contactModal');
+  showToast('تم إرسال رسالتك بنجاح ✓', 'success');
+}
+function openChat() {
+  closeAll();
+  setTimeout(() => openDrawer('chatDrawer'), 200);
+}
+function sendChatMsg() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const msgs = document.getElementById('chatMessages');
+  const now = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+  msgs.innerHTML += '<div class="chat-bubble sent">' + msg + '<div class="bubble-time">' + time + '</div></div>';
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    msgs.innerHTML += '<div class="chat-bubble received">شكراً على رسالتك، سأتواصل معك قريباً إن شاء الله<div class="bubble-time">' + time + '</div></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200);
+}
+function changeLang(lang) {
+  document.getElementById('langDropdown').classList.remove('open');
+  document.querySelector('.lang-btn').textContent = lang + ' ▾';
+  showToast('تم تغيير اللغة إلى ' + lang, 'info');
+}
+function changePage(btn, page) {
+  document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showToast('تحميل الصفحة ' + page + '...', 'info');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// init welcome
+setTimeout(() => showToast('مرحباً! اضغط على أي حيوان لتجربة الشراء 🐑', 'info'), 800);
+</script>
+</body>
+</html>

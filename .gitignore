@@ -1,0 +1,49 @@
+### Angular ###
+node_modules/
+dist/
+.angular/
+coverage/
+*.code-workspace
+
+### Spring ###
+target/
+*.class
+*.jar
+*.war
+*.log
+.classpath
+.project
+.settings/
+
+### IDE ###
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+### OS ###
+.DS_Store
+Thumbs.db
+*.tmp
+
+### ENV ###
+.env
+.env.local
+.env.*.local
+
+### Build & Dependencies ###
+*.o
+*.a
+.gradle/
+build/
+
+### Cache ###
+.cache/
+.npm/
+### Assets ###
+assets/*.png
+src/assets/*.png
+### Assets ###
+**/assets/

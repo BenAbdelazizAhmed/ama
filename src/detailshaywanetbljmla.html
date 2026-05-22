@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أغنام برقي ممتازة — جملة | أمانة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:14px; scroll-behavior:smooth; }
+body { font-family:'Cairo',sans-serif; background:#f2f4f3; direction:rtl; color:#1a1a1a; line-height:1.5; }
+a { text-decoration:none; color:inherit; }
+button,input,select,textarea { font-family:'Cairo',sans-serif; }
+img { display:block; max-width:100%; }
+ul { list-style:none; }
+
+:root {
+  --green:#1c7c3a; --green-dark:#155a2b; --green-light:#e6f4ec;
+  --orange:#e65100; --orange-light:#fff3e0; --orange-mid:#f57c00;
+  --gold:#f59f00; --red:#e53935; --blue:#1565c0;
+  --border:#e2e6e3; --bg:#f2f4f3; --white:#fff;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07);
+  --shadow-md:0 3px 12px rgba(0,0,0,.1);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.15);
+  --radius:10px;
+}
+
+/* ─── HEADER ─── */
+.header { background:#fff; border-bottom:1px solid var(--border); height:62px; display:flex; align-items:center; padding:0 20px; gap:14px; position:sticky; top:0; z-index:300; box-shadow:var(--shadow-sm); }
+.logo { display:flex; align-items:center; gap:9px; flex-shrink:0; cursor:pointer; }
+.logo-mark { width:46px; height:46px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; }
+.logo-text .lname { font-size:20px; font-weight:900; color:var(--green); }
+.logo-text .ltag  { font-size:9px; color:#888; font-weight:500; }
+.search-wrap { flex:1; max-width:520px; }
+.search-bar { display:flex; align-items:center; border:1.5px solid #d4d9d6; border-radius:8px; overflow:hidden; background:#f8faf9; }
+.search-bar input { flex:1; border:none; outline:none; padding:9px 14px; font-size:13px; color:#333; background:transparent; }
+.search-bar input::placeholder { color:#b0bab4; }
+.search-bar .sbtn { background:var(--green); color:#fff; border:none; padding:9px 22px; font-size:13px; font-weight:800; cursor:pointer; }
+.header-right { display:flex; align-items:center; gap:4px; margin-right:auto; }
+.wholesale-badge-header { background:var(--orange); color:#fff; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:800; display:flex; align-items:center; gap:5px; }
+.hico { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 10px; cursor:pointer; position:relative; border-radius:8px; transition:.15s; }
+.hico:hover { background:#f0f7f2; }
+.hico svg { width:22px; height:22px; color:#555; stroke-width:1.7; }
+.hico .lbl { font-size:10px; color:#666; font-weight:600; }
+.badge { position:absolute; top:-5px; right:-8px; background:var(--green); color:#fff; font-size:9px; font-weight:800; border-radius:10px; padding:1px 5px; min-width:17px; text-align:center; }
+.badge.rb { background:var(--red); }
+.user-block { display:flex; align-items:center; gap:8px; padding:4px 12px; cursor:pointer; border-left:1px solid var(--border); }
+.user-avt { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#78909c,#546e7a); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; }
+.user-meta .uname { font-size:13px; font-weight:800; color:#222; }
+.user-meta .utitle { font-size:10px; color:var(--orange); font-weight:700; }
+
+/* ─── NAVBAR ─── */
+.navbar { background:#fff; border-bottom:2px solid var(--border); display:flex; align-items:center; padding:0 20px; }
+.navbar ul { display:flex; gap:0; overflow-x:auto; scrollbar-width:none; }
+.navbar ul::-webkit-scrollbar { display:none; }
+.nav-link { display:flex; align-items:center; gap:5px; padding:11px 12px; color:#4a5a4e; font-size:12.5px; font-weight:600; white-space:nowrap; border-bottom:2.5px solid transparent; margin-bottom:-2px; transition:.15s; cursor:pointer; }
+.nav-link:hover { color:var(--green); }
+.nav-link.active { color:var(--orange); border-bottom-color:var(--orange); }
+.nav-link svg { width:15px; height:15px; stroke-width:1.8; }
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb { background:#fff; border-bottom:1px solid var(--border); padding:9px 20px; }
+.bc-inner { display:flex; align-items:center; gap:6px; font-size:12px; color:#888; }
+.bc-inner a { color:var(--green); cursor:pointer; }
+.bc-inner a:hover { text-decoration:underline; }
+
+/* ─── WHOLESALE HERO STRIP ─── */
+.wholesale-strip { background:linear-gradient(90deg,#1a3a2a,var(--orange)); padding:10px 24px; display:flex; align-items:center; justify-content:space-between; }
+.ws-left { display:flex; align-items:center; gap:12px; }
+.ws-tag { background:rgba(255,255,255,.2); color:#fff; padding:3px 12px; border-radius:20px; font-size:11px; font-weight:800; display:flex; align-items:center; gap:5px; }
+.ws-text { color:rgba(255,255,255,.9); font-size:12px; font-weight:600; }
+.ws-right { display:flex; align-items:center; gap:16px; }
+.ws-stat { text-align:center; }
+.ws-stat-n { font-size:16px; font-weight:900; color:#ffd54f; }
+.ws-stat-l { font-size:10px; color:rgba(255,255,255,.8); }
+
+/* ─── PAGE LAYOUT ─── */
+.page-wrap { max-width:1280px; margin:0 auto; padding:18px 20px; display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start; }
+.left-col { display:flex; flex-direction:column; gap:16px; }
+.right-col { display:flex; flex-direction:column; gap:14px; position:sticky; top:80px; }
+
+/* ─── GALLERY ─── */
+.gallery-box { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.main-photo { position:relative; height:420px; overflow:hidden; background:#e8f5e9; cursor:zoom-in; }
+.main-photo img { width:100%; height:100%; object-fit:cover; transition:.35s; }
+.main-photo:hover img { transform:scale(1.03); }
+.photo-badges { position:absolute; top:14px; right:14px; display:flex; flex-direction:column; gap:6px; z-index:2; }
+.badge-pill { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; color:#fff; display:inline-block; }
+.badge-orange { background:var(--orange); }
+.badge-green  { background:var(--green); }
+.badge-gold   { background:var(--gold); }
+.photo-actions { position:absolute; top:14px; left:14px; display:flex; gap:8px; z-index:2; }
+.photo-action-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.95); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.photo-action-btn:hover { transform:scale(1.1); }
+.photo-action-btn svg { width:17px; height:17px; color:#555; }
+.nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.9); border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.15); transition:.2s; z-index:2; }
+.nav-btn:hover { background:#fff; }
+.nav-btn.prev { right:14px; }
+.nav-btn.next { left:14px; }
+.photo-count { position:absolute; bottom:14px; left:14px; background:rgba(0,0,0,.55); color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+/* wholesale watermark */
+.wholesale-stamp { position:absolute; bottom:14px; right:14px; background:rgba(230,81,0,.85); color:#fff; font-size:11px; font-weight:800; padding:5px 12px; border-radius:8px; display:flex; align-items:center; gap:5px; backdrop-filter:blur(4px); z-index:2; }
+.thumbnails { display:flex; gap:8px; padding:12px; overflow-x:auto; }
+.thumbnails::-webkit-scrollbar { height:4px; }
+.thumbnails::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+.thumb { width:72px; height:72px; border-radius:8px; overflow:hidden; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:.15s; }
+.thumb.active { border-color:var(--orange); }
+.thumb img { width:100%; height:100%; object-fit:cover; }
+.thumb-more { width:72px; height:72px; border-radius:8px; border:2px dashed #ddd; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:11px; font-weight:800; color:#888; cursor:pointer; gap:3px; flex-shrink:0; transition:.15s; }
+.thumb-more:hover { border-color:var(--orange); color:var(--orange); }
+
+/* ─── PRODUCT INFO ─── */
+.product-info { background:#fff; border:1px solid var(--border); border-radius:12px; padding:22px; }
+.pi-wholesale-tag { display:inline-flex; align-items:center; gap:6px; background:var(--orange-light); color:var(--orange); font-size:11px; font-weight:800; padding:4px 12px; border-radius:20px; margin-bottom:10px; border:1px solid rgba(230,81,0,.2); }
+.pi-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; flex-wrap:wrap; gap:10px; }
+.pi-title { font-size:22px; font-weight:900; color:#111; }
+.pi-views { display:flex; align-items:center; gap:5px; font-size:12px; color:#999; }
+.pi-meta { display:flex; align-items:center; gap:14px; margin-bottom:12px; flex-wrap:wrap; }
+.pi-loc { display:flex; align-items:center; gap:5px; font-size:13px; color:#666; }
+.pi-loc svg, .pi-meta svg { width:14px; height:14px; }
+.pi-date { font-size:12px; color:#aaa; }
+.pi-verified { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--green); font-weight:700; }
+.rating-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.stars-lg { color:#f59f00; font-size:16px; }
+.rating-score { font-size:14px; font-weight:800; color:#333; }
+.rating-count { font-size:12px; color:#888; }
+.pi-divider { border:none; border-top:1px solid #f0f2f1; margin:14px 0; }
+
+/* PRICE TIERS — main block */
+.price-tiers-main { background:linear-gradient(135deg,#fff9f5,#fff3e0); border:1.5px solid rgba(230,81,0,.25); border-radius:12px; padding:16px; margin-bottom:14px; }
+.ptm-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.ptm-title { font-size:13px; font-weight:900; color:#333; display:flex; align-items:center; gap:6px; }
+.ptm-title svg { width:16px; height:16px; color:var(--orange); }
+.ptm-best-badge { font-size:10px; font-weight:800; background:var(--orange); color:#fff; padding:2px 10px; border-radius:12px; }
+.ptm-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.ptm-col { background:#fff; border-radius:10px; padding:12px 8px; text-align:center; border:1.5px solid #eee; cursor:pointer; transition:.2s; }
+.ptm-col:hover, .ptm-col.selected { border-color:var(--orange); box-shadow:0 2px 10px rgba(230,81,0,.15); transform:translateY(-2px); }
+.ptm-col.selected .ptm-qty { color:var(--orange); }
+.ptm-qty { font-size:11px; font-weight:700; color:#888; margin-bottom:4px; }
+.ptm-price { font-size:18px; font-weight:900; color:var(--green); margin-bottom:2px; line-height:1; }
+.ptm-unit { font-size:10px; color:#aaa; margin-bottom:4px; }
+.ptm-disc { font-size:11px; color:var(--orange); font-weight:800; background:var(--orange-light); padding:2px 8px; border-radius:12px; display:inline-block; }
+.ptm-savings { text-align:center; font-size:11.5px; color:#666; margin-top:10px; padding-top:10px; border-top:1px dashed #f0e0d0; }
+.ptm-savings span { color:var(--green); font-weight:800; }
+
+/* SPECS */
+.specs-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
+.spec-item { background:#f8faf9; border-radius:10px; padding:12px 8px; text-align:center; }
+.spec-icon { font-size:20px; margin-bottom:4px; }
+.spec-label { font-size:10px; color:#888; font-weight:600; }
+.spec-value { font-size:12.5px; font-weight:800; color:#333; margin-top:2px; }
+
+/* CERTIFICATIONS */
+.certs-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.cert-chip { display:flex; align-items:center; gap:5px; background:#e6f4ec; color:var(--green); font-size:11.5px; font-weight:700; padding:5px 12px; border-radius:20px; border:1px solid rgba(28,124,58,.2); }
+.cert-chip svg { width:13px; height:13px; }
+
+/* ACTION ROW */
+.action-row { display:flex; gap:10px; flex-wrap:wrap; }
+.btn-quote-main { background:var(--orange); color:#fff; border:none; flex:1; min-width:140px; padding:13px; border-radius:9px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:.15s; }
+.btn-quote-main:hover { background:#bf360c; }
+.btn-fav { background:#fff; color:#666; border:1.5px solid #ddd; padding:12px 18px; border-radius:9px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:.15s; }
+.btn-fav:hover { border-color:var(--red); color:var(--red); }
+.btn-share { background:#fff; color:#666; border:1.5px solid #ddd; padding:12px 18px; border-radius:9px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:.15s; }
+.btn-share:hover { border-color:var(--green); color:var(--green); }
+
+/* ─── STOCK BANNER ─── */
+.stock-banner { background:linear-gradient(90deg,#1a3a2a,#1c7c3a); border-radius:10px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.sb-left { display:flex; align-items:center; gap:10px; }
+.sb-bar-wrap { }
+.sb-label { font-size:11px; color:rgba(255,255,255,.8); margin-bottom:5px; }
+.sb-track { width:220px; height:8px; background:rgba(255,255,255,.2); border-radius:4px; overflow:hidden; }
+.sb-fill { height:100%; background:linear-gradient(90deg,#ffd54f,var(--orange)); border-radius:4px; }
+.sb-numbers { font-size:11px; color:rgba(255,255,255,.9); margin-top:4px; display:flex; justify-content:space-between; width:220px; }
+.sb-urgency { background:rgba(255,255,255,.1); border-radius:8px; padding:8px 14px; text-align:center; }
+.sb-urgency-n { font-size:18px; font-weight:900; color:#ffd54f; }
+.sb-urgency-l { font-size:10px; color:rgba(255,255,255,.8); }
+
+/* ─── TABS ─── */
+.tabs-box { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.tabs-nav { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; }
+.tabs-nav::-webkit-scrollbar { display:none; }
+.tab-btn { flex-shrink:0; padding:12px 14px; font-size:12.5px; font-weight:700; color:#666; cursor:pointer; border-bottom:2.5px solid transparent; margin-bottom:-1px; transition:.15s; text-align:center; background:none; border-top:none; border-right:none; border-left:none; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+.tab-btn svg { width:14px; height:14px; }
+.tab-btn:hover { color:var(--orange); }
+.tab-btn.active { color:var(--orange); border-bottom-color:var(--orange); }
+.tab-content { padding:20px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* DESCRIPTION TAB */
+.desc-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.desc-text { font-size:13px; color:#444; line-height:2; }
+.desc-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.desc-tag { background:#f0f7f2; color:var(--green); border-radius:20px; padding:4px 12px; font-size:11px; font-weight:700; }
+.attrs-grid { display:flex; flex-direction:column; gap:0; }
+.attr-row { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid #f5f5f5; }
+.attr-row:last-child { border-bottom:none; }
+.attr-label { font-size:12px; color:#888; }
+.attr-value { font-size:12px; font-weight:700; color:#333; }
+
+/* CONDITIONS TAB */
+.conditions-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.cond-card { border:1px solid var(--border); border-radius:10px; padding:14px; }
+.cond-icon { font-size:22px; margin-bottom:6px; }
+.cond-title { font-size:12.5px; font-weight:800; color:#333; margin-bottom:4px; }
+.cond-text { font-size:12px; color:#666; line-height:1.7; }
+.cond-highlight { color:var(--orange); font-weight:800; }
+
+/* DELIVERY TAB */
+.delivery-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+.delivery-table th { background:#f8faf9; padding:10px 12px; text-align:right; font-weight:800; color:#555; border-bottom:1px solid var(--border); }
+.delivery-table td { padding:10px 12px; border-bottom:1px solid #f5f5f5; color:#333; }
+.delivery-table tr:last-child td { border-bottom:none; }
+.dl-free { color:var(--green); font-weight:800; }
+.dl-paid { color:var(--orange); font-weight:700; }
+.map-box-sm { background:linear-gradient(135deg,#c8e6d4,#a8d8b8); border-radius:10px; height:140px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; cursor:pointer; margin-top:14px; }
+.map-pin { position:absolute; font-size:26px; filter:drop-shadow(0 3px 6px rgba(0,0,0,.3)); }
+.map-label { position:absolute; bottom:10px; right:10px; background:#fff; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700; color:#333; }
+.map-link { position:absolute; bottom:10px; left:10px; background:var(--green); color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; }
+
+/* REVIEWS TAB */
+.review-summary { display:flex; gap:20px; align-items:center; padding-bottom:14px; border-bottom:1px solid #f0f0f0; margin-bottom:14px; }
+.review-big { text-align:center; flex-shrink:0; }
+.review-score { font-size:44px; font-weight:900; color:var(--green); line-height:1; }
+.review-stars { color:#f59f00; font-size:16px; margin:4px 0; }
+.review-count { font-size:12px; color:#888; }
+.rating-bars { flex:1; display:flex; flex-direction:column; gap:5px; }
+.rbar-row { display:flex; align-items:center; gap:8px; }
+.rbar-label { font-size:11px; color:#888; width:30px; }
+.rbar-track { flex:1; height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; }
+.rbar-fill { height:100%; background:var(--gold); border-radius:3px; }
+.rbar-count { font-size:11px; color:#aaa; width:20px; }
+.review-item { padding:12px 0; border-bottom:1px solid #f5f5f5; }
+.review-item:last-child { border-bottom:none; }
+.review-header { display:flex; justify-content:space-between; margin-bottom:6px; }
+.reviewer { display:flex; align-items:center; gap:8px; }
+.reviewer-avt { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px; }
+.reviewer-name { font-size:13px; font-weight:800; }
+.reviewer-meta { font-size:11px; color:#aaa; }
+.review-stars-sm { color:#f59f00; font-size:12px; }
+.review-text { font-size:12.5px; color:#555; line-height:1.8; }
+.review-chips { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.review-chip { font-size:10px; font-weight:700; background:#f0f7f2; color:var(--green); padding:2px 8px; border-radius:12px; }
+
+/* SIMILAR */
+.similar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.sim-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer; transition:.2s; background:#fff; }
+.sim-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.sim-photo { height:90px; background:#f0f7f2; display:flex; align-items:center; justify-content:center; font-size:34px; position:relative; overflow:hidden; }
+.sim-photo img { width:100%; height:100%; object-fit:cover; }
+.sim-badge { position:absolute; top:6px; right:6px; padding:2px 7px; border-radius:12px; font-size:9px; font-weight:800; color:#fff; }
+.sim-body { padding:9px; }
+.sim-name { font-size:11.5px; font-weight:800; color:#222; margin-bottom:2px; }
+.sim-loc { font-size:10px; color:#888; margin-bottom:4px; }
+.sim-price { font-size:13px; font-weight:900; color:var(--green); }
+.sim-disc { font-size:10px; color:var(--orange); font-weight:700; }
+
+/* ─── RIGHT COL BOXES ─── */
+.quote-box { background:#fff; border:1.5px solid var(--orange); border-radius:12px; padding:18px; }
+.qb-head { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.qb-title { font-size:15px; font-weight:900; color:#222; }
+.qb-sub { font-size:11px; color:#888; margin-bottom:14px; }
+.qb-price-row { display:flex; align-items:baseline; gap:6px; margin-bottom:12px; padding:10px; background:#f8faf9; border-radius:8px; }
+.qb-price { font-size:26px; font-weight:900; color:var(--green); }
+.qb-currency { font-size:13px; color:#888; }
+.qb-per { font-size:11px; color:#aaa; }
+.qb-selected-tier { font-size:11px; color:var(--orange); font-weight:700; background:var(--orange-light); padding:2px 10px; border-radius:12px; }
+.qty-selector { margin-bottom:12px; }
+.qty-label { font-size:12px; font-weight:700; color:#555; margin-bottom:6px; }
+.qty-row { display:flex; align-items:center; gap:8px; }
+.qty-dec, .qty-inc { width:34px; height:34px; border-radius:7px; border:1.5px solid var(--border); background:#fff; cursor:pointer; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; transition:.15s; }
+.qty-dec:hover { border-color:var(--orange); color:var(--orange); }
+.qty-inc:hover { border-color:var(--green); color:var(--green); }
+.qty-input { width:80px; text-align:center; border:1.5px solid var(--border); border-radius:7px; padding:7px; font-size:14px; font-weight:800; outline:none; color:#333; }
+.qty-input:focus { border-color:var(--orange); }
+.qty-hint { font-size:11px; color:#aaa; margin-top:4px; }
+.total-row { background:linear-gradient(90deg,#e6f4ec,#f0f9f4); border-radius:8px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.total-label { font-size:12px; font-weight:700; color:#555; }
+.total-price { font-size:20px; font-weight:900; color:var(--green); }
+.total-sub { font-size:10px; color:#888; }
+.btn-quote-big { width:100%; background:var(--orange); color:#fff; border:none; padding:14px; border-radius:9px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:.15s; margin-bottom:8px; }
+.btn-quote-big:hover { background:#bf360c; }
+.btn-add-list { width:100%; background:#fff; color:var(--green); border:2px solid var(--green); padding:11px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:.15s; }
+.btn-add-list:hover { background:var(--green-light); }
+.qb-response-time { display:flex; align-items:center; gap:6px; font-size:11px; color:#888; margin-top:8px; justify-content:center; }
+.qb-response-time svg { width:13px; height:13px; color:var(--green); }
+
+/* SUPPLIER BOX */
+.supplier-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px; }
+.sup-title { font-size:11px; font-weight:800; color:#aaa; text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px; }
+.sup-profile { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.sup-avt { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:20px; flex-shrink:0; }
+.sup-name { font-size:15px; font-weight:900; color:#222; margin-bottom:2px; }
+.sup-verified { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--green); font-weight:700; }
+.sup-verified svg { width:12px; height:12px; }
+.sup-rating { font-size:12px; color:#888; margin-top:2px; }
+.sup-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
+.sstat { background:#f8faf9; border-radius:8px; padding:8px; text-align:center; }
+.sstat-n { font-size:14px; font-weight:900; color:var(--orange); }
+.sstat-l { font-size:10px; color:#888; margin-top:1px; }
+.sup-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+.sup-tag { font-size:10px; font-weight:700; padding:3px 9px; border-radius:12px; background:#f0f3f1; color:#666; }
+.sup-tag.green { background:var(--green-light); color:var(--green); }
+.sup-btn { width:100%; border:1.5px solid var(--border); background:#fff; color:#444; padding:9px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:.15s; }
+.sup-btn:hover { border-color:var(--green); color:var(--green); }
+.sup-btn svg { width:13px; height:13px; }
+
+/* TRUST BOX */
+.trust-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; }
+.trust-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:#222; margin-bottom:12px; }
+.trust-title svg { width:16px; height:16px; color:var(--green); }
+.trust-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:9px; }
+.trust-item:last-child { margin-bottom:0; }
+.trust-icon { font-size:16px; flex-shrink:0; margin-top:2px; }
+.trust-text strong { font-size:12px; font-weight:800; display:block; color:#333; margin-bottom:1px; }
+.trust-text span { font-size:11px; color:#888; }
+
+/* PAYMENT BOX */
+.payment-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; }
+.pay-title { font-size:13px; font-weight:800; color:#222; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.pay-title svg { width:16px; height:16px; color:var(--orange); }
+.pay-option { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-radius:8px; margin-bottom:6px; cursor:pointer; transition:.15s; border:1.5px solid transparent; }
+.pay-option:hover { background:#f8faf9; }
+.pay-option.selected { border-color:var(--orange); background:var(--orange-light); }
+.pay-left { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#333; }
+.pay-icon { font-size:18px; }
+.pay-right { font-size:11px; color:#888; }
+.pay-right.highlight { color:var(--green); font-weight:700; }
+
+/* TOAST */
+.toast-container { position:fixed; bottom:24px; left:24px; z-index:2000; display:flex; flex-direction:column; gap:8px; }
+.toast { background:#222; color:#fff; padding:11px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); animation:slideUp .3s ease; display:flex; align-items:center; gap:10px; min-width:240px; }
+.toast.success { background:var(--green); }
+.toast.orange  { background:var(--orange); }
+.toast.info    { background:var(--blue); }
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* MODAL */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
+.overlay.active { display:flex; }
+.modal { background:#fff; border-radius:16px; padding:24px; max-width:500px; width:92%; position:relative; animation:slideUp .25s ease; max-height:90vh; overflow-y:auto; }
+.modal-close { position:absolute; top:12px; left:12px; width:30px; height:30px; border-radius:50%; border:1px solid #ddd; background:#fff; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
+.modal h2 { font-size:17px; font-weight:900; color:#222; margin-bottom:4px; }
+.modal .sub { font-size:12px; color:#888; margin-bottom:16px; }
+.form-group { margin-bottom:11px; }
+.form-group label { font-size:12px; font-weight:700; color:#444; display:block; margin-bottom:4px; }
+.form-input { width:100%; border:1.5px solid #ddd; border-radius:8px; padding:9px 12px; font-size:13px; font-family:'Cairo',sans-serif; outline:none; color:#333; }
+.form-input:focus { border-color:var(--orange); }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.modal-btn { width:100%; background:var(--orange); color:#fff; border:none; padding:13px; border-radius:9px; font-size:13.5px; font-weight:800; cursor:pointer; margin-top:4px; }
+.modal-summary { background:#f8faf9; border-radius:10px; padding:12px; margin-bottom:14px; }
+.ms-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; }
+.ms-row strong { font-weight:800; }
+.ms-total { font-size:14px; font-weight:900; color:var(--green); border-top:1px solid #eee; padding-top:8px; margin-top:6px; display:flex; justify-content:space-between; }
+
+/* FOOTER */
+footer { background:#155a2b; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; }
+.ft-links { display:flex; gap:16px; flex-wrap:wrap; }
+.ft-links a { font-size:11px; color:rgba(255,255,255,.75); cursor:pointer; }
+.ft-copy { font-size:10.5px; color:rgba(255,255,255,.6); }
+.ft-logo { font-size:18px; font-weight:900; color:#fff; }
+</style>
+</head>
+<body>
+
+<!-- ══ QUOTE MODAL ══ -->
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <h2>📋 طلب عرض سعر بالجملة</h2>
+    <p class="sub">مزرعة المغربي — أغنام برقي ممتازة، سيدي بوزيد</p>
+    <div class="modal-summary">
+      <div class="ms-row"><span>الكمية المختارة</span><strong id="modal-qty">60 رأس</strong></div>
+      <div class="ms-row"><span>السعر / رأس</span><strong id="modal-pprice">1,305 د.ت</strong></div>
+      <div class="ms-row"><span>الخصم</span><strong id="modal-disc" style="color:var(--orange)">-10%</strong></div>
+      <div class="ms-total"><span>الإجمالي التقديري</span><span id="modal-total">78,300 د.ت</span></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>الكمية الفعلية</label><input class="form-input" type="number" id="modalQtyInput" placeholder="عدد الرؤوس" min="10" value="60"></div>
+      <div class="form-group"><label>تاريخ التسليم</label><input class="form-input" type="date"></div>
+    </div>
+    <div class="form-group"><label>ولاية التسليم</label>
+      <select class="form-input"><option>اختر الولاية</option><option>تونس</option><option>صفاقس</option><option>سوسة</option><option>قابس</option><option>بنزرت</option><option>سيدي بوزيد</option><option>القيروان</option></select>
+    </div>
+    <div class="form-group"><label>طريقة الدفع</label>
+      <select class="form-input"><option>اختر طريقة الدفع</option><option>دفع فوري كامل (-2%)</option><option>دفعة أولى 30%</option><option>دفع آجل 60 يوم</option></select>
+    </div>
+    <div class="form-group"><label>ملاحظات ومواصفات خاصة</label><textarea class="form-input" rows="2" placeholder="مواصفات الوزن، الجنس، السن، شروط خاصة..."></textarea></div>
+    <button class="modal-btn" onclick="submitQuote()">إرسال طلب عرض السعر ←</button>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L34 10 L34 22 C34 30 20 37 20 37 C20 37 6 30 6 22 L6 10 Z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>
+        <path d="M15 24 Q14 18 17 16 Q19 14 22 15 Q25 14 26 17 L27 20 Q26 22 24 23 L22 24 Q20 26 20 28 L18 28 Q18 26 16 25 Z" fill="white"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <div class="lname">AMANA</div>
+      <div class="ltag">منصة الفلاحة و الحيوانات الأولى في تونس</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" placeholder="ابحث عن منتج بالجملة...">
+      <button class="sbtn">بحث</button>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="wholesale-badge-header">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+      حساب جملة
+    </div>
+    <div class="user-block">
+      <div class="user-avt">م</div>
+      <div class="user-meta">
+        <div class="uname">محمد الفلاح</div>
+        <div class="utitle">مشتري بالجملة</div>
+      </div>
+    </div>
+    <div class="hico">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="badge">3</span>
+      </div>
+      <span class="lbl">الطلبات</span>
+    </div>
+    <div class="hico">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="badge rb">2</span>
+      </div>
+      <span class="lbl">الإشعارات</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <ul>
+    <li><a class="nav-link" href="javascript:history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>الرئيسية</a></li>
+    <li><a class="nav-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>البيع بالجملة</a></li>
+    <li><a class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>السوق</a></li>
+    <li><a class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>النقل</a></li>
+    <li><a class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>البيطرة</a></li>
+    <li><a class="nav-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>الاستثمار</a></li>
+  </ul>
+</nav>
+
+<!-- ══ BREADCRUMB ══ -->
+<div class="breadcrumb">
+  <div class="bc-inner">
+    <a>الرئيسية</a><span style="color:#ccc">›</span>
+    <a href="javascript:history.back()">البيع بالجملة</a><span style="color:#ccc">›</span>
+    <a>أغنام</a><span style="color:#ccc">›</span>
+    <span style="color:var(--orange);font-weight:700">أغنام برقي ممتازة — جملة</span>
+  </div>
+</div>
+
+<!-- ══ WHOLESALE STRIP ══ -->
+<div class="wholesale-strip">
+  <div class="ws-left">
+    <div class="ws-tag">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+      عرض جملة
+    </div>
+    <span class="ws-text">مورد معتمد | شهادة صحية | توصيل لجميع الولايات | رد خلال ساعتين</span>
+  </div>
+  <div class="ws-right">
+    <div class="ws-stat"><div class="ws-stat-n">250</div><div class="ws-stat-l">رأس متاح</div></div>
+    <div class="ws-stat"><div class="ws-stat-n">-16%</div><div class="ws-stat-l">أقصى خصم</div></div>
+    <div class="ws-stat"><div class="ws-stat-n">2 سا</div><div class="ws-stat-l">متوسط الرد</div></div>
+  </div>
+</div>
+
+<!-- ══ PAGE BODY ══ -->
+<div class="page-wrap">
+
+  <!-- ════ LEFT COL ════ -->
+  <div class="left-col">
+
+    <!-- GALLERY -->
+    <div class="gallery-box">
+      <div class="main-photo">
+        <img id="mainImg" src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=900&q=85" alt="أغنام برقي ممتازة" onerror="this.style.display='none'">
+        <div class="photo-badges">
+          <span class="badge-pill badge-orange">جملة مميزة</span>
+          <span class="badge-pill badge-green">متوفر</span>
+        </div>
+        <div class="photo-actions">
+          <button class="photo-action-btn" id="favPhotoBtn" onclick="toggleFav()" title="المفضلة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+          <button class="photo-action-btn" onclick="showToast('تم نسخ رابط العرض ✓','success')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+        <button class="nav-btn prev" onclick="changePhoto(-1)">›</button>
+        <button class="nav-btn next" onclick="changePhoto(1)">‹</button>
+        <div class="photo-count" id="photoCount">1 / 6</div>
+        <div class="wholesale-stamp">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+          عرض بالجملة
+        </div>
+      </div>
+      <div class="thumbnails">
+        <div class="thumb active" onclick="setPhoto(0,this)"><img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=150&q=70" alt=""></div>
+        <div class="thumb" onclick="setPhoto(1,this)"><img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.remove()"></div>
+        <div class="thumb" onclick="setPhoto(2,this)"><img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.remove()"></div>
+        <div class="thumb" onclick="setPhoto(3,this)"><img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.remove()"></div>
+        <div class="thumb" onclick="setPhoto(4,this)"><img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.remove()"></div>
+        <div class="thumb-more" onclick="showToast('عرض جميع الصور الـ 6...','info')"><span style="font-size:16px;font-weight:900">+1</span><span>صور</span></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="product-info">
+      <div class="pi-wholesale-tag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+        عرض بالجملة — الحد الأدنى 10 رؤوس
+      </div>
+      <div class="pi-top">
+        <div class="pi-title">أغنام برقي ممتازة — سيدي بوزيد</div>
+        <div class="pi-views">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          428 مشاهدة
+        </div>
+      </div>
+      <div class="pi-meta">
+        <div class="pi-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>سيدي بوزيد، تونس</div>
+        <div class="pi-date">نُشر منذ 3 أيام</div>
+        <div class="pi-verified"><svg viewBox="0 0 24 24" fill="#1c7c3a" stroke-width="0" width="13" height="13"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>مورد موثوق</div>
+      </div>
+      <div class="rating-row">
+        <div class="stars-lg">★★★★★</div>
+        <div class="rating-score">4.8</div>
+        <div class="rating-count">(84 تقييم جملة)</div>
+      </div>
+
+      <!-- PRICE TIERS MAIN -->
+      <div class="price-tiers-main">
+        <div class="ptm-head">
+          <div class="ptm-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            شرائح سعر الجملة (دت / رأس)
+          </div>
+          <span class="ptm-best-badge">⚡ الأوفر: +100 رأس</span>
+        </div>
+        <div class="ptm-grid">
+          <div class="ptm-col" onclick="selectTier(this,1380,0.05,'10-50')" id="tier1">
+            <div class="ptm-qty">10 — 50 رأس</div>
+            <div class="ptm-price">1,380</div>
+            <div class="ptm-unit">د.ت / رأس</div>
+            <div class="ptm-disc">-5%</div>
+          </div>
+          <div class="ptm-col selected" onclick="selectTier(this,1305,0.10,'51-100')" id="tier2">
+            <div class="ptm-qty">51 — 100 رأس</div>
+            <div class="ptm-price">1,305</div>
+            <div class="ptm-unit">د.ت / رأس</div>
+            <div class="ptm-disc">-10%</div>
+          </div>
+          <div class="ptm-col" onclick="selectTier(this,1218,0.16,'+100')" id="tier3">
+            <div class="ptm-qty">+ 100 رأس</div>
+            <div class="ptm-price">1,218</div>
+            <div class="ptm-unit">د.ت / رأس</div>
+            <div class="ptm-disc">-16%</div>
+          </div>
+        </div>
+        <div class="ptm-savings">السعر الأصلي: <s>1,452 د.ت</s> &nbsp;→&nbsp; عند 51-100 رأس توفّر <span id="savingsText">147 د.ت لكل رأس</span></div>
+      </div>
+
+      <!-- SPECS -->
+      <div class="specs-grid">
+        <div class="spec-item"><div class="spec-icon">⚖️</div><div class="spec-label">الوزن المتوسط</div><div class="spec-value">52 كغ</div></div>
+        <div class="spec-item"><div class="spec-icon">🗓️</div><div class="spec-label">العمر</div><div class="spec-value">6-8 أشهر</div></div>
+        <div class="spec-item"><div class="spec-icon">🐑</div><div class="spec-label">السلالة</div><div class="spec-value">برقي أصيل</div></div>
+        <div class="spec-item"><div class="spec-icon">📦</div><div class="spec-label">الكمية المتاحة</div><div class="spec-value">250 رأس</div></div>
+        <div class="spec-item"><div class="spec-icon">🗂️</div><div class="spec-label">الحد الأدنى</div><div class="spec-value">10 رؤوس</div></div>
+      </div>
+
+      <!-- CERTS -->
+      <div class="certs-row">
+        <div class="cert-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>شهادة صحية</div>
+        <div class="cert-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>تطعيم مكتمل</div>
+        <div class="cert-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="9 9 9 15 15 15"/></svg>فواتير رسمية</div>
+        <div class="cert-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>توصيل متاح</div>
+        <div class="cert-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>دفع آجل 60 يوم</div>
+      </div>
+
+      <!-- ACTION ROW -->
+      <div class="action-row">
+        <button class="btn-quote-main" onclick="openModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          طلب عرض سعر بالجملة
+        </button>
+        <button class="btn-fav" id="favBtn2" onclick="toggleFav()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          المفضلة
+        </button>
+        <button class="btn-share" onclick="showToast('تم نسخ الرابط ✓','success')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          مشاركة
+        </button>
+      </div>
+    </div>
+
+    <!-- STOCK BANNER -->
+    <div class="stock-banner">
+      <div class="sb-left">
+        <div>
+          <div class="sb-label">الكمية المتاحة حالياً</div>
+          <div class="sb-track"><div class="sb-fill" style="width:72%"></div></div>
+          <div class="sb-numbers"><span>0</span><span>180 من 250 رأس</span></div>
+        </div>
+      </div>
+      <div class="sb-urgency">
+        <div class="sb-urgency-n">⚠ 70</div>
+        <div class="sb-urgency-l">رأس متبقي فقط</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:12px;color:rgba(255,255,255,.8);margin-bottom:4px">آخر طلب</div>
+        <div style="font-size:13px;font-weight:800;color:#ffd54f">منذ 4 ساعات</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-box">
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('desc',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/></svg>
+          وصف المنتج
+        </button>
+        <button class="tab-btn" onclick="switchTab('conditions',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          شروط البيع
+        </button>
+        <button class="tab-btn" onclick="switchTab('delivery',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          التوصيل
+        </button>
+        <button class="tab-btn" onclick="switchTab('reviews',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          التقييمات (84)
+        </button>
+        <button class="tab-btn" onclick="switchTab('similar',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          عروض مشابهة
+        </button>
+      </div>
+
+      <div class="tab-content">
+
+        <!-- DESC TAB -->
+        <div class="tab-panel active" id="tab-desc">
+          <div class="desc-grid">
+            <div>
+              <h4 style="font-size:13.5px;font-weight:800;color:#333;margin-bottom:10px;">وصف العرض</h4>
+              <p class="desc-text">أغنام برقي ممتازة من مزرعة المغربي للتربية في سيدي بوزيد، من أفضل السلالات المحلية التونسية. تتميز بصحة عالية، وزن مثالي وتغذية طبيعية 100%.<br><br>مناسبة للتربية، المسالخ، المطاعم والمناسبات الكبرى. نوفر توصيلاً لجميع ولايات الجمهورية مع ضمان الجودة وشهادة صحية لكل قطعان.</p>
+              <div class="desc-tags">
+                <span class="desc-tag">تربية طبيعية</span>
+                <span class="desc-tag">خالية من المضادات الحيوية</span>
+                <span class="desc-tag">جاهزة للتسليم الفوري</span>
+                <span class="desc-tag">شهادة صحية مرفقة</span>
+                <span class="desc-tag">تطعيمات كاملة</span>
+              </div>
+            </div>
+            <div>
+              <h4 style="font-size:13.5px;font-weight:800;color:#333;margin-bottom:10px;">مواصفات المنتج</h4>
+              <div class="attrs-grid">
+                <div class="attr-row"><span class="attr-label">السلالة</span><span class="attr-value">برقي تونسي أصيل</span></div>
+                <div class="attr-row"><span class="attr-label">الوزن الأدنى</span><span class="attr-value">45 كغ</span></div>
+                <div class="attr-row"><span class="attr-label">الوزن الأقصى</span><span class="attr-value">65 كغ</span></div>
+                <div class="attr-row"><span class="attr-label">متوسط الوزن</span><span class="attr-value">52 كغ</span></div>
+                <div class="attr-row"><span class="attr-label">العمر</span><span class="attr-value">6 — 8 أشهر</span></div>
+                <div class="attr-row"><span class="attr-label">الجنس</span><span class="attr-value">ذكور وإناث</span></div>
+                <div class="attr-row"><span class="attr-label">نوع التغذية</span><span class="attr-value">علف طبيعي + رعي</span></div>
+                <div class="attr-row"><span class="attr-label">منطقة التربية</span><span class="attr-value">سيدي بوزيد</span></div>
+                <div class="attr-row"><span class="attr-label">الحالة الصحية</span><span class="attr-value" style="color:var(--green)">ممتازة ✓</span></div>
+                <div class="attr-row"><span class="attr-label">رقم الترخيص</span><span class="attr-value">TN-SBZ-2024-0312</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONDITIONS TAB -->
+        <div class="tab-panel" id="tab-conditions">
+          <div class="conditions-grid">
+            <div class="cond-card">
+              <div class="cond-icon">💳</div>
+              <div class="cond-title">شروط الدفع</div>
+              <div class="cond-text">
+                <b>دفع فوري:</b> خصم إضافي <span class="cond-highlight">-2%</span><br>
+                <b>دفعة أولى 30%:</b> عند تأكيد الطلب<br>
+                <b>دفع آجل:</b> حتى <span class="cond-highlight">60 يوم</span> للحسابات المسجلة<br><br>
+                طرق الدفع: تحويل بنكي، فلوسي، دينار الكتروني
+              </div>
+            </div>
+            <div class="cond-card">
+              <div class="cond-icon">📋</div>
+              <div class="cond-title">الحد الأدنى للطلب</div>
+              <div class="cond-text">
+                الحد الأدنى <span class="cond-highlight">10 رؤوس</span> للطلب الواحد.<br>
+                لا يوجد حد أقصى للكمية.<br><br>
+                عند طلب +200 رأس، يُنصح بالتواصل المباشر لتخصيص سعر خاص وبرمجة التسليم.
+              </div>
+            </div>
+            <div class="cond-card">
+              <div class="cond-icon">🔄</div>
+              <div class="cond-title">سياسة الاسترجاع</div>
+              <div class="cond-text">
+                ضمان الجودة: إذا لم يطابق المنتج الوصف، يُسترجع خلال <span class="cond-highlight">24 ساعة</span> من الاستلام.<br><br>
+                يشترط تقديم تقرير بيطري معتمد لإجراء الاسترجاع.
+              </div>
+            </div>
+            <div class="cond-card">
+              <div class="cond-icon">📄</div>
+              <div class="cond-title">الوثائق المرفقة</div>
+              <div class="cond-text">
+                ✓ شهادة صحية بيطرية<br>
+                ✓ وثيقة نقل رسمية<br>
+                ✓ فاتورة تجارية مفصلة<br>
+                ✓ شهادة التطعيم<br>
+                ✓ ترخيص المزرعة
+              </div>
+            </div>
+            <div class="cond-card">
+              <div class="cond-icon">⚖️</div>
+              <div class="cond-title">ضبط الوزن</div>
+              <div class="cond-text">
+                يُحسب السعر على أساس <span class="cond-highlight">عدد الرؤوس</span> لا الوزن.<br><br>
+                توفر المزرعة قياس الوزن الفردي بطلب مسبق، ويمكن ضبط العقد بناءً على الوزن الفعلي عند الاتفاق.
+              </div>
+            </div>
+            <div class="cond-card">
+              <div class="cond-icon">🤝</div>
+              <div class="cond-title">ضمان الصفقة</div>
+              <div class="cond-text">
+                منصة أمانة تتوسط في جميع الصفقات.<br>
+                الأموال محجوزة لدى المنصة حتى <span class="cond-highlight">تأكيد الاستلام</span>.<br><br>
+                حماية كاملة للمشتري والبائع.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DELIVERY TAB -->
+        <div class="tab-panel" id="tab-delivery">
+          <table class="delivery-table">
+            <thead>
+              <tr>
+                <th>الولاية</th>
+                <th>مدة التوصيل</th>
+                <th>تكلفة التوصيل</th>
+                <th>الحد للمجانية</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>سيدي بوزيد (نفس الولاية)</td><td>نفس اليوم</td><td class="dl-free">مجاني</td><td>—</td></tr>
+              <tr><td>الولايات المجاورة (قابس، قفصة، القيروان)</td><td>24 ساعة</td><td class="dl-free">مجاني +100 رأس</td><td>+100 رأس</td></tr>
+              <tr><td>الوسط (سوسة، صفاقس، مهدية)</td><td>24 — 48 ساعة</td><td class="dl-paid">200 د.ت / رحلة</td><td>+150 رأس</td></tr>
+              <tr><td>الشمال (تونس، بنزرت، نابل)</td><td>48 ساعة</td><td class="dl-paid">350 د.ت / رحلة</td><td>+200 رأس</td></tr>
+              <tr><td>الجنوب (توزر، تطاوين، مدنين)</td><td>48 — 72 ساعة</td><td class="dl-paid">400 د.ت / رحلة</td><td>+200 رأس</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11.5px;color:#888;margin-top:10px;padding:10px;background:#f8faf9;border-radius:8px;">
+            🚚 النقل بواسطة شاحنات مجهزة بيطرياً | يمكن نقل حتى 50 رأس في رحلة واحدة | التأمين على الحيوانات أثناء النقل متاح (+1% من قيمة الصفقة)
+          </p>
+          <div class="map-box-sm" onclick="showToast('فتح الموقع على الخريطة...','info')">
+            <div class="map-pin">📍</div>
+            <div class="map-label">📍 سيدي بوزيد، تونس</div>
+            <div class="map-link">فتح في خرائط Google</div>
+          </div>
+        </div>
+
+        <!-- REVIEWS TAB -->
+        <div class="tab-panel" id="tab-reviews">
+          <div class="review-summary">
+            <div class="review-big">
+              <div class="review-score">4.8</div>
+              <div class="review-stars">★★★★★</div>
+              <div class="review-count">84 تقييم جملة</div>
+            </div>
+            <div class="rating-bars">
+              <div class="rbar-row"><span class="rbar-label">5 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:80%"></div></div><span class="rbar-count">67</span></div>
+              <div class="rbar-row"><span class="rbar-label">4 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:15%"></div></div><span class="rbar-count">13</span></div>
+              <div class="rbar-row"><span class="rbar-label">3 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:4%"></div></div><span class="rbar-count">3</span></div>
+              <div class="rbar-row"><span class="rbar-label">2 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:1%"></div></div><span class="rbar-count">1</span></div>
+              <div class="rbar-row"><span class="rbar-label">1 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span class="rbar-count">0</span></div>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#e65100,#bf360c)">ش</div>
+                <div><div class="reviewer-name">شركة الجزارة الحديثة</div><div class="reviewer-meta">مسلخ صناعي • منذ أسبوع</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★★</div>
+            </div>
+            <p class="review-text">اشترينا 120 رأس للمرة الثالثة من مزرعة المغربي. الجودة ثابتة دائماً والوزن مطابق للمواصفات. التوصيل كان في الموعد. بلاشك من أفضل الموردين في المنطقة.</p>
+            <div class="review-chips"><span class="review-chip">جودة ممتازة</span><span class="review-chip">توصيل سريع</span><span class="review-chip">مورد موثوق</span></div>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#1565c0,#0d47a1)">ف</div>
+                <div><div class="reviewer-name">فندق المنتزه صفاقس</div><div class="reviewer-meta">مزود مطاعم • منذ 3 أسابيع</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★★</div>
+            </div>
+            <p class="review-text">نوفر اللحوم لمطاعم الفندق من هذا المورد منذ سنة. الخراف ذات جودة عالية والمسلخ أشاد بمدى سلامتها الصحية. السعر منافس جداً للكميات الكبيرة.</p>
+            <div class="review-chips"><span class="review-chip">شهادة صحية</span><span class="review-chip">سعر منافس</span></div>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">م</div>
+                <div><div class="reviewer-name">مربية المواشي — نابل</div><div class="reviewer-meta">مربي • منذ شهر</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★☆</div>
+            </div>
+            <p class="review-text">اشتريت 30 رأس لتطوير قطيعي. الأغنام صحيحة وصالحة للتكاثر. التوصيل أخذ يوماً إضافياً لكن بشكل عام الصفقة ممتازة والبائع متجاوب.</p>
+            <div class="review-chips"><span class="review-chip">جاهزة للتكاثر</span></div>
+          </div>
+          <button style="width:100%;margin-top:12px;background:#f8faf9;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:13px;font-weight:700;color:#555;cursor:pointer;" onclick="showToast('تحميل المزيد من التقييمات...','info')">عرض جميع التقييمات (84)</button>
+        </div>
+
+        <!-- SIMILAR TAB -->
+        <div class="tab-panel" id="tab-similar">
+          <div class="similar-grid">
+            <div class="sim-card" onclick="showToast('تحميل عرض الجملة...','info')">
+              <div class="sim-photo" style="background:#f0f7f2"><img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=250&q=70" alt="" onerror="this.style.display='none'"><span class="sim-badge badge-orange">جملة</span></div>
+              <div class="sim-body"><div class="sim-name">أغنام سليانة — 180 رأس</div><div class="sim-loc">📍 سليانة</div><div class="sim-price">1,250 <span style="font-size:10px;color:#888">د.ت/رأس</span></div><div class="sim-disc">-8%</div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل عرض الجملة...','info')">
+              <div class="sim-photo" style="background:#fff8e1">🐑<span class="sim-badge badge-gold">مميز</span></div>
+              <div class="sim-body"><div class="sim-name">أغنام القيروان الممتازة</div><div class="sim-loc">📍 القيروان</div><div class="sim-price">1,310 <span style="font-size:10px;color:#888">د.ت/رأس</span></div><div class="sim-disc">-12%</div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل عرض الجملة...','info')">
+              <div class="sim-photo" style="background:#e8f5e9">🐑<span class="sim-badge badge-green">جديد</span></div>
+              <div class="sim-body"><div class="sim-name">أغنام صفاقس — قطيع كبير</div><div class="sim-loc">📍 صفاقس</div><div class="sim-price">1,190 <span style="font-size:10px;color:#888">د.ت/رأس</span></div><div class="sim-disc">-7%</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- ════ RIGHT COL ════ -->
+  <div class="right-col">
+
+    <!-- QUOTE BOX -->
+    <div class="quote-box">
+      <div class="qb-head">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div class="qb-title">طلب عرض سعر</div>
+      </div>
+      <div class="qb-sub">احسب تكلفة طلبك واختر الكمية المناسبة</div>
+
+      <div class="qb-price-row">
+        <div class="qb-price" id="boxPrice">1,305</div>
+        <div class="qb-currency">د.ت</div>
+        <div class="qb-per">/ رأس</div>
+        <div style="margin-right:auto"><span class="qb-selected-tier" id="boxTierLabel">51-100 رأس (-10%)</span></div>
+      </div>
+
+      <div class="qty-selector">
+        <div class="qty-label">الكمية المطلوبة (رأس)</div>
+        <div class="qty-row">
+          <button class="qty-dec" onclick="changeQty(-5)">−</button>
+          <input class="qty-input" type="number" id="qtyInput" value="60" min="10" oninput="recalculate()">
+          <button class="qty-inc" onclick="changeQty(5)">+</button>
+        </div>
+        <div class="qty-hint">الحد الأدنى: 10 رؤوس | المتاح: 250 رأس</div>
+      </div>
+
+      <div class="total-row">
+        <div>
+          <div class="total-label">الإجمالي التقديري</div>
+          <div class="total-sub">قبل التفاوض</div>
+        </div>
+        <div style="text-align:left">
+          <div class="total-price" id="totalPrice">78,300</div>
+          <div style="font-size:10px;color:#888">د.ت</div>
+        </div>
+      </div>
+
+      <button class="btn-quote-big" onclick="openModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        إرسال طلب عرض السعر
+      </button>
+      <button class="btn-add-list" onclick="showToast('أُضيف لقائمة الطلبات ✓','success')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        إضافة لقائمة الطلبات
+      </button>
+      <div class="qb-response-time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        المورد يرد خلال ساعتين في المتوسط
+      </div>
+    </div>
+
+    <!-- PAYMENT BOX -->
+    <div class="payment-box">
+      <div class="pay-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        طرق الدفع المتاحة
+      </div>
+      <div class="pay-option selected" onclick="selPay(this)">
+        <div class="pay-left"><div class="pay-icon">⚡</div>دفع فوري كامل</div>
+        <div class="pay-right highlight">خصم إضافي -2%</div>
+      </div>
+      <div class="pay-option" onclick="selPay(this)">
+        <div class="pay-left"><div class="pay-icon">💳</div>دفعة أولى 30%</div>
+        <div class="pay-right">باقي عند التسليم</div>
+      </div>
+      <div class="pay-option" onclick="selPay(this)">
+        <div class="pay-left"><div class="pay-icon">📅</div>دفع آجل 60 يوم</div>
+        <div class="pay-right">للحسابات المعتمدة</div>
+      </div>
+    </div>
+
+    <!-- SUPPLIER BOX -->
+    <div class="supplier-box">
+      <div class="sup-title">معلومات المورد</div>
+      <div class="sup-profile">
+        <div class="sup-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">م</div>
+        <div>
+          <div class="sup-name">مزرعة المغربي للتربية</div>
+          <div class="sup-verified">
+            <svg viewBox="0 0 24 24" fill="#1c7c3a"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            مورد معتمد بالجملة
+          </div>
+          <div class="sup-rating">★★★★★ 4.8 | عضو منذ يناير 2021</div>
+        </div>
+      </div>
+      <div class="sup-stats">
+        <div class="sstat"><div class="sstat-n">+2,400</div><div class="sstat-l">رأس مباع</div></div>
+        <div class="sstat"><div class="sstat-n">96%</div><div class="sstat-l">نسبة الرد</div></div>
+        <div class="sstat"><div class="sstat-n">2 سا</div><div class="sstat-l">متوسط الرد</div></div>
+      </div>
+      <div class="sup-tags">
+        <span class="sup-tag green">مورد موثوق</span>
+        <span class="sup-tag green">شهادة صحية</span>
+        <span class="sup-tag">دفع آجل</span>
+        <span class="sup-tag">توصيل جمهوري</span>
+      </div>
+      <button class="sup-btn" onclick="showToast('عرض ملف المورد...','info')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/></svg>
+        عرض جميع عروض المورد
+      </button>
+    </div>
+
+    <!-- TRUST BOX -->
+    <div class="trust-box">
+      <div class="trust-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        تسوق بالجملة بأمان
+      </div>
+      <div class="trust-item"><div class="trust-icon">🛡️</div><div class="trust-text"><strong>ضمان المنصة</strong><span>الأموال محجوزة حتى تأكيد الاستلام</span></div></div>
+      <div class="trust-item"><div class="trust-icon">✅</div><div class="trust-text"><strong>جودة مضمونة</strong><span>مطابقة للمواصفات أو استرجاع كامل</span></div></div>
+      <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-text"><strong>نقل مؤمّن</strong><span>شاحنات بيطرية مجهزة ومؤمنة</span></div></div>
+      <div class="trust-item"><div class="trust-icon">📄</div><div class="trust-text"><strong>وثائق رسمية</strong><span>شهادة صحية + فاتورة ضريبية</span></div></div>
+    </div>
+
+  </div><!-- /right-col -->
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<footer>
+  <div class="ft-links"><a>اتصل بنا</a><a>عن أمانة</a><a>شروط الجملة</a><a>سياسة الخصوصية</a><a>التوريد</a></div>
+  <div class="ft-copy">© 2024 AMANA — البيع بالجملة</div>
+  <div class="ft-logo">AMANA</div>
+</footer>
+
+<script>
+// ── Photos
+const photos = [
+  'https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=900&q=85',
+  'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=900&q=85',
+  'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=900&q=85',
+  'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=900&q=85',
+  'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=900&q=85',
+];
+let curPhoto = 0;
+function changePhoto(d) {
+  curPhoto = (curPhoto + d + photos.length) % photos.length;
+  document.getElementById('mainImg').src = photos[curPhoto];
+  document.getElementById('photoCount').textContent = `${curPhoto+1} / 6`;
+  document.querySelectorAll('.thumb').forEach((t,i) => t.classList.toggle('active', i === curPhoto));
+}
+function setPhoto(idx, el) {
+  curPhoto = idx;
+  document.getElementById('mainImg').src = photos[idx] || photos[0];
+  document.getElementById('photoCount').textContent = `${idx+1} / 6`;
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Fav
+let isFav = false;
+function toggleFav() {
+  isFav = !isFav;
+  const b1 = document.getElementById('favPhotoBtn');
+  const b2 = document.getElementById('favBtn2');
+  if (isFav) {
+    b1.querySelector('svg').style.cssText = 'fill:#e53935;color:#e53935';
+    b2.style.cssText = 'color:#e53935;border-color:#e53935';
+    showToast('أُضيف لقائمة المفضلة ❤️','success');
+  } else {
+    b1.querySelector('svg').style.cssText = '';
+    b2.style.cssText = '';
+    showToast('حُذف من المفضلة','info');
+  }
+}
+
+// ── Tier Selection
+let currentPrice = 1305, currentDisc = 0.10, currentTierLabel = '51-100 رأس (-10%)';
+function selectTier(el, price, disc, label) {
+  document.querySelectorAll('.ptm-col').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentPrice = price;
+  currentDisc = disc;
+  currentTierLabel = `${label} رأس (-${Math.round(disc*100)}%)`;
+  document.getElementById('boxPrice').textContent = price.toLocaleString('ar-TN');
+  document.getElementById('boxTierLabel').textContent = currentTierLabel;
+  const savings = Math.round(1452 - price);
+  document.getElementById('savingsText').textContent = `${savings} د.ت لكل رأس`;
+  recalculate();
+}
+
+// ── Qty
+function changeQty(delta) {
+  const inp = document.getElementById('qtyInput');
+  let v = parseInt(inp.value) + delta;
+  if (v < 10) v = 10;
+  if (v > 250) v = 250;
+  inp.value = v;
+  recalculate();
+}
+function recalculate() {
+  const qty = parseInt(document.getElementById('qtyInput').value) || 60;
+  // Auto-select tier
+  let price, disc, label, tierId;
+  if (qty <= 50)       { price=1380; disc=0.05; label='10-50'; tierId='tier1'; }
+  else if (qty <= 100) { price=1305; disc=0.10; label='51-100'; tierId='tier2'; }
+  else                 { price=1218; disc=0.16; label='+100'; tierId='tier3'; }
+  currentPrice = price;
+  document.querySelectorAll('.ptm-col').forEach(c => c.classList.remove('selected'));
+  document.getElementById(tierId).classList.add('selected');
+  document.getElementById('boxPrice').textContent = price.toLocaleString('ar-TN');
+  document.getElementById('boxTierLabel').textContent = `${label} رأس (-${Math.round(disc*100)}%)`;
+  const total = qty * price;
+  document.getElementById('totalPrice').textContent = total.toLocaleString('ar-TN');
+  // Update modal
+  document.getElementById('modal-qty').textContent = `${qty} رأس`;
+  document.getElementById('modal-pprice').textContent = `${price.toLocaleString('ar-TN')} د.ت`;
+  document.getElementById('modal-disc').textContent = `-${Math.round(disc*100)}%`;
+  document.getElementById('modal-total').textContent = `${total.toLocaleString('ar-TN')} د.ت`;
+}
+
+// ── Tabs
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ── Payment
+function selPay(el) {
+  document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast(`تم اختيار: ${el.querySelector('.pay-left').textContent.trim()}`,'info');
+}
+
+// ── Modal
+function openModal() {
+  recalculate();
+  document.getElementById('modalQtyInput').value = document.getElementById('qtyInput').value;
+  document.getElementById('overlay').classList.add('active');
+}
+function closeOverlay(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+function closeModal() { document.getElementById('overlay').classList.remove('active'); }
+function submitQuote() {
+  closeModal();
+  showToast('تم إرسال طلب عرض السعر بنجاح ✓ سيرد المورد خلال ساعتين','success');
+}
+
+// ── Toast
+function showToast(msg, type='info') {
+  const icons = {success:'✅', orange:'📦', info:'ℹ️'};
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span>${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// Init
+recalculate();
+setTimeout(() => showToast('عرض جملة مميز — رد خلال ساعتين 🏭','orange'), 700);
+</script>
+</body>
+</html>

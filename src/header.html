@@ -1,0 +1,665 @@
+<!-- ANN BAR -->
+<div class="ann-bar">
+  <div class="ann-dot"></div>
+  <span>أعلن مجانًا وبيع أسرع في كامل تونس</span>
+  <span class="ann-badge">نشر الإعلان الأول مجاني 🎉</span>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="#" class="logo">
+    <div class="logo-mark"><i data-lucide="leaf" width="24" height="24" stroke="var(--green)" stroke-width="2.5"></i></div>
+    <div class="logo-texts">
+      <div class="name">AMANAFARM</div>
+      <div class="tagline">منصة الفلاحة والحيوانات الأولى في تونس</div>
+    </div>
+  </a>
+
+  <div class="search-wrap">
+    <input id="searchInput" type="text" placeholder="ابحث: خروف، بقرة، علف، بيطري، نقل...">
+    <button class="search-btn" id="searchBtn"><i data-lucide="search" width="15" height="15"></i> بحث</button>
+  </div>
+
+  <div class="header-actions">
+    <button class="hact" id="cartAction" title="السلة">
+      <i data-lucide="shopping-cart" width="20" height="20"></i>
+      <div class="hact-label">السلة</div>
+      <span class="hbadge hidden" id="cartBadge">0</span>
+    </button>
+    <button class="hact" id="messagesAction" title="الرسائل">
+      <i data-lucide="message-circle" width="20" height="20"></i>
+      <div class="hact-label">رسائل</div>
+      <span class="hbadge" id="msgBadge">2</span>
+    </button>
+    <button class="hact" id="notifAction" title="الإشعارات">
+      <i data-lucide="bell" width="20" height="20"></i>
+      <div class="hact-label">إشعارات</div>
+      <span class="hbadge red" id="notifBadge">3</span>
+    </button>
+    <div class="divider-v"></div>
+    <div class="user-block" id="userAction">
+      <div class="user-avt" id="userAvatar"><i data-lucide="user" width="18" height="18" stroke="var(--muted)"></i></div>
+      <div>
+        <div class="greet">مرحباً،</div>
+        <div class="uname" id="userName">تسجيل الدخول</div>
+      </div>
+      <i data-lucide="chevron-down" width="14" height="14" stroke="var(--muted)"></i>
+      <!-- Dropdown -->
+      <div class="user-dropdown" id="userDropdown">
+        <div class="ud-header" id="udHeader" style="display:none">
+          <div class="ud-avt" id="udAvt">👨‍🌾</div>
+          <div>
+            <div class="ud-name" id="udName"></div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
+        </div>
+        <div id="udGuest">
+          <div class="ud-item" onclick="openAuth('login');closeDropdown()"><span>🔐</span> تسجيل الدخول</div>
+          <div class="ud-item" onclick="openAuth('register');closeDropdown()"><span>✨</span> إنشاء حساب</div>
+        </div>
+        <div id="udUser" style="display:none">
+          <div class="ud-item" onclick="openPanel('add');closeDropdown()"><span>📝</span> إعلاناتي</div>
+          <div class="ud-item" onclick="closeDropdown()"><span>❤️</span> المفضلة</div>
+          <div class="ud-item" onclick="closeDropdown()"><span>⚙️</span> الإعدادات</div>
+          <div class="ud-divider"></div>
+          <div class="ud-item danger" onclick="doLogout();closeDropdown()"><span>🚪</span> تسجيل الخروج</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <ul>
+    <li><a class="active" href="#"><i data-lucide="home" width="15" height="15"></i> الرئيسية</a></li>
+    <li><a href="#market"><i data-lucide="beef" width="15" height="15"></i> الحيوانات</a></li>
+    <li><a href="#"><i data-lucide="wheat" width="15" height="15"></i> المنتجات الفلاحية</a></li>
+    <li><a href="#"><i data-lucide="wrench" width="15" height="15"></i> الخدمات</a></li>
+    <li><a href="#"><i data-lucide="stethoscope" width="15" height="15"></i> البيطريون</a></li>
+<li><a href="apropsdenous.html"><i data-lucide="info" width="15" height="15"></i> من نحن</a></li>  </ul>
+  <div class="nb-spacer"></div>
+  <button class="nb-post-btn" id="navPostBtn"><i data-lucide="plus" width="16" height="16"></i> أضف إعلانك مجاناً</button>
+</nav>
+
+<!-- PANEL OVERLAY -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+<!-- CART PANEL -->
+<div class="side-panel" id="cartPanel">
+  <div class="panel-head">
+    <h3>🛒 سلة المشتريات</h3>
+    <button class="panel-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="panel-body" id="cartBody"></div>
+  <div class="panel-footer" id="cartFooter"></div>
+</div>
+
+<!-- MESSAGES PANEL -->
+<div class="side-panel" id="messagesPanel">
+  <div class="panel-head">
+    <h3>💬 الرسائل</h3>
+    <button class="panel-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="panel-body" id="messagesBody">
+    <div class="conv-item unread" onclick="toast('محادثة محمد الشريف','info')">
+      <div class="conv-avt">👨‍🌾</div>
+      <div class="conv-body">
+        <div class="conv-top"><div class="conv-name">محمد الشريف</div><div class="conv-time">منذ 5 دقائق</div></div>
+        <div class="conv-msg unread">السلام عليكم، الخروف لقيتو؟</div>
+      </div>
+    </div>
+    <div class="conv-item unread" onclick="toast('محادثة فاطمة بن علي','info')">
+      <div class="conv-avt">👩‍🌾</div>
+      <div class="conv-body">
+        <div class="conv-top"><div class="conv-name">فاطمة بن علي</div><div class="conv-time">منذ 23 دقيقة</div></div>
+        <div class="conv-msg unread">هل البقرة لازالت متوفرة؟</div>
+      </div>
+    </div>
+    <div class="conv-item" onclick="toast('محادثة الحاج رضا','info')">
+      <div class="conv-avt">🧑‍🌾</div>
+      <div class="conv-body">
+        <div class="conv-top"><div class="conv-name">الحاج رضا</div><div class="conv-time">أمس</div></div>
+        <div class="conv-msg">شكراً على خدمة النقل ممتازة</div>
+      </div>
+    </div>
+    <div class="conv-item" onclick="toast('دعم AMANAFARM','info')">
+      <div class="conv-avt">🌿</div>
+      <div class="conv-body">
+        <div class="conv-top"><div class="conv-name">دعم AMANAFARM</div><div class="conv-time">3 أيام</div></div>
+        <div class="conv-msg">مرحباً بك في المنصة! كيف يمكننا مساعدتك؟</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="new-msg-btn" onclick="toast('ميزة الرسائل ستكون متاحة قريباً 🚀','info')">✏️ رسالة جديدة</button>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="side-panel" id="notifPanel">
+  <div class="panel-head">
+    <h3>🔔 الإشعارات</h3>
+    <button class="panel-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="panel-body" id="notifBody">
+    <div class="notif-item unread" onclick="markNotifRead(this)">
+      <div class="notif-icon green">🐑</div>
+      <div class="notif-body">
+        <div class="notif-title">إعلانك تم مشاهدته 47 مرة</div>
+        <div class="notif-sub">خروف بربري ممتاز — قابس</div>
+        <div class="notif-time">منذ 10 دقائق</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="markNotifRead(this)">
+      <div class="notif-icon gold">⭐</div>
+      <div class="notif-body">
+        <div class="notif-title">رسالة جديدة من مشتري</div>
+        <div class="notif-sub">محمد الشريف أرسل رسالة بخصوص إعلانك</div>
+        <div class="notif-time">منذ 25 دقيقة</div>
+      </div>
+    </div>
+    <div class="notif-item unread" onclick="markNotifRead(this)">
+      <div class="notif-icon red">🔥</div>
+      <div class="notif-body">
+        <div class="notif-title">عروض مميزة قريبة منك!</div>
+        <div class="notif-sub">3 إعلانات جديدة في منطقة قابس تستحق المشاهدة</div>
+        <div class="notif-time">منذ ساعة</div>
+      </div>
+    </div>
+    <div class="notif-item" onclick="markNotifRead(this)">
+      <div class="notif-icon green">✅</div>
+      <div class="notif-body">
+        <div class="notif-title">حساب تم التحقق منه</div>
+        <div class="notif-sub">حسابك الآن موثق — يمكنك الإعلان بحرية</div>
+        <div class="notif-time">أمس</div>
+      </div>
+    </div>
+    <div class="notif-item" onclick="markNotifRead(this)">
+      <div class="notif-icon gold">🎉</div>
+      <div class="notif-body">
+        <div class="notif-title">مرحباً بك في AMANAFARM!</div>
+        <div class="notif-sub">ابدأ بنشر إعلانك الأول مجاناً</div>
+        <div class="notif-time">3 أيام</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="mark-read-btn" onclick="markAllRead()">✓ تعليم الكل كمقروء</button>
+  </div>
+</div>
+
+<!-- ADD ANNONCE PANEL -->
+<div class="side-panel add-panel" id="addPanel">
+  <div class="panel-head">
+    <h3>📝 أضف إعلانك مجاناً</h3>
+    <button class="panel-close" onclick="closePanel()">×</button>
+  </div>
+  <div class="panel-body" id="addBody">
+    <div id="addForm">
+      <!-- Category -->
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="grid" width="14" height="14"></i> اختر الفئة</div>
+        <div class="cat-grid" id="addCatGrid">
+          <div class="cat-btn selected" data-cat="أغنام" onclick="selectCat(this)"><div class="cat-btn-icon">🐑</div><div class="cat-btn-txt">أغنام</div></div>
+          <div class="cat-btn" data-cat="أبقار" onclick="selectCat(this)"><div class="cat-btn-icon">🐄</div><div class="cat-btn-txt">أبقار</div></div>
+          <div class="cat-btn" data-cat="دواجن" onclick="selectCat(this)"><div class="cat-btn-icon">🐔</div><div class="cat-btn-txt">دواجن</div></div>
+          <div class="cat-btn" data-cat="ماعز" onclick="selectCat(this)"><div class="cat-btn-icon">🐐</div><div class="cat-btn-txt">ماعز</div></div>
+          <div class="cat-btn" data-cat="منتجات" onclick="selectCat(this)"><div class="cat-btn-icon">🌾</div><div class="cat-btn-txt">منتجات</div></div>
+          <div class="cat-btn" data-cat="خدمات" onclick="selectCat(this)"><div class="cat-btn-icon">🚚</div><div class="cat-btn-txt">خدمات</div></div>
+        </div>
+      </div>
+      <!-- Basic Info -->
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="file-text" width="14" height="14"></i> معلومات الإعلان</div>
+        <div class="field">
+          <label>عنوان الإعلان *</label>
+          <input type="text" id="addTitle" placeholder="مثال: خروف بربري ممتاز للبيع">
+        </div>
+        <div class="fields-row-2">
+          <div class="field">
+            <label>السعر (دت) *</label>
+            <input type="number" id="addPrice" placeholder="1450">
+          </div>
+          <div class="field">
+            <label>الولاية *</label>
+            <select id="addWilaya">
+              <option value="">اختر الولاية</option>
+              <option>تونس</option><option>أريانة</option><option>بن عروس</option><option>منوبة</option>
+              <option>نابل</option><option>زغوان</option><option>بنزرت</option><option>باجة</option>
+              <option>جندوبة</option><option>الكاف</option><option>سليانة</option><option>سوسة</option>
+              <option>المنستير</option><option>المهدية</option><option>صفاقس</option><option>القيروان</option>
+              <option>القصرين</option><option>سيدي بوزيد</option><option>قابس</option><option>مدنين</option>
+              <option>تطاوين</option><option>قفصة</option><option>توزر</option><option>قبلي</option>
+            </select>
+          </div>
+        </div>
+        <div class="fields-row-2">
+          <div class="field">
+            <label>الوزن</label>
+            <input type="text" id="addWeight" placeholder="مثال: 55 كغ">
+          </div>
+          <div class="field">
+            <label>الجنس</label>
+            <select id="addGender">
+              <option value="">اختر</option>
+              <option>ذكر</option><option>أنثى</option><option>مجموعة مختلطة</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>وصف الإعلان</label>
+          <textarea id="addDesc" placeholder="اكتب وصفاً تفصيلياً للحيوان أو المنتج..."></textarea>
+        </div>
+        <div class="field">
+          <label>رقم الهاتف (واتساب)</label>
+          <input type="tel" id="addPhone" placeholder="XX XXX XXX">
+        </div>
+      </div>
+      <!-- Photos -->
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="image" width="14" height="14"></i> الصور</div>
+        <label class="photo-upload-area" for="addPhotos">
+          <input type="file" id="addPhotos" multiple accept="image/*" onchange="previewPhotos(this)">
+          <div class="photo-upload-icon">📸</div>
+          <div class="photo-upload-txt">انقر لإضافة صور</div>
+          <div class="photo-upload-sub">JPG، PNG — حتى 5 صور</div>
+        </label>
+        <div class="photo-previews" id="photoPreviews"></div>
+      </div>
+    </div>
+    <!-- Success State -->
+    <div class="success-annonce" id="addSuccess" style="display:none">
+      <div class="success-annonce-icon">🎉</div>
+      <h3>تم نشر إعلانك بنجاح!</h3>
+      <p>إعلانك الآن مرئي لآلاف المستخدمين في كامل تونس.<br>ستتلقى رسائل واتساب مباشرة من المشترين المهتمين.</p>
+      <br>
+      <button class="submit-annonce-btn" onclick="resetAddForm()">نشر إعلان آخر</button>
+    </div>
+  </div>
+  <div class="panel-footer" id="addFooter">
+    <button class="submit-annonce-btn" id="submitAnnonceBtn" onclick="submitAnnonce()">
+      🚀 نشر الإعلان مجاناً
+    </button>
+  </div>
+</div>
+:root{
+  --green:#0f7a3c;
+  --green-dark:#084d25;
+  --green-light:#e6f7ed;
+  --green-xlight:#f0faf4;
+  --text:#0d1f14;
+  --muted:#6b7d72;
+  --border:#dde8e1;
+  --bg:#f4f8f5;
+  --red:#c0392b;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Cairo',sans-serif;
+  direction:rtl;
+  background:var(--bg);
+  color:var(--text);
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,input{
+  font-family:'Cairo',sans-serif;
+  border:none;
+  outline:none;
+}
+
+/* ANN BAR */
+.ann-bar{
+  min-height:38px;
+  padding:8px 20px;
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+}
+
+.ann-badge{
+  background:rgba(255,255,255,.18);
+  padding:3px 10px;
+  border-radius:99px;
+  font-size:11.5px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.25);
+}
+
+.ann-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#6ee89a;
+  animation:pulse 2s infinite;
+  flex-shrink:0;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.8)}
+}
+
+/* HEADER */
+.header{
+  height:72px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:0 40px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 16px rgba(0,0,0,.06);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:200px;
+}
+
+.logo-mark{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:var(--green-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1.5px solid var(--border);
+}
+
+.logo-texts .name{
+  font-size:20px;
+  font-weight:900;
+  color:var(--green-dark);
+  line-height:1.2;
+}
+
+.logo-texts .tagline{
+  font-size:10.5px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+.search-wrap{
+  flex:1;
+  max-width:520px;
+  height:46px;
+  border:1.5px solid var(--border);
+  border-radius:99px;
+  display:flex;
+  background:var(--bg);
+  overflow:hidden;
+}
+
+.search-wrap:focus-within{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(15,122,60,.12);
+  background:#fff;
+}
+
+.search-wrap input{
+  flex:1;
+  background:transparent;
+  padding:0 18px;
+  font-size:14px;
+  color:var(--text);
+  cursor:text;
+}
+
+.search-btn{
+  width:90px;
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:#fff;
+  font-weight:800;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:0 99px 99px 0;
+  cursor:pointer;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-right:auto;
+}
+
+.hact{
+  width:52px;
+  height:52px;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  color:var(--muted);
+  position:relative;
+  background:transparent;
+  cursor:pointer;
+}
+
+.hact:hover{
+  background:var(--bg);
+  color:var(--green);
+}
+
+.hact-label{
+  font-size:9px;
+  font-weight:800;
+}
+
+.hbadge{
+  position:absolute;
+  top:6px;
+  right:6px;
+  background:var(--green);
+  color:#fff;
+  border-radius:99px;
+  font-size:8px;
+  min-width:16px;
+  height:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  border:2px solid #fff;
+}
+
+.hbadge.red{
+  background:var(--red);
+}
+
+.hbadge.hidden{
+  display:none;
+}
+
+.divider-v{
+  width:1px;
+  height:32px;
+  background:var(--border);
+  margin:0 4px;
+}
+
+.user-block{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 14px 6px 10px;
+  border-radius:99px;
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  background:#fff;
+}
+
+.user-block:hover{
+  border-color:var(--green);
+  background:var(--green-xlight);
+}
+
+.user-avt{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--green-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid var(--border);
+}
+
+.greet{
+  font-size:9.5px;
+  color:var(--muted);
+  line-height:1;
+}
+
+.uname{
+  font-size:13px;
+  font-weight:900;
+  white-space:nowrap;
+  color:var(--text);
+}
+
+/* NAVBAR */
+.navbar{
+  height:48px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  padding:0 40px;
+  border-bottom:1px solid var(--border);
+  gap:6px;
+  position:sticky;
+  top:72px;
+  z-index:999;
+}
+
+.navbar ul{
+  display:flex;
+  list-style:none;
+  gap:2px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.navbar li a{
+  height:48px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-weight:800;
+  font-size:13px;
+  color:var(--muted);
+  border-bottom:3px solid transparent;
+  white-space:nowrap;
+}
+
+.navbar li a:hover,
+.navbar li a.active{
+  color:var(--green);
+  border-bottom-color:var(--green);
+}
+
+.nb-spacer{
+  flex:1;
+}
+
+.nb-post-btn{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 18px;
+  border-radius:99px;
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.nb-post-btn:hover{
+  opacity:.9;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .header{
+    height:auto;
+    padding:12px 16px;
+    flex-wrap:wrap;
+    position:relative;
+  }
+
+  .search-wrap{
+    order:3;
+    width:100%;
+    max-width:none;
+    flex:none;
+  }
+
+  .navbar{
+    top:0;
+    position:relative;
+    padding:0 16px;
+  }
+
+  .nb-post-btn{
+    display:none;
+  }
+}
+
+@media(max-width:540px){
+  .logo{
+    min-width:auto;
+  }
+
+  .logo-texts .tagline{
+    display:none;
+  }
+
+  .header-actions{
+    gap:2px;
+  }
+
+  .hact{
+    width:44px;
+    height:44px;
+  }
+
+  .user-block{
+    padding:5px 8px;
+  }
+
+  .greet{
+    display:none;
+  }
+}

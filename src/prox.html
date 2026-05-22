@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خروف سيدي ممتاز — أمانة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#0f7a3c; --green-dark:#074d24; --green-mid:#1a9e50;
+  --green-light:#e8f6ee; --green-glow:rgba(15,122,60,.14);
+  --gold:#c98b0a; --gold-light:#fef5dc; --amber:#f59e0b;
+  --red:#dc2626; --red-light:#fef2f2; --blue:#1d4ed8; --wa:#25d366;
+  --text:#0f1b12; --text-2:#3d5244; --text-3:#7a9183;
+  --border:#dce8e1; --border-2:#eff5f1; --bg:#f1f6f3; --white:#ffffff;
+  --shadow-xs:0 1px 3px rgba(0,0,0,.06); --shadow-sm:0 2px 8px rgba(0,0,0,.08);
+  --shadow-md:0 6px 24px rgba(0,0,0,.1); --shadow-lg:0 16px 48px rgba(0,0,0,.14);
+  --shadow-xl:0 24px 64px rgba(0,0,0,.18);
+  --r-sm:10px; --r:14px; --r-lg:20px; --r-xl:28px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--bg);direction:rtl;color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:'Cairo',sans-serif}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:99px}
+
+.header{background:var(--white);border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;padding:0 28px;gap:18px;position:sticky;top:0;z-index:500;box-shadow:var(--shadow-sm)}
+.logo{display:flex;align-items:center;gap:11px;flex-shrink:0;cursor:pointer}
+.logo-mark{width:44px;height:44px;border-radius:13px;background:linear-gradient(145deg,var(--green-dark),var(--green-mid));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(15,122,60,.32);position:relative;overflow:hidden}
+.logo-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent)}
+.logo-icon{font-size:22px;position:relative;z-index:1}
+.logo-text .lname{font-size:20px;font-weight:900;color:var(--green-dark);letter-spacing:1.5px}
+.logo-text .ltag{font-size:9px;color:var(--text-3);font-weight:600;margin-top:-2px}
+.search-wrap{flex:1;max-width:500px;display:flex;border:1.5px solid var(--border);border-radius:99px;overflow:hidden;background:var(--bg);transition:border-color .2s,box-shadow .2s}
+.search-wrap:focus-within{border-color:var(--green);box-shadow:0 0 0 3px var(--green-glow)}
+.search-wrap input{flex:1;border:none;outline:none;padding:9px 18px;font-size:13px;color:var(--text);background:transparent}
+.search-wrap input::placeholder{color:var(--text-3)}
+.search-wrap .sbtn{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:#fff;border:none;padding:9px 22px;font-size:13px;font-weight:800;cursor:pointer;border-radius:0 99px 99px 0;transition:opacity .2s}
+.search-wrap .sbtn:hover{opacity:.9}
+.header-actions{display:flex;align-items:center;gap:4px;margin-right:auto}
+.hico{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;border-radius:10px;cursor:pointer;position:relative;transition:background .15s;color:var(--text-2)}
+.hico:hover{background:var(--green-light);color:var(--green)}
+.hico svg{width:20px;height:20px;stroke-width:1.8}
+.hico .lbl{font-size:9.5px;font-weight:700}
+.hbadge{position:absolute;top:2px;right:4px;background:var(--green);color:#fff;font-size:8.5px;font-weight:900;border-radius:99px;padding:1px 5px;min-width:16px;text-align:center;border:2px solid #fff}
+.hbadge.red{background:var(--red)}
+.hv-divider{width:1px;height:32px;background:var(--border);margin:0 4px}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 14px;border-radius:99px;cursor:pointer;border:1.5px solid var(--border);transition:border-color .2s}
+.user-chip:hover{border-color:var(--green)}
+.user-avt{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px}
+.user-name{font-size:12.5px;font-weight:800}
+
+.navbar{background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;position:sticky;top:66px;z-index:499;box-shadow:var(--shadow-xs)}
+.navbar ul{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.navbar ul::-webkit-scrollbar{display:none}
+.navbar ul li a{display:flex;align-items:center;gap:5px;padding:11px 14px;color:var(--text-2);font-size:12.5px;font-weight:700;white-space:nowrap;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.15s;cursor:pointer}
+.navbar ul li a:hover{color:var(--green)}
+.navbar ul li a.active{color:var(--green);border-bottom-color:var(--green)}
+
+.breadcrumb{background:var(--white);border-bottom:1px solid var(--border-2);padding:10px 28px}
+.bc-inner{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3)}
+.bc-inner a{color:var(--green);font-weight:700;cursor:pointer;transition:opacity .15s}
+.bc-inner a:hover{opacity:.75}
+.bc-sep{color:var(--border);font-size:10px}
+.bc-current{color:var(--text-2);font-weight:600}
+
+.page-wrap{max-width:1340px;margin:0 auto;padding:22px 28px;display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+.left-col{display:flex;flex-direction:column;gap:18px}
+
+/* GALLERY */
+.gallery{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.gallery-main{position:relative;height:480px;overflow:hidden;background:#d8ead0;cursor:zoom-in}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.25,.46,.45,.94),opacity .25s}
+.gallery-main:hover img{transform:scale(1.03)}
+.gallery-main::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.38) 0%,rgba(0,0,0,0) 42%);pointer-events:none}
+.g-top-left{position:absolute;top:16px;left:16px;z-index:5;display:flex;gap:6px}
+.g-act-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);transition:transform .15s,box-shadow .15s}
+.g-act-btn:hover{transform:scale(1.08);box-shadow:var(--shadow-lg)}
+.g-act-btn svg{width:17px;height:17px;color:var(--text-2)}
+.g-act-btn.faved svg{color:var(--red);fill:var(--red)}
+.g-top-right{position:absolute;top:16px;right:16px;z-index:5;display:flex;flex-direction:column;gap:6px}
+.g-pill{padding:5px 13px;border-radius:99px;font-size:11px;font-weight:900;color:#fff;backdrop-filter:blur(6px);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.gp-gold{background:linear-gradient(135deg,#c98b0a,#f5c642)}
+.gp-green{background:linear-gradient(135deg,var(--green-dark),var(--green-mid))}
+.g-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow-md);transition:background .15s,transform .15s}
+.g-nav:hover{background:var(--white);transform:translateY(-50%) scale(1.06)}
+.g-nav.prev{right:14px}
+.g-nav.next{left:14px}
+.g-counter{position:absolute;bottom:54px;left:16px;z-index:5;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;font-size:11px;font-weight:700;padding:4px 11px;border-radius:99px}
+.g-info-bar{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.g-views{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.85);font-size:12px;font-weight:600}
+.g-views svg{width:14px;height:14px}
+.g-share-inline{display:flex;gap:6px}
+.g-share-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:background .15s;color:#fff}
+.g-share-btn:hover{background:rgba(255,255,255,.32)}
+.thumb-strip{display:flex;gap:8px;padding:12px 14px;overflow-x:auto;background:var(--white)}
+.thumb-strip::-webkit-scrollbar{height:3px}
+.thumb-strip::-webkit-scrollbar-thumb{background:var(--border)}
+.thumb{width:74px;height:74px;border-radius:10px;overflow:hidden;border:2.5px solid transparent;cursor:pointer;flex-shrink:0;transition:border-color .15s,transform .15s;display:flex;align-items:center;justify-content:center;background:var(--bg);font-size:28px}
+.thumb:hover{transform:scale(1.04)}
+.thumb.active{border-color:var(--green)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb-more{width:74px;height:74px;border-radius:10px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;font-size:11px;font-weight:900;color:var(--text-3);cursor:pointer;flex-shrink:0;transition:all .15s;background:var(--bg)}
+.thumb-more:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+/* PINFO */
+.pinfo{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;box-shadow:var(--shadow-sm)}
+.pinfo-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.pinfo-title{font-size:26px;font-weight:900;color:var(--text);line-height:1.2;flex:1}
+.pinfo-id{font-size:11px;color:var(--text-3);font-weight:700;background:var(--bg);padding:4px 12px;border-radius:99px;white-space:nowrap}
+.pi-meta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border-2)}
+.pi-meta-item{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--text-2);font-weight:600}
+.pi-meta-item svg{width:14px;height:14px;flex-shrink:0}
+.pi-meta-item.green{color:var(--green);font-weight:800}
+.pi-meta-item.gold{color:var(--gold)}
+.rating-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.stars{color:var(--amber);font-size:15px;letter-spacing:1px}
+.r-score{font-size:16px;font-weight:900;color:var(--text)}
+.r-count{font-size:12px;color:var(--text-3)}
+.r-link{color:var(--green);font-size:12px;font-weight:700;cursor:pointer}
+.r-link:hover{text-decoration:underline}
+.price-block{display:flex;align-items:baseline;gap:10px;margin-bottom:18px;padding:16px;background:linear-gradient(135deg,var(--green-light),#f0faf4);border-radius:var(--r);border:1px solid rgba(15,122,60,.12)}
+.price-main{font-size:40px;font-weight:900;color:var(--green);line-height:1}
+.price-cur{font-size:16px;color:var(--text-2);font-weight:700}
+.price-neg{margin-right:auto;display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:var(--gold);background:var(--gold-light);padding:5px 13px;border-radius:99px}
+.specs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.spec-card{background:var(--bg);border-radius:var(--r-sm);padding:12px 8px;text-align:center;border:1.5px solid transparent;cursor:default;transition:border-color .15s,box-shadow .15s,transform .15s}
+.spec-card:hover{border-color:var(--green);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.spec-emoji{font-size:22px;margin-bottom:5px}
+.spec-lbl{font-size:9.5px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.spec-val{font-size:13px;font-weight:900;color:var(--text);margin-top:3px}
+.health-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.health-chip{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:800;border:1.5px solid}
+.hc-green{background:var(--green-light);color:var(--green);border-color:rgba(15,122,60,.2)}
+.hc-gold{background:var(--gold-light);color:var(--gold);border-color:rgba(201,139,10,.2)}
+.hc-dot{width:7px;height:7px;border-radius:50%}
+.hc-green .hc-dot{background:var(--green);animation:pulse-dot 2s infinite}
+.hc-gold .hc-dot{background:var(--gold)}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(15,122,60,.4)}50%{box-shadow:0 0 0 4px rgba(15,122,60,0)}}
+.actions-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{flex:1;min-width:160px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:#fff;border:none;padding:14px 20px;border-radius:var(--r-sm);font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(15,122,60,.3);transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,122,60,.38)}
+.btn-secondary{padding:13px 18px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--white);color:var(--text-2);font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;transition:border-color .15s,color .15s,background .15s}
+.btn-secondary:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+.btn-secondary.faved{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.btn-secondary svg{width:15px;height:15px}
+
+/* TABS */
+.tabs-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.tabs-nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg);padding:6px 6px 0;gap:2px}
+.tab-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;font-size:12.5px;font-weight:800;color:var(--text-3);border-radius:var(--r-sm) var(--r-sm) 0 0;border:1.5px solid transparent;border-bottom:none;cursor:pointer;background:transparent;transition:color .15s,background .15s;margin-bottom:-1px}
+.tab-btn svg{width:14px;height:14px}
+.tab-btn:hover{color:var(--green);background:rgba(255,255,255,.6)}
+.tab-btn.active{color:var(--green);background:var(--white);border-color:var(--border);border-bottom-color:var(--white)}
+.tab-cnt{background:var(--green);color:#fff;font-size:9px;font-weight:900;padding:1px 6px;border-radius:99px}
+.tab-body{padding:24px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* DESC */
+.desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.desc-section-title{font-size:13px;font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.desc-section-title::before{content:'';width:4px;height:16px;background:var(--green);border-radius:2px;display:block}
+.desc-text{font-size:13px;color:var(--text-2);line-height:2}
+.desc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.dtag{background:var(--green-light);color:var(--green);border-radius:99px;padding:4px 13px;font-size:11.5px;font-weight:800;border:1px solid rgba(15,122,60,.15)}
+.attr-table{border-collapse:collapse;width:100%}
+.attr-table tr{border-bottom:1px solid var(--border-2)}
+.attr-table tr:last-child{border-bottom:none}
+.attr-table td{padding:9px 4px;font-size:12px}
+.attr-table .ak{color:var(--text-3);font-weight:600}
+.attr-table .av{font-weight:800;color:var(--text);text-align:left}
+.attr-table .av.green{color:var(--green)}
+.attr-table .av.gold{color:var(--gold)}
+
+/* MAP */
+.map-container{border-radius:var(--r);overflow:hidden;height:220px;position:relative;background:linear-gradient(145deg,#c5dfc5,#a8cfb0);cursor:pointer}
+.map-grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:32px 32px}
+.map-road-h{position:absolute;top:50%;left:0;right:0;height:6px;background:rgba(255,255,255,.3);transform:translateY(-50%)}
+.map-road-v{position:absolute;top:0;bottom:0;left:40%;width:6px;background:rgba(255,255,255,.2)}
+.map-pin-wrap{position:absolute;top:42%;left:40%;transform:translate(-50%,-100%)}
+.map-pin-shadow{width:20px;height:6px;background:rgba(0,0,0,.2);border-radius:50%;margin:0 auto}
+.map-pin-icon{font-size:36px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.map-label-box{position:absolute;bottom:14px;right:14px;background:var(--white);padding:8px 14px;border-radius:var(--r-sm);box-shadow:var(--shadow-md);font-size:12px;font-weight:800;color:var(--text)}
+.map-gmaps-btn{position:absolute;bottom:14px;left:14px;background:var(--green);color:#fff;padding:7px 12px;border-radius:var(--r-sm);font-size:11.5px;font-weight:800;cursor:pointer;border:none;box-shadow:0 4px 12px rgba(15,122,60,.3);transition:opacity .15s}
+.map-gmaps-btn:hover{opacity:.9}
+.map-caption{text-align:center;font-size:12px;color:var(--text-3);margin-top:10px}
+
+/* REVIEWS */
+.review-hero{display:flex;gap:28px;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--border-2);margin-bottom:20px}
+.review-score-big{text-align:center;flex-shrink:0;width:100px}
+.rsb-num{font-size:56px;font-weight:900;color:var(--green);line-height:1}
+.rsb-stars{color:var(--amber);font-size:18px;margin:4px 0}
+.rsb-cnt{font-size:12px;color:var(--text-3)}
+.rating-bars-col{flex:1}
+.rbar-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.rbar-lbl{font-size:11px;color:var(--text-3);width:28px}
+.rbar-track{flex:1;height:7px;background:var(--bg);border-radius:99px;overflow:hidden}
+.rbar-fill{height:100%;border-radius:99px}
+.rbar-fill.f5{background:linear-gradient(90deg,var(--green-dark),var(--green-mid))}
+.rbar-fill.f4{background:var(--green-mid)}
+.rbar-fill.f3{background:var(--amber)}
+.rbar-fill.f2{background:#f97316}
+.rbar-fill.f1{background:var(--red)}
+.rbar-cnt{font-size:11px;color:var(--text-3);width:24px}
+.review-item{padding:16px 0;border-bottom:1px solid var(--border-2)}
+.review-item:last-of-type{border-bottom:none}
+.rev-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.rev-user{display:flex;gap:10px;align-items:center}
+.rev-avt{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:15px}
+.rev-name{font-size:13px;font-weight:900;color:var(--text)}
+.rev-date{font-size:11px;color:var(--text-3)}
+.rev-stars{color:var(--amber);font-size:13px}
+.rev-text{font-size:13px;color:var(--text-2);line-height:1.85;background:var(--bg);padding:10px 14px;border-radius:var(--r-sm)}
+.load-more-btn{width:100%;margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px;font-size:13px;font-weight:800;color:var(--text-2);cursor:pointer;transition:all .15s}
+.load-more-btn:hover{background:var(--green-light);color:var(--green);border-color:var(--green)}
+
+/* SIMILAR */
+.sim-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sim-card{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;background:var(--white);transition:transform .2s,box-shadow .2s}
+.sim-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.sim-photo{height:105px;position:relative;overflow:hidden;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:42px}
+.sim-photo img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.sim-card:hover .sim-photo img{transform:scale(1.05)}
+.sim-pill{position:absolute;top:7px;right:7px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:900;color:#fff}
+.sp-gold{background:linear-gradient(135deg,var(--gold),#f5c642)}
+.sp-green{background:linear-gradient(135deg,var(--green-dark),var(--green-mid))}
+.sim-body{padding:10px}
+.sim-name{font-size:12.5px;font-weight:900;color:var(--text);margin-bottom:3px}
+.sim-loc{font-size:10.5px;color:var(--text-3);margin-bottom:6px}
+.sim-bottom{display:flex;justify-content:space-between;align-items:center}
+.sim-price{font-size:16px;font-weight:900;color:var(--green)}
+.sim-price span{font-size:10px;color:var(--text-3);font-weight:600}
+.sim-btn{background:var(--green-light);color:var(--green);border:none;border-radius:99px;font-size:10px;font-weight:900;padding:4px 10px;cursor:pointer;transition:all .15s}
+.sim-btn:hover{background:var(--green);color:#fff}
+
+/* RIGHT COL */
+.right-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:90px}
+.purchase-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-md)}
+.pb-header{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:18px 20px;color:#fff}
+.pb-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.pb-price{font-size:36px;font-weight:900}
+.pb-cur{font-size:15px;opacity:.8;font-weight:600}
+.pb-neg{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;background:rgba(255,255,255,.18);padding:3px 11px;border-radius:99px}
+.pb-availability{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;opacity:.85}
+.avail-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse-avail 2s infinite}
+@keyframes pulse-avail{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}}
+.pb-body{padding:18px 20px}
+.btn-wa{width:100%;background:var(--wa);color:#fff;border:none;padding:14px;border-radius:var(--r-sm);font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;box-shadow:0 4px 16px rgba(37,211,102,.28);transition:transform .15s,box-shadow .15s}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(37,211,102,.38)}
+.btn-call2{width:100%;background:var(--white);color:var(--green);border:2px solid var(--green);padding:12px;border-radius:var(--r-sm);font-size:13.5px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;transition:background .15s}
+.btn-call2:hover{background:var(--green-light)}
+.del-title{font-size:11.5px;font-weight:900;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.del-opts{display:flex;flex-direction:column;gap:8px}
+.del-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg);transition:border-color .15s;cursor:pointer}
+.del-opt:hover{border-color:var(--green)}
+.del-opt-icon{width:36px;height:36px;border-radius:9px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.del-opt-info{flex:1}
+.del-opt-name{font-size:12px;font-weight:800;color:var(--text)}
+.del-opt-sub{font-size:10.5px;color:var(--text-3)}
+.del-opt-status{font-size:11px;font-weight:900;color:var(--green);background:var(--green-light);padding:3px 9px;border-radius:99px}
+.calc-btn{width:100%;margin-top:12px;background:transparent;border:1.5px dashed var(--border);border-radius:var(--r-sm);padding:9px;font-size:12px;font-weight:800;color:var(--text-3);cursor:pointer;transition:all .15s}
+.calc-btn:hover{border-color:var(--green);color:var(--green)}
+
+.seller-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.sb-label{font-size:10.5px;font-weight:900;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px}
+.seller-profile{display:flex;gap:13px;align-items:center;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border-2)}
+.seller-avt{width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,var(--green-dark),var(--green-mid));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px;flex-shrink:0;box-shadow:0 4px 14px rgba(15,122,60,.3)}
+.seller-name{font-size:15px;font-weight:900;color:var(--text);margin-bottom:3px}
+.seller-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:99px}
+.seller-since{font-size:11px;color:var(--text-3);margin-top:3px}
+.seller-rating-row{display:flex;align-items:center;gap:5px;margin-top:2px}
+.seller-stars-sm{color:var(--amber);font-size:12px}
+.seller-r-num{font-size:12px;font-weight:800;color:var(--text)}
+.seller-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ss-item{background:var(--bg);border-radius:var(--r-sm);padding:10px 8px;text-align:center;border:1px solid var(--border-2)}
+.ss-num{font-size:16px;font-weight:900;color:var(--green);line-height:1}
+.ss-lbl{font-size:10px;color:var(--text-3);margin-top:2px}
+.seller-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.stag{font-size:10.5px;font-weight:800;padding:4px 11px;border-radius:99px;border:1.5px solid var(--border);color:var(--text-2)}
+.view-all-btn{width:100%;border:1.5px solid var(--border);background:var(--white);color:var(--text-2);padding:10px;border-radius:var(--r-sm);font-size:12.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
+.view-all-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+.trust-box{background:linear-gradient(145deg,var(--green-dark),#0a5a2c);border-radius:var(--r-lg);padding:20px;color:#fff}
+.trust-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:900;margin-bottom:16px}
+.trust-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;padding:10px;background:rgba(255,255,255,.08);border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.1)}
+.trust-item:last-child{margin-bottom:0}
+.trust-ico{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.trust-text strong{font-size:12px;font-weight:900;display:block;margin-bottom:2px}
+.trust-text span{font-size:10.5px;opacity:.75}
+
+.toast-wrap{position:fixed;bottom:24px;left:24px;z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:var(--r);font-size:13px;font-weight:700;color:#fff;box-shadow:var(--shadow-xl);animation:toastIn .3s cubic-bezier(.34,1.56,.64,1) both;pointer-events:auto;min-width:240px}
+.toast.success{background:var(--green)}
+.toast.info{background:var(--blue)}
+.toast.error{background:var(--red)}
+@keyframes toastIn{from{transform:translateY(20px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+footer{background:var(--green-dark);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:20px}
+.ft-logo{font-size:20px;font-weight:900;color:#fff;letter-spacing:1.5px}
+.ft-copy{font-size:11px;color:rgba(255,255,255,.6)}
+.ft-links{display:flex;gap:18px}
+.ft-links a{font-size:11px;color:rgba(255,255,255,.7);cursor:pointer;transition:color .15s}
+.ft-links a:hover{color:#fff}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.gallery{animation:slideUp .5s .05s ease both}
+.pinfo{animation:slideUp .5s .1s ease both}
+.tabs-wrap{animation:slideUp .5s .15s ease both}
+.purchase-box{animation:slideUp .5s .08s ease both}
+.seller-box{animation:slideUp .5s .13s ease both}
+.trust-box{animation:slideUp .5s .18s ease both}
+
+@media(max-width:1100px){
+  .page-wrap{grid-template-columns:1fr;padding:14px 16px}
+  .right-col{position:static}
+  .specs-grid{grid-template-columns:repeat(3,1fr)}
+  .desc-grid{grid-template-columns:1fr}
+  .sim-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .specs-grid{grid-template-columns:repeat(2,1fr)}
+  .sim-grid{grid-template-columns:1fr}
+  .header{padding:0 14px;gap:10px}
+  .gallery-main{height:280px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark"><div class="logo-icon">🌿</div></div>
+    <div class="logo-text">
+      <div class="lname">AMANA</div>
+      <div class="ltag">منصة الفلاحة و الحيوانات الأولى في تونس</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <input type="text" placeholder="ابحث عن حيوان، منتج، خدمة...">
+    <button class="sbtn">بحث</button>
+  </div>
+  <div class="header-actions">
+    <div class="hico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <span class="hbadge">2</span><span class="lbl">السلة</span>
+    </div>
+    <div class="hico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78a5.5 5.5 0 000-7.78z"/></svg>
+      <span class="lbl">المفضلة</span>
+    </div>
+    <div class="hico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="hbadge red">3</span><span class="lbl">الإشعارات</span>
+    </div>
+    <div class="hv-divider"></div>
+    <div class="user-chip">
+      <div class="user-avt">م</div>
+      <span class="user-name">محمد ▾</span>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar">
+  <ul>
+    <li><a href="#">الرئيسية</a></li>
+    <li><a href="#">فرص العمل</a></li>
+    <li><a class="active" href="#">السوق</a></li>
+    <li><a href="#">النقل</a></li>
+    <li><a href="#">البيطرة</a></li>
+    <li><a href="#">الصيدلية</a></li>
+    <li><a href="#">المنتجات</a></li>
+    <li><a href="#">الاستثمار</a></li>
+    <li><a href="#">المجتمع</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb">
+  <div class="bc-inner">
+    <a href="#">الرئيسية</a><span class="bc-sep">›</span>
+    <a href="#">السوق</a><span class="bc-sep">›</span>
+    <a href="#">أغنام</a><span class="bc-sep">›</span>
+    <span class="bc-current">خروف سيدي ممتاز</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="left-col">
+
+    <!-- GALLERY -->
+    <div class="gallery">
+      <div class="gallery-main" id="galleryMain">
+        <img id="mainImg" src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=1200&q=90" alt="خروف سيدي ممتاز">
+        <div class="g-top-left">
+          <button class="g-act-btn" id="favPhotoBtn" onclick="toggleFav()" title="مفضلة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+          <button class="g-act-btn" onclick="shareAd()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+          <button class="g-act-btn" onclick="showToast('فتح الصورة بشكل كامل...','info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </button>
+        </div>
+        <div class="g-top-right">
+          <span class="g-pill gp-gold">⭐ مميز</span>
+          <span class="g-pill gp-green">جديد</span>
+        </div>
+        <button class="g-nav prev" onclick="changePhoto(-1)">›</button>
+        <button class="g-nav next" onclick="changePhoto(1)">‹</button>
+        <div class="g-counter" id="gCounter">1 / 8</div>
+        <div class="g-info-bar">
+          <div class="g-views">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            256 مشاهدة
+          </div>
+          <div class="g-share-inline">
+            <button class="g-share-btn" onclick="showToast('تمت المشاركة على فيسبوك ✓','success')">f</button>
+            <button class="g-share-btn" onclick="showToast('تمت المشاركة على واتساب ✓','success')">W</button>
+            <button class="g-share-btn" onclick="showToast('تم نسخ الرابط ✓','success')">🔗</button>
+          </div>
+        </div>
+      </div>
+      <div class="thumb-strip">
+        <div class="thumb active" onclick="setPhoto(0,this)"><img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=200&q=70" alt=""></div>
+        <div class="thumb" onclick="setPhoto(1,this)">🐑</div>
+        <div class="thumb" onclick="setPhoto(2,this)">🐑</div>
+        <div class="thumb" onclick="setPhoto(3,this)">🌾</div>
+        <div class="thumb" onclick="setPhoto(4,this)">🏡</div>
+        <div class="thumb-more" onclick="showToast('عرض كل الصور...','info')"><span style="font-size:16px;font-weight:900">+3</span><span>صور</span></div>
+      </div>
+    </div>
+
+    <!-- PINFO -->
+    <div class="pinfo">
+      <div class="pinfo-header">
+        <h1 class="pinfo-title">خروف سيدي ممتاز</h1>
+        <div class="pinfo-id"># TN-5642-2024</div>
+      </div>
+      <div class="pi-meta-row">
+        <div class="pi-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          سيدي بوزيد، تونس
+        </div>
+        <div class="pi-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          نُشر منذ 6 أيام
+        </div>
+        <div class="pi-meta-item green">
+          <svg viewBox="0 0 24 24" fill="var(--green)" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          بائع موثوق
+        </div>
+        <div class="pi-meta-item gold">
+          <svg viewBox="0 0 24 24" fill="var(--gold)" stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          إعلان مميز
+        </div>
+      </div>
+      <div class="rating-bar">
+        <div class="stars">★★★★★</div>
+        <div class="r-score">4.9</div>
+        <div class="r-count">(120 تقييم)</div>
+        <a class="r-link" onclick="switchTab('reviews',document.querySelectorAll('.tab-btn')[2])">اقرأ التقييمات ←</a>
+      </div>
+      <div class="price-block">
+        <div class="price-main">1,450</div>
+        <div class="price-cur">د.ت</div>
+        <div class="price-neg">🤝 قابل للتفاوض</div>
+      </div>
+      <div class="specs-grid">
+        <div class="spec-card"><div class="spec-emoji">⚖️</div><div class="spec-lbl">الوزن</div><div class="spec-val">55 كغ</div></div>
+        <div class="spec-card"><div class="spec-emoji">🗓️</div><div class="spec-lbl">العمر</div><div class="spec-val">6 أشهر</div></div>
+        <div class="spec-card"><div class="spec-emoji">🐑</div><div class="spec-lbl">النوع</div><div class="spec-val">أغنام</div></div>
+        <div class="spec-card"><div class="spec-emoji">⚥</div><div class="spec-lbl">الجنس</div><div class="spec-val">ذكر</div></div>
+        <div class="spec-card"><div class="spec-emoji">🌿</div><div class="spec-lbl">التغذية</div><div class="spec-val">طبيعي</div></div>
+      </div>
+      <div class="health-bar">
+        <div class="health-chip hc-green"><div class="hc-dot"></div>صحة ممتازة</div>
+        <div class="health-chip hc-green"><div class="hc-dot"></div>💉 مطعّم</div>
+        <div class="health-chip hc-green"><div class="hc-dot"></div>🚚 جاهز للنقل</div>
+        <div class="health-chip hc-gold"><div class="hc-dot"></div>🌾 أكل طبيعي</div>
+      </div>
+      <div class="actions-row">
+        <button class="btn-primary" onclick="showToast('جارٍ فتح المحادثة مع البائع...','info')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          تواصل مع البائع
+        </button>
+        <button class="btn-secondary" id="favBtn2" onclick="toggleFav()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          المفضلة
+        </button>
+        <button class="btn-secondary" onclick="shareAd()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          مشاركة
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-wrap">
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('desc',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+          تفاصيل المنتج
+        </button>
+        <button class="tab-btn" onclick="switchTab('map',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          الموقع
+        </button>
+        <button class="tab-btn" onclick="switchTab('reviews',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          التقييمات <span class="tab-cnt">120</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('similar',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          منتجات مشابهة
+        </button>
+      </div>
+      <div class="tab-body">
+
+        <div class="tab-panel active" id="tab-desc">
+          <div class="desc-grid">
+            <div>
+              <div class="desc-section-title">وصف الإعلان</div>
+              <p class="desc-text">خروف سيدي ممتاز، صحة ممتازة، مناسب للتربية أو للمناسبات. تمت تربيته في بيئة نظيفة مع تغذية طبيعية 100% بدون مواد كيميائية. تتم متابعته من طبيب بيطري بانتظام.<br><br>خروف عربي أصيل من منطقة سيدي بوزيد، معروف بجودته العالية.</p>
+              <div class="desc-tags">
+                <span class="dtag">أكل طبيعي</span><span class="dtag">نشط سليم</span>
+                <span class="dtag">جاهز للنقل</span><span class="dtag">بدون أمراض</span>
+                <span class="dtag">مزرعة خاصة</span>
+              </div>
+            </div>
+            <div>
+              <div class="desc-section-title">معلومات إضافية</div>
+              <table class="attr-table">
+                <tr><td class="ak">الحالة الصحية</td><td class="av green">صحة ممتازة ✓</td></tr>
+                <tr><td class="ak">نوع التغذية</td><td class="av">علف طبيعي</td></tr>
+                <tr><td class="ak">مكان التربية</td><td class="av">مزرعة خاصة</td></tr>
+                <tr><td class="ak">الجنس</td><td class="av">ذكر</td></tr>
+                <tr><td class="ak">التطعيمات</td><td class="av green">مكتملة ✓</td></tr>
+                <tr><td class="ak">رقم التسجيل</td><td class="av">TN-5642-2024</td></tr>
+                <tr><td class="ak">تاريخ النشر</td><td class="av">منذ 6 أيام</td></tr>
+                <tr><td class="ak">التوصيل</td><td class="av gold">لكل الولايات</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-map">
+          <div class="map-container">
+            <div class="map-grid-overlay"></div>
+            <div class="map-road-h"></div>
+            <div class="map-road-v"></div>
+            <div class="map-pin-wrap">
+              <div class="map-pin-icon">📍</div>
+              <div class="map-pin-shadow"></div>
+            </div>
+            <div class="map-label-box">📍 سيدي بوزيد، تونس</div>
+            <button class="map-gmaps-btn" onclick="showToast('فتح في Google Maps...','info')">🗺️ فتح في خرائط Google</button>
+          </div>
+          <p class="map-caption">موقع البائع: سيدي بوزيد — توصيل متوفر لجميع ولايات تونس</p>
+        </div>
+
+        <div class="tab-panel" id="tab-reviews">
+          <div class="review-hero">
+            <div class="review-score-big">
+              <div class="rsb-num">4.9</div>
+              <div class="rsb-stars">★★★★★</div>
+              <div class="rsb-cnt">120 تقييم</div>
+            </div>
+            <div class="rating-bars-col">
+              <div class="rbar-row"><span class="rbar-lbl">5★</span><div class="rbar-track"><div class="rbar-fill f5" style="width:88%"></div></div><span class="rbar-cnt">106</span></div>
+              <div class="rbar-row"><span class="rbar-lbl">4★</span><div class="rbar-track"><div class="rbar-fill f4" style="width:8%"></div></div><span class="rbar-cnt">9</span></div>
+              <div class="rbar-row"><span class="rbar-lbl">3★</span><div class="rbar-track"><div class="rbar-fill f3" style="width:3%"></div></div><span class="rbar-cnt">3</span></div>
+              <div class="rbar-row"><span class="rbar-lbl">2★</span><div class="rbar-track"><div class="rbar-fill f2" style="width:2%"></div></div><span class="rbar-cnt">2</span></div>
+              <div class="rbar-row"><span class="rbar-lbl">1★</span><div class="rbar-track"><div class="rbar-fill f1" style="width:0%"></div></div><span class="rbar-cnt">0</span></div>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="rev-header">
+              <div class="rev-user"><div class="rev-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">ع</div><div><div class="rev-name">عمر بن صالح</div><div class="rev-date">منذ أسبوع</div></div></div>
+              <div class="rev-stars">★★★★★</div>
+            </div>
+            <div class="rev-text">خروف ممتاز فعلاً! البائع محترف جداً، والخروف بالضبط كما وصفه — صحة ممتازة ووزن مطابق. شكراً على منصة أمانة.</div>
+          </div>
+          <div class="review-item">
+            <div class="rev-header">
+              <div class="rev-user"><div class="rev-avt" style="background:linear-gradient(135deg,#2196f3,#0d47a1)">ح</div><div><div class="rev-name">حسن المنصوري</div><div class="rev-date">منذ أسبوعين</div></div></div>
+              <div class="rev-stars">★★★★★</div>
+            </div>
+            <div class="rev-text">اشتريت 3 أغنام من نفس المربي، جميعها بصحة ممتازة. البائع صادق ويصف ما عنده بالضبط. أنصح به بشدة!</div>
+          </div>
+          <div class="review-item">
+            <div class="rev-header">
+              <div class="rev-user"><div class="rev-avt" style="background:linear-gradient(135deg,#ff9800,#e65100)">ن</div><div><div class="rev-name">نادية الجعفري</div><div class="rev-date">منذ شهر</div></div></div>
+              <div class="rev-stars">★★★★☆</div>
+            </div>
+            <div class="rev-text">خروف جيد جداً والبائع متعاون. التوصيل تأخر قليلاً لكن الخروف وصل بسلامة. تجربة إيجابية.</div>
+          </div>
+          <button class="load-more-btn" onclick="showToast('تحميل المزيد...','info')">عرض جميع التقييمات (120) ↓</button>
+        </div>
+
+        <div class="tab-panel" id="tab-similar">
+          <div class="sim-grid">
+            <div class="sim-card"><div class="sim-photo"><img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=300&q=70" alt="" onerror="this.style.display='none'"><span class="sim-pill sp-green">جديد</span></div><div class="sim-body"><div class="sim-name">خروف برقي سليانة</div><div class="sim-loc">📍 سليانة</div><div class="sim-bottom"><div class="sim-price">1,250 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+            <div class="sim-card"><div class="sim-photo" style="background:#f0f7f2">🐑<span class="sim-pill sp-gold">مميز</span></div><div class="sim-body"><div class="sim-name">خروف القيروان الأصيل</div><div class="sim-loc">📍 القيروان</div><div class="sim-bottom"><div class="sim-price">1,380 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+            <div class="sim-card"><div class="sim-photo" style="background:#fff8e1">🐑<span class="sim-pill sp-green">جديد</span></div><div class="sim-body"><div class="sim-name">خروف القصرين المحلي</div><div class="sim-loc">📍 القصرين</div><div class="sim-bottom"><div class="sim-price">1,100 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+            <div class="sim-card"><div class="sim-photo" style="background:#e8f5e9">🐑</div><div class="sim-body"><div class="sim-name">خروف صفاقس الممتاز</div><div class="sim-loc">📍 صفاقس</div><div class="sim-bottom"><div class="sim-price">1,300 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+            <div class="sim-card"><div class="sim-photo" style="background:#fce4ec">🐑<span class="sim-pill sp-gold">مميز</span></div><div class="sim-body"><div class="sim-name">خروف نابل الأصيل</div><div class="sim-loc">📍 نابل</div><div class="sim-bottom"><div class="sim-price">1,420 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+            <div class="sim-card"><div class="sim-photo" style="background:#e3f2fd">🐑</div><div class="sim-body"><div class="sim-name">خروف سيدي بوزيد</div><div class="sim-loc">📍 سيدي بوزيد</div><div class="sim-bottom"><div class="sim-price">1,600 <span>د.ت</span></div><button class="sim-btn">عرض</button></div></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- RIGHT -->
+  <div class="right-col">
+    <div class="purchase-box">
+      <div class="pb-header">
+        <div class="pb-price-row"><div class="pb-price">1,450</div><div class="pb-cur">د.ت</div></div>
+        <span class="pb-neg">🤝 قابل للتفاوض</span>
+        <div class="pb-availability"><div class="avail-dot"></div>الحيوان متاح ومعروض الآن</div>
+      </div>
+      <div class="pb-body">
+        <button class="btn-wa" onclick="showToast('فتح واتساب مع البائع...','success')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.144.564 4.151 1.549 5.887L.057 23.9l6.224-1.631A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.793 9.793 0 01-4.988-1.362l-.356-.212-3.694.968.986-3.595-.232-.369A9.793 9.793 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+          تواصل عبر واتساب
+        </button>
+        <button class="btn-call2" onclick="showToast('جارٍ الاتصال بالبائع...','info')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.72 12 19.79 19.79 0 011.65 3.51 2 2 0 013.63 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          اتصل بالبائع
+        </button>
+        <div class="del-title">🚚 خيارات التوصيل</div>
+        <div class="del-opts">
+          <div class="del-opt"><div class="del-opt-icon">🧑‍🌾</div><div class="del-opt-info"><div class="del-opt-name">توصيل البائع</div><div class="del-opt-sub">يوصل البائع شخصياً</div></div><span class="del-opt-status">متوفر</span></div>
+          <div class="del-opt"><div class="del-opt-icon">🚛</div><div class="del-opt-info"><div class="del-opt-name">نقل عبر أمانة</div><div class="del-opt-sub">شاحنة متخصصة بالحيوانات</div></div><span class="del-opt-status">متوفر</span></div>
+        </div>
+        <button class="calc-btn" onclick="showToast('حساب تكلفة النقل...','info')">📐 احسب تكلفة التوصيل إلى ولايتك</button>
+      </div>
+    </div>
+
+    <div class="seller-box">
+      <div class="sb-label">البائع</div>
+      <div class="seller-profile">
+        <div class="seller-avt">أ</div>
+        <div>
+          <div class="seller-name">أحمد بن سالم</div>
+          <div class="seller-badge">✓ فلاح محترف موثوق</div>
+          <div class="seller-since">عضو منذ مارس 2022</div>
+          <div class="seller-rating-row"><span class="seller-stars-sm">★★★★★</span><span class="seller-r-num">4.8</span></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="ss-item"><div class="ss-num">128</div><div class="ss-lbl">إعلان</div></div>
+        <div class="ss-item"><div class="ss-num">98%</div><div class="ss-lbl">نسبة الرد</div></div>
+        <div class="ss-item"><div class="ss-num">2 سا</div><div class="ss-lbl">متوسط الرد</div></div>
+      </div>
+      <div class="seller-tags">
+        <span class="stag">🌿 فلاحة</span><span class="stag">🐑 أغنام</span><span class="stag">🐄 أبقار</span>
+      </div>
+      <button class="view-all-btn" onclick="showToast('عرض إعلانات البائع...','info')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>
+        عرض جميع إعلانات البائع
+      </button>
+    </div>
+
+    <div class="trust-box">
+      <div class="trust-title">🛡️ تسوق بثقة وأمان</div>
+      <div class="trust-item"><div class="trust-ico">✅</div><div class="trust-text"><strong>ضمان الجودة</strong><span>منتجات مراجعة ومضمونة 100%</span></div></div>
+      <div class="trust-item"><div class="trust-ico">💳</div><div class="trust-text"><strong>دفع آمن ومحمي</strong><span>وسائل دفع متعددة وآمنة</span></div></div>
+      <div class="trust-item"><div class="trust-ico">🚚</div><div class="trust-text"><strong>توصيل سريع</strong><span>إلى جميع ولايات تونس</span></div></div>
+      <div class="trust-item"><div class="trust-ico">🎧</div><div class="trust-text"><strong>دعم 24/7</strong><span>فريق متخصص في الفلاحة</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<footer>
+  <div class="ft-logo">AMANA</div>
+  <div class="ft-copy">© 2024 أمانة — جميع الحقوق محفوظة</div>
+  <div class="ft-links"><a>اتصل بنا</a><a>من نحن</a><a>الشروط</a><a>الخصوصية</a></div>
+</footer>
+
+<script>
+const PHOTOS=['https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=1200&q=90','https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1200&q=90','https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=1200&q=90','https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=1200&q=90','https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=1200&q=90'];
+let curPhoto=0,isFav=false;
+function changePhoto(d){curPhoto=(curPhoto+d+PHOTOS.length)%PHOTOS.length;applyPhoto();}
+function setPhoto(idx,el){curPhoto=idx;applyPhoto();document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+function applyPhoto(){const img=document.getElementById('mainImg');img.style.opacity='0';img.style.transform='scale(1.04)';img.style.transition='opacity .25s,transform .3s';setTimeout(()=>{img.src=PHOTOS[curPhoto]||PHOTOS[0];img.style.opacity='1';img.style.transform='scale(1)';},120);document.getElementById('gCounter').textContent=`${curPhoto+1} / 8`;document.querySelectorAll('.thumb').forEach((t,i)=>t.classList.toggle('active',i===curPhoto));}
+function toggleFav(){isFav=!isFav;const b1=document.getElementById('favPhotoBtn'),b2=document.getElementById('favBtn2');if(isFav){b1.classList.add('faved');b1.querySelector('svg').style.fill='#dc2626';b1.querySelector('svg').style.color='#dc2626';b2.classList.add('faved');b2.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> في المفضلة ❤️';showToast('أُضيف إلى المفضلة ❤️','success');}else{b1.classList.remove('faved');b1.querySelector('svg').style.fill='none';b1.querySelector('svg').style.color='';b2.classList.remove('faved');b2.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> المفضلة';showToast('أُزيل من المفضلة','info');}}
+function shareAd(){showToast('تم نسخ رابط الإعلان ✓','success');}
+function switchTab(id,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+id).classList.add('active');}
+function showToast(msg,type='info'){const icons={success:'✅',info:'ℹ️',error:'❌'};const t=document.createElement('div');t.className=`toast ${type}`;t.innerHTML=`<span>${icons[type]}</span> ${msg}`;document.getElementById('toastWrap').appendChild(t);setTimeout(()=>{t.style.transition='opacity .3s,transform .3s';t.style.opacity='0';t.style.transform='translateY(10px)';setTimeout(()=>t.remove(),300);},3000);}
+</script>
+</body>
+</html>

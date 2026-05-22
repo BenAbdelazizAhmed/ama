@@ -1,0 +1,125 @@
+<section class="wholesale-hero">
+  <div class="wholesale-hero__content">
+    <div class="eyebrow">سوق الجملة</div>
+    <h1>بيع وشراء بالكميات، بطريقة أوضح وأسرع</h1>
+    <p>قطعان، أعلاف، معدات، وبضائع فلاحية بالجملة. اعرض الكمية، السعر، الولاية، وتواصل مباشرة مع المورد.</p>
+    <div class="hero-actions">
+      <button type="button" class="btn-primary" (click)="showForm = true">
+        <i data-lucide="plus-circle" width="17" height="17"></i>
+        أضف عرض جملة
+      </button>
+      <a routerLink="/animals" class="btn-secondary">
+        سوق الحيوانات
+      </a>
+    </div>
+  </div>
+
+  <div class="wholesale-hero__panel" aria-label="مؤشرات سوق الجملة">
+    <div>
+      <strong>{{ items.length || 0 }}</strong>
+      <span>عرض ناشط</span>
+    </div>
+    <div>
+      <strong>24</strong>
+      <span>ولاية</span>
+    </div>
+    <div>
+      <strong>مباشر</strong>
+      <span>تواصل مع المورد</span>
+    </div>
+  </div>
+</section>
+
+<main class="wholesale-shell">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">العروض المتاحة</div>
+      <h2>اختار عرض يناسب الكمية والسعر</h2>
+    </div>
+    <button type="button" class="btn-compact" (click)="showForm = !showForm">
+      {{ showForm ? 'إغلاق النموذج' : 'نشر عرض جديد' }}
+    </button>
+  </div>
+
+  <section class="form-card" *ngIf="showForm">
+    <div class="form-card__head">
+      <h3>إضافة عرض جملة</h3>
+      <p>املأ المعلومات الأساسية فقط. التفاصيل الواضحة تزيد الثقة وتسرّع البيع.</p>
+    </div>
+
+    <div class="form-grid">
+      <label class="field wide">
+        <span>عنوان العرض</span>
+        <input [(ngModel)]="form.title" placeholder="مثال: قطيع أغنام للبيع بالجملة" />
+      </label>
+      <label class="field">
+        <span>الفئة</span>
+        <input [(ngModel)]="form.category" placeholder="أغنام، أعلاف، معدات..." />
+      </label>
+      <label class="field">
+        <span>اسم المورد</span>
+        <input [(ngModel)]="form.supplierName" placeholder="اسم الشركة أو البائع" />
+      </label>
+      <label class="field">
+        <span>الولاية</span>
+        <input [(ngModel)]="form.location" placeholder="صفاقس، سوسة، تونس..." />
+      </label>
+      <label class="field">
+        <span>السعر</span>
+        <input [(ngModel)]="form.price" type="number" min="0" placeholder="0" />
+      </label>
+      <label class="field">
+        <span>وحدة السعر</span>
+        <input [(ngModel)]="form.priceUnit" placeholder="للرأس، للطن، للكيس..." />
+      </label>
+      <label class="field">
+        <span>أقل كمية</span>
+        <input [(ngModel)]="form.minQuantity" type="number" min="1" placeholder="10" />
+      </label>
+      <label class="field">
+        <span>رقم الهاتف</span>
+        <input [(ngModel)]="form.contactPhone" placeholder="+216 55 123 456" dir="ltr" />
+      </label>
+      <label class="field wide">
+        <span>وصف مختصر</span>
+        <textarea [(ngModel)]="form.description" placeholder="اذكر الكمية، الحالة، النقل، وطريقة الاتفاق."></textarea>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-primary" (click)="addItem()">نشر العرض</button>
+      <button type="button" class="btn-text" (click)="showForm = false">إلغاء</button>
+    </div>
+  </section>
+
+  <section class="wholesale-grid">
+    <article class="wholesale-card" *ngFor="let item of items; trackBy: trackById">
+      <div class="card-top">
+        <span class="category-pill">{{ item.category || 'عرض جملة' }}</span>
+        <button type="button" class="delete-btn" (click)="deleteItem(item.id)" aria-label="حذف العرض">×</button>
+      </div>
+
+      <h3>{{ item.title || 'عرض جملة بدون عنوان' }}</h3>
+      <p>{{ item.description || 'لا يوجد وصف بعد.' }}</p>
+
+      <div class="meta-row">
+        <span><i data-lucide="building-2" width="14" height="14"></i>{{ item.supplierName || 'مورد' }}</span>
+        <span><i data-lucide="map-pin" width="14" height="14"></i>{{ item.location || 'كل تونس' }}</span>
+      </div>
+
+      <div class="card-footer">
+        <div class="price">
+          <strong>{{ state.fmtPrice(item.price) }} دت</strong>
+          <span *ngIf="item.priceUnit">/ {{ item.priceUnit }}</span>
+        </div>
+        <div class="min-qty" *ngIf="item.minQuantity">أقل كمية: {{ item.minQuantity }}</div>
+      </div>
+    </article>
+
+    <div class="empty-state" *ngIf="items.length === 0">
+      <h3>ما فماش عروض جملة حالياً</h3>
+      <p>كن أول واحد ينشر عرض واضح للكميات الكبيرة.</p>
+      <button type="button" class="btn-primary" (click)="showForm = true">أضف أول عرض</button>
+    </div>
+  </section>
+</main>

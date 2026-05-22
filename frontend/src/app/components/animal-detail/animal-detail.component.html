@@ -1,0 +1,187 @@
+@if (isLoading) {
+  <div class="detail-loading" dir="rtl">
+    <div class="detail-spinner"></div>
+    <span>جاري تحميل تفاصيل الإعلان...</span>
+  </div>
+}
+
+@if (!isLoading && animal) {
+  <main class="animal-detail-page" dir="rtl">
+    <nav class="detail-breadcrumb" aria-label="التنقل">
+      <a routerLink="/">الرئيسية</a>
+      <span>/</span>
+      <a routerLink="/animals">سوق الحيوانات</a>
+      <span>/</span>
+      <strong>{{ animal.name }}</strong>
+    </nav>
+
+    <section class="detail-hero" aria-labelledby="animal-detail-title">
+      <div class="detail-hero__content">
+        <p class="detail-kicker">AMANAFARM · إعلان حيوان موثق</p>
+        <h1 id="animal-detail-title">{{ animal.name }}</h1>
+        <p>
+          تفاصيل واضحة، صور مرتبة، وسعر مفهوم باش تتواصل مع البائع بثقة وتاخذ قرار أسرع.
+        </p>
+      </div>
+
+      <div class="detail-hero__facts" aria-label="ملخص الإعلان">
+        <div>
+          <span>الفئة</span>
+          <strong>{{ animal.category || 'حيوان' }}</strong>
+        </div>
+        <div>
+          <span>الولاية</span>
+          <strong>{{ animal.location || '-' }}</strong>
+        </div>
+        <div>
+          <span>المشاهدات</span>
+          <strong>{{ animal.views || 0 }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="detail-layout">
+      <section class="detail-gallery-card" aria-label="صور الحيوان">
+        <div class="gallery-stage">
+          @if (animal.imageUrls && animal.imageUrls.length > 0) {
+            <img class="gallery-bg" [src]="animal.imageUrls[activeImgIdx]" alt="" aria-hidden="true">
+            <img class="gallery-img" [src]="animal.imageUrls[activeImgIdx]" [alt]="animal.name">
+          } @else {
+            <div class="gallery-empty">{{ CAT_EMOJIS[animal.category] || 'ح' }}</div>
+          }
+
+          <div class="gallery-badges">
+            @if (animal.featured) {
+              <span class="detail-badge detail-badge--gold">مميز</span>
+            }
+            @if (animal.trustedSeller) {
+              <span class="detail-badge detail-badge--green">بائع موثوق</span>
+            }
+          </div>
+
+          @if (animal.imageUrls && animal.imageUrls.length > 1) {
+            <div class="gallery-count">{{ activeImgIdx + 1 }} / {{ animal.imageUrls.length }}</div>
+          }
+        </div>
+
+        @if (animal.imageUrls && animal.imageUrls.length > 1) {
+          <div class="thumb-row">
+            @for (url of animal.imageUrls; track $index) {
+              <button
+                type="button"
+                class="thumb"
+                [class.thumb--active]="activeImgIdx === $index"
+                (click)="activeImgIdx = $index"
+                [attr.aria-label]="'عرض الصورة ' + ($index + 1)"
+              >
+                <img [src]="url" [alt]="'صورة ' + ($index + 1)">
+              </button>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="detail-info-card">
+        <div class="title-row">
+          <div>
+            <p class="eyebrow">{{ animal.category || 'حيوان' }}</p>
+            <h2>{{ animal.name }}</h2>
+          </div>
+          <span class="views">{{ animal.views || 0 }} مشاهدة</span>
+        </div>
+
+        <div class="quick-meta">
+          <span>
+            <i data-lucide="map-pin" width="14" height="14"></i>
+            {{ animal.location || 'غير محدد' }}
+            @if(animal.zone){<b> · {{ animal.zone }}</b>}
+          </span>
+          @if (animal.deliveryAvailable) {
+            <span class="pill pill--green">توصيل متاح</span>
+          }
+          @if (animal.vetCertificate) {
+            <span class="pill pill--gold">شهادة بيطرية</span>
+          }
+        </div>
+
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span>الفئة</span>
+            <strong>{{ animal.category || '-' }}</strong>
+          </div>
+          <div class="spec-item">
+            <span>العمر</span>
+            <strong>{{ animal.age || '-' }}</strong>
+          </div>
+          <div class="spec-item">
+            <span>الجنس</span>
+            <strong>{{ animal.gender || '-' }}</strong>
+          </div>
+          <div class="spec-item">
+            <span>الحالة الصحية</span>
+            <strong class="green-text">{{ animal.healthStatus || '-' }}</strong>
+          </div>
+        </div>
+
+        <div class="description-box">
+          <h3>وصف الإعلان</h3>
+          <p>{{ animal.description || 'البائع لم يضف وصفا مفصلا بعد. استعمل واتساب واسأل على التفاصيل قبل الاتفاق.' }}</p>
+        </div>
+      </section>
+
+      <aside class="detail-side">
+        <section class="price-card">
+          <span class="price-label">السعر المطلوب</span>
+          <div class="price-value">
+            {{ fmt(animal.price) }}
+            <small>دت</small>
+          </div>
+          @if (animal.priceType && animal.priceType !== 'FIXED') {
+            <p class="price-type">{{ formatPriceType(animal.priceType) }}</p>
+          }
+
+          <button type="button" class="wa-btn" (click)="openWa()">
+            <i data-lucide="message-circle" width="18" height="18"></i>
+            تواصل واتساب
+          </button>
+          <a routerLink="/animals" class="back-btn">العودة للسوق</a>
+        </section>
+
+        <section class="seller-card">
+          <div class="seller-head">
+            <div class="seller-avatar">{{ animal.sellerName?.slice(0, 1) || 'ب' }}</div>
+            <div>
+              <strong>{{ animal.sellerName }}</strong>
+              <span>{{ animal.trustedSeller ? 'بائع موثوق' : 'بائع' }}</span>
+            </div>
+            <em>{{ animal.sellerRating }}</em>
+          </div>
+          <div class="seller-line">
+            <span>الهاتف</span>
+            <strong>{{ animal.phone || '-' }}</strong>
+          </div>
+          <div class="seller-line">
+            <span>الولاية</span>
+            <strong>{{ animal.location || '-' }}</strong>
+          </div>
+        </section>
+
+        <section class="safety-card">
+          <h3>نصيحة AMANAFARM</h3>
+          <p>
+            شوف الحيوان بعينك أو عبر مكالمة فيديو قبل الدفع. ما تبعث حتى مبلغ قبل ما تتأكد من صحة المعلومات.
+          </p>
+        </section>
+      </aside>
+    </div>
+  </main>
+}
+
+@if (!isLoading && !animal) {
+  <div class="not-found" dir="rtl">
+    <div>!</div>
+    <h2>الإعلان غير موجود</h2>
+    <p>يمكن الإعلان تحذف أو الرابط غير صحيح.</p>
+    <a routerLink="/animals">العودة للسوق</a>
+  </div>
+}

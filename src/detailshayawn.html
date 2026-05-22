@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خروف سيدي ممتاز - أمانة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:14px; scroll-behavior:smooth; }
+body { font-family: 'Cairo', sans-serif; background: #f2f4f3; direction: rtl; color: #1a1a1a; line-height: 1.5; }
+a { text-decoration:none; color:inherit; }
+button, input, select, textarea { font-family: 'Cairo', sans-serif; }
+img { display:block; max-width:100%; }
+
+:root {
+  --green:#1c7c3a; --green-dark:#155a2b; --green-light:#e6f4ec; --green-mid:#28a84e;
+  --gold:#f59f00; --red:#e53935; --blue:#1565c0;
+  --border:#e2e6e3; --bg:#f2f4f3; --white:#ffffff;
+  --text:#1a1a1a; --text-sub:#5a6a5e; --text-light:#9aab9e;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07); --shadow-md:0 3px 12px rgba(0,0,0,.1);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.15); --radius:10px;
+}
+
+/* HEADER */
+.header {
+  background:#fff; border-bottom:1px solid var(--border);
+  height:62px; display:flex; align-items:center; padding:0 20px;
+  gap:14px; position:sticky; top:0; z-index:300; box-shadow:var(--shadow-sm);
+}
+.logo { display:flex; align-items:center; gap:9px; flex-shrink:0; cursor:pointer; }
+.logo-mark { width:46px; height:46px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; }
+.logo-svg { width:28px; height:28px; }
+.logo-text .lname { font-size:20px; font-weight:900; color:var(--green); }
+.logo-text .ltag  { font-size:9px; color:#888; font-weight:500; }
+.search-wrap { flex:1; max-width:520px; }
+.search-bar { display:flex; align-items:center; border:1.5px solid #d4d9d6; border-radius:8px; overflow:hidden; background:#f8faf9; }
+.search-bar input { flex:1; border:none; outline:none; padding:9px 14px; font-size:13px; color:#333; background:transparent; }
+.search-bar input::placeholder { color:#b0bab4; }
+.search-bar .sbtn { background:var(--green); color:#fff; border:none; padding:9px 22px; font-size:13.5px; font-weight:800; cursor:pointer; }
+.header-actions { display:flex; align-items:center; gap:4px; margin-right:auto; }
+.hico { display:flex; flex-direction:column; align-items:center; gap:1px; padding:5px 11px; cursor:pointer; position:relative; border-radius:8px; transition:.15s; }
+.hico:hover { background:#f0f7f2; }
+.hico svg { width:22px; height:22px; color:#555; stroke-width:1.7; }
+.hico .lbl { font-size:10px; color:#666; font-weight:600; }
+.badge { position:absolute; top:-5px; right:-9px; background:var(--green); color:#fff; font-size:9px; font-weight:800; border-radius:10px; padding:1px 5px; min-width:17px; text-align:center; }
+.badge.rb { background:var(--red); }
+.user-block { display:flex; align-items:center; gap:9px; padding:4px 12px; cursor:pointer; border-left:1px solid var(--border); }
+.user-avt-ph { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#78909c,#546e7a); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; }
+.user-meta .uname { font-size:13px; font-weight:800; color:#222; }
+.user-meta .utitle { font-size:10px; color:var(--green); font-weight:700; }
+
+/* NAVBAR */
+.navbar { background:#fff; border-bottom:2px solid var(--border); display:flex; align-items:center; padding:0 20px; }
+.navbar ul { display:flex; gap:0; overflow-x:auto; scrollbar-width:none; }
+.navbar ul::-webkit-scrollbar { display:none; }
+.navbar ul li a { display:flex; align-items:center; gap:5px; padding:11px 12px; color:#4a5a4e; font-size:12.5px; font-weight:600; white-space:nowrap; border-bottom:2.5px solid transparent; margin-bottom:-2px; transition:.15s; cursor:pointer; }
+.navbar ul li a:hover { color:var(--green); }
+.navbar ul li a.active { color:var(--green); border-bottom-color:var(--green); }
+
+/* BREADCRUMB */
+.breadcrumb { background:#fff; border-bottom:1px solid var(--border); padding:9px 20px; }
+.breadcrumb-inner { display:flex; align-items:center; gap:6px; font-size:12px; color:#888; }
+.breadcrumb-inner a { color:var(--green); cursor:pointer; }
+.breadcrumb-inner a:hover { text-decoration:underline; }
+.sep { color:#ccc; }
+
+/* PAGE LAYOUT */
+.page-wrap { max-width:1280px; margin:0 auto; padding:18px 20px; display:grid; grid-template-columns:1fr 320px; gap:20px; align-items:start; }
+
+/* LEFT COLUMN */
+.left-col { display:flex; flex-direction:column; gap:16px; }
+
+/* GALLERY */
+.gallery-box { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.main-photo { position:relative; height:420px; overflow:hidden; background:#e8f0ea; cursor:zoom-in; }
+.main-photo img { width:100%; height:100%; object-fit:cover; transition:.3s; }
+.main-photo:hover img { transform:scale(1.02); }
+.photo-badges { position:absolute; top:14px; right:14px; display:flex; flex-direction:column; gap:6px; }
+.badge-pill { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; color:#fff; display:inline-block; }
+.badge-gold { background:var(--gold); }
+.badge-green { background:var(--green); }
+.photo-actions { position:absolute; top:14px; left:14px; display:flex; gap:8px; }
+.photo-action-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.95); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.photo-action-btn:hover { transform:scale(1.1); }
+.photo-action-btn svg { width:18px; height:18px; color:#555; }
+.photo-action-btn.liked svg { color:var(--red); fill:var(--red); }
+.nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.9); border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.15); transition:.2s; z-index:2; }
+.nav-btn:hover { background:#fff; box-shadow:0 4px 16px rgba(0,0,0,.2); }
+.nav-btn.prev { right:14px; }
+.nav-btn.next { left:14px; }
+.photo-count { position:absolute; bottom:14px; left:14px; background:rgba(0,0,0,.55); color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+.thumbnails { display:flex; gap:8px; padding:12px; overflow-x:auto; }
+.thumbnails::-webkit-scrollbar { height:4px; }
+.thumbnails::-webkit-scrollbar-thumb { background:#ddd; border-radius:2px; }
+.thumb { width:72px; height:72px; border-radius:8px; overflow:hidden; border:2px solid transparent; cursor:pointer; flex-shrink:0; transition:.15s; }
+.thumb.active { border-color:var(--green); }
+.thumb img { width:100%; height:100%; object-fit:cover; }
+.thumb-more { width:72px; height:72px; border-radius:8px; border:2px dashed #ddd; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:11px; font-weight:800; color:#888; cursor:pointer; gap:3px; flex-shrink:0; transition:.15s; }
+.thumb-more:hover { border-color:var(--green); color:var(--green); }
+
+/* PRODUCT INFO */
+.product-info { background:#fff; border:1px solid var(--border); border-radius:12px; padding:22px; }
+.pi-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; flex-wrap:wrap; gap:10px; }
+.pi-title { font-size:24px; font-weight:900; color:#111; }
+.pi-views { display:flex; align-items:center; gap:5px; font-size:12px; color:#999; }
+.pi-views svg { width:14px; height:14px; }
+.pi-meta { display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap; }
+.pi-loc { display:flex; align-items:center; gap:5px; font-size:13px; color:#666; }
+.pi-loc svg { width:15px; height:15px; }
+.pi-date { font-size:12px; color:#aaa; }
+.pi-verified { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--green); font-weight:700; }
+.rating-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.stars-lg { color:#f59f00; font-size:16px; letter-spacing:1px; }
+.rating-score { font-size:14px; font-weight:800; color:#333; }
+.rating-count { font-size:12px; color:#888; }
+.price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+.pi-price { font-size:36px; font-weight:900; color:var(--green); line-height:1; }
+.pi-currency { font-size:15px; color:#888; font-weight:600; }
+.pi-negotiable { font-size:12px; color:var(--gold); font-weight:700; background:#fffde7; padding:3px 10px; border-radius:20px; }
+.pi-divider { border:none; border-top:1px solid #f0f2f1; margin:16px 0; }
+.specs-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.spec-item { background:#f8faf9; border-radius:10px; padding:12px 10px; text-align:center; }
+.spec-icon { font-size:22px; margin-bottom:5px; }
+.spec-label { font-size:10px; color:#888; font-weight:600; }
+.spec-value { font-size:13px; font-weight:800; color:#333; margin-top:2px; }
+.action-row { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+.btn-contact { background:var(--green); color:#fff; border:none; flex:1; min-width:140px; padding:13px; border-radius:9px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:.15s; }
+.btn-contact:hover { background:var(--green-dark); }
+.btn-fav { background:#fff; color:#666; border:1.5px solid #ddd; padding:12px 18px; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:7px; transition:.15s; }
+.btn-fav:hover { border-color:var(--red); color:var(--red); }
+.btn-share { background:#fff; color:#666; border:1.5px solid #ddd; padding:12px 18px; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:7px; transition:.15s; }
+.btn-share:hover { border-color:var(--green); color:var(--green); }
+
+/* TABS */
+.tabs-box { background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.tabs-nav { display:flex; border-bottom:1px solid var(--border); }
+.tab-btn { flex:1; padding:12px 10px; font-size:13px; font-weight:700; color:#666; cursor:pointer; border-bottom:2.5px solid transparent; margin-bottom:-1px; transition:.15s; text-align:center; background:none; border-top:none; border-right:none; border-left:none; display:flex; align-items:center; justify-content:center; gap:5px; }
+.tab-btn svg { width:15px; height:15px; }
+.tab-btn:hover { color:var(--green); }
+.tab-btn.active { color:var(--green); border-bottom-color:var(--green); }
+.tab-content { padding:20px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* DESCRIPTION */
+.desc-text { font-size:13.5px; color:#444; line-height:2; }
+.desc-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.desc-tag { background:#f0f7f2; color:var(--green); border-radius:20px; padding:4px 12px; font-size:11.5px; font-weight:700; }
+.attrs-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-top:4px; }
+.attr-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f5f5f5; }
+.attr-row:last-child { border-bottom:none; }
+.attr-label { font-size:12px; color:#888; display:flex; align-items:center; gap:6px; }
+.attr-label svg { width:13px; height:13px; }
+.attr-value { font-size:12.5px; font-weight:700; color:#333; }
+.attrs-col { padding:0 10px; }
+.attrs-col:first-child { border-left:1px solid #f0f0f0; }
+
+/* LOCATION MAP */
+.map-box { background:#e8f5e9; border-radius:10px; height:180px; display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; overflow:hidden; cursor:pointer; }
+.map-box::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#c8e6d4,#a8d8b8); }
+.map-pin { position:absolute; top:50%; left:50%; transform:translate(-50%,-100%); font-size:28px; filter:drop-shadow(0 3px 6px rgba(0,0,0,.3)); }
+.map-label { position:absolute; bottom:12px; right:12px; background:#fff; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700; color:#333; box-shadow:0 2px 8px rgba(0,0,0,.1); }
+.map-link { position:absolute; bottom:12px; left:12px; background:var(--green); color:#fff; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; }
+
+/* REVIEWS */
+.review-summary { display:flex; gap:20px; align-items:center; padding-bottom:16px; border-bottom:1px solid #f0f0f0; margin-bottom:16px; }
+.review-big { text-align:center; flex-shrink:0; }
+.review-score { font-size:48px; font-weight:900; color:var(--green); line-height:1; }
+.review-stars { color:#f59f00; font-size:18px; margin:4px 0; }
+.review-count { font-size:12px; color:#888; }
+.rating-bars { flex:1; display:flex; flex-direction:column; gap:6px; }
+.rbar-row { display:flex; align-items:center; gap:8px; }
+.rbar-label { font-size:11px; color:#888; white-space:nowrap; width:30px; }
+.rbar-track { flex:1; height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; }
+.rbar-fill { height:100%; background:var(--gold); border-radius:3px; }
+.rbar-count { font-size:11px; color:#aaa; width:20px; text-align:left; }
+.review-item { padding:14px 0; border-bottom:1px solid #f5f5f5; }
+.review-item:last-child { border-bottom:none; }
+.review-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.reviewer { display:flex; align-items:center; gap:8px; }
+.reviewer-avt { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; }
+.reviewer-name { font-size:13px; font-weight:800; color:#222; }
+.reviewer-date { font-size:11px; color:#aaa; }
+.review-stars-sm { color:#f59f00; font-size:12px; }
+.review-text { font-size:13px; color:#555; line-height:1.8; }
+
+/* SIMILAR */
+.similar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.sim-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; cursor:pointer; transition:.2s; background:#fff; }
+.sim-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.sim-photo { height:100px; background:#f0f7f2; display:flex; align-items:center; justify-content:center; font-size:36px; position:relative; overflow:hidden; }
+.sim-photo img { width:100%; height:100%; object-fit:cover; }
+.sim-badge { position:absolute; top:6px; right:6px; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:800; color:#fff; }
+.sim-body { padding:9px; }
+.sim-name { font-size:12px; font-weight:800; color:#222; margin-bottom:3px; }
+.sim-loc { font-size:10px; color:#888; margin-bottom:4px; }
+.sim-price { font-size:15px; font-weight:900; color:var(--green); }
+
+/* RIGHT COLUMN */
+.right-col { display:flex; flex-direction:column; gap:14px; position:sticky; top:80px; }
+
+/* PRICE BOX */
+.price-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px; }
+.pb-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:4px; }
+.pb-price { font-size:30px; font-weight:900; color:var(--green); }
+.pb-currency { font-size:14px; color:#888; }
+.pb-neg { font-size:11px; color:var(--gold); font-weight:700; margin-bottom:14px; }
+.btn-whatsapp { width:100%; background:#25d366; color:#fff; border:none; padding:13px; border-radius:9px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:.15s; margin-bottom:8px; }
+.btn-whatsapp:hover { background:#1ebe5a; }
+.btn-call { width:100%; background:#fff; color:var(--green); border:2px solid var(--green); padding:12px; border-radius:9px; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; transition:.15s; margin-bottom:8px; }
+.btn-call:hover { background:var(--green-light); }
+.delivery-opts { display:flex; flex-direction:column; gap:6px; margin-top:12px; padding-top:12px; border-top:1px solid #f0f0f0; }
+.del-opt { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
+.del-label { display:flex; align-items:center; gap:6px; color:#555; }
+.del-label svg { width:14px; height:14px; }
+.del-status { font-size:11px; font-weight:800; color:var(--green); }
+.del-calc { width:100%; background:var(--green-light); color:var(--green); border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; margin-top:8px; }
+
+/* SELLER BOX */
+.seller-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:18px; }
+.sb-title { font-size:12px; font-weight:800; color:#aaa; text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px; }
+.seller-profile { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.seller-avt-lg { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:20px; flex-shrink:0; }
+.seller-name-lg { font-size:15px; font-weight:900; color:#222; margin-bottom:2px; }
+.seller-verified-badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--green); font-weight:700; }
+.seller-verified-badge svg { width:13px; height:13px; }
+.seller-rating-lg { font-size:12px; color:#888; margin-top:2px; }
+.seller-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:14px; }
+.stat-item { background:#f8faf9; border-radius:8px; padding:8px; text-align:center; }
+.stat-num { font-size:15px; font-weight:900; color:var(--green); line-height:1; }
+.stat-lbl { font-size:10px; color:#888; margin-top:2px; }
+.seller-actions { display:flex; flex-direction:column; gap:6px; }
+.seller-btn { width:100%; border:1.5px solid var(--border); background:#fff; color:#444; padding:9px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:.15s; }
+.seller-btn:hover { border-color:var(--green); color:var(--green); }
+.seller-btn svg { width:14px; height:14px; }
+
+/* TRUST BOX */
+.trust-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:16px; }
+.trust-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; color:#222; margin-bottom:12px; }
+.trust-title svg { width:18px; height:18px; color:var(--green); }
+.trust-item { display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; }
+.trust-item:last-child { margin-bottom:0; }
+.trust-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.trust-text strong { font-size:12px; font-weight:800; display:block; color:#333; margin-bottom:1px; }
+.trust-text span { font-size:11px; color:#888; }
+
+/* TOAST */
+.toast-container { position:fixed; bottom:24px; left:24px; z-index:2000; display:flex; flex-direction:column; gap:8px; }
+.toast { background:#222; color:#fff; padding:12px 18px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); animation:slideUp .3s ease; display:flex; align-items:center; gap:10px; min-width:240px; }
+.toast.success { background:var(--green); }
+.toast.info { background:var(--blue); }
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* FOOTER */
+footer { background:#155a2b; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; }
+.ft-links { display:flex; gap:16px; flex-wrap:wrap; }
+.ft-links a { font-size:11px; color:rgba(255,255,255,.75); cursor:pointer; }
+.ft-copy { font-size:10.5px; color:rgba(255,255,255,.6); }
+.ft-logo { font-size:18px; font-weight:900; color:#fff; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L34 10 L34 22 C34 30 20 37 20 37 C20 37 6 30 6 22 L6 10 Z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>
+        <path d="M15 24 Q14 18 17 16 Q19 14 22 15 Q25 14 26 17 L27 20 Q26 22 24 23 L22 24 Q20 26 20 28 L18 28 Q18 26 16 25 Z" fill="white"/>
+        <circle cx="24" cy="17" r="1.5" fill="rgba(255,255,255,.6)"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <div class="lname">AMANAFARM</div>
+      <div class="ltag">منصة الفلاحة و الحيوانات الأولى في تونس</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-bar">
+      <input type="text" placeholder="ابحث عن حيوان، منتج، خدمة...">
+      <button class="sbtn">بحث</button>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <div class="user-block">
+      <div class="user-avt-ph">م</div>
+      <div class="user-meta">
+        <div class="uname">محمد الفلاح</div>
+        <div class="utitle">فلاح محترف</div>
+      </div>
+    </div>
+    <div class="hico">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="badge">2</span>
+      </div>
+      <span class="lbl">السلة</span>
+    </div>
+    <div class="hico">
+      <div style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="badge rb">3</span>
+      </div>
+      <span class="lbl">الإشعارات</span>
+    </div>
+    <div class="hico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="lbl">الرسائل</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <ul>
+    <li><a href="javascript:history.back()">الرئيسية</a></li>
+    <li><a>فرص العمل</a></li>
+    <li><a class="active">السوق</a></li>
+    <li><a>النقل</a></li>
+    <li><a>البيطرة</a></li>
+    <li><a>الصيدلية</a></li>
+    <li><a>المنتجات</a></li>
+    <li><a>الاستثمار</a></li>
+    <li><a>المجتمع</a></li>
+  </ul>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="javascript:history.back()">الرئيسية</a>
+    <span class="sep">›</span>
+    <a>السوق</a>
+    <span class="sep">›</span>
+    <a>أغنام</a>
+    <span class="sep">›</span>
+    <span style="color:#666">خروف سيدي ممتاز</span>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page-wrap">
+  <!-- LEFT -->
+  <div class="left-col">
+
+    <!-- GALLERY -->
+    <div class="gallery-box">
+      <div class="main-photo" id="mainPhoto">
+        <img id="mainImg" src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=900&q=85" alt="خروف سيدي ممتاز" onerror="this.style.display='none'">
+        <div class="photo-badges">
+          <span class="badge-pill badge-gold">مميز</span>
+          <span class="badge-pill badge-green">جديد</span>
+        </div>
+        <div class="photo-actions">
+          <button class="photo-action-btn" id="favBtn" onclick="toggleFav()" title="إضافة للمفضلة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+          <button class="photo-action-btn" onclick="showToast('تم مشاركة الرابط ✓','success')" title="مشاركة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+        <button class="nav-btn prev" onclick="changePhoto(-1)">›</button>
+        <button class="nav-btn next" onclick="changePhoto(1)">‹</button>
+        <div class="photo-count" id="photoCount">1 / 8</div>
+      </div>
+      <div class="thumbnails">
+        <div class="thumb active" onclick="setPhoto(0,this)">
+          <img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=150&q=70" alt="">
+        </div>
+        <div class="thumb" onclick="setPhoto(1,this)">
+          <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.parentElement.innerHTML='🐑'">
+        </div>
+        <div class="thumb" onclick="setPhoto(2,this)">
+          <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.parentElement.innerHTML='🐑'">
+        </div>
+        <div class="thumb" onclick="setPhoto(3,this)">
+          <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.parentElement.innerHTML='🌾'">
+        </div>
+        <div class="thumb" onclick="setPhoto(4,this)">
+          <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=150&q=70" alt="" onerror="this.parentElement.style.background='#f0f7f2';this.parentElement.innerHTML='🏡'">
+        </div>
+        <div class="thumb-more" onclick="showToast('عرض جميع الصور الـ 8...','info')">
+          <span style="font-size:18px;font-weight:900">+3</span>
+          <span>صور</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="product-info">
+      <div class="pi-top">
+        <div class="pi-title">خروف سيدي ممتاز</div>
+        <div class="pi-views">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          256 مشاهدة
+        </div>
+      </div>
+      <div class="pi-meta">
+        <div class="pi-loc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          سيدي بوزيد، تونس
+        </div>
+        <div class="pi-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-left:3px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          نُشر منذ 6 أيام
+        </div>
+        <div class="pi-verified">
+          <svg viewBox="0 0 24 24" fill="#1c7c3a" stroke-width="0" width="14" height="14"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          موثوق
+        </div>
+      </div>
+      <div class="rating-row">
+        <div class="stars-lg">★★★★★</div>
+        <div class="rating-score">4.9</div>
+        <div class="rating-count">(120 تقييم)</div>
+      </div>
+      <div class="price-row">
+        <div class="pi-price">1,450</div>
+        <div class="pi-currency">د.ت</div>
+        <div class="pi-negotiable">قابل للتفاوض</div>
+      </div>
+      <hr class="pi-divider">
+      <div class="specs-grid">
+        <div class="spec-item">
+          <div class="spec-icon">⚖️</div>
+          <div class="spec-label">الوزن</div>
+          <div class="spec-value">55 كغ</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">🗓️</div>
+          <div class="spec-label">العمر</div>
+          <div class="spec-value">6 أشهر</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">🐑</div>
+          <div class="spec-label">النوع</div>
+          <div class="spec-value">أغنام</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">🏥</div>
+          <div class="spec-label">الصحة</div>
+          <div class="spec-value">سليمة</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">🌿</div>
+          <div class="spec-label">التغذية</div>
+          <div class="spec-value">ممتازة</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-contact" onclick="showToast('جارٍ فتح المحادثة مع البائع...','info')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          تواصل مع البائع
+        </button>
+        <button class="btn-fav" id="favBtn2" onclick="toggleFav()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          إضافة للمفضلة
+        </button>
+        <button class="btn-share" onclick="showToast('تم نسخ الرابط ✓','success')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          مشاركة
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-box">
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('desc',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+          تفاصيل المنتج
+        </button>
+        <button class="tab-btn" onclick="switchTab('map',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          الموقع
+        </button>
+        <button class="tab-btn" onclick="switchTab('reviews',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          التقييمات (120)
+        </button>
+        <button class="tab-btn" onclick="switchTab('similar',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          منتجات مشابهة
+        </button>
+      </div>
+
+      <!-- DESCRIPTION TAB -->
+      <div class="tab-content">
+        <div class="tab-panel active" id="tab-desc">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+              <h4 style="font-size:13.5px;font-weight:800;color:#333;margin-bottom:12px;">الوصف</h4>
+              <p class="desc-text">خروف سيدي ممتاز، صحة ممتازة، مناسب للتربية أو للمناسبات. تمت تربيته في بيئة نظيفة ومع تغذية طبيعية 100% بدون مواد كيميائية. تتم متابعته من طرف طبيب بيطري بانتظام.<br><br>خروف عربي أصيل من منطقة سيدي بوزيد، معروف بجودته العالية وقدرته على التكيف مع الظروف المناخية التونسية.</p>
+              <div class="desc-tags">
+                <span class="desc-tag">أكل طبيعي</span>
+                <span class="desc-tag">نشط سليم</span>
+                <span class="desc-tag">جاهز للنقل</span>
+                <span class="desc-tag">لا يعاني من أي أمراض</span>
+              </div>
+            </div>
+            <div>
+              <h4 style="font-size:13.5px;font-weight:800;color:#333;margin-bottom:12px;">معلومات إضافية</h4>
+              <div class="attrs-grid">
+                <div class="attrs-col">
+                  <div class="attr-row"><span class="attr-label">الحالة</span><span class="attr-value" style="color:var(--green)">صحة ممتازة</span></div>
+                  <div class="attr-row"><span class="attr-label">نوع التغذية</span><span class="attr-value">علف طبيعي</span></div>
+                  <div class="attr-row"><span class="attr-label">مكان التربية</span><span class="attr-value">مزرعة خاصة</span></div>
+                  <div class="attr-row"><span class="attr-label">رقم التسجيل</span><span class="attr-value">TN-5642-2024</span></div>
+                </div>
+                <div class="attrs-col">
+                  <div class="attr-row"><span class="attr-label">نُشر منذ</span><span class="attr-value">6 أيام</span></div>
+                  <div class="attr-row"><span class="attr-label">صحة الحيوان</span><span class="attr-value">ممتازة</span></div>
+                  <div class="attr-row"><span class="attr-label">التطعيم</span><span class="attr-value" style="color:var(--green)">✓ مكتمل</span></div>
+                  <div class="attr-row"><span class="attr-label">الجنس</span><span class="attr-value">ذكر</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAP TAB -->
+        <div class="tab-panel" id="tab-map">
+          <div class="map-box">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#c8e6d4,#a8d8b8);"></div>
+            <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr);opacity:.15;">
+              <div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div><div style="border:1px solid #1c7c3a"></div>
+            </div>
+            <div class="map-pin">📍</div>
+            <div class="map-label">📍 سيدي بوزيد، تونس</div>
+            <div class="map-link" onclick="showToast('فتح الخريطة في Google Maps...','info')">فتح في خرائط Google</div>
+          </div>
+          <p style="font-size:12px;color:#888;margin-top:10px;text-align:center;">موقع البائع: سيدي بوزيد، تونس - يتوفر توصيل لجميع الولايات</p>
+        </div>
+
+        <!-- REVIEWS TAB -->
+        <div class="tab-panel" id="tab-reviews">
+          <div class="review-summary">
+            <div class="review-big">
+              <div class="review-score">4.9</div>
+              <div class="review-stars">★★★★★</div>
+              <div class="review-count">120 تقييم</div>
+            </div>
+            <div class="rating-bars">
+              <div class="rbar-row"><span class="rbar-label">5 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:88%"></div></div><span class="rbar-count">106</span></div>
+              <div class="rbar-row"><span class="rbar-label">4 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:8%"></div></div><span class="rbar-count">9</span></div>
+              <div class="rbar-row"><span class="rbar-label">3 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:3%"></div></div><span class="rbar-count">3</span></div>
+              <div class="rbar-row"><span class="rbar-label">2 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:2%"></div></div><span class="rbar-count">2</span></div>
+              <div class="rbar-row"><span class="rbar-label">1 ★</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span class="rbar-count">0</span></div>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">ع</div>
+                <div><div class="reviewer-name">عمر بن صالح</div><div class="reviewer-date">منذ أسبوع</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★★</div>
+            </div>
+            <p class="review-text">خروف ممتاز فعلاً! تعاملت مع البائع وكان محترف جداً. الخروف بالضبط كما وصفه، صحة ممتازة ووزن مطابق. شكراً على منصة أمانة.</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#2196f3,#0d47a1)">ح</div>
+                <div><div class="reviewer-name">حسن المنصوري</div><div class="reviewer-date">منذ أسبوعين</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★★</div>
+            </div>
+            <p class="review-text">اشتريت 3 أغنام من نفس المربي، جميعها بصحة ممتازة. البائع صادق ويصف ما عنده بالضبط. أنصح به بشدة!</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="reviewer-avt" style="background:linear-gradient(135deg,#ff9800,#e65100)">ن</div>
+                <div><div class="reviewer-name">نادية الجعفري</div><div class="reviewer-date">منذ شهر</div></div>
+              </div>
+              <div class="review-stars-sm">★★★★☆</div>
+            </div>
+            <p class="review-text">خروف جيد جداً، والبائع متعاون. التوصيل تأخر قليلاً لكن الخروف وصل بسلامة. بشكل عام تجربة إيجابية.</p>
+          </div>
+          <button style="width:100%;margin-top:12px;background:#f8faf9;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:13px;font-weight:700;color:#555;cursor:pointer;" onclick="showToast('تحميل المزيد من التقييمات...','info')">عرض جميع التقييمات (120)</button>
+        </div>
+
+        <!-- SIMILAR TAB -->
+        <div class="tab-panel" id="tab-similar">
+          <div class="similar-grid">
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#f0f7f2">
+                <img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=250&q=70" alt="" onerror="this.style.display='none'">
+                <span class="sim-badge badge-green">جديد</span>
+              </div>
+              <div class="sim-body"><div class="sim-name">خروف برقي سليانة</div><div class="sim-loc">📍 سليانة</div><div class="sim-price">1,250 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#fff8e1">
+                <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=250&q=70" alt="" onerror="this.style.display='none'">
+                <span class="sim-badge badge-gold">مميز</span>
+              </div>
+              <div class="sim-body"><div class="sim-name">خروف سيدي القيروان</div><div class="sim-loc">📍 القيروان</div><div class="sim-price">1,380 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#e8f5e9">
+                <img src="https://images.unsplash.com/photo-1547161078-cd08a4b93b43?w=250&q=70" alt="" onerror="this.parentElement.innerHTML='🐑';this.parentElement.style.fontSize='50px'">
+                <span class="sim-badge badge-green">جديد</span>
+              </div>
+              <div class="sim-body"><div class="sim-name">خروف محلي القصرين</div><div class="sim-loc">📍 القصرين</div><div class="sim-price">1,100 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#f0f7f2">🐑</div>
+              <div class="sim-body"><div class="sim-name">خروف برقي صفاقس</div><div class="sim-loc">📍 صفاقس</div><div class="sim-price">1,300 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#fff8e1">🐑</div>
+              <div class="sim-body"><div class="sim-name">خروف سيدي بوزيد</div><div class="sim-loc">📍 سيدي بوزيد</div><div class="sim-price">1,600 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+            <div class="sim-card" onclick="showToast('تحميل الإعلان...','info')">
+              <div class="sim-photo" style="background:#e8f5e9">🐑</div>
+              <div class="sim-body"><div class="sim-name">خروف برقي نابل</div><div class="sim-loc">📍 نابل</div><div class="sim-price">1,420 <span style="font-size:11px;color:#888">د.ت</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-col">
+
+    <!-- PRICE BOX -->
+    <div class="price-box">
+      <div class="pb-price-row">
+        <div class="pb-price">1,450</div>
+        <div class="pb-currency">د.ت</div>
+      </div>
+      <div class="pb-neg">قابل للتفاوض</div>
+      <button class="btn-whatsapp" onclick="showToast('فتح واتساب مع البائع...','success')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.144.564 4.151 1.549 5.887L.057 23.9l6.224-1.631A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.793 9.793 0 01-4.988-1.362l-.356-.212-3.694.968.986-3.595-.232-.369A9.793 9.793 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        تواصل واتساب
+      </button>
+      <button class="btn-call" onclick="showToast('جارٍ الاتصال بالبائع...','info')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.72 12 19.79 19.79 0 011.65 3.51 2 2 0 013.63 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        اتصل بالبائع
+      </button>
+      <div class="delivery-opts">
+        <h5 style="font-size:12px;font-weight:800;color:#444;margin-bottom:8px;">خيارات التوصيل</h5>
+        <div class="del-opt">
+          <div class="del-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            النقل بواسطة البائع
+          </div>
+          <span class="del-status">متوفر</span>
+        </div>
+        <div class="del-opt">
+          <div class="del-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            النقل عبر منصتنا
+          </div>
+          <span class="del-status">متوفر</span>
+        </div>
+        <button class="del-calc" onclick="showToast('حساب تكلفة النقل...','info')">احسب تكلفة النقل</button>
+      </div>
+    </div>
+
+    <!-- SELLER BOX -->
+    <div class="seller-box">
+      <div class="sb-title">معلومات البائع</div>
+      <div class="seller-profile">
+        <div class="seller-avt-lg" style="background:linear-gradient(135deg,#4caf50,#1c7c3a)">أ</div>
+        <div>
+          <div class="seller-name-lg">أحمد بن سالم</div>
+          <div class="seller-verified-badge">
+            <svg viewBox="0 0 24 24" fill="#1c7c3a" stroke="none"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            فلاح محترف
+          </div>
+          <div class="seller-rating-lg">★★★★★ 4.8 | عضو منذ مارس 2022</div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-item"><div class="stat-num">128</div><div class="stat-lbl">إعلانات</div></div>
+        <div class="stat-item"><div class="stat-num">98%</div><div class="stat-lbl">نسبة الرد</div></div>
+        <div class="stat-item"><div class="stat-num">2 سا</div><div class="stat-lbl">متوسط الرد</div></div>
+      </div>
+      <div class="seller-actions">
+        <button class="seller-btn" onclick="showToast('عرض جميع إعلانات البائع...','info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>
+          عرض جميع الإعلانات
+        </button>
+      </div>
+    </div>
+
+    <!-- TRUST BOX -->
+    <div class="trust-box">
+      <div class="trust-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        تسوق بثقة وأمان
+      </div>
+      <div class="trust-item"><div class="trust-icon">✅</div><div class="trust-text"><strong>ضمان الجودة</strong><span>منتجات مضمونة 100%</span></div></div>
+      <div class="trust-item"><div class="trust-icon">💳</div><div class="trust-text"><strong>دفع آمن</strong><span>وسائل دفع محمية</span></div></div>
+      <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-text"><strong>توصيل سريع</strong><span>إلى جميع الولايات</span></div></div>
+      <div class="trust-item"><div class="trust-icon">🎧</div><div class="trust-text"><strong>دعم 24/7</strong><span>فريق دعم متاح دائماً</span></div></div>
+    </div>
+
+  </div><!-- /right-col -->
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-links">
+    <a>اتصل بنا</a>
+    <a>عن أمانة</a>
+    <a>الشروط والأحكام</a>
+    <a>سياسة الخصوصية</a>
+  </div>
+  <div class="ft-copy">© 2024 AMANA - جميع الحقوق محفوظة</div>
+  <div class="ft-logo">AMANA</div>
+</footer>
+
+<script>
+const photos = [
+  'https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=900&q=85',
+  'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=900&q=85',
+  'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=900&q=85',
+  'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=900&q=85',
+  'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=900&q=85',
+];
+let currentPhoto = 0;
+let isFav = false;
+
+function changePhoto(dir) {
+  currentPhoto = (currentPhoto + dir + photos.length) % photos.length;
+  document.getElementById('mainImg').src = photos[currentPhoto];
+  document.getElementById('photoCount').textContent = `${currentPhoto+1} / 8`;
+  document.querySelectorAll('.thumb').forEach((t,i) => t.classList.toggle('active', i === currentPhoto));
+}
+
+function setPhoto(idx, el) {
+  currentPhoto = idx;
+  document.getElementById('mainImg').src = photos[idx] || photos[0];
+  document.getElementById('photoCount').textContent = `${idx+1} / 8`;
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleFav() {
+  isFav = !isFav;
+  const btns = [document.getElementById('favBtn'), document.getElementById('favBtn2')];
+  if (isFav) {
+    btns[0].classList.add('liked');
+    btns[0].querySelector('svg').style.fill = '#e53935';
+    btns[0].querySelector('svg').style.color = '#e53935';
+    btns[1].innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="#e53935" stroke="#e53935" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> تمت الإضافة للمفضلة`;
+    btns[1].style.color = '#e53935';
+    btns[1].style.borderColor = '#e53935';
+    showToast('تمت إضافة الإعلان إلى المفضلة ❤️','success');
+  } else {
+    btns[0].classList.remove('liked');
+    btns[0].querySelector('svg').style.fill = 'none';
+    btns[0].querySelector('svg').style.color = '#555';
+    btns[1].innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> إضافة للمفضلة`;
+    btns[1].style.color = '';
+    btns[1].style.borderColor = '';
+    showToast('تم إزالة الإعلان من المفضلة','info');
+  }
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+function showToast(msg, type='info') {
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]}</span>${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+</script>
+</body>
+</html>

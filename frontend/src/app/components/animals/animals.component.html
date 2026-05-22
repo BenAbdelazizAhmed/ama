@@ -1,0 +1,444 @@
+<section class="services-hero market-hero-clone mode-hire" dir="rtl">
+  <div class="services-hero__inner">
+    <div class="services-hero__content">
+      <div class="services-hero__badge">
+        <span class="live-dot"></span>
+        <span>{{ totalAds }} إعلان متاح</span>
+      </div>
+
+      <h1>سوق الحيوانات في تونس</h1>
+      <p>إعلانات موثوقة، أسعار واضحة، وتواصل مباشر في كامل تونس.</p>
+
+      <div class="mode-switch" role="group" aria-label="إجراءات سوق الحيوانات">
+        <button type="button" class="active" (click)="openAddModal()">انشر إعلان حيوان</button>
+        <button type="button" (click)="openAddModal('bulk')">بيع قطيع</button>
+        <button type="button" (click)="scrollToMarket()">شوف السوق</button>
+      </div>
+
+      <div class="services-stats" aria-label="إحصائيات السوق">
+        <div>
+          <strong>{{ totalAds }}</strong>
+          <span>إعلان</span>
+        </div>
+        <div>
+          <strong>24</strong>
+          <span>ولاية</span>
+        </div>
+        <div>
+          <strong>{{ fmt(avgPrice) }}</strong>
+          <span>متوسط السعر</span>
+        </div>
+        <div>
+          <strong>{{ verifiedCount }}</strong>
+          <span>بائع موثوق</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="filter-bar" dir="rtl">
+  <div class="filter-bar-inner">
+    <div class="market-search">
+      <i data-lucide="search" width="15" height="15"></i>
+      <input
+        type="text"
+        placeholder="لوّج: خروف، بقرة، دجاج..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="debouncedFilter()"
+      />
+      <button *ngIf="searchQuery" type="button" (click)="clearSearch()" aria-label="مسح البحث">×</button>
+    </div>
+
+    <div class="sale-tabs" aria-label="نوع البيع">
+      <button type="button" [class.active]="saleAllActive" (click)="filterSaleAll()">الكل</button>
+      <button type="button" [class.active]="saleSingleActive" (click)="filterSaleSingle()">بالكعبة</button>
+      <button type="button" [class.active]="saleBulkActive" (click)="filterSaleBulk()">بالجملة</button>
+    </div>
+
+    <div class="category-rail" aria-label="الفئات">
+      <button
+        *ngFor="let cat of CATEGORIES"
+        class="filter-btn"
+        [class.active]="activeCategory === cat"
+        (click)="filterByCategory(cat)"
+      >
+        {{ cat }}
+      </button>
+    </div>
+
+    <select
+      class="sort-select"
+      [(ngModel)]="sortValue"
+      (ngModelChange)="applyFilter()"
+      aria-label="ترتيب النتائج"
+    >
+      <option value="newest">الأحدث</option>
+      <option value="cheap">الأرخص</option>
+      <option value="expensive">الأغلى</option>
+    </select>
+  </div>
+</div>
+
+<section class="market-layout" #marketSection aria-label="سوق الإعلانات" dir="rtl">
+  <aside class="sidebar">
+    <div class="box">
+      <div class="box-title">
+        <i data-lucide="sliders-horizontal" width="15" height="15"></i>
+        فلترة سريعة
+      </div>
+      <div class="price-range-row">
+        <input type="number" class="price-input" placeholder="من" [(ngModel)]="priceMin" (ngModelChange)="debouncedFilter()" min="0" />
+        <span class="price-sep">-</span>
+        <input type="number" class="price-input" placeholder="إلى" [(ngModel)]="priceMax" (ngModelChange)="debouncedFilter()" min="0" />
+      </div>
+      <button class="retry-btn reset-filter-btn" type="button" (click)="resetFilters()">عرض الكل</button>
+    </div>
+
+    <div class="box compact-stats">
+      <div class="box-title">
+        <i data-lucide="bar-chart-2" width="15" height="15"></i>
+        السوق اليوم
+      </div>
+      <div class="stat-mini">
+        <div>
+          <div class="stat-mini-num">{{ totalAds || '-' }}</div>
+          <div class="stat-mini-lbl">إعلان نشط</div>
+        </div>
+      </div>
+      <div class="stat-mini">
+        <div>
+          <div class="stat-mini-num">{{ avgPrice ? fmt(avgPrice) : '-' }}</div>
+          <div class="stat-mini-lbl">متوسط السعر دت</div>
+        </div>
+      </div>
+      <div class="stat-mini">
+        <div>
+          <div class="stat-mini-num">{{ verifiedCount || '-' }}</div>
+          <div class="stat-mini-lbl">بائع موثوق</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="box-title">
+        <i data-lucide="layout-grid" width="15" height="15"></i>
+        الفئات
+      </div>
+      <div class="cat-list">
+        <div
+          *ngFor="let cat of CATEGORIES"
+          class="cat-item"
+          [class.active]="activeCategory === cat"
+          (click)="filterByCategory(cat)"
+          role="button"
+          [attr.aria-pressed]="activeCategory === cat"
+          tabindex="0"
+          (keydown.enter)="filterByCategory(cat)"
+        >
+          <span>{{ cat }}</span>
+          <span class="cat-count">{{ getCatCount(cat) }}</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>قاعدين نحمّلو الإعلانات...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+      <div class="content-header">
+        <h2>{{ activeCategory === 'الكل' ? 'آخر الإعلانات' : activeCategory }}</h2>
+        <div class="result-info">
+          <strong>{{ filteredList.length }}</strong> إعلان متاح
+        </div>
+      </div>
+
+      <div class="error-state" *ngIf="loadError">
+        <h3>ما تنجمناش نحمّلو البيانات</h3>
+        <p>{{ loadError }}</p>
+        <button class="retry-btn" (click)="loadAnimals()">عاود جرّب</button>
+      </div>
+
+      <div class="empty-state" *ngIf="!loadError && pagedList.length === 0">
+        <h3>ما فماش إعلانات تطابق البحث</h3>
+        <p>بدّل الفئة أو نقص من الفلاتر.</p>
+        <button class="retry-btn" (click)="resetFilters()">عرض الكل</button>
+      </div>
+
+      <div class="ads-grid" *ngIf="!loadError && pagedList.length > 0" aria-live="polite">
+        <article
+          *ngFor="let ad of pagedList; trackBy: trackById"
+          class="ad-card"
+          [class.featured-card]="ad.featured"
+          [attr.data-id]="ad.id"
+          tabindex="0"
+          role="article"
+          (click)="goToDetail($event, ad)"
+          (keydown.enter)="goToDetail($event, ad)"
+        >
+          <div class="ad-photo">
+            <img *ngIf="ad.mainImageUrl" class="ad-photo-bg" [src]="ad.mainImageUrl" alt="" aria-hidden="true" loading="lazy" />
+            <img *ngIf="ad.mainImageUrl" class="ad-photo-main" [src]="ad.mainImageUrl" [alt]="ad.title" loading="lazy" (error)="ad.mainImageUrl = ''" />
+            <span class="ad-photo-emoji" [class.hidden]="ad.mainImageUrl">{{ ad.category?.slice(0, 1) || 'ح' }}</span>
+
+            <div class="multi-img-badge" *ngIf="ad.imageUrls && ad.imageUrls.length > 1">
+              <i data-lucide="images" width="11" height="11"></i>
+              {{ ad.imageUrls.length }}
+            </div>
+
+            <div class="delivery-badge" *ngIf="ad.deliveryAvailable">
+              <i data-lucide="truck" width="11" height="11"></i>
+              توصيل
+            </div>
+          </div>
+
+          <div class="ad-body">
+            <div class="ad-name">{{ ad.title }}</div>
+            <div class="ad-loc">
+              <i data-lucide="map-pin" width="12" height="12"></i>
+              {{ ad.wilaya }}<span *ngIf="ad.zone"> · {{ ad.zone }}</span>
+            </div>
+
+            <div class="ad-meta">
+              <span *ngIf="ad.age" class="ad-chip">{{ ad.age }}</span>
+              <span *ngIf="ad.gender" class="ad-chip">{{ ad.gender }}</span>
+              <span *ngIf="ad.healthStatus" class="ad-chip health-chip">{{ getHealthLabel(ad.healthStatus) }}</span>
+              <span *ngIf="ad.vetCertificate" class="ad-chip vet-chip">شهادة بيطرية</span>
+            </div>
+
+            <div class="ad-bottom">
+              <div class="ad-price">
+                {{ fmt(ad.price) }}
+                <span>دت</span>
+                <small *ngIf="ad.priceType && ad.priceType !== 'FIXED'" class="price-type">/ {{ formatPriceType(ad.priceType) }}</small>
+              </div>
+              <div class="card-actions">
+                <button class="details-btn" (click)="goToDetail($event, ad)">التفاصيل</button>
+                <button class="whatsapp-btn" (click)="openWa($event, ad)">واتساب</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="pagination" *ngIf="totalPages > 1" role="navigation" aria-label="التنقل بين الصفحات">
+        <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="gotoPage(currentPage - 1)" aria-label="السابق">
+          <i data-lucide="chevron-right" width="16" height="16"></i>
+        </button>
+        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+        <ng-container *ngFor="let n of pageNumbers">
+          <button class="page-btn" [class.active]="n === currentPage" (click)="gotoPage(n)">{{ n }}</button>
+        </ng-container>
+        <button class="page-nav-btn" [disabled]="currentPage === totalPages" (click)="gotoPage(currentPage + 1)" aria-label="التالي">
+          <i data-lucide="chevron-left" width="16" height="16"></i>
+        </button>
+      </div>
+    </ng-container>
+  </main>
+</section>
+
+<div
+  class="modal-overlay"
+  [class.show]="showAddModal"
+  (click)="closeAddModal()"
+  *ngIf="showAddModal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="إضافة إعلان"
+  dir="rtl"
+>
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-head">
+      <h3>{{ addListingMode === 'bulk' ? 'انشر عرض بيع بالجملة' : 'انشر إعلان بيع بالكعبة' }}</h3>
+      <button class="close-modal-btn" (click)="closeAddModal()" aria-label="إغلاق">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="publish-mode-switch">
+        <button type="button" [class.active]="addListingMode === 'single'" (click)="setSingleListingMode()">بيع بالكعبة</button>
+        <button type="button" [class.active]="addListingMode === 'bulk'" (click)="setBulkListingMode()">بيع بالجملة</button>
+      </div>
+
+      <div class="publish-intro publish-intro--animal">
+        <div>
+          <span class="publish-kicker">{{ addListingMode === 'bulk' ? 'بيع بالجملة' : 'بيع بالكعبة' }}</span>
+          <h4>{{ addListingMode === 'bulk' ? 'قطيع واضح + عدد رؤوس + سوم للراس' : 'صور واضحة + معلومات صحيحة = شاري أسرع' }}</h4>
+          <p>{{ addListingMode === 'bulk' ? 'مناسب للتجار والمربين: اكتب عدد الرؤوس، الولاية، والسوم باش العرض يبان موثوق.' : 'حط السعر، الولاية، الحالة الصحية ورقم واتساب باش الإعلان يبان موثوق.' }}</p>
+        </div>
+        <div class="publish-score"><strong>{{ imgPreviews.length || 0 }}</strong><span>صور</span></div>
+      </div>
+
+      <div class="publish-steps">
+        <span class="active">الصور</span>
+        <span>معلومات الحيوان</span>
+        <span>البائع</span>
+      </div>
+
+      <div class="form-section-title">صور الإعلان</div>
+      <div
+        class="img-drop-zone"
+        (click)="fileInput.click()"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+        [class.has-imgs]="imgPreviews.length > 0"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="fileInput.click()"
+      >
+        <input #fileInput type="file" accept="image/*" multiple style="display:none" (change)="onFileSelect($event)" />
+
+        <div *ngIf="imgPreviews.length === 0">
+          <div class="img-drop-icon"><i data-lucide="image-plus" width="26" height="26"></i></div>
+          <div class="img-drop-text">انقر لإضافة الصور أو اسحبهم هنا</div>
+          <div class="img-drop-hint">JPG أو PNG، حتى 5 صور، 2MB لكل صورة</div>
+        </div>
+
+        <div *ngIf="imgPreviews.length > 0" class="img-previews" (click)="$event.stopPropagation()">
+          <div *ngFor="let src of imgPreviews; let i = index" class="img-thumb">
+            <img [src]="src" alt="صورة {{ i + 1 }}" />
+            <span *ngIf="i === 0" class="main-img-label">الرئيسية</span>
+            <button class="img-remove-btn" (click)="removeImg(i)" aria-label="حذف الصورة">×</button>
+          </div>
+          <div *ngIf="imgPreviews.length < 5" class="img-add-more" (click)="fileInput.click()" role="button" tabindex="0">
+            <i data-lucide="plus" width="20" height="20"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">معلومات الحيوان</div>
+
+      <div class="field">
+        <label for="ad-title">عنوان الإعلان *</label>
+        <input id="ad-title" [(ngModel)]="addForm.title" [class.err]="addErrors['title']" placeholder="مثال: خروف سليم للبيع" />
+        <span class="field-err" *ngIf="addErrors['title']">الخانة هاذي مطلوبة</span>
+      </div>
+
+      <div class="fields-row-2">
+        <div class="field">
+          <label for="ad-category">الفئة</label>
+          <select id="ad-category" [(ngModel)]="addForm.category">
+            <option *ngFor="let c of CATEGORIES.slice(1)">{{ c }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ad-price">السعر (دت) *</label>
+          <input id="ad-price" type="number" min="0" [(ngModel)]="addForm.price" [class.err]="addErrors['price']" placeholder="0" />
+          <span class="field-err" *ngIf="addErrors['price']">اكتب سعر صحيح</span>
+        </div>
+      </div>
+
+      <div class="field bulk-heads-field" *ngIf="addListingMode === 'bulk'">
+        <label for="bulk-heads">عدد الرؤوس</label>
+        <input id="bulk-heads" type="number" min="2" [(ngModel)]="bulkHeads" placeholder="مثال: 20" />
+      </div>
+
+      <div class="fields-row-2">
+        <div class="field">
+          <label for="ad-price-type">نوع السعر</label>
+          <select id="ad-price-type" [(ngModel)]="addForm.priceType">
+            <option value="FIXED">سوم ثابت</option>
+            <option value="NEGOTIABLE">قابل للنقاش</option>
+            <option value="PER_HEAD">للراس</option>
+            <option value="PER_KG">للكيلو</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ad-health">الحالة الصحية</label>
+          <select id="ad-health" [(ngModel)]="addForm.healthStatus">
+            <option>ممتازة</option>
+            <option>جيد</option>
+            <option>عادي</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fields-row-3">
+        <div class="field">
+          <label for="ad-gender">الجنس</label>
+          <select id="ad-gender" [(ngModel)]="addForm.gender">
+            <option>ذكر</option>
+            <option>أنثى</option>
+            <option>مختلط</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ad-age">العمر</label>
+          <input id="ad-age" [(ngModel)]="addForm.age" placeholder="مثال: عامين" />
+        </div>
+        <div class="field">
+          <label for="ad-contact">طريقة التواصل</label>
+          <select id="ad-contact" [(ngModel)]="addForm.contactMethod">
+            <option value="WHATSAPP">واتساب</option>
+            <option value="CALL">اتصال</option>
+            <option value="BOTH">الزوز</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fields-row-2">
+        <div class="field">
+          <label for="ad-wilaya">الولاية</label>
+          <select id="ad-wilaya" [(ngModel)]="addForm.wilaya">
+            <option *ngFor="let w of WILAYAS">{{ w }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ad-zone">المنطقة (اختياري)</label>
+          <input id="ad-zone" [(ngModel)]="addForm.zone" placeholder="مثال: طريق المطار" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ad-desc">وصف الإعلان</label>
+        <textarea id="ad-desc" [(ngModel)]="addForm.description" rows="3" placeholder="زيد تفاصيل تساعد الشاري..."></textarea>
+      </div>
+
+      <div class="form-section-title">معلومات البائع</div>
+
+      <div class="fields-row-2">
+        <div class="field">
+          <label for="ad-seller">اسم البائع *</label>
+          <input id="ad-seller" [(ngModel)]="addForm.sellerName" [class.err]="addErrors['sellerName']" placeholder="اسمك الكامل" />
+          <span class="field-err" *ngIf="addErrors['sellerName']">الخانة هاذي مطلوبة</span>
+        </div>
+        <div class="field">
+          <label for="ad-phone">رقم الهاتف *</label>
+          <input id="ad-phone" [(ngModel)]="addForm.phone" [class.err]="addErrors['phone']" placeholder="مثال: 55123456" />
+          <span class="field-err" *ngIf="addErrors['phone']">الخانة هاذي مطلوبة</span>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.featured" /> إعلان مميز</label>
+        <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.trustedSeller" /> بائع موثوق</label>
+        <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.deliveryAvailable" /> توصيل متاح</label>
+        <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.vetCertificate" /> شهادة بيطرية</label>
+      </div>
+
+      <div class="publish-trust-note">
+        <i data-lucide="shield-check" width="15" height="15"></i>
+        <span>AMANAFARM تشجع الصور الحقيقية ومعلومات الصحة الواضحة. الشاري يثق أكثر كي تكون التفاصيل كاملة.</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="submit-btn" (click)="submitAdd()" [disabled]="addSubmitting">
+        <span *ngIf="!addSubmitting">نشر إعلان موثوق</span>
+        <span *ngIf="addSubmitting" class="spinner-inline"></span>
+        <span *ngIf="addSubmitting">جاري النشر...</span>
+      </button>
+      <button class="cancel-btn" (click)="closeAddModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" *ngIf="toast" aria-live="assertive" aria-atomic="true">
+  <div class="toast" [class.error]="toast.type==='error'" [class.info]="toast.type==='info'" [class.warn]="toast.type==='warn'">
+    <span class="toast-icon" aria-hidden="true"></span>
+    {{ toast.msg }}
+  </div>
+</div>

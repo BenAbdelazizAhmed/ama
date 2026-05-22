@@ -1,0 +1,859 @@
+﻿<section class="services-hero" [ngClass]="'mode-' + currentMode">
+  <div class="services-hero__inner">
+    <div class="services-hero__content">
+      <div class="services-hero__badge">
+        <span class="live-dot"></span>
+        <span>{{ currentMode === 'hire' ? workers.length : jobs.length }} نتيجة متاحة</span>
+      </div>
+
+      <h1>{{ currentMode === 'hire' ? 'لقى العامل المناسب لمزرعتك' : 'لقى خدمة فلاحية تناسب خبرتك' }}</h1>
+      <p>
+        {{ currentMode === 'hire'
+          ? 'قارن المهنيين وتواصل بسرعة مع الأنسب لمزرعتك.'
+          : 'سجّل خبرتك وخلي أصحاب الخدمة يلقاوك بسهولة.' }}
+      </p>
+
+      <div class="mode-switch" role="group" aria-label="إضافة خدمة أو طلب">
+        <button type="button" class="active" (click)="openProModal('hire')">
+          انشر طلب خدمة
+        </button>
+        <button type="button" (click)="openProModal('work')">
+          سجّل كعامل
+        </button>
+      </div>
+
+      <div class="services-search">
+        <div class="services-search__field">
+          <i data-lucide="search" width="16" height="16"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            [placeholder]="currentMode === 'hire' ? 'مثال: راعي أغنام، بيطري، سائق...' : 'مثال: وظيفة موسمية، راعي، حصاد...'"
+            (keydown.enter)="applySearch()"
+          />
+        </div>
+        <select [(ngModel)]="selectedRegion" (change)="applySearch()" aria-label="الولاية">
+          <option value="">كل الولايات</option>
+          <option *ngFor="let r of regions">{{ r }}</option>
+        </select>
+        <button type="button" class="services-search__btn" (click)="applySearch()">ابحث</button>
+      </div>
+
+      <div class="services-stats">
+        <div>
+          <strong>{{ currentMode === 'hire' ? workers.length : jobs.length }}</strong>
+          <span>{{ currentMode === 'hire' ? 'بروفايل' : 'وظيفة' }}</span>
+        </div>
+        <div>
+          <strong>24</strong>
+          <span>ولاية</span>
+        </div>
+        <div>
+          <strong>4.8</strong>
+          <span>متوسط التقييم</span>
+        </div>
+        <div>
+          <strong>+850</strong>
+          <span>خدمة ناجحة</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="services-hero__panel">
+      <h3>{{ currentMode === 'hire' ? 'تبحث على عامل؟' : 'تحب تخدم؟' }}</h3>
+      <p>
+        {{ currentMode === 'hire'
+          ? 'انشر طلبك أو تواصل مباشرة مع بروفايل مناسب.'
+          : 'سجّل بروفايل واضح وخلي أصحاب الخدمة يكلموك.' }}
+      </p>
+      <div class="panel-list">
+        <span>بروفايلات واضحة ومراجعة</span>
+        <span>تواصل سريع عبر واتساب</span>
+        <span>فلترة حسب الولاية والسعر</span>
+      </div>
+      <button type="button" class="panel-primary" (click)="openProModal(currentMode)">
+        {{ currentMode === 'hire' ? 'انشر طلب عامل' : 'سجّل بروفايلك' }}
+      </button>
+      <button type="button" class="panel-secondary" (click)="currentMode === 'hire' ? openProModal('work') : openProModal('hire')">
+        {{ currentMode === 'hire' ? 'أنا نخدم' : 'نحب نلقى عامل' }}
+      </button>
+    </aside>
+  </div>
+</section>
+
+<div class="services-tabs-bar">
+  <div class="services-tabs-bar__inner">
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'all'" (click)="applyFilter('all')">الكل</button>
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'available'" *ngIf="currentMode === 'hire'" (click)="applyFilter('available')">متاح الآن</button>
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'top'" *ngIf="currentMode === 'hire'" (click)="applyFilter('top')">الأعلى تقييماً</button>
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'بيطري'" (click)="applyFilter('بيطري')">بيطري</button>
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'سائق'" (click)="applyFilter('سائق')">سائق</button>
+    <button type="button" class="filter-pill" [class.active]="currentFilter === 'فلاح'" (click)="applyFilter('فلاح')">فلاح</button>
+
+    <div class="tabs-spacer"></div>
+    <select class="sort-select clean" [(ngModel)]="sortValue" (change)="applySort()">
+      <option value="best">الأفضل</option>
+      <option value="top-rated">الأعلى تقييماً</option>
+      <option value="price-asc">الأرخص</option>
+      <option value="newest">الأحدث</option>
+    </select>
+  </div>
+</div>
+
+<main class="services-layout" id="mainContent">
+  <aside class="services-sidebar">
+    <div class="clean-box">
+      <div class="clean-box__title">السعر الأقصى</div>
+      <div class="range-row"><span>0</span><span>{{ priceMax }} دت</span></div>
+      <input type="range" min="0" max="500" step="10" [(ngModel)]="priceMax" (input)="applyFilters()">
+    </div>
+
+    <div class="clean-box">
+      <div class="clean-box__title">اختيارات سريعة</div>
+      <div class="smart-filter-grid">
+        <button type="button" [class.active]="currentFilter === 'available'" (click)="applyFilter('available')">متاح الآن</button>
+        <button type="button" [class.active]="currentFilter === 'top'" (click)="applyFilter('top')">الأكثر خبرة</button>
+        <button type="button" [class.active]="sortValue === 'price-asc'" (click)="sortValue = 'price-asc'; applySort()">الأرخص</button>
+        <button type="button" [class.active]="currentFilter === 'all' && sortValue === 'best'" (click)="currentFilter = 'all'; sortValue = 'best'; applyFilters()">عرض الكل</button>
+      </div>
+    </div>
+
+    <div class="clean-box">
+      <div class="clean-box__title">الولاية</div>
+      <div class="region-grid">
+        <button
+          type="button"
+          class="reg-pill"
+          *ngFor="let reg of regions"
+          [class.sel]="selectedRegions.includes(reg)"
+          (click)="toggleRegion(reg)">
+          {{ reg }}
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <section class="services-results" [class.fading]="isFading">
+    <div class="results-header clean-results-header">
+      <div>
+        <div class="results-kicker">{{ currentMode === 'hire' ? 'نتائج البحث' : 'فرص العمل' }}</div>
+        <div class="results-count"><span>{{ filteredCount }}</span> نتيجة</div>
+        <div class="results-sub">
+          {{ currentMode === 'hire' ? 'عمال وخدمات تنجم تقارن بينهم' : 'وظائف متاحة تنجم تقدم عليها' }}
+        </div>
+      </div>
+      <button type="button" class="quick-action" (click)="openProModal(currentMode)">
+        {{ currentMode === 'hire' ? 'انشر طلب' : 'سجّل بروفايل' }}
+      </button>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && loadError">
+      <h3>تعذر تحميل البيانات</h3>
+      <p>{{ loadError }}</p>
+      <button class="fb-btn" (click)="loadAll()" type="button">إعادة المحاولة</button>
+    </div>
+
+    <ng-container *ngIf="!loadError && currentMode === 'hire'">
+      <div class="services-grid" [class.list-view]="viewMode === 'list'">
+        <div class="empty-state" *ngIf="!isLoading && filteredWorkers.length === 0">
+          <h3>ما لقيناش نتائج</h3>
+          <p>جرّب تبدّل البحث أو الفلاتر.</p>
+        </div>
+
+        <article class="service-card" *ngFor="let w of filteredWorkers; let i = index" (click)="openProfileDetails(i)">
+          <div class="service-card__media">
+            <img [src]="w.coverUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80'" [alt]="w.title" loading="lazy">
+            <span class="availability" [class.off]="!w.available">{{ w.available ? 'متاح' : 'غير متاح' }}</span>
+          </div>
+          <div class="service-card__body">
+            <div class="service-card__top">
+              <div>
+                <h3>{{ w.name }}</h3>
+                <p>{{ w.title }}</p>
+              </div>
+              <span class="experience">{{ w.experience }}</span>
+            </div>
+            <div class="meta-line"><span>{{ w.location }}</span><span>{{ w.rating }} تقييم</span><span>{{ w.completedJobs }} خدمة</span></div>
+            <div class="skills-row">
+              <span class="skill-tag" *ngFor="let s of getSkillsArray(w.skills).slice(0,3)">{{ s }}</span>
+            </div>
+            <div class="service-card__footer">
+              <div class="price-val">{{ fmtPrice(w.price) }} <span>{{ w.priceUnit }}</span></div>
+              <div class="card-actions">
+                <button class="btn-contact" (click)="$event.stopPropagation(); openProfileDetails(i)" type="button">التفاصيل</button>
+                <button class="btn-whatsapp text-btn" (click)="$event.stopPropagation(); contactWhatsapp(w.name, w.phone)" type="button">واتساب</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!loadError && currentMode === 'work'">
+      <div class="services-grid">
+        <div class="empty-state" *ngIf="!isLoading && filteredJobs.length === 0">
+          <h3>ما لقيناش وظائف</h3>
+          <p>سجّل بروفايلك باش أصحاب الخدمة يلقاوك.</p>
+        </div>
+
+        <article class="job-card clean-job-card" *ngFor="let j of filteredJobs; let i = index">
+          <div class="job-card-top">
+            <div class="job-info">
+              <div class="job-title">{{ j.title }}</div>
+              <div class="employer-name">{{ j.employer }} · {{ j.location }}</div>
+            </div>
+            <span class="job-badge" [ngClass]="getBadgeClass(j.badge)">{{ j.badgeText }}</span>
+          </div>
+          <div class="job-desc">{{ j.description }}</div>
+          <div class="job-tags">
+            <span class="jtag">{{ j.jobType }}</span>
+            <span class="jtag" *ngFor="let t of getTagsArray(j.tags)">{{ t }}</span>
+          </div>
+          <div class="job-footer">
+            <div>
+              <div class="salary-label">الراتب</div>
+              <div class="salary-val">{{ j.salary }} <span class="salary-period">{{ j.period }}</span></div>
+            </div>
+            <button class="btn-apply" (click)="applyToJob(j.id)" type="button">تقدّم الآن</button>
+          </div>
+        </article>
+      </div>
+    </ng-container>
+  </section>
+</main>
+<div class="pro-modal-overlay" [class.open]="proModalOpen" (click)="onProOverlayClick($event)">
+  <div class="pro-modal">
+
+    <!-- HEADER -->
+    <div class="pro-modal-header" [class.pmh-hire]="proMode === 'hire'" [class.pmh-work]="proMode === 'work'">
+      <div class="pmh-blob1"></div>
+      <div class="pmh-blob2"></div>
+
+      <!-- top bar: tabs + close -->
+      <div class="pmh-top">
+        <div class="pmh-tabs">
+          <!-- hire side tabs -->
+          <ng-container *ngIf="proMode === 'hire'">
+            <button class="pmh-tab" [class.tab-active]="proFormType === 'job'" (click)="setProFormType('job')" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              </svg>
+              انشر وظيفة
+            </button>
+            <button class="pmh-tab" [class.tab-active]="proFormType === 'request'" (click)="setProFormType('request')" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              طلب خدمة
+            </button>
+          </ng-container>
+          <!-- work side tabs -->
+          <ng-container *ngIf="proMode === 'work'">
+            <button class="pmh-tab" [class.tab-active]="proFormType === 'worker'" (click)="setProFormType('worker')" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              بروفايل عامل
+            </button>
+            <button class="pmh-tab" [class.tab-active]="proFormType === 'profile'" (click)="setProFormType('profile')" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+              خدمة مستقلة
+            </button>
+          </ng-container>
+        </div>
+        <button class="pmh-close" (click)="closeProModal()" type="button" aria-label="إغلاق">×</button>
+      </div>
+
+      <!-- cover upload (only for worker/profile) -->
+      <ng-container *ngIf="proFormType === 'worker' || proFormType === 'profile'">
+        <div class="pmh-cover"
+          [style.backgroundImage]="proForm.coverPreview ? 'url(' + proForm.coverPreview + ')' : ''"
+          (click)="triggerInput('proModalCover')">
+          <div class="pmh-cover-inner" [class.has-img]="proForm.coverPreview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>{{ proForm.coverPreview ? 'تغيير الصورة' : 'صورة الغلاف (اختياري)' }}</span>
+          </div>
+          <input type="file" id="proModalCover" accept="image/*" hidden (change)="onProCoverChange($event)">
+        </div>
+        <div class="cover-upload-wrap" style="position:relative;height:0;">
+          <div class="pmh-avatar-wrap">
+            <div class="pmh-avatar"
+              [style.backgroundImage]="proForm.avatarPreview ? 'url(' + proForm.avatarPreview + ')' : ''"
+              (click)="triggerInput('proModalAvatar')">
+              <div class="pmh-avatar-inner" [class.has-img]="proForm.avatarPreview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <span class="pmh-avatar-lbl">صورتك</span>
+            <input type="file" id="proModalAvatar" accept="image/*" hidden (change)="onProAvatarChange($event)">
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- title zone -->
+      <div class="pmh-title-zone" [style.paddingTop]="(proFormType === 'worker' || proFormType === 'profile') ? '40px' : '18px'">
+        <div class="pmh-title" [innerHTML]="proModalTitle"></div>
+        <div class="pmh-sub">{{ proModalSub }}</div>
+      </div>
+
+      <!-- steps -->
+      <div class="pmh-steps">
+        <div class="pmh-step" [class.step-active]="proStep === 1" [class.step-done]="proStep > 1">1</div>
+        <div class="pmh-step-line" [class.line-done]="proStep > 1"></div>
+        <div class="pmh-step" [class.step-active]="proStep === 2" [class.step-done]="proStep > 2">2</div>
+        <div class="pmh-step-line" [class.line-done]="proStep > 2"></div>
+        <div class="pmh-step" [class.step-active]="proStep === 3">3</div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="pro-modal-body" *ngIf="!proSuccess">
+      <div class="form-trust-strip">
+        <span><i data-lucide="shield-check" width="14" height="14"></i> طلبك يتراجع قبل الظهور</span>
+        <span><i data-lucide="message-circle" width="14" height="14"></i> تواصل مباشر عبر واتساب</span>
+        <span><i data-lucide="clock-3" width="14" height="14"></i> النشر في أقل من دقيقتين</span>
+      </div>
+
+      <!-- STEP 1: Basic info -->
+      <ng-container *ngIf="proStep === 1">
+
+        <!-- HIRE: post job -->
+        <ng-container *ngIf="proMode === 'hire' && proFormType === 'job'">
+          <div class="pm-section-title">معلومات الوظيفة</div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> عنوان الوظيفة</label>
+            <input class="pm-input" type="text" [(ngModel)]="proForm.jobTitle" placeholder="مثال: راعي أغنام لمزرعة كبيرة">
+          </div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> اسم صاحب العمل / الشركة</label>
+              <input class="pm-input" type="text" [(ngModel)]="proForm.employer" placeholder="مثال: مزرعة الوادي">
+            </div>
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> الولاية</label>
+              <select class="pm-select" [(ngModel)]="proForm.region">
+                <option value="">اختر الولاية</option>
+                <option *ngFor="let r of regions">{{ r }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> وصف الوظيفة</label>
+            <textarea class="pm-textarea" [(ngModel)]="proForm.description" rows="4" placeholder="اشرح شنية تحتاج، المدة، السكن، وطبيعة الخدمة..."></textarea>
+          </div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label">نوع العمل</label>
+              <select class="pm-select" [(ngModel)]="proForm.jobType">
+                <option>دوام كامل</option>
+                <option>دوام جزئي</option>
+                <option>موسمي</option>
+                <option>يومي</option>
+              </select>
+            </div>
+            <div class="pm-field">
+              <label class="pm-label">تاريخ الانتهاء</label>
+              <input class="pm-input" type="date" [(ngModel)]="proForm.deadline">
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- HIRE: service request -->
+        <ng-container *ngIf="proMode === 'hire' && proFormType === 'request'">
+          <div class="pm-section-title">تفاصيل طلب الخدمة</div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> اسمك</label>
+              <input class="pm-input" type="text" [(ngModel)]="proForm.fullName" placeholder="اسمك الكامل">
+            </div>
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> رقم الهاتف</label>
+              <input class="pm-input" type="tel" [(ngModel)]="proForm.phone" placeholder="216XXXXXXXX">
+            </div>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> نوع الخدمة المطلوبة</label>
+            <div class="pm-chips">
+              <button
+                *ngFor="let c of serviceChips"
+                class="pm-chip"
+                [class.chip-active]="proForm.serviceType === c.value"
+                (click)="proForm.serviceType = c.value"
+                type="button">{{ c.label }}</button>
+            </div>
+            <input class="pm-input" style="margin-top:10px;" type="text" [(ngModel)]="proForm.serviceType" placeholder="أو اكتب خدمة أخرى...">
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> الولاية</label>
+            <select class="pm-select" [(ngModel)]="proForm.region">
+              <option value="">اختر الولاية</option>
+              <option *ngFor="let r of regions">{{ r }}</option>
+            </select>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> تفاصيل الطلب</label>
+            <textarea class="pm-textarea" [(ngModel)]="proForm.description" rows="4" placeholder="اشرح ماذا تحتاج بالتفصيل..."></textarea>
+          </div>
+        </ng-container>
+
+        <!-- WORK: worker profile -->
+        <ng-container *ngIf="proMode === 'work' && (proFormType === 'worker' || proFormType === 'profile')">
+          <div class="pm-section-title">المعلومات الأساسية</div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> الاسم الكامل</label>
+              <input class="pm-input" type="text" [(ngModel)]="proForm.fullName" placeholder="اسمك كما يظهر للعملاء">
+            </div>
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> رقم الهاتف</label>
+              <input class="pm-input" type="tel" [(ngModel)]="proForm.phone" placeholder="216XXXXXXXX">
+            </div>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> تخصصك / خدمتك</label>
+            <div class="pm-chips">
+              <button
+                *ngFor="let c of serviceChips"
+                class="pm-chip"
+                [class.chip-active]="proForm.serviceType === c.value"
+                (click)="proForm.serviceType = c.value"
+                type="button">{{ c.label }}</button>
+            </div>
+            <input class="pm-input" style="margin-top:10px;" type="text" [(ngModel)]="proForm.serviceType" placeholder="أو اكتب تخصصاً آخر...">
+          </div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> الولاية</label>
+              <select class="pm-select" [(ngModel)]="proForm.region">
+                <option value="">اختر الولاية</option>
+                <option *ngFor="let r of regions">{{ r }}</option>
+              </select>
+            </div>
+            <div class="pm-field">
+              <label class="pm-label">سنوات الخبرة</label>
+              <select class="pm-select" [(ngModel)]="proForm.experience">
+                <option value="جديد">جديد (أقل من سنة)</option>
+                <option value="1-3 سنوات">1-3 سنوات</option>
+                <option value="3-5 سنوات">3-5 سنوات</option>
+                <option value="5-10 سنوات">5-10 سنوات</option>
+                <option value="+10 سنوات">+10 سنوات</option>
+              </select>
+            </div>
+          </div>
+        </ng-container>
+
+      </ng-container>
+
+      <!-- STEP 2: Details -->
+      <ng-container *ngIf="proStep === 2">
+
+        <!-- HIRE: job details (salary, requirements) -->
+        <ng-container *ngIf="proMode === 'hire' && proFormType === 'job'">
+          <div class="pm-section-title">الراتب والمتطلبات</div>
+          <div class="pm-field">
+            <label class="pm-label">الراتب المقترح</label>
+            <div class="pm-price-wrap">
+              <div class="pm-price-field">
+                <span class="pm-currency">دت</span>
+                <input class="pm-input" type="number" [(ngModel)]="proForm.salary" placeholder="0">
+              </div>
+              <select class="pm-select pm-period" [(ngModel)]="proForm.priceUnit">
+                <option>/شهر</option><option>/يوم</option><option>/مشروع</option>
+              </select>
+            </div>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label">المتطلبات والمزايا</label>
+            <textarea class="pm-textarea" [(ngModel)]="proForm.skills" rows="3" placeholder="مثال: خبرة 3 سنوات، مأكل ومسكن، مكافآت..."></textarea>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label">متى تحتاج العامل؟</label>
+            <div class="pm-avail-grid">
+              <button *ngFor="let a of availOptions" class="pm-avail-btn"
+                [class.avail-active]="proForm.availability === a"
+                (click)="proForm.availability = a" type="button">{{ a }}</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- HIRE: request details -->
+        <ng-container *ngIf="proMode === 'hire' && proFormType === 'request'">
+          <div class="pm-section-title">الميزانية والتوقيت</div>
+          <div class="pm-field">
+            <label class="pm-label">الميزانية المقترحة</label>
+            <div class="pm-price-wrap">
+              <div class="pm-price-field">
+                <span class="pm-currency">دت</span>
+                <input class="pm-input" type="number" [(ngModel)]="proForm.salary" placeholder="0">
+              </div>
+              <select class="pm-select pm-period" [(ngModel)]="proForm.priceUnit">
+                <option>/يوم</option><option>/شهر</option><option>/مشروع</option>
+              </select>
+            </div>
+          </div>
+          <div class="pm-field">
+            <label class="pm-label">متى تحتاج الخدمة؟</label>
+            <div class="pm-avail-grid">
+              <button *ngFor="let a of availOptions" class="pm-avail-btn"
+                [class.avail-active]="proForm.availability === a"
+                (click)="proForm.availability = a" type="button">{{ a }}</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- WORK: profile details -->
+        <ng-container *ngIf="proMode === 'work'">
+          <div class="pm-section-title">تفاصيل الخدمة</div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label"><span class="req">*</span> وصف خبرتك</label>
+              <textarea class="pm-textarea" [(ngModel)]="proForm.description" rows="3" placeholder="اشرح خبرتك، مهاراتك، وما يميزك عن غيرك..."></textarea>
+            </div>
+            <div class="pm-field">
+              <label class="pm-label">مهاراتك (افصل بفاصلة)</label>
+              <textarea class="pm-textarea" [(ngModel)]="proForm.skills" rows="3" placeholder="مثال: رعي الأغنام، تلقيح، رعاية صحية..."></textarea>
+            </div>
+          </div>
+          <div class="pm-row2">
+            <div class="pm-field">
+              <label class="pm-label">السعر</label>
+              <div class="pm-price-wrap">
+                <div class="pm-price-field">
+                  <span class="pm-currency">دت</span>
+                  <input class="pm-input" type="number" [(ngModel)]="proForm.price" placeholder="0">
+                </div>
+                <select class="pm-select pm-period" [(ngModel)]="proForm.priceUnit">
+                  <option>دت/يوم</option><option>دت/شهر</option><option>دت/ساعة</option><option>دت/مشروع</option>
+                </select>
+              </div>
+            </div>
+            <div class="pm-field">
+              <label class="pm-label">التوفر</label>
+              <div class="pm-avail-grid">
+                <button *ngFor="let a of availOptions" class="pm-avail-btn"
+                  [class.avail-work]="proForm.availability === a"
+                  (click)="proForm.availability = a" type="button">{{ a }}</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </ng-container>
+
+      <!-- STEP 3: Plan -->
+      <ng-container *ngIf="proStep === 3">
+        <div class="pm-section-title">اختر خطة النشر</div>
+        <div class="pm-plans">
+          <div
+            *ngFor="let plan of postPlans"
+            class="pm-plan"
+            [class.plan-selected]="proForm.plan === plan.value"
+            [class.plan-work]="proMode === 'work'"
+            (click)="proForm.plan = plan.value">
+            <span class="pm-best-badge" *ngIf="plan.best">الأشهر</span>
+            <div class="pm-plan-icon">{{ plan.icon }}</div>
+            <div class="pm-plan-name">{{ plan.name }}</div>
+            <div class="pm-plan-price">{{ plan.price }}</div>
+            <div class="pm-plan-feat">{{ plan.feat }}</div>
+          </div>
+        </div>
+
+        <div class="pm-field" style="margin-top:20px;">
+          <div class="pm-section-title">مراجعة سريعة</div>
+          <div style="background:var(--bg);border-radius:14px;padding:16px;font-size:13px;line-height:2;">
+            <div><strong>{{ proForm.fullName || proForm.employer || '-' }}</strong></div>
+            <div>{{ proForm.region || '-' }}</div>
+            <div>{{ proForm.serviceType || proForm.jobTitle || '-' }}</div>
+            <div *ngIf="proForm.price || proForm.salary">
+              {{ proForm.price || proForm.salary }} {{ proForm.priceUnit }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="pm-success" *ngIf="proSuccess">
+      <div class="pm-success-icon">{{ proMode === 'hire' ? '✓' : '✓' }}</div>
+      <div class="pm-success-title">{{ proMode === 'hire' ? 'تم نشر الطلب بنجاح!' : 'تم نشر بروفايلك!' }}</div>
+      <div class="pm-success-sub">
+        {{ proMode === 'hire'
+          ? 'سيتواصل معك المهنيون المناسبون في أقرب وقت. ستصلك إشعارات الطلبات على هاتفك.'
+          : 'بروفايلك الآن مرئي لأصحاب العمل. ستصلك طلبات قريباً!' }}
+      </div>
+      <button class="pm-success-btn" [class.btn-hire]="proMode === 'hire'" [class.btn-work]="proMode === 'work'" (click)="closeProModal()" type="button">
+        عودة للبحث
+      </button>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="pro-modal-footer" *ngIf="!proSuccess">
+      <div class="pm-footer-info">
+        <strong>{{ proStep === 3 ? 'جاهز للنشر' : 'خطوة ' + proStep + ' من 3' }}</strong>
+        {{ proStep === 1 ? 'المعلومات الأساسية' : proStep === 2 ? 'التفاصيل والسعر' : 'اختر الخطة وانشر' }}
+      </div>
+      <button class="pm-btn-back" *ngIf="proStep > 1" (click)="prevProStep()" type="button">رجوع</button>
+      <button
+        class="pm-btn-next"
+        [class.btn-hire]="proMode === 'hire'"
+        [class.btn-work]="proMode === 'work'"
+        [disabled]="isSubmittingPro"
+        (click)="proStep < 3 ? nextProStep() : submitProForm()"
+        type="button">
+        <span *ngIf="!isSubmittingPro">{{ proStep < 3 ? 'التالي' : 'انشر الآن' }}</span>
+        <span *ngIf="isSubmittingPro">جاري النشر...</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ADD MODAL (action bar) -->
+<div class="add-modal-overlay" [class.open]="showAddModal" (click)="onAddOverlayClick($event)">
+  <div class="add-modal">
+    <div class="add-modal-header"
+      [class.header-worker]="unifiedForm.formType === 'worker'"
+      [class.header-job]="unifiedForm.formType === 'job'"
+      [class.header-profile]="unifiedForm.formType === 'profile'">
+
+      <div class="add-modal-header-top">
+        <div class="add-type-selector">
+          <button class="type-btn" [class.active-worker]="unifiedForm.formType === 'worker'" (click)="unifiedForm.formType = 'worker'" type="button">عامل</button>
+          <button class="type-btn" [class.active-profile]="unifiedForm.formType === 'profile'" (click)="unifiedForm.formType = 'profile'" type="button">خدمة مستقلة</button>
+          <button class="type-btn" [class.active-job]="unifiedForm.formType === 'job'" (click)="unifiedForm.formType = 'job'" type="button">وظيفة</button>
+        </div>
+        <button class="pmh-close" style="background:rgba(255,255,255,.15);color:white;" (click)="closeAddModal()" type="button">×</button>
+      </div>
+
+      <div class="add-modal-title">
+        {{ unifiedForm.formType === 'job' ? 'انشر وظيفة فلاحية' : unifiedForm.formType === 'worker' ? 'أضف عامل موثوق' : 'أضف خدمة مستقلة' }}
+      </div>
+
+      <div class="cover-upload-wrap">
+        <div class="cover-upload"
+          [style.backgroundImage]="unifiedForm.coverPreview ? 'url(' + unifiedForm.coverPreview + ')' : ''"
+          (click)="triggerInput('addCoverInput')">
+          <div class="cover-upload-inner" [class.has-image]="unifiedForm.coverPreview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>{{ unifiedForm.coverPreview ? 'تغيير الغلاف' : 'صورة الغلاف' }}</span>
+          </div>
+          <input type="file" id="addCoverInput" accept="image/*" hidden (change)="onCoverChange($event, 'add')">
+        </div>
+        <div class="avatar-upload-wrap">
+          <div class="avatar-upload"
+            [style.backgroundImage]="unifiedForm.avatarPreview ? 'url(' + unifiedForm.avatarPreview + ')' : ''"
+            (click)="triggerInput('addAvatarInput')">
+            <div class="avatar-upload-inner" [class.has-image]="unifiedForm.avatarPreview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+          </div>
+          <span class="avatar-upload-label">صورتك</span>
+          <input type="file" id="addAvatarInput" accept="image/*" hidden (change)="onAvatarChange($event)">
+        </div>
+      </div>
+
+      <div class="steps-indicator">
+        <div class="step-dot" [class.active]="addModalStep === 1" [class.done]="addModalStep > 1">1</div>
+        <div class="step-line" [class.done]="addModalStep > 1"></div>
+        <div class="step-dot" [class.active]="addModalStep === 2">2</div>
+      </div>
+    </div>
+
+    <div class="add-modal-body" *ngIf="!addSuccess">
+      <ng-container *ngIf="addModalStep === 1">
+        <div class="pm-row2">
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> {{ unifiedForm.formType === 'job' ? 'اسم صاحب العمل' : 'الاسم الكامل' }}</label>
+            <input class="pm-input" type="text" [(ngModel)]="unifiedForm.fullName" placeholder="الاسم">
+          </div>
+          <div class="pm-field">
+            <label class="pm-label"><span class="req">*</span> الولاية</label>
+            <select class="pm-select" [(ngModel)]="unifiedForm.region">
+              <option value="">اختر</option>
+              <option *ngFor="let r of regions">{{ r }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="pm-field">
+          <label class="pm-label"><span class="req">*</span> {{ unifiedForm.formType === 'job' ? 'عنوان الوظيفة' : 'التخصص / الخدمة' }}</label>
+          <input class="pm-input" type="text" [(ngModel)]="unifiedForm.serviceType" [placeholder]="unifiedForm.formType === 'job' ? 'مثال: راعي أغنام' : 'مثال: طبيب بيطري'">
+        </div>
+        <div class="pm-field">
+          <label class="pm-label">رقم الهاتف</label>
+          <input class="pm-input" type="tel" [(ngModel)]="unifiedForm.phone" placeholder="216XXXXXXXX">
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="addModalStep === 2">
+        <div class="pm-field">
+          <label class="pm-label"><span class="req">*</span> الوصف</label>
+          <textarea class="pm-textarea" [(ngModel)]="unifiedForm.description" rows="4" placeholder="اشرح الخدمة أو الوظيفة..."></textarea>
+        </div>
+        <div class="pm-row2">
+          <div class="pm-field">
+            <label class="pm-label">السعر / الراتب</label>
+            <input class="pm-input" type="number" [(ngModel)]="unifiedForm.price" placeholder="0">
+          </div>
+          <div class="pm-field">
+            <label class="pm-label">الوحدة</label>
+            <select class="pm-select" [(ngModel)]="unifiedForm.priceUnit">
+              <option>دت/يوم</option><option>دت/شهر</option><option>دت/زيارة</option>
+            </select>
+          </div>
+        </div>
+        <div class="pm-field" *ngIf="unifiedForm.formType !== 'job'">
+          <label class="pm-label">المهارات</label>
+          <input class="pm-input" type="text" [(ngModel)]="unifiedForm.skills" placeholder="مثال: رعي، تلقيح، حلب...">
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="pm-success" *ngIf="addSuccess">
+      <div class="pm-success-icon">✓</div>
+      <div class="pm-success-title">تم الحفظ بنجاح!</div>
+      <div class="pm-success-sub">تمت إضافة البروفايل/الوظيفة بنجاح وهو الآن مرئي للجميع.</div>
+      <button class="pm-success-btn btn-hire" (click)="closeAddModal()" type="button">إغلاق</button>
+    </div>
+
+    <div class="pm-footer" *ngIf="!addSuccess">
+      <div class="pm-footer-btns">
+        <button class="pm-btn-back" *ngIf="addModalStep > 1" (click)="addModalStep = 1" type="button">رجوع</button>
+      </div>
+      <button
+        class="pm-btn-next"
+        [class.btn-hire]="unifiedForm.formType !== 'job'"
+        [class.btn-work]="unifiedForm.formType === 'job'"
+        [disabled]="isSubmittingAdd"
+        (click)="addModalStep === 1 ? nextAddStep() : submitAddForm()"
+        type="button">
+        {{ addModalStep === 1 ? 'التالي' : (isSubmittingAdd ? 'جاري الحفظ...' : 'حفظ') }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- PROFILE DETAILS MODAL -->
+<div class="profile-details-overlay" [class.open]="profileDetailsOpen" (click)="onProfileDetailsOverlayClick($event)">
+  <div class="profile-details-card" *ngIf="selectedWorker">
+    <div class="pd-cover">
+      <img [src]="selectedWorker.coverUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80'" [alt]="selectedWorker.name">
+      <button class="pd-close" (click)="closeProfileDetails()" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="pd-avatar">
+        <img [src]="selectedWorker.avatarUrl || 'https://ui-avatars.com/api/?name=' + selectedWorker.name + '&background=0f7a3c&color=fff&size=200'" [alt]="selectedWorker.name">
+      </div>
+    </div>
+
+    <div class="pd-body">
+      <div class="pd-head">
+        <div>
+          <div class="pd-name">{{ selectedWorker.name }}</div>
+          <div class="pd-title-text">{{ selectedWorker.title }}</div>
+          <div class="pd-loc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            </svg>
+            {{ selectedWorker.location }}
+          </div>
+        </div>
+        <div class="pd-rate">
+          <div class="pd-rate-num">{{ fmtPrice(selectedWorker.price) }}</div>
+          <div>{{ selectedWorker.priceUnit }}</div>
+          <div class="pd-rate-sub">السعر</div>
+        </div>
+      </div>
+
+      <div class="pd-grid">
+        <div class="pd-stat"><strong>{{ getStars(selectedWorker.rating) }}</strong><span>{{ selectedWorker.rating }} تقييم</span></div>
+        <div class="pd-stat"><strong>{{ selectedWorker.completedJobs }}</strong><span>عملية منجزة</span></div>
+        <div class="pd-stat"><strong>{{ selectedWorker.responseTime }}</strong><span>وقت الرد</span></div>
+      </div>
+
+      <div class="pd-section" *ngIf="selectedWorker.description">
+        <h4>عن العامل</h4>
+        <p>{{ selectedWorker.description }}</p>
+      </div>
+
+      <div class="pd-section" *ngIf="selectedWorker.skills">
+        <h4>المهارات</h4>
+        <div class="skills-row">
+          <span class="skill-tag" *ngFor="let s of getSkillsArray(selectedWorker.skills)">{{ s }}</span>
+        </div>
+      </div>
+
+      <div class="pd-actions">
+        <button class="pd-main" (click)="requestService(selectedWorker)" type="button">طلب الخدمة</button>
+        <a class="pd-wa" [href]="'https://wa.me/' + (selectedWorker.phone || '21600000000') + '?text=' + getWhatsappMessage(selectedWorker.name)" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.484 2 12.017c0 1.99.52 3.855 1.432 5.472L2 22l4.627-1.403A9.935 9.935 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+          </svg>
+          واتساب
+        </a>
+        <button class="pd-save" [class.saved]="savedIds.has(selectedWorker.id)" (click)="toggleSave(selectedWorker.id)" type="button">
+          {{ savedIds.has(selectedWorker.id) ? 'محفوظ' : 'حفظ' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FILTER DRAWER (mobile) -->
+<div class="filter-drawer-overlay" [class.open]="filterDrawerOpen" (click)="onDrawerOverlayClick($event)">
+  <div class="filter-drawer">
+    <div class="fd-handle"></div>
+    <button class="fd-close" (click)="closeFilterDrawer()" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div class="fd-title">الفلاتر</div>
+
+    <div class="pm-field">
+      <label class="pm-label">الفئة</label>
+      <div class="pm-chips">
+        <button *ngFor="let chip of (currentMode === 'hire' ? filterChipsHire : filterChipsWork)"
+          class="pm-chip" [class.chip-active]="drawerFilter === chip.value"
+          (click)="drawerFilter = chip.value" type="button">{{ chip.label }}</button>
+      </div>
+    </div>
+
+    <div class="pm-field">
+      <label class="pm-label">الترتيب</label>
+      <select class="pm-select" [(ngModel)]="drawerSort">
+        <option value="best">الأنسب</option>
+        <option value="top-rated">الأعلى تقييماً</option>
+        <option value="price-asc">السعر ↑</option>
+        <option value="newest">الأحدث</option>
+      </select>
+    </div>
+
+    <button class="fd-apply" (click)="applyDrawerFilters()" type="button">تطبيق الفلاتر</button>
+  </div>
+</div>
+
+
+<!-- TOAST -->
+<div class="toast" [class.toast-error]="toastType === 'error'" *ngIf="toastVisible">
+  {{ toastType === 'success' ? '✓' : '!' }} {{ toastMessage }}
+</div>
+

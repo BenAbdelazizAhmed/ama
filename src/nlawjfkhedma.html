@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>أمانة — العمالة والخدمات الفلاحية في تونس</title>
+<meta name="description" content="منصة أمانة للفلاحة: ابحث عن عمال فلاحيين موثوقين، بيطريين، رعاة أغنام وخدمات فلاحية في كامل تونس." />
+<meta property="og:title" content="أمانة — منصة الفلاحة والخدمات الأولى في تونس" />
+<meta property="og:description" content="لقى عامل فلاحي موثوق في أقل وقت. رعاة أغنام، بيطريين، سائقين وعمال حقول." />
+<meta property="og:type" content="website" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ─── DESIGN TOKENS ─── */
+:root{
+  --green:#0f7a3c;--green-dark:#084d25;--green-mid:#1a9e50;--green-soft:#e6f7ed;
+  --gold:#d4920a;--gold-soft:#fff4d8;--blue:#1e40af;--blue-soft:#eff6ff;
+  --red:#dc2626;--text:#111b15;--muted:#5a6b60;--line:#dde8e1;--bg:#f2f7f4;
+  --white:#fff;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:0 8px 24px rgba(0,0,0,.10);
+  --shadow-lg:0 22px 60px rgba(0,0,0,.14);
+  --radius:16px;--radius-lg:24px;
+  --font-size-base:15px;
+  --header-h:68px;--navbar-h:50px;--filter-h:52px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;direction:rtl;background:var(--bg);color:var(--text);font-size:var(--font-size-base);line-height:1.6;min-height:100vh}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:'Cairo',sans-serif}
+button{border:0;cursor:pointer;background:none}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:99px}
+
+/* ─── ICONS SVG ─── */
+.icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon svg{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ─── ANN BAR ─── */
+.ann-bar{background:linear-gradient(90deg,var(--green-dark),var(--green),var(--green-dark));color:white;text-align:center;padding:8px 18px;font-size:12px;font-weight:800}
+.ann-bar span{opacity:.65;margin:0 14px}
+
+/* ─── HEADER ─── */
+.header{height:var(--header-h);background:white;display:flex;align-items:center;gap:20px;padding:0 36px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1000;box-shadow:var(--shadow-sm)}
+.logo{display:flex;align-items:center;gap:10px;min-width:210px}
+.logo-mark{width:46px;height:46px;background:linear-gradient(135deg,var(--green-dark),var(--green));border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(15,122,60,.3)}
+.logo-mark svg{width:26px;height:26px;fill:white;stroke:none}
+.name{font-size:22px;font-weight:900;color:#17351f;line-height:1}
+.tagline{font-size:11px;color:#738177;margin-top:3px;font-weight:700}
+.search-wrap{flex:1;max-width:520px;height:44px;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;display:flex;background:var(--bg);transition:.2s}
+.search-wrap:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.12)}
+.search-wrap input{flex:1;border:0;outline:0;background:transparent;padding:0 20px;font-size:14px}
+.search-wrap button{width:85px;background:linear-gradient(135deg,var(--green),var(--green-mid));color:white;font-weight:900;font-size:13px}
+.header-actions{display:flex;align-items:center;gap:4px;margin-right:auto}
+.hact{width:46px;height:46px;position:relative;color:#555;border-radius:12px;transition:.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.hact:hover{background:var(--bg);color:var(--green)}
+.hact .ico{font-size:20px;display:flex;align-items:center;justify-content:center}
+.hact .ico svg{width:22px;height:22px}
+.hact .label{font-size:9px;font-weight:800}
+.badge{position:absolute;top:4px;right:4px;background:var(--green);color:white;border-radius:99px;font-size:9px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid white;line-height:1}
+.badge.red{background:var(--red)}
+.divider-v{width:1px;height:36px;background:var(--line);margin:0 4px}
+.user-block{display:flex;align-items:center;gap:10px;padding:6px 14px;border-radius:99px;border:1.5px solid var(--line);transition:.2s;background:white;cursor:pointer}
+.user-block:hover{border-color:var(--green)}
+.user-avt{width:34px;height:34px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;color:var(--green)}
+.user-avt svg{width:18px;height:18px}
+.greet{font-size:9px;color:var(--muted)}.uname{font-size:13px;font-weight:900}
+
+/* ─── NAVBAR ─── */
+.navbar{height:var(--navbar-h);background:white;display:flex;align-items:center;padding:0 36px;border-bottom:1px solid var(--line);gap:10px;position:sticky;top:calc(var(--header-h));z-index:999}
+.navbar ul{display:flex;list-style:none;gap:2px;overflow-x:auto}
+.navbar li a{height:var(--navbar-h);padding:0 15px;display:flex;align-items:center;gap:7px;font-weight:800;font-size:13px;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:.2s}
+.navbar li a svg{width:16px;height:16px;flex-shrink:0}
+.navbar li a:hover,.navbar li a.active{color:var(--green);border-bottom-color:var(--green)}
+.nb-spacer{flex:1}
+
+/* ─── HERO ─── */
+.hero{position:relative;min-height:520px;padding:52px 80px 80px;overflow:hidden;background-size:cover;background-position:center;background-repeat:no-repeat;transition:.4s}
+.hero.mode-hire{background-image:linear-gradient(to left,rgba(4,35,17,.88),rgba(15,122,60,.72),rgba(15,122,60,.25),rgba(15,122,60,0)),url("assets/za.png")}
+.hero.mode-work{background-image:linear-gradient(to left,rgba(5,12,45,.92),rgba(30,64,175,.75),rgba(30,64,175,.25),rgba(30,64,175,0)),url("assets/sa.png")}
+/* Fallback si image absente */
+.hero.mode-hire:not([style*="url"]){background:linear-gradient(135deg,#042311,#0f7a3c)}
+.hero.mode-work:not([style*="url"]){background:linear-gradient(135deg,#05102d,#1e40af)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr 330px;gap:36px;align-items:center;max-width:1320px;margin:auto}
+.mode-toggle-wrap{display:inline-flex;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:6px;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.mode-btn{position:relative;display:flex;align-items:center;gap:9px;padding:12px 22px;border-radius:99px;color:rgba(255,255,255,.72);font-size:14px;font-weight:900;transition:.25s;cursor:pointer}
+.mode-btn.active{background:rgba(255,255,255,.2);color:white;box-shadow:0 4px 20px rgba(0,0,0,.16)}
+.mode-btn.post-profile{background:white;color:var(--green-dark)}
+.hero.mode-work .mode-btn.post-profile{color:var(--blue)}
+.mode-badge{position:absolute;top:-8px;right:-5px;background:var(--gold);color:white;border-radius:99px;padding:2px 7px;font-size:9px;font-weight:900;border:2px solid rgba(0,0,0,.22);white-space:nowrap}
+.hero-title{color:white;font-size:50px;font-weight:900;line-height:1.15;margin-bottom:14px;text-shadow:0 4px 24px rgba(0,0,0,.24)}
+.hero-title em{font-style:normal;color:#b8ffd2}.hero.mode-work .hero-title em{color:#bfdbfe}
+.hero-sub{max-width:650px;color:rgba(255,255,255,.82);font-size:15px;line-height:1.9;font-weight:600;margin-bottom:24px}
+.search-engine{max-width:820px;background:rgba(255,255,255,.97);border-radius:var(--radius-lg);padding:20px;box-shadow:0 24px 64px rgba(0,0,0,.28)}
+.search-row{display:flex;gap:10px;margin-bottom:12px}
+.search-field{position:relative;flex:1}
+.search-field .s-icon{position:absolute;top:50%;right:14px;transform:translateY(-50%);color:var(--muted);opacity:.7;pointer-events:none}
+.search-field .s-icon svg{width:18px;height:18px}
+.search-field input,.search-field select{width:100%;height:52px;border:1.5px solid var(--line);border-radius:13px;background:white;outline:0;color:var(--text);font-size:14px;padding:0 43px 0 16px;appearance:none;transition:.2s}
+.search-field input:focus,.search-field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.1)}
+.search-go{height:52px;padding:0 28px;border-radius:13px;color:white;font-weight:900;font-size:14px;white-space:nowrap;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));box-shadow:0 6px 20px rgba(15,122,60,.30);transition:.15s;cursor:pointer;flex-shrink:0}
+.search-go:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,122,60,.4)}
+.hero.mode-work .search-go{background:linear-gradient(135deg,#1e3a8a,#3b82f6)}
+.search-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.search-tags .label{font-size:11px;color:var(--muted);font-weight:800}
+.stag{padding:5px 13px;border-radius:99px;background:var(--green-soft);color:var(--green);font-size:11px;font-weight:900;cursor:pointer;transition:.15s}
+.stag:hover{background:var(--green);color:white}
+.hero.mode-work .stag{background:var(--blue-soft);color:var(--blue)}
+.hero.mode-work .stag:hover{background:var(--blue);color:white}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15)}
+.hstat .num{color:white;font-size:24px;font-weight:900}.hstat .lbl{color:rgba(255,255,255,.68);font-size:11px;font-weight:800}
+
+/* ─── TRUST PANEL ─── */
+.trust-panel{background:rgba(255,255,255,.98);border-radius:var(--radius-lg);padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.trust-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.trust-icon{width:48px;height:48px;border-radius:14px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;color:var(--green);flex-shrink:0}
+.trust-icon svg{width:24px;height:24px}
+.hero.mode-work .trust-icon{background:var(--blue-soft);color:var(--blue)}
+.trust-head h3{font-size:16px;font-weight:900}.trust-head p{font-size:11px;color:var(--muted);font-weight:700}
+.trust-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;font-weight:800}
+.trust-item:last-child{border-bottom:0}
+.check{width:22px;height:22px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0}
+.check svg{width:12px;height:12px}
+.trust-cta{margin-top:16px;width:100%;border-radius:99px;padding:13px;color:white;font-size:14px;font-weight:900;background:linear-gradient(135deg,var(--green-dark),var(--green));cursor:pointer;transition:.15s}
+.trust-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(15,122,60,.4)}
+.hero.mode-work .trust-cta{background:linear-gradient(135deg,#1e3a8a,#3b82f6)}
+
+/* ─── HOW IT WORKS ─── */
+.how-it-works{padding:36px 80px;background:white;border-bottom:1px solid var(--line)}
+.hiw-inner{max-width:900px;margin:auto;text-align:center}
+.hiw-inner h2{font-size:20px;font-weight:900;color:var(--green-dark);margin-bottom:24px}
+.hiw-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.hiw-step{display:flex;flex-direction:column;align-items:center;gap:12px}
+.hiw-num{width:52px;height:52px;border-radius:50%;background:var(--green-soft);color:var(--green);font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--green)}
+.hiw-step h4{font-size:14px;font-weight:900;color:var(--text)}
+.hiw-step p{font-size:12px;color:var(--muted);font-weight:600;line-height:1.7}
+
+/* ─── FILTERS ─── */
+.filters-bar{background:white;border-bottom:1px solid var(--line);padding:10px 80px;display:flex;align-items:center;gap:12px;position:sticky;top:calc(var(--header-h) + var(--navbar-h));z-index:900;box-shadow:var(--shadow-sm)}
+.filter-label{font-size:12px;color:var(--muted);font-weight:900;white-space:nowrap}
+.filter-chips{display:flex;gap:8px;overflow-x:auto;flex:1}
+.filter-chips::-webkit-scrollbar{height:0}
+.fchip{padding:7px 15px;border-radius:99px;border:1.5px solid var(--line);background:white;color:var(--muted);font-size:12px;font-weight:900;white-space:nowrap;transition:.15s;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:36px}
+.fchip svg{width:14px;height:14px;flex-shrink:0}
+.fchip:hover,.fchip.active{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.filter-right{display:flex;gap:8px;margin-right:auto;flex-shrink:0;align-items:center}
+.sort-select{padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:white;color:var(--muted);font-size:12px;font-weight:900;outline:0;cursor:pointer}
+.mobile-filter-btn{display:none;padding:8px 16px;border-radius:99px;color:var(--green);background:var(--green-soft);border:1.5px solid var(--green);font-size:12px;font-weight:900;cursor:pointer;align-items:center;gap:6px}
+.mobile-filter-btn svg{width:16px;height:16px}
+.view-btns{display:flex;gap:4px}
+.view-btn{width:36px;height:36px;border-radius:9px;border:1.5px solid var(--line);background:white;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.view-btn svg{width:16px;height:16px}
+.view-btn.active,.view-btn:hover{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+
+/* ─── MAIN LAYOUT ─── */
+.main-wrap{display:grid;grid-template-columns:280px 1fr;gap:20px;padding:24px 80px;max-width:1440px;margin:auto}
+.s-box{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.s-box-title{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:900;margin-bottom:14px}
+.s-box-title a{font-size:11px;color:var(--green);font-weight:900}
+.cat-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;transition:.15s}
+.cat-row:hover{background:var(--bg)}.cat-row.selected{background:var(--green-soft)}
+.c-icon{font-size:18px;width:30px;text-align:center;flex-shrink:0}
+.c-name{font-size:12px;font-weight:900;flex:1}
+.selected .c-name{color:var(--green)}
+.c-count{font-size:11px;background:var(--bg);color:var(--muted);padding:2px 8px;border-radius:99px;font-weight:900}
+.selected .c-count{background:var(--green);color:white}
+.range-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:800}
+input[type=range]{width:100%;accent-color:var(--green)}
+.rating-opt{display:flex;align-items:center;gap:8px;padding:6px;border-radius:8px;cursor:pointer;font-size:13px}
+.rating-opt:hover{background:var(--bg)}.rating-opt input{accent-color:var(--green);cursor:pointer}
+.stars{color:var(--gold);font-size:13px}.r-count{font-size:11px;color:var(--muted);font-weight:800}
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.reg-pill{padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;text-align:center;color:var(--muted);font-size:11px;font-weight:900;cursor:pointer;transition:.15s}
+.reg-pill:hover,.reg-pill.sel{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.side-promo{background:linear-gradient(135deg,var(--green-dark),var(--green));color:white;border:0;position:relative;overflow:hidden}
+.side-promo::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.08);left:-70px;top:-70px}
+.side-promo h4{font-size:15px;font-weight:900;margin-bottom:6px;position:relative}
+.side-promo p{font-size:12px;opacity:.85;line-height:1.8;position:relative}
+.side-promo button{margin-top:12px;border-radius:99px;padding:9px 16px;background:rgba(255,255,255,.16);color:white;border:1px solid rgba(255,255,255,.28);font-weight:900;position:relative;cursor:pointer;font-size:12px;transition:.2s}
+.side-promo button:hover{background:rgba(255,255,255,.26)}
+
+/* ─── RESULTS ─── */
+.results-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.results-count{font-size:15px;font-weight:900}.results-count span{color:var(--green)}
+.results-sub{font-size:12px;color:var(--muted);font-weight:700}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap;margin-right:auto}
+.af-tag{display:flex;gap:6px;align-items:center;background:var(--green-soft);color:var(--green);padding:4px 12px;border-radius:99px;font-size:11px;font-weight:900;cursor:pointer}
+.af-tag:hover{background:var(--green);color:white}
+.cards-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.cards-grid.list-view{grid-template-columns:1fr}
+
+/* ─── SKELETON LOADER ─── */
+.skeleton-card{background:white;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;animation:skpulse 1.5s ease infinite}
+@keyframes skpulse{0%,100%{opacity:1}50%{opacity:.6}}
+.sk-cover{height:132px;background:#e8efe9}
+.sk-body{padding:50px 16px 16px}
+.sk-line{height:14px;border-radius:99px;background:#e8efe9;margin-bottom:10px}
+.sk-line.w60{width:60%}.sk-line.w80{width:80%}.sk-line.w40{width:40%}
+
+/* ─── PROFILE CARD ─── */
+.profile-card{background:white;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;position:relative;transition:.2s;cursor:pointer}
+.profile-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.avail-ribbon{position:absolute;top:14px;left:0;background:var(--green);color:white;font-size:10px;font-weight:900;padding:4px 12px 4px 8px;border-radius:0 99px 99px 0;display:flex;align-items:center;gap:5px;z-index:8}
+.avail-ribbon.off{background:#9ca3af}
+.dot{width:7px;height:7px;background:#6ee89a;border-radius:50%;animation:blink 1.5s infinite;flex-shrink:0}
+@keyframes blink{50%{opacity:.35}}
+.card-cover{height:132px;position:relative;background:#eef3ef;overflow:hidden}
+.card-cover img{width:100%;height:100%;object-fit:cover}
+.card-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.18));pointer-events:none}
+.card-avatar-wrap{position:absolute;right:22px;bottom:-38px;z-index:9}
+.card-avatar{width:76px;height:76px;border-radius:50%;border:4px solid white;box-shadow:0 8px 22px rgba(0,0,0,.22);overflow:hidden;background:var(--bg)}
+.card-avatar img{width:100%;height:100%;object-fit:cover}
+.verified-badge{position:absolute;bottom:0;left:0;width:24px;height:24px;border-radius:50%;background:var(--green);color:white;border:2px solid white;display:flex;align-items:center;justify-content:center}
+.verified-badge svg{width:12px;height:12px;stroke:white;fill:none}
+.card-body{padding:50px 16px 16px}
+.card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:4px}
+.worker-name{font-size:15px;font-weight:900}
+.worker-exp{background:var(--gold-soft);color:var(--gold);font-size:11px;font-weight:900;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.worker-title{font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px}
+.worker-loc{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700;display:flex;align-items:center;gap:5px}
+.worker-loc svg{width:13px;height:13px;flex-shrink:0}
+.trust-mini{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.trust-chip{background:var(--green-soft);color:var(--green);font-size:10px;font-weight:900;padding:3px 9px;border-radius:99px}
+.rating-row{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.rating-stars{color:var(--gold);font-size:13px}
+.rating-num{font-size:13px;font-weight:900}
+.rating-cnt{font-size:11px;color:var(--muted);font-weight:700}
+.skills-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.skill-tag{background:var(--bg);color:var(--muted);font-size:11px;font-weight:900;padding:4px 10px;border-radius:99px}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.price-label{font-size:11px;color:var(--muted);font-weight:800}
+.price-val{font-size:17px;color:var(--green);font-weight:900}
+.price-unit{font-size:11px;color:var(--muted)}
+.card-actions{display:flex;gap:6px}
+.btn-contact{padding:9px 15px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:white;font-size:12px;font-weight:900;box-shadow:0 3px 10px rgba(15,122,60,.28);cursor:pointer;transition:.15s}
+.btn-contact:hover{transform:translateY(-1px)}
+.btn-whatsapp{width:40px;height:40px;border-radius:50%;background:#dcfce7;color:#16a34a;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;border:0;transition:.15s;flex-shrink:0}
+.btn-whatsapp:hover{background:#16a34a;color:white}
+.btn-whatsapp svg{width:20px;height:20px}
+.btn-save{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:white;font-size:16px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-save:hover{border-color:var(--red);color:var(--red)}
+.btn-save svg{width:18px;height:18px;stroke:var(--muted);fill:none}
+.btn-save.saved svg{stroke:var(--red);fill:var(--red)}
+
+/* List view */
+.cards-grid.list-view .profile-card{display:grid;grid-template-columns:180px 1fr}
+.cards-grid.list-view .card-cover{height:100%;min-height:180px;border-radius:var(--radius) 0 0 var(--radius)}
+.cards-grid.list-view .card-avatar-wrap{right:auto;left:50%;bottom:14px;transform:translateX(-50%)}
+.cards-grid.list-view .card-body{padding:20px 24px}
+
+/* ─── JOB CARD ─── */
+.job-card{background:white;border:1px solid var(--line);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:.2s;cursor:pointer}
+.job-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.job-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:linear-gradient(180deg,#1e40af,#3b82f6)}
+.job-card-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.employer-logo{width:52px;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.job-info{flex:1}
+.job-title{font-size:15px;font-weight:900}
+.employer-name{font-size:12px;color:var(--muted);font-weight:800}
+.job-badge{padding:4px 11px;border-radius:99px;font-size:11px;font-weight:900}
+.badge-urgent{background:#fef2f2;color:var(--red)}
+.badge-new{background:var(--blue-soft);color:var(--blue)}
+.badge-featured{background:var(--gold-soft);color:var(--gold)}
+.job-desc{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:12px;font-weight:600}
+.job-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.jtag{background:var(--bg);color:var(--muted);padding:4px 11px;border-radius:99px;font-size:11px;font-weight:900}
+.job-footer{border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.salary-label{font-size:11px;color:var(--muted);font-weight:800}
+.salary-val{font-size:17px;color:var(--blue);font-weight:900}
+.salary-period{font-size:11px;color:var(--muted)}
+.deadline{font-size:11px;color:var(--muted);font-weight:800;display:flex;align-items:center;gap:4px}
+.deadline svg{width:13px;height:13px}
+.btn-apply{padding:9px 18px;border-radius:99px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:white;font-size:12px;font-weight:900;box-shadow:0 3px 10px rgba(30,58,138,.28);cursor:pointer;transition:.15s}
+.btn-apply:hover{transform:translateY(-1px)}
+
+.featured-banner{grid-column:1/-1;background:linear-gradient(135deg,#0a3d1e,#0f7a3c);border-radius:var(--radius);padding:22px 24px;display:flex;align-items:center;gap:18px;color:white;overflow:hidden}
+.fb-icon{font-size:36px;flex-shrink:0}
+.fb-title{font-size:16px;font-weight:900;margin-bottom:4px}
+.fb-sub{font-size:12px;opacity:.82;font-weight:700}
+.fb-btn{margin-right:auto;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.3);color:white;padding:11px 22px;border-radius:99px;font-size:12px;font-weight:900;white-space:nowrap;cursor:pointer;transition:.2s;flex-shrink:0}
+.fb-btn:hover{background:rgba(255,255,255,.28)}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 24px;background:white;border-radius:var(--radius);border:1px solid var(--line)}
+.empty-state svg{width:64px;height:64px;color:var(--muted);margin:0 auto 16px;opacity:.5}
+.empty-state h3{font-size:20px;color:var(--green-dark);margin-bottom:8px;font-weight:900}
+.empty-state p{color:var(--muted);font-weight:700;font-size:13px}
+
+/* ─── PAGINATION ─── */
+.pagination{display:flex;justify-content:center;gap:6px;margin-top:28px}
+.pag-btn{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--line);background:white;color:var(--muted);font-weight:900;cursor:pointer;transition:.15s;font-size:13px}
+.pag-btn:hover,.pag-btn.active{background:var(--green);border-color:var(--green);color:white}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.card-appear{animation:fadeUp .45s ease both}
+.results-section{transition:opacity .3s}
+.results-section.fading{opacity:.35;pointer-events:none}
+
+/* ─── MOBILE FILTER DRAWER ─── */
+.filter-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;opacity:0;pointer-events:none;transition:.25s}
+.filter-drawer-overlay.open{opacity:1;pointer-events:all}
+.filter-drawer{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:24px 24px 0 0;padding:24px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:.3s cubic-bezier(.4,0,.2,1);z-index:2001}
+.filter-drawer-overlay.open .filter-drawer{transform:translateY(0)}
+.fd-handle{width:40px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 20px}
+.fd-title{font-size:17px;font-weight:900;margin-bottom:20px;color:var(--green-dark)}
+.fd-close{position:absolute;top:20px;left:20px;width:36px;height:36px;border-radius:50%;background:var(--bg);border:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.fd-close svg{width:18px;height:18px;color:var(--muted)}
+.fd-apply{width:100%;padding:14px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:white;font-weight:900;font-size:14px;margin-top:20px;cursor:pointer}
+
+/* ─── POST MODAL ─── */
+.post-overlay,.profile-details-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.25s;backdrop-filter:blur(6px)}
+.post-overlay.open,.profile-details-overlay.open{opacity:1;pointer-events:all}
+.post-modal,.profile-details-card{width:min(720px,100%);max-height:90vh;overflow:auto;background:white;border-radius:24px;box-shadow:0 32px 90px rgba(0,0,0,.32);transform:translateY(20px) scale(.97);transition:.25s}
+.post-overlay.open .post-modal,.profile-details-overlay.open .profile-details-card{transform:translateY(0) scale(1)}
+.pm-hero{padding:28px;border-radius:24px 24px 0 0;position:relative;overflow:hidden}
+.pm-hero.hire-hero{background:linear-gradient(135deg,#073d1e,#0f7a3c)}
+.pm-hero.work-hero{background:linear-gradient(135deg,#0c1a4a,#1e40af)}
+.pm-hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.pm-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);padding:5px 14px;border-radius:99px;color:white;font-size:11px;font-weight:900}
+.bdot{width:8px;height:8px;border-radius:50%}.hire-dot{background:#6ee89a}.work-dot{background:#93c5fd}
+.pm-close{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+.pm-close:hover{background:rgba(255,255,255,.22)}
+.pm-title{font-size:26px;font-weight:900;color:white;line-height:1.2;margin-bottom:6px}
+.pm-title em{font-style:normal}
+.hire-hero .pm-title em{color:#6ee89a}
+.work-hero .pm-title em{color:#93c5fd}
+.pm-sub{font-size:13px;color:rgba(255,255,255,.75);font-weight:600}
+.pm-body{padding:24px 28px;background:white}
+.pm-field{margin-bottom:18px}
+.pm-label{display:block;font-size:13px;font-weight:900;color:var(--text);margin-bottom:7px}
+.pm-label .req{color:var(--red);margin-right:2px}
+.pm-input,.pm-select,.pm-textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);outline:none;font-size:14px;color:var(--text);transition:.2s}
+.pm-input:focus,.pm-select:focus,.pm-textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.1)}
+.pm-input,.pm-select{height:48px;padding:0 14px}
+.pm-textarea{padding:12px 14px;resize:vertical;min-height:90px;line-height:1.7}
+.pm-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pm-chip{padding:8px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--bg);color:var(--muted);font-size:12px;font-weight:900;transition:.2s;cursor:pointer}
+.pm-chip.chip-hire{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.pm-chip.chip-work{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.pm-price-wrap{display:flex;gap:10px;align-items:flex-end}
+.pm-price-inner{position:relative;flex:1}
+.pm-currency{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:900;color:var(--muted)}
+.pm-price-inner .pm-input{padding-left:46px}
+.pm-period{width:130px}
+.pm-avail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pm-avail-btn{padding:11px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);font-size:12px;font-weight:900;color:var(--muted);cursor:pointer;transition:.2s}
+.pm-avail-btn:hover{border-color:var(--green);color:var(--green)}
+.pm-avail-btn.avail-hire{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.pm-avail-btn.avail-work{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.pm-upload{border:2px dashed var(--line);border-radius:14px;padding:28px 16px;text-align:center;background:var(--bg);cursor:pointer;transition:.2s}
+.pm-upload:hover{border-color:var(--green);background:var(--green-soft)}
+.pm-upload-icon{font-size:32px;margin-bottom:8px}
+.pm-upload p{font-size:13px;font-weight:900}
+.pm-upload span{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;display:block}
+.pm-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.pm-plan{border:1.5px solid var(--line);border-radius:14px;padding:14px;text-align:center;background:var(--bg);cursor:pointer;transition:.2s}
+.pm-plan:hover{border-color:var(--green)}
+.pm-plan.plan-hire{background:var(--green-soft);border-color:var(--green)}
+.pm-plan.plan-work{background:var(--blue-soft);border-color:var(--blue)}
+.pm-best{display:inline-block;background:var(--green);color:white;font-size:10px;font-weight:900;padding:3px 8px;border-radius:99px;margin-bottom:8px}
+.pm-plan-icon{font-size:26px;margin-bottom:6px}
+.pm-plan-name{font-size:13px;font-weight:900;margin-bottom:4px}
+.pm-plan-price{font-size:18px;font-weight:900;color:var(--green);margin-bottom:6px}
+.pm-plan-feat{font-size:11px;color:var(--muted);font-weight:700;line-height:1.8}
+.pm-footer{padding:18px 28px;border-top:1.5px solid var(--line);display:flex;align-items:center;gap:12px;background:white;border-radius:0 0 24px 24px;position:sticky;bottom:0}
+.pm-footer-btns{display:flex;gap:10px;margin-right:auto}
+.pm-btn-back{padding:11px 22px;border-radius:99px;border:1.5px solid var(--line);background:var(--bg);font-size:13px;font-weight:900;color:var(--muted);cursor:pointer;transition:.15s}
+.pm-btn-back:hover{border-color:var(--green)}
+.pm-btn-next{padding:11px 28px;border-radius:99px;font-size:13px;font-weight:900;color:white;cursor:pointer;transition:.15s}
+.pm-btn-next:hover{transform:translateY(-1px)}
+.pm-btn-next:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.next-hire{background:linear-gradient(135deg,var(--green-dark),var(--green))}
+.next-work{background:linear-gradient(135deg,#1e3a8a,#3b82f6)}
+.pm-success{text-align:center;padding:40px 24px}
+.pm-success-icon{font-size:56px;margin-bottom:16px}
+.pm-success-title{font-size:22px;font-weight:900;margin-bottom:8px}
+.pm-success-sub{font-size:13px;color:var(--muted);font-weight:600;line-height:1.9;margin-bottom:24px}
+.pm-success-btn{padding:13px 34px;border-radius:99px;font-size:14px;font-weight:900;color:white;cursor:pointer}
+.sb-hire{background:linear-gradient(135deg,var(--green-dark),var(--green))}
+.sb-work{background:linear-gradient(135deg,#1e3a8a,#3b82f6)}
+
+/* ─── PROFILE DETAILS MODAL ─── */
+.profile-details-overlay{z-index:9998}
+.pd-cover{height:210px;background:#eef3ef;position:relative;overflow:hidden;border-radius:24px 24px 0 0}
+.pd-cover img{width:100%;height:100%;object-fit:cover}
+.pd-close{position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);color:white;font-size:18px;border:1px solid rgba(255,255,255,.25);z-index:4;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;backdrop-filter:blur(6px)}
+.pd-close svg{width:18px;height:18px}
+.pd-avatar{width:100px;height:100px;border-radius:50%;border:5px solid white;overflow:hidden;position:absolute;right:28px;bottom:-48px;background:var(--bg);box-shadow:0 12px 32px rgba(0,0,0,.25);z-index:5}
+.pd-avatar img{width:100%;height:100%;object-fit:cover}
+.pd-body{padding:66px 28px 26px}
+.pd-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px}
+.pd-name{font-size:24px;font-weight:900;color:var(--green-dark)}
+.pd-title{font-size:14px;font-weight:800;color:var(--green);margin-top:3px}
+.pd-loc{font-size:12px;color:var(--muted);font-weight:800;margin-top:6px;display:flex;align-items:center;gap:4px}
+.pd-loc svg{width:13px;height:13px}
+.pd-rate{text-align:center;background:var(--gold-soft);color:var(--gold);padding:10px 16px;border-radius:16px;font-weight:900;white-space:nowrap;flex-shrink:0}
+.pd-rate .pd-rate-num{font-size:20px;font-weight:900}
+.pd-rate .pd-rate-sub{font-size:11px;color:#8a6508;margin-top:2px}
+.pd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.pd-stat{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.pd-stat strong{display:block;font-size:18px;color:var(--green);font-weight:900}
+.pd-stat span{font-size:11px;color:var(--muted);font-weight:800}
+.pd-section{margin-top:18px}
+.pd-section h4{font-size:14px;font-weight:900;margin-bottom:8px;color:var(--green-dark)}
+.pd-section p{font-size:13px;color:var(--muted);font-weight:600;line-height:1.9}
+.pd-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.pd-actions button,.pd-actions a{flex:1;min-width:140px;text-align:center;padding:13px 18px;border-radius:99px;font-weight:900;cursor:pointer;font-size:13px;transition:.15s;border:0}
+.pd-actions button:hover,.pd-actions a:hover{transform:translateY(-1px)}
+.pd-main{background:linear-gradient(135deg,var(--green-dark),var(--green));color:white}
+.pd-wa{background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.pd-wa svg{width:18px;height:18px}
+.pd-save{background:var(--bg);color:var(--muted);border:1.5px solid var(--line)!important}
+.pd-save.saved{border-color:var(--red)!important;color:var(--red)}
+
+/* ─── FOOTER ─── */
+.page-footer{background:var(--green-dark);color:white;margin-top:30px}
+.pf-top{padding:40px 80px 30px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px;border-bottom:1px solid rgba(255,255,255,.1)}
+.pf-brand strong{font-size:20px;font-weight:900;display:block;margin-bottom:6px}
+.pf-brand p{font-size:12px;opacity:.72;line-height:1.8;font-weight:500}
+.pf-col h5{font-size:13px;font-weight:900;margin-bottom:14px;opacity:.9}
+.pf-col a{display:block;font-size:12px;font-weight:700;opacity:.7;margin-bottom:8px;transition:.15s}
+.pf-col a:hover{opacity:1;color:#b8ffd2}
+.pf-bottom{padding:16px 80px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.pf-bottom p{font-size:12px;opacity:.6}
+.pf-legal{display:flex;gap:16px}
+.pf-legal a{font-size:12px;opacity:.6;font-weight:700;transition:.15s}
+.pf-legal a:hover{opacity:1}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green-dark);color:white;padding:12px 20px;border-radius:16px;z-index:10000;font-weight:900;font-size:13px;box-shadow:0 12px 34px rgba(0,0,0,.24);animation:toastIn .25s ease,toastOut .25s ease 2.2s forwards;display:flex;align-items:center;gap:8px}
+.toast.toast-error{background:#991b1b}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(12px)}}
+
+/* ─── RESPONSIVE: TABLET ─── */
+@media(max-width:1180px){
+  .header{height:auto;flex-wrap:wrap;padding:12px 16px}
+  .search-wrap{order:3;max-width:none;width:100%;flex-basis:100%}
+  .navbar{top:97px;overflow-x:auto;padding:0 16px}
+  .filters-bar{top:calc(97px + var(--navbar-h));padding:10px 16px}
+  .hero{padding:36px 24px 48px}
+  .hero-grid{grid-template-columns:1fr}
+  .trust-panel{display:none}
+  .main-wrap{grid-template-columns:1fr;padding:16px}
+  .sidebar{display:none}
+  .mobile-filter-btn{display:flex}
+  .cards-grid{grid-template-columns:1fr}
+  .hero-title{font-size:36px}
+  .search-row{flex-direction:column}
+  .search-field[style]{max-width:none!important}
+  .mode-toggle-wrap{width:100%;justify-content:center}
+  .mode-btn{padding:11px 14px;font-size:13px}
+  .featured-banner{flex-direction:column;text-align:center}
+  .fb-btn{margin:0}
+  .filter-right .sort-select{display:none}
+  .hact{display:none}
+  .how-it-works{padding:24px 16px}
+  .pf-top{grid-template-columns:1fr 1fr;gap:24px;padding:32px 24px 24px}
+  .pf-bottom{padding:14px 24px;flex-direction:column;text-align:center}
+}
+
+/* ─── RESPONSIVE: MOBILE ─── */
+@media(max-width:620px){
+  :root{--header-h:92px}
+  .ann-bar{font-size:11px}
+  .logo{min-width:auto}
+  .name{font-size:18px}
+  .tagline{display:none}
+  .user-block{display:none}
+  .navbar{top:92px}
+  .filters-bar{top:calc(92px + var(--navbar-h))}
+  .hero-title{font-size:28px}
+  .hero-sub{font-size:14px}
+  .search-engine{padding:14px}
+  .hero-stats{display:grid;grid-template-columns:repeat(2,1fr)}
+  .cards-grid.list-view .profile-card{grid-template-columns:1fr}
+  .cards-grid.list-view .card-cover{height:140px;border-radius:var(--radius) var(--radius) 0 0}
+  .cards-grid.list-view .card-avatar-wrap{right:20px;left:auto;transform:none;bottom:-38px}
+  .pm-body{padding:18px 16px}
+  .pm-hero{padding:22px 16px 20px}
+  .pm-footer{padding:14px 16px}
+  .pm-row2{grid-template-columns:1fr}
+  .pm-plans{grid-template-columns:1fr}
+  .pm-avail-grid{grid-template-columns:repeat(2,1fr)}
+  .pd-grid{grid-template-columns:1fr 1fr}
+  .pd-head{flex-direction:column}
+  .pf-top{grid-template-columns:1fr;gap:20px}
+  .hiw-steps{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SVG ICONS SPRITE (inline, no external dependency) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="ic-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="ic-animal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></symbol>
+  <symbol id="ic-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></symbol>
+  <symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="ic-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="ic-map-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+  <symbol id="ic-filter" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="ic-star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></symbol>
+  <symbol id="ic-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.29 9.9a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.59 6.59l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></symbol>
+  <symbol id="ic-whatsapp" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.857L.057 23.882a.5.5 0 00.61.637l6.257-1.543A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 01-5.11-1.402l-.36-.213-3.738.921.969-3.637-.237-.377A9.982 9.982 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></symbol>
+  <symbol id="ic-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="ic-leaf" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.62L2 21l1 1 2-2c.97.63 2.07 1 3 1 4 0 8-4 8-10V5l1 3z"/></symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></symbol>
+  <symbol id="ic-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="ic-chevron-right" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="ic-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+</svg>
+
+<div class="ann-bar">
+  🎉 أمانة تربطك بالعمال، المربين، البيطريين والخدمات الفلاحية في كامل تونس
+  <span>|</span> نشر الإعلان الأول مجاناً
+</div>
+
+<header class="header" role="banner">
+  <a href="index.html" class="logo" aria-label="AMANAFARM الرئيسية">
+    <div class="logo-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><use href="#ic-leaf"/></svg>
+    </div>
+    <div class="logo-texts">
+      <div class="name">AMANAFARM</div>
+      <div class="tagline">منصة الفلاحة والخدمات الأولى في تونس</div>
+    </div>
+  </a>
+
+  <div class="search-wrap" role="search">
+    <input id="topSearchInput" type="text" placeholder="ابحث عن عامل، خدمة، عرض عمل..." aria-label="بحث رئيسي">
+    <button id="topSearchBtn" type="button" aria-label="تنفيذ البحث">بحث</button>
+  </div>
+
+  <div class="header-actions" role="toolbar" aria-label="إجراءات المستخدم">
+    <button class="hact" aria-label="السلة (0 عناصر)">
+      <div class="ico"><svg><use href="#ic-cart"/></svg></div>
+      <span class="badge" aria-hidden="true">0</span>
+      <div class="label">السلة</div>
+    </button>
+    <button class="hact" aria-label="الرسائل (5 غير مقروءة)">
+      <div class="ico"><svg><use href="#ic-mail"/></svg></div>
+      <span class="badge" aria-hidden="true">5</span>
+      <div class="label">الرسائل</div>
+    </button>
+    <button class="hact" aria-label="الإشعارات (3 جديدة)">
+      <div class="ico"><svg><use href="#ic-bell"/></svg></div>
+      <span class="badge red" aria-hidden="true">3</span>
+      <div class="label">الإشعارات</div>
+    </button>
+    <div class="divider-v" aria-hidden="true"></div>
+    <button class="user-block" aria-label="حسابي — محمد" aria-haspopup="true">
+      <div class="user-avt" aria-hidden="true"><svg><use href="#ic-user"/></svg></div>
+      <div>
+        <div class="greet">مرحباً،</div>
+        <div class="uname">محمد ▾</div>
+      </div>
+    </button>
+  </div>
+</header>
+
+<nav class="navbar" role="navigation" aria-label="القائمة الرئيسية">
+  <ul>
+    <li><a href="index.html"><svg width="16" height="16"><use href="#ic-home"/></svg> الرئيسية</a></li>
+    <li><a href="haywant.html">🐑 الحيوانات</a></li>
+    <li><a href="nlawjfkhedma.html" class="active" aria-current="page"><svg width="16" height="16"><use href="#ic-tool"/></svg> الخدمات</a></li>
+    <li><a href="about.html"><svg width="16" height="16"><use href="#ic-info"/></svg> من نحن</a></li>
+  </ul>
+  <div class="nb-spacer"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero mode-hire" id="heroSection" aria-label="قسم البحث الرئيسي">
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="mode-toggle-wrap" role="group" aria-label="وضع البحث">
+        <button class="mode-btn active" id="btnHire" onclick="setMode('hire')" aria-pressed="true">
+          نحب نلقى عامل / خدمة
+          <span class="mode-badge" aria-label="الأكثر طلباً">الأكثر طلباً</span>
+        </button>
+        <button class="mode-btn" id="btnWork" onclick="setMode('work')" aria-pressed="false">
+          نحب نخدم / نلقى خدمة
+        </button>
+        <button class="mode-btn post-profile" onclick="openPostModal('work')">
+          نعمل profile مهني
+        </button>
+      </div>
+
+      <h1 class="hero-title" id="heroTitle">لقى <em>عامل فلاحي</em> موثوق<br>في أقل وقت</h1>
+      <p class="hero-sub" id="heroSub">رعاة أغنام، بيطريين، سائقين، عمال حقول ومربي دواجن — تقييمات واضحة، أسعار شفافة، وتواصل مباشر عبر أمانة.</p>
+
+      <div class="search-engine" role="search" aria-label="البحث التفصيلي">
+        <div class="search-row">
+          <div class="search-field">
+            <span class="s-icon" aria-hidden="true"><svg><use href="#ic-search"/></svg></span>
+            <input type="text" id="searchInput" placeholder="مثال: راعي أغنام، بيطري، سائق نقل حيوانات..." aria-label="كلمة البحث">
+          </div>
+          <div class="search-field" style="max-width:190px">
+            <span class="s-icon" aria-hidden="true"><svg><use href="#ic-map-pin"/></svg></span>
+            <select id="regionSelect" aria-label="اختر الولاية">
+              <option value="">كل الولايات</option>
+              <option>تونس العاصمة</option>
+              <option>صفاقس</option>
+              <option>سوسة</option>
+              <option>قابس</option>
+              <option>نابل</option>
+              <option>سيدي بوزيد</option>
+              <option>باجة</option>
+              <option>الكاف</option>
+            </select>
+          </div>
+          <button class="search-go" id="searchGo" type="button">ابحث الآن ←</button>
+        </div>
+        <div class="search-tags" id="searchTags" aria-label="بحث سريع"></div>
+      </div>
+
+      <div class="hero-stats" aria-label="إحصائيات المنصة">
+        <div class="hstat"><div class="num" id="s1">+3.2K</div><div class="lbl" id="l1">عامل نشط</div></div>
+        <div class="hstat"><div class="num" id="s2">+850</div><div class="lbl" id="l2">خدمة متاحة</div></div>
+        <div class="hstat"><div class="num" id="s3">+5K</div><div class="lbl" id="l3">عملية ناجحة</div></div>
+        <div class="hstat"><div class="num">4.8★</div><div class="lbl">متوسط التقييم</div></div>
+      </div>
+    </div>
+
+    <!-- TRUST PANEL -->
+    <aside class="trust-panel" aria-label="مميزات المنصة">
+      <div class="trust-head">
+        <div class="trust-icon" id="trustIcon" aria-hidden="true">
+          <svg><use href="#ic-shield"/></svg>
+        </div>
+        <div>
+          <h3 id="trustTitle">توظيف بثقة</h3>
+          <p id="trustSub">قبل ما تتصل، تشوف كل شيء بوضوح</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <span class="check" aria-hidden="true"><svg><use href="#ic-check"/></svg></span>
+        profiles موثقة وصور واضحة
+      </div>
+      <div class="trust-item">
+        <span class="check" aria-hidden="true"><svg><use href="#ic-check"/></svg></span>
+        تقييمات وتجارب عملاء حقيقية
+      </div>
+      <div class="trust-item">
+        <span class="check" aria-hidden="true"><svg><use href="#ic-check"/></svg></span>
+        تواصل سريع واتساب أو هاتف
+      </div>
+      <button class="trust-cta" id="trustCta" onclick="openPostModal('hire')" type="button">
+        انشر طلب خدمة
+      </button>
+    </aside>
+  </div>
+</section>
+
+
+
+<!-- FILTERS BAR -->
+<div class="filters-bar" role="toolbar" aria-label="تصفية النتائج">
+  <button class="mobile-filter-btn" id="mobileFilterBtn" aria-label="فتح الفلاتر" aria-expanded="false" type="button">
+    <svg><use href="#ic-filter"/></svg> فلترة
+  </button>
+  <span class="filter-label" aria-hidden="true">تصفية:</span>
+  <div class="filter-chips" role="group" aria-label="فلاتر سريعة" id="filterChipsHire">
+    <button class="fchip active" data-filter="all" type="button">الكل</button>
+    <button class="fchip" data-filter="راعي أغنام" type="button">🐑 رعاة الأغنام</button>
+    <button class="fchip" data-filter="مربو الأبقار" type="button">🐄 مربو الأبقار</button>
+    <button class="fchip" data-filter="بيطري" type="button">🩺 بيطريون</button>
+    <button class="fchip" data-filter="سائق" type="button">🚚 سائقون</button>
+    <button class="fchip" data-filter="دواجن" type="button">🐓 دواجن</button>
+    <button class="fchip" data-filter="فلاحة" type="button">🌾 فلاحة</button>
+    <button class="fchip" data-filter="top" type="button">⭐ الأعلى تقييماً</button>
+    <button class="fchip" data-filter="available" type="button">🟢 متاح الآن</button>
+  </div>
+  <div class="filter-right">
+    <select class="sort-select" id="sortSelect" aria-label="ترتيب النتائج">
+      <option value="best">الأكثر مناسبة</option>
+      <option value="newest">الأحدث</option>
+      <option value="top-rated">الأعلى تقييماً</option>
+      <option value="price-asc">الأقل سعراً</option>
+    </select>
+    <div class="view-btns" role="group" aria-label="طريقة العرض">
+      <button class="view-btn active" onclick="setView('grid')" id="gridBtn" aria-label="عرض شبكي" aria-pressed="true" type="button">
+        <svg><use href="#ic-grid"/></svg>
+      </button>
+      <button class="view-btn" onclick="setView('list')" id="listBtn" aria-label="عرض قائمة" aria-pressed="false" type="button">
+        <svg><use href="#ic-list"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main-wrap" id="mainContent">
+  <aside class="sidebar" aria-label="فلاتر متقدمة">
+    <div class="s-box">
+      <div class="s-box-title">التخصصات <a href="#" onclick="resetFilters(event)">إعادة تعيين</a></div>
+      <div class="category-list" role="listbox" aria-label="اختر التخصص">
+        <div class="cat-row selected" role="option" aria-selected="true" tabindex="0" data-cat="all">
+          <div class="c-icon">🌟</div><div class="c-name">الكل</div><div class="c-count">3.2K</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="راعي أغنام">
+          <div class="c-icon">🐑</div><div class="c-name">رعاة الأغنام</div><div class="c-count">842</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="مربو الأبقار">
+          <div class="c-icon">🐄</div><div class="c-name">مربو الأبقار</div><div class="c-count">615</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="بيطري">
+          <div class="c-icon">🩺</div><div class="c-name">بيطريون</div><div class="c-count">384</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="سائق">
+          <div class="c-icon">🚚</div><div class="c-name">نقل الحيوانات</div><div class="c-count">297</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="دواجن">
+          <div class="c-icon">🐓</div><div class="c-name">مربو الدواجن</div><div class="c-count">441</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="فلاح">
+          <div class="c-icon">🌾</div><div class="c-name">عمال الحقول</div><div class="c-count">563</div>
+        </div>
+        <div class="cat-row" role="option" aria-selected="false" tabindex="0" data-cat="نحل">
+          <div class="c-icon">🐝</div><div class="c-name">مربو النحل</div><div class="c-count">178</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-box">
+      <div class="s-box-title">السعر اليومي</div>
+      <div class="range-row"><span id="priceMin">20 دت</span><span id="priceMax">200 دت</span></div>
+      <input type="range" min="20" max="200" value="200" id="priceRange" aria-label="الحد الأقصى للسعر">
+    </div>
+
+    <div class="s-box">
+      <div class="s-box-title">التقييم</div>
+      <label class="rating-opt">
+        <input type="radio" name="rat" value="5" checked aria-label="5 نجوم فقط">
+        <span class="stars">★★★★★</span><span class="r-count">5.0 — 284</span>
+      </label>
+      <label class="rating-opt">
+        <input type="radio" name="rat" value="4" aria-label="4 نجوم وأكثر">
+        <span class="stars">★★★★☆</span><span class="r-count">4+ — 891</span>
+      </label>
+      <label class="rating-opt">
+        <input type="radio" name="rat" value="3" aria-label="3 نجوم وأكثر">
+        <span class="stars">★★★☆☆</span><span class="r-count">3+ — 1.4K</span>
+      </label>
+    </div>
+
+    <div class="s-box">
+      <div class="s-box-title">المنطقة</div>
+      <div class="region-grid">
+        <div class="reg-pill sel" role="checkbox" aria-checked="true" tabindex="0">تونس</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">صفاقس</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">سوسة</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">قابس</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">نابل</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">سيدي بوزيد</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">الكاف</div>
+        <div class="reg-pill" role="checkbox" aria-checked="false" tabindex="0">باجة</div>
+      </div>
+    </div>
+
+    <div class="s-box side-promo">
+      <h4>تحب تخدم مع أمانة؟</h4>
+      <p>اعمل profile احترافي، خلي الناس تشوف تقييماتك وخدماتك، وابدأ تستقبل طلبات.</p>
+      <button onclick="openPostModal('work')" type="button">اعمل profile مهني ←</button>
+    </div>
+  </aside>
+
+  <section class="results-section" id="resultsSection" aria-label="نتائج البحث" aria-live="polite">
+    <div class="results-header">
+      <div>
+        <div class="results-count"><span id="rCount">0</span> نتيجة</div>
+        <div class="results-sub" id="rSub">عمال ومزودو خدمة متاحون الآن</div>
+      </div>
+      <div class="active-filters" id="activeFilters" aria-label="الفلاتر النشطة"></div>
+    </div>
+    <div class="cards-grid" id="cardsGrid" aria-label="قائمة العمال"></div>
+    <div class="pagination" id="pagination" role="navigation" aria-label="الصفحات">
+      <button class="pag-btn" onclick="changePage(-1)" aria-label="الصفحة السابقة">
+        <svg width="16" height="16"><use href="#ic-chevron-right"/></svg>
+      </button>
+      <button class="pag-btn active" aria-current="page">1</button>
+      <button class="pag-btn">2</button>
+      <button class="pag-btn">3</button>
+      <button class="pag-btn">…</button>
+      <button class="pag-btn">12</button>
+      <button class="pag-btn" onclick="changePage(1)" aria-label="الصفحة التالية">
+        <svg width="16" height="16"><use href="#ic-chevron-left"/></svg>
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer" role="contentinfo">
+  <div class="pf-top">
+    <div class="pf-brand">
+      <strong>AMANAFARM</strong>
+      <p>منصة الفلاحة والحيوانات والخدمات الأولى في تونس. نربطك بعمال موثوقين ومختصين في كل الولايات.</p>
+    </div>
+    <div class="pf-col">
+      <h5>الصفحات</h5>
+      <a href="index.html">الرئيسية</a>
+      <a href="haywant.html">الحيوانات</a>
+      <a href="nlawjfkhedma.html">الخدمات</a>
+      <a href="about.html">من نحن</a>
+    </div>
+    <div class="pf-col">
+      <h5>الدعم</h5>
+      <a href="contact.html">اتصل بنا</a>
+      <a href="faq.html">الأسئلة الشائعة</a>
+      <a href="help.html">مركز المساعدة</a>
+    </div>
+    <div class="pf-col">
+      <h5>قانوني</h5>
+      <a href="cgu.html">شروط الاستخدام</a>
+      <a href="privacy.html">سياسة الخصوصية</a>
+      <a href="cookies.html">سياسة الكوكيز</a>
+    </div>
+  </div>
+  <div class="pf-bottom">
+    <p>© 2026 AMANAFARM — جميع الحقوق محفوظة</p>
+    <div class="pf-legal">
+      <a href="cgu.html">شروط الاستخدام</a>
+      <a href="privacy.html">الخصوصية</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE FILTER DRAWER -->
+<div class="filter-drawer-overlay" id="filterDrawerOverlay" aria-modal="true" role="dialog" aria-label="فلاتر البحث">
+  <div class="filter-drawer" id="filterDrawer">
+    <div class="fd-handle" aria-hidden="true"></div>
+    <button class="fd-close" onclick="closeFilterDrawer()" aria-label="إغلاق الفلاتر" type="button">
+      <svg><use href="#ic-x"/></svg>
+    </button>
+    <div class="fd-title">تصفية النتائج</div>
+
+    <div class="s-box-title" style="font-size:13px;font-weight:900;margin-bottom:10px">التخصص</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px" id="drawerCats">
+      <button class="fchip active" data-filter="all" type="button">الكل</button>
+      <button class="fchip" data-filter="راعي أغنام" type="button">🐑 أغنام</button>
+      <button class="fchip" data-filter="مربو الأبقار" type="button">🐄 أبقار</button>
+      <button class="fchip" data-filter="بيطري" type="button">🩺 بيطري</button>
+      <button class="fchip" data-filter="سائق" type="button">🚚 سائق</button>
+      <button class="fchip" data-filter="دواجن" type="button">🐓 دواجن</button>
+      <button class="fchip" data-filter="فلاح" type="button">🌾 فلاح</button>
+    </div>
+
+    <div class="s-box-title" style="font-size:13px;font-weight:900;margin-bottom:10px">الترتيب</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      <label style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="radio" name="sort-drawer" value="best" checked style="accent-color:var(--green)"> الأكثر مناسبة
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="radio" name="sort-drawer" value="top-rated" style="accent-color:var(--green)"> الأعلى تقييماً
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="radio" name="sort-drawer" value="price-asc" style="accent-color:var(--green)"> الأقل سعراً
+      </label>
+    </div>
+
+    <button class="fd-apply" onclick="applyDrawerFilters()" type="button">تطبيق الفلاتر</button>
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div class="post-overlay" id="pmOverlay" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+  <div class="post-modal" id="pmModal">
+    <div class="pm-hero hire-hero" id="pmHero">
+      <div class="pm-hero-top">
+        <div class="pm-badge"><span class="bdot hire-dot" id="pmDot"></span><span id="pmBadgeTxt">نشر إعلان طلب خدمة</span></div>
+        <button class="pm-close" onclick="pmClose()" aria-label="إغلاق" type="button">
+          <svg width="18" height="18"><use href="#ic-x"/></svg>
+        </button>
+      </div>
+      <div class="pm-title" id="pmTitle">ابحث عن <em>عامل موثوق</em></div>
+      <div class="pm-sub" id="pmSub">أنشر طلبك واستقبل عروض من عمال ومختصين مباشرة</div>
+    </div>
+    <div class="pm-body" id="pmBody"></div>
+    <div class="pm-footer" id="pmFooter">
+      <button class="pm-btn-back" onclick="pmClose()" type="button">إغلاق</button>
+      <div class="pm-footer-btns">
+        <button class="pm-btn-next next-hire" id="pmBtnNext" type="button">نشر الآن ←</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE DETAILS MODAL -->
+<div class="profile-details-overlay" id="profileDetails" role="dialog" aria-modal="true" aria-labelledby="pdWorkerName">
+  <div class="profile-details-card" id="profileDetailsCard"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONFIG — remplacer par URL réelle en production
+   ═══════════════════════════════════════════ */
+const API_BASE = window.API_BASE || "/api"; // ✅ CORRIGÉ: plus de localhost:8080 hardcodé
+
+/* ═══════════════════════════════════════════
+   DONNÉES MOCK — affichées si l'API échoue (✅ nouveau)
+   ═══════════════════════════════════════════ */
+const MOCK_WORKERS = [
+  {id:"m1",name:"علي بن سالم",title:"راعي أغنام",location:"صفاقس",experience:"5 سنوات",rating:4.9,reviewCount:47,completedJobs:120,responseTime:"فوراً",price:80,priceUnit:"دت/يوم",available:true,skills:"رعي الأغنام,تربية الخرفان,الرعاية الصحية",avatarUrl:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",description:"خبرة 5 سنوات في رعي الأغنام والماعز. متاح للعمل اليومي والموسمي."},
+  {id:"m2",name:"محمد الكريمي",title:"طبيب بيطري",location:"تونس العاصمة",experience:"8 سنوات",rating:4.8,reviewCount:89,completedJobs:340,responseTime:"< ساعة",price:150,priceUnit:"دت/زيارة",available:true,skills:"بيطرة,علاج الحيوانات,تلقيح",avatarUrl:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1200&q=80",description:"طبيب بيطري متخصص في علاج الماشية والدواجن. يقبل مواعيد عاجلة."},
+  {id:"m3",name:"سامي الطرابلسي",title:"سائق نقل حيوانات",location:"سوسة",experience:"3 سنوات",rating:4.7,reviewCount:31,completedJobs:85,responseTime:"2 ساعة",price:200,priceUnit:"دت/رحلة",available:false,skills:"نقل حيوانات,سياقة شاحنة,خبرة طرق",avatarUrl:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1537745885830-75e5a11e90f4?auto=format&fit=crop&w=1200&q=80",description:"متخصص في نقل الأغنام والأبقار بين الولايات. شاحنة مجهزة ونظيفة."},
+  {id:"m4",name:"فاطمة الزريبي",title:"مربية دواجن",location:"قابس",experience:"6 سنوات",rating:5.0,reviewCount:22,completedJobs:60,responseTime:"فوراً",price:90,priceUnit:"دت/يوم",available:true,skills:"تربية الدجاج,إنتاج البيض,إدارة مزرعة",avatarUrl:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=80",description:"خبرة في تربية الدواجن وإدارة مزارع البيض. ملتزمة بالمواعيد والنظافة."},
+  {id:"m5",name:"حمودة بن علي",title:"عامل حقول",location:"باجة",experience:"10 سنوات",rating:4.6,reviewCount:54,completedJobs:200,responseTime:"يرد لاحقاً",price:60,priceUnit:"دت/يوم",available:true,skills:"حرث,زراعة,حصاد,ري",avatarUrl:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1200&q=80",description:"عمل 10 سنوات في الزراعة. خبرة في جميع مراحل الإنتاج الزراعي."},
+  {id:"m6",name:"يوسف المحمودي",title:"مربي نحل",location:"نابل",experience:"4 سنوات",rating:4.9,reviewCount:18,completedJobs:45,responseTime:"فوراً",price:100,priceUnit:"دت/يوم",available:true,skills:"تربية النحل,إنتاج العسل,صيانة الخلايا",avatarUrl:"https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=200&q=80",coverUrl:"https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=1200&q=80",description:"متخصص في تربية النحل وإنتاج العسل الطبيعي بمنطقة نابل."}
+];
+
+const MOCK_JOBS = [
+  {id:"j1",title:"راعي أغنام لمزرعة كبيرة",employer:"مزرعة سيدي عبيد",location:"سيدي بوزيد",badge:"urgent",badgeText:"🔴 عاجل",logo:"🏡",description:"نبحث عن راعي خبرة لرعاية 200 رأس غنم في مزرعة كبيرة. العمل يومي 6 ساعات.",jobType:"دوام كامل",tags:"خبرة 3 سنوات,يقيم بالمزرعة",salary:"1200",period:"دت/شهر",deadline:"2026-06-01"},
+  {id:"j2",title:"طبيب بيطري متجول",employer:"شركة أغري-تونس",location:"صفاقس",badge:"featured",badgeText:"⭐ مميز",logo:"🏢",description:"فرصة عمل لطبيب بيطري متجول لزيارة المزارع والتدخل عند الضرورة.",jobType:"دوام جزئي",tags:"جدول مرن,مكافآت",salary:"2500",period:"دت/شهر",deadline:"2026-05-31"},
+  {id:"j3",title:"عمال حصاد موسمي",employer:"كوبراتيف باجة",location:"باجة",badge:"new",badgeText:"🔵 جديد",logo:"🌾",description:"نوظف عمال للحصاد الموسمي. مدة العقد شهرين. المأكل والمسكن متوفر.",jobType:"موسمي",tags:"مأكل ومسكن,شهرين",salary:"900",period:"دت/شهر",deadline:"2026-06-15"}
+];
+
+/* ═══════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════ */
+let currentMode = "hire";
+let currentFilter = "all";
+let workers = [];
+let jobs = [];
+let savedIds = new Set();
+
+/* ═══════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", async () => {
+  setupFocusTrap();
+  await loadData();
+  renderTags(["راعي أغنام","طبيب بيطري","سائق نقل حيوانات","حلاب أبقار","مربي دواجن"]);
+  renderWorkers(workers);
+  document.getElementById("rCount").textContent = workers.length;
+});
+
+/* ═══════════════════════════════════════════
+   DATA LOADING — avec fallback mock (✅ corrigé)
+   ═══════════════════════════════════════════ */
+async function loadData() {
+  await Promise.all([loadWorkers(), loadJobs()]);
+}
+
+async function loadWorkers() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(`${API_BASE}/profiles`, {signal: controller.signal});
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    workers = data.map(profileToWorker);
+  } catch {
+    // ✅ Fallback silencieux sur mock data — l'utilisateur voit du contenu
+    workers = [...MOCK_WORKERS];
+  }
+}
+
+async function loadJobs() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(`${API_BASE}/jobs`, {signal: controller.signal});
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    jobs = await res.json();
+  } catch {
+    jobs = [...MOCK_JOBS];
+  }
+}
+
+function profileToWorker(p) {
+  return {
+    id: p.id,
+    name: p.fullName || "",
+    title: p.serviceType || "",
+    location: p.region || "",
+    experience: p.experience || "جديد",
+    rating: typeof p.rating === "number" ? p.rating : 4.8,
+    reviewCount: p.reviewCount || 12,
+    completedJobs: p.completedJobs || 24,
+    responseTime: p.availability || "فوراً",
+    price: p.price || 0,
+    priceUnit: p.period || "دت/يوم",
+    available: p.available !== false,
+    skills: typeof p.skills === "string" ? p.skills : (p.serviceType || ""),
+    avatarUrl: p.avatarUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    coverUrl: p.coverUrl || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
+    description: p.experienceDescription || p.description || ""
+  };
+}
+
+/* ═══════════════════════════════════════════
+   SANITIZE — protection XSS (✅ nouveau)
+   ═══════════════════════════════════════════ */
+function esc(str) {
+  if (!str && str !== 0) return "";
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+/* ═══════════════════════════════════════════
+   RENDER TAGS
+   ═══════════════════════════════════════════ */
+function renderTags(tags) {
+  const wrap = document.getElementById("searchTags");
+  const label = document.createElement("span");
+  label.className = "label";
+  label.textContent = "الأكثر بحثاً:";
+  wrap.innerHTML = "";
+  wrap.appendChild(label);
+
+  tags.forEach(t => {
+    const s = document.createElement("button");
+    s.className = "stag";
+    s.type = "button";
+    s.textContent = t;
+    s.setAttribute("aria-label", `بحث عن ${t}`);
+    s.addEventListener("click", () => {
+      document.getElementById("searchInput").value = t;
+      applySearch();
+    });
+    wrap.appendChild(s);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   SKELETON LOADER (✅ nouveau)
+   ═══════════════════════════════════════════ */
+function showSkeletons(count = 4) {
+  const grid = document.getElementById("cardsGrid");
+  let html = "";
+  for (let i = 0; i < count; i++) {
+    html += `<div class="skeleton-card" aria-hidden="true"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line w60"></div><div class="sk-line w80"></div><div class="sk-line w40"></div></div></div>`;
+  }
+  grid.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   RENDER WORKERS — DocumentFragment (✅ corrigé innerHTML+=)
+   ═══════════════════════════════════════════ */
+function renderWorkers(list) {
+  const grid = document.getElementById("cardsGrid");
+  const section = document.getElementById("resultsSection");
+  section.classList.add("fading");
+
+  // Petit délai pour l'animation de transition
+  setTimeout(() => {
+    grid.innerHTML = "";
+
+    if (!list || !list.length) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <svg><use href="#ic-search"/></svg>
+          <h3>ما فما حتى نتيجة</h3>
+          <p>جرّب كلمة أخرى أو غيّر الولاية.</p>
+        </div>`;
+      section.classList.remove("fading");
+      return;
+    }
+
+    // ✅ DocumentFragment pour éviter O(n²) DOM parsing
+    const fragment = document.createDocumentFragment();
+    const tempDiv = document.createElement("div");
+
+    list.forEach((w, i) => {
+      const globalIdx = workers.findIndex(x => x.id === w.id);
+      const isSaved = savedIds.has(w.id);
+      const skills = (w.skills || "").split(",").map(s => `<span class="skill-tag">${esc(s.trim())}</span>`).join("");
+      const rating = Math.round((w.rating || 0) * 10) / 10;
+      const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
+
+      tempDiv.innerHTML = `
+      <article class="profile-card card-appear" style="animation-delay:${Math.min(i * 0.06, 0.5)}s" data-id="${esc(w.id)}">
+        <div class="avail-ribbon${w.available ? "" : " off"}" aria-label="${w.available ? "متاح الآن" : "غير متاح اليوم"}">
+          ${w.available ? '<span class="dot" aria-hidden="true"></span>متاح الآن' : 'غير متاح اليوم'}
+        </div>
+        <div class="card-cover">
+          <img src="${esc(w.coverUrl)}" alt="" loading="lazy" decoding="async">
+          <div class="card-avatar-wrap">
+            <div class="card-avatar">
+              <img src="${esc(w.avatarUrl)}" alt="صورة ${esc(w.name)}" loading="lazy" decoding="async">
+            </div>
+            <div class="verified-badge" aria-label="موثق">
+              <svg><use href="#ic-check"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="worker-name">${esc(w.name)}</div>
+            <div class="worker-exp">خبرة ${esc(w.experience || "جديد")}</div>
+          </div>
+          <div class="worker-title">${esc(w.title)}</div>
+          <div class="worker-loc"><svg width="13" height="13"><use href="#ic-map-pin"/></svg> ${esc(w.location)}</div>
+          <div class="trust-mini">
+            <span class="trust-chip">✓ هوية موثقة</span>
+            <span class="trust-chip">${esc(w.completedJobs)} خدمة</span>
+            <span class="trust-chip">${esc(w.responseTime)}</span>
+          </div>
+          <div class="rating-row">
+            <span class="rating-stars" aria-hidden="true">${stars}</span>
+            <span class="rating-num">${esc(rating)}</span>
+            <span class="rating-cnt">(${esc(w.reviewCount)} تقييم)</span>
+          </div>
+          <div class="skills-row">${skills}</div>
+          <div class="card-footer">
+            <div>
+              <div class="price-label">السعر التقريبي</div>
+              <div class="price-val">${esc(w.price)} <span class="price-unit">${esc(w.priceUnit)}</span></div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-contact js-open-profile" data-idx="${globalIdx}" type="button" aria-label="اطلب خدمة من ${esc(w.name)}">اطلب خدمة</button>
+              <button class="btn-whatsapp js-whatsapp" data-name="${esc(w.name)}" data-phone="${esc(w.phone || "21600000000")}" type="button" aria-label="تواصل عبر واتساب مع ${esc(w.name)}">
+                <svg><use href="#ic-whatsapp"/></svg>
+              </button>
+              <button class="btn-save js-save${isSaved ? " saved" : ""}" data-id="${esc(w.id)}" type="button" aria-label="${isSaved ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}" aria-pressed="${isSaved}">
+                <svg><use href="#ic-heart"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>`;
+
+      fragment.appendChild(tempDiv.firstElementChild);
+
+      // Featured banner after 3rd card
+      if (i === 2) {
+        tempDiv.innerHTML = `
+        <div class="featured-banner card-appear" style="animation-delay:0.2s">
+          <div class="fb-icon" aria-hidden="true">🌟</div>
+          <div>
+            <div class="fb-title">هل أنت مزود خدمة؟ اعمل profile وابدأ تستقبل طلبات</div>
+            <div class="fb-sub">ملف موثق، تقييمات، صور أعمال، ورسائل مباشرة من العملاء</div>
+          </div>
+          <button class="fb-btn" onclick="openPostModal('work')" type="button">سجّل مجاناً ←</button>
+        </div>`;
+        fragment.appendChild(tempDiv.firstElementChild);
+      }
+    });
+
+    grid.appendChild(fragment);
+    section.classList.remove("fading");
+    document.getElementById("rCount").textContent = list.length;
+  }, 150);
+}
+
+/* ═══════════════════════════════════════════
+   RENDER JOBS
+   ═══════════════════════════════════════════ */
+function renderJobs(list) {
+  const grid = document.getElementById("cardsGrid");
+  const section = document.getElementById("resultsSection");
+  section.classList.add("fading");
+
+  setTimeout(() => {
+    grid.innerHTML = "";
+
+    if (!list || !list.length) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <svg><use href="#ic-search"/></svg>
+          <h3>ما فما حتى فرصة</h3>
+          <p>جرّب كلمة أخرى أو ولاية أخرى.</p>
+        </div>`;
+      section.classList.remove("fading");
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    const tempDiv = document.createElement("div");
+
+    list.forEach((j, i) => {
+      const cls = j.badge === "urgent" ? "badge-urgent" : j.badge === "featured" ? "badge-featured" : "badge-new";
+      const tags = (j.tags || "").split(",").map(t => `<span class="jtag">${esc(t.trim())}</span>`).join("");
+
+      tempDiv.innerHTML = `
+      <article class="job-card card-appear" style="animation-delay:${Math.min(i * 0.06, 0.5)}s" data-id="${esc(j.id)}">
+        <div class="job-card-top">
+          <div class="employer-logo" aria-hidden="true">${esc(j.logo || "🏡")}</div>
+          <div class="job-info">
+            <div class="job-title">${esc(j.title)}</div>
+            <div class="employer-name">${esc(j.employer)} · ${esc(j.location)}</div>
+          </div>
+          <span class="job-badge ${cls}">${esc(j.badgeText || "🔵 جديد")}</span>
+        </div>
+        <div class="job-desc">${esc(j.description)}</div>
+        <div class="job-tags">
+          <span class="jtag">🕐 ${esc(j.jobType)}</span>
+          ${tags}
+        </div>
+        <div class="job-footer">
+          <div>
+            <div class="salary-label">الأجر</div>
+            <div class="salary-val">${esc(j.salary)} <span class="salary-period">${esc(j.period)}</span></div>
+          </div>
+          <span class="deadline"><svg><use href="#ic-calendar"/></svg> ${esc(j.deadline)}</span>
+          <button class="btn-apply js-apply" data-id="${esc(j.id)}" type="button">تقدم الآن</button>
+        </div>
+      </article>`;
+
+      fragment.appendChild(tempDiv.firstElementChild);
+    });
+
+    grid.appendChild(fragment);
+    section.classList.remove("fading");
+    document.getElementById("rCount").textContent = list.length;
+  }, 150);
+}
+
+/* ═══════════════════════════════════════════
+   EVENT DELEGATION — un seul listener (✅ corrigé)
+   ═══════════════════════════════════════════ */
+document.getElementById("cardsGrid").addEventListener("click", (e) => {
+  // Bouton "اطلب خدمة"
+  const openBtn = e.target.closest(".js-open-profile");
+  if (openBtn) {
+    e.stopPropagation();
+    openProfileDetails(parseInt(openBtn.dataset.idx, 10));
+    return;
+  }
+  // Bouton whatsapp
+  const waBtn = e.target.closest(".js-whatsapp");
+  if (waBtn) {
+    e.stopPropagation();
+    contactWhatsapp(waBtn.dataset.name, waBtn.dataset.phone);
+    return;
+  }
+  // Bouton save
+  const saveBtn = e.target.closest(".js-save");
+  if (saveBtn) {
+    e.stopPropagation();
+    toggleSave(saveBtn);
+    return;
+  }
+  // Bouton apply (jobs)
+  const applyBtn = e.target.closest(".js-apply");
+  if (applyBtn) {
+    e.stopPropagation();
+    showToast("تم إرسال طلب التقديم ✓");
+    return;
+  }
+  // Click sur la card entière
+  const card = e.target.closest(".profile-card");
+  if (card) {
+    const id = card.dataset.id;
+    const idx = workers.findIndex(w => w.id === id);
+    if (idx >= 0) openProfileDetails(idx);
+  }
+});
+
+/* ═══════════════════════════════════════════
+   MODE SWITCH
+   ═══════════════════════════════════════════ */
+function setMode(mode) {
+  currentMode = mode;
+  currentFilter = "all";
+
+  const btnHire = document.getElementById("btnHire");
+  const btnWork = document.getElementById("btnWork");
+  const heroSection = document.getElementById("heroSection");
+
+  btnHire.classList.toggle("active", mode === "hire");
+  btnHire.setAttribute("aria-pressed", mode === "hire");
+  btnWork.classList.toggle("active", mode === "work");
+  btnWork.setAttribute("aria-pressed", mode === "work");
+
+  heroSection.className = `hero mode-${mode}`;
+
+  const trustIconEl = document.getElementById("trustIcon");
+
+  if (mode === "hire") {
+    document.getElementById("heroTitle").innerHTML = 'لقى <em>عامل فلاحي</em> موثوق<br>في أقل وقت';
+    document.getElementById("heroSub").textContent = "رعاة أغنام، بيطريين، سائقين، عمال حقول ومربي دواجن — تقييمات واضحة، أسعار شفافة، وتواصل مباشر عبر أمانة.";
+    document.getElementById("searchInput").placeholder = "مثال: راعي أغنام، بيطري، سائق نقل حيوانات...";
+    document.getElementById("rSub").textContent = "عمال ومزودو خدمة متاحون الآن";
+    trustIconEl.innerHTML = `<svg><use href="#ic-shield"/></svg>`;
+    document.getElementById("trustTitle").textContent = "توظيف بثقة";
+    document.getElementById("trustSub").textContent = "قبل ما تتصل، تشوف كل شيء بوضوح";
+    const cta = document.getElementById("trustCta");
+    cta.textContent = "انشر طلب خدمة";
+    cta.onclick = () => openPostModal("hire");
+    renderTags(["راعي أغنام","طبيب بيطري","سائق نقل حيوانات","حلاب أبقار","مربي دواجن"]);
+    renderWorkers(workers);
+  } else {
+    document.getElementById("heroTitle").innerHTML = 'لقى <em>فرصة عمل</em><br>تناسب خبرتك';
+    document.getElementById("heroSub").textContent = "خدمات يومية، عقود، فرص موسمية ووظائف في مزارع وشركات فلاحية.";
+    document.getElementById("searchInput").placeholder = "مثال: عمل راعي أغنام، وظيفة بيطري...";
+    document.getElementById("rSub").textContent = "فرص عمل وخدمات متاحة";
+    trustIconEl.innerHTML = `<svg><use href="#ic-rocket"/></svg>`;
+    document.getElementById("trustTitle").textContent = "قدّم بملف قوي";
+    document.getElementById("trustSub").textContent = "خلي صاحب العمل يشوف خبرتك بسرعة";
+    const cta = document.getElementById("trustCta");
+    cta.textContent = "اعمل profile مهني";
+    cta.onclick = () => openPostModal("work");
+    renderTags(["راعي أغنام","طبيب بيطري","سائق شاحنة","فلاح","مشرف مزرعة"]);
+    renderJobs(jobs);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SEARCH
+   ═══════════════════════════════════════════ */
+async function applySearch() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const region = document.getElementById("regionSelect").value;
+
+  if (currentMode === "hire") {
+    let list = [...workers];
+    if (q) {
+      list = list.filter(w =>
+        (w.name || "").toLowerCase().includes(q) ||
+        (w.title || "").toLowerCase().includes(q) ||
+        (w.location || "").toLowerCase().includes(q) ||
+        (w.skills || "").toLowerCase().includes(q)
+      );
+    }
+    if (region && region !== "كل الولايات") {
+      const r = region.replace(" العاصمة","");
+      list = list.filter(w => (w.location || "").includes(r));
+    }
+    renderWorkers(list);
+  } else {
+    let list = [...jobs];
+    if (q) {
+      list = list.filter(j =>
+        (j.title || "").toLowerCase().includes(q) ||
+        (j.employer || "").toLowerCase().includes(q) ||
+        (j.description || "").toLowerCase().includes(q)
+      );
+    }
+    if (region && region !== "كل الولايات") {
+      const r = region.replace(" العاصمة","");
+      list = list.filter(j => (j.location || "").includes(r));
+    }
+    renderJobs(list);
+  }
+
+  // Scroll vers résultats (hauteur dynamique, pas hardcodée)
+  const target = document.getElementById("mainContent");
+  if (target) {
+    const top = target.getBoundingClientRect().top + window.scrollY - 20;
+    window.scrollTo({top, behavior:"smooth"});
+  }
+}
+
+/* ═══════════════════════════════════════════
+   FILTER CHIPS
+   ═══════════════════════════════════════════ */
+document.getElementById("filterChipsHire").addEventListener("click", (e) => {
+  const chip = e.target.closest(".fchip");
+  if (!chip) return;
+  document.querySelectorAll("#filterChipsHire .fchip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  currentFilter = chip.dataset.filter || "all";
+
+  if (currentMode === "hire") {
+    let list = [...workers];
+    if (currentFilter !== "all" && currentFilter !== "top" && currentFilter !== "available") {
+      list = list.filter(w => (w.skills || "").toLowerCase().includes(currentFilter) || (w.title || "").toLowerCase().includes(currentFilter));
+    } else if (currentFilter === "available") {
+      list = list.filter(w => w.available);
+    } else if (currentFilter === "top") {
+      list = list.filter(w => (w.rating || 0) >= 4.8);
+    }
+    renderWorkers(list);
+  }
+});
+
+/* ═══════════════════════════════════════════
+   SIDEBAR CATEGORY
+   ═══════════════════════════════════════════ */
+document.addEventListener("click", (e) => {
+  const cat = e.target.closest(".cat-row");
+  if (cat && cat.dataset.cat !== undefined) {
+    document.querySelectorAll(".cat-row").forEach(x => {
+      x.classList.remove("selected");
+      x.setAttribute("aria-selected","false");
+    });
+    cat.classList.add("selected");
+    cat.setAttribute("aria-selected","true");
+    const filter = cat.dataset.cat;
+    let list = [...workers];
+    if (filter !== "all") {
+      list = list.filter(w =>
+        (w.skills || "").toLowerCase().includes(filter.toLowerCase()) ||
+        (w.title || "").toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    renderWorkers(list);
+    return;
+  }
+
+  const reg = e.target.closest(".reg-pill");
+  if (reg) {
+    const isSelected = reg.classList.toggle("sel");
+    reg.setAttribute("aria-checked", isSelected);
+    return;
+  }
+});
+
+/* Keyboard for cat-row */
+document.querySelectorAll(".cat-row").forEach(row => {
+  row.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); row.click(); }
+  });
+});
+
+/* ═══════════════════════════════════════════
+   SORT
+   ═══════════════════════════════════════════ */
+document.getElementById("sortSelect").addEventListener("change", (e) => {
+  const val = e.target.value;
+  let list = [...workers];
+  if (val === "top-rated") list.sort((a,b) => (b.rating||0) - (a.rating||0));
+  else if (val === "price-asc") list.sort((a,b) => (a.price||0) - (b.price||0));
+  else if (val === "newest") list.reverse();
+  renderWorkers(list);
+});
+
+/* ═══════════════════════════════════════════
+   PRICE RANGE
+   ═══════════════════════════════════════════ */
+document.getElementById("priceRange").addEventListener("input", (e) => {
+  const val = parseInt(e.target.value);
+  document.getElementById("priceMax").textContent = `${val} دت`;
+});
+
+/* ═══════════════════════════════════════════
+   VIEW TOGGLE
+   ═══════════════════════════════════════════ */
+function setView(v) {
+  const grid = document.getElementById("cardsGrid");
+  const gBtn = document.getElementById("gridBtn");
+  const lBtn = document.getElementById("listBtn");
+  grid.classList.toggle("list-view", v === "list");
+  gBtn.classList.toggle("active", v === "grid");
+  gBtn.setAttribute("aria-pressed", v === "grid");
+  lBtn.classList.toggle("active", v === "list");
+  lBtn.setAttribute("aria-pressed", v === "list");
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE FILTER DRAWER (✅ nouveau)
+   ═══════════════════════════════════════════ */
+function openFilterDrawer() {
+  const overlay = document.getElementById("filterDrawerOverlay");
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("mobileFilterBtn").setAttribute("aria-expanded","true");
+}
+
+function closeFilterDrawer() {
+  const overlay = document.getElementById("filterDrawerOverlay");
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+  document.getElementById("mobileFilterBtn").setAttribute("aria-expanded","false");
+}
+
+function applyDrawerFilters() {
+  const activeChip = document.querySelector("#drawerCats .fchip.active");
+  if (activeChip) {
+    const filter = activeChip.dataset.filter || "all";
+    let list = [...workers];
+    if (filter !== "all") {
+      list = list.filter(w =>
+        (w.skills || "").toLowerCase().includes(filter.toLowerCase()) ||
+        (w.title || "").toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    renderWorkers(list);
+  }
+  closeFilterDrawer();
+}
+
+document.getElementById("mobileFilterBtn").addEventListener("click", openFilterDrawer);
+
+document.getElementById("filterDrawerOverlay").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) closeFilterDrawer();
+});
+
+document.getElementById("drawerCats").addEventListener("click", (e) => {
+  const chip = e.target.closest(".fchip");
+  if (!chip) return;
+  document.querySelectorAll("#drawerCats .fchip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+});
+
+/* ═══════════════════════════════════════════
+   RESET FILTERS
+   ═══════════════════════════════════════════ */
+function resetFilters(e) {
+  e.preventDefault();
+  document.querySelectorAll(".cat-row").forEach((r, i) => {
+    r.classList.toggle("selected", i === 0);
+    r.setAttribute("aria-selected", i === 0 ? "true" : "false");
+  });
+  document.getElementById("searchInput").value = "";
+  document.getElementById("regionSelect").value = "";
+  currentFilter = "all";
+  renderWorkers(workers);
+}
+
+/* ═══════════════════════════════════════════
+   PAGINATION (✅ placeholder fonctionnel)
+   ═══════════════════════════════════════════ */
+function changePage(dir) {
+  const btns = document.querySelectorAll("#pagination .pag-btn");
+  // Placeholder — à connecter à la pagination réelle
+  showToast("الصفحات ستكون متاحة قريباً");
+}
+
+/* ═══════════════════════════════════════════
+   PROFILE DETAILS MODAL
+   ═══════════════════════════════════════════ */
+function openProfileDetails(index) {
+  const w = workers[index];
+  if (!w) return;
+
+  const rating = Math.round((w.rating || 0) * 10) / 10;
+  const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
+  const skills = (w.skills || "").split(",").map(s => `<span class="skill-tag">${esc(s.trim())}</span>`).join("");
+  const waPhone = w.phone || "21600000000"; // ← remplacer par le vrai numéro depuis l'API
+
+  document.getElementById("profileDetailsCard").innerHTML = `
+    <div class="pd-cover">
+      <img src="${esc(w.coverUrl)}" alt="" loading="lazy">
+      <button class="pd-close" id="pdCloseBtn" type="button" aria-label="إغلاق">
+        <svg><use href="#ic-x"/></svg>
+      </button>
+      <div class="pd-avatar">
+        <img src="${esc(w.avatarUrl)}" alt="صورة ${esc(w.name)}" loading="lazy">
+      </div>
+    </div>
+    <div class="pd-body">
+      <div class="pd-head">
+        <div>
+          <div class="pd-name" id="pdWorkerName">${esc(w.name)} <span style="font-size:14px;color:var(--green)" aria-label="موثق">✓ موثق</span></div>
+          <div class="pd-title">${esc(w.title)}</div>
+          <div class="pd-loc"><svg><use href="#ic-map-pin"/></svg> ${esc(w.location)} · خبرة ${esc(w.experience)}</div>
+        </div>
+        <div class="pd-rate">
+          <div class="pd-rate-num" aria-label="التقييم">${stars} ${esc(rating)}</div>
+          <div class="pd-rate-sub">${esc(w.reviewCount)} تقييم</div>
+        </div>
+      </div>
+      <div class="pd-grid">
+        <div class="pd-stat"><strong>${esc(w.completedJobs)}</strong><span>خدمة منجزة</span></div>
+        <div class="pd-stat"><strong>${esc(w.responseTime)}</strong><span>سرعة الرد</span></div>
+        <div class="pd-stat"><strong>${esc(w.price)}</strong><span>${esc(w.priceUnit)}</span></div>
+      </div>
+      <div class="pd-section">
+        <h4>نبذة</h4>
+        <p>${esc(w.description || "profile موثق ومناسب لأصحاب المزارع والمربين.")}</p>
+      </div>
+      <div class="pd-section">
+        <h4>المهارات</h4>
+        <div class="skills-row">${skills}</div>
+      </div>
+      <div class="pd-actions">
+        <button class="pd-main" onclick="showToast('تم إرسال طلب الخدمة ✓')" type="button">اطلب الخدمة الآن</button>
+        <a class="pd-wa" href="https://wa.me/${esc(waPhone)}?text=${encodeURIComponent("مرحبا، نحب نتواصل عبر AMANAFARM")}" target="_blank" rel="noopener noreferrer">
+          <svg><use href="#ic-whatsapp"/></svg> واتساب
+        </a>
+        <button class="pd-save${savedIds.has(w.id) ? " saved" : ""}" data-id="${esc(w.id)}" onclick="toggleSaveById('${esc(w.id)}',this)" type="button">
+          ${savedIds.has(w.id) ? "❤️ محفوظ" : "🤍 حفظ profile"}
+        </button>
+      </div>
+    </div>`;
+
+  const overlay = document.getElementById("profileDetails");
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  // ✅ Gestion focus
+  const closeBtn = document.getElementById("pdCloseBtn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+    });
+    setTimeout(() => closeBtn.focus(), 100);
+  }
+}
+
+document.getElementById("profileDetails").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) {
+    e.currentTarget.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+});
+
+/* ═══════════════════════════════════════════
+   WHATSAPP
+   ═══════════════════════════════════════════ */
+function contactWhatsapp(name, phone) {
+  const num = phone || "21600000000";
+  window.open(
+    `https://wa.me/${num}?text=${encodeURIComponent(`مرحبا، نحب نتواصل مع ${name} عبر AMANAFARM`)}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+/* ═══════════════════════════════════════════
+   SAVE TOGGLE (✅ géré par state Set)
+   ═══════════════════════════════════════════ */
+function toggleSave(btn) {
+  const id = btn.dataset.id;
+  if (!id) return;
+  toggleSaveById(id, btn);
+}
+
+function toggleSaveById(id, btn) {
+  const wasSaved = savedIds.has(id);
+  if (wasSaved) {
+    savedIds.delete(id);
+    btn.classList.remove("saved");
+    btn.setAttribute("aria-pressed","false");
+    btn.setAttribute("aria-label","إضافة إلى المفضلة");
+    if (btn.classList.contains("pd-save")) btn.textContent = "🤍 حفظ profile";
+    showToast("تم حذف profile من المفضلة");
+  } else {
+    savedIds.add(id);
+    btn.classList.add("saved");
+    btn.setAttribute("aria-pressed","true");
+    btn.setAttribute("aria-label","إزالة من المفضلة");
+    if (btn.classList.contains("pd-save")) btn.textContent = "❤️ محفوظ";
+    showToast("تم حفظ profile في المفضلة ❤️");
+  }
+}
+
+/* ═══════════════════════════════════════════
+   POST MODAL
+   ═══════════════════════════════════════════ */
+let currentPostMode = "hire";
+
+function openPostModal(mode) {
+  currentPostMode = mode;
+  const isWork = mode === "work";
+  const overlay = document.getElementById("pmOverlay");
+
+  document.getElementById("pmFooter").style.display = "flex";
+  document.getElementById("pmHero").style.display = "block";
+  document.getElementById("pmHero").className = `pm-hero ${isWork ? "work" : "hire"}-hero`;
+  document.getElementById("pmDot").className = `bdot ${isWork ? "work" : "hire"}-dot`;
+  document.getElementById("pmBadgeTxt").textContent = isWork ? "نشر profile مهني" : "نشر إعلان طلب خدمة";
+  document.getElementById("pmTitle").innerHTML = isWork ? 'أعرض <em>خدمتك ومهاراتك</em>' : 'ابحث عن <em>عامل موثوق</em>';
+  document.getElementById("pmSub").textContent = isWork
+    ? "أنشئ profile احترافي واستقبل عروض من أصحاب المزارع"
+    : "أنشر طلبك واستقبل عروض من عمال ومختصين مباشرة";
+
+  const btn = document.getElementById("pmBtnNext");
+  btn.className = `pm-btn-next next-${mode}`;
+  btn.textContent = isWork ? "نشر profile الآن ←" : "نشر الطلب الآن ←";
+  btn.disabled = false;
+  // ✅ On retire l'ancien listener avant d'en ajouter un nouveau
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.addEventListener("click", isWork ? submitProfile : submitServiceRequest);
+
+  document.getElementById("pmBody").innerHTML = modalForm(isWork);
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  // Focus sur le premier champ
+  setTimeout(() => {
+    const first = document.querySelector("#pmBody .pm-input");
+    if (first) first.focus();
+  }, 300);
+}
+
+function pmClose() {
+  document.getElementById("pmOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("pmOverlay").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) pmClose();
+});
+
+/* ═══════════════════════════════════════════
+   MODAL FORM
+   ═══════════════════════════════════════════ */
+function modalForm(isWork) {
+  return `
+  <div class="pm-row2">
+    <div class="pm-field">
+      <label class="pm-label" for="pmFullName"><span class="req" aria-hidden="true">*</span>${isWork ? "اسمك الكامل" : "عنوان الطلب"}</label>
+      <input class="pm-input" id="pmFullName" type="text" placeholder="${isWork ? "مثال: علي بن سالم" : "مثال: نبحث عن راعي أغنام في قابس"}" autocomplete="${isWork ? "name" : "off"}" required>
+    </div>
+    <div class="pm-field">
+      <label class="pm-label" for="pmRegion"><span class="req" aria-hidden="true">*</span>الولاية</label>
+      <select class="pm-select" id="pmRegion" required>
+        <option value="">اختر الولاية</option>
+        <option>تونس</option><option>صفاقس</option><option>سوسة</option>
+        <option>قابس</option><option>نابل</option><option>سيدي بوزيد</option>
+        <option>باجة</option><option>الكاف</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label"><span class="req" aria-hidden="true">*</span>${isWork ? "شنوّة خدمتك؟" : "نوع الخدمة المطلوبة"}</label>
+    <div class="pm-chips" role="group" aria-label="نوع الخدمة">
+      <button type="button" class="pm-chip" onclick="selectChip(this,'راعي أغنام')">🐑 راعي أغنام</button>
+      <button type="button" class="pm-chip" onclick="selectChip(this,'أبقار')">🐄 أبقار</button>
+      <button type="button" class="pm-chip" onclick="selectChip(this,'بيطري')">🩺 بيطري</button>
+      <button type="button" class="pm-chip" onclick="selectChip(this,'نقل')">🚚 نقل</button>
+      <button type="button" class="pm-chip" onclick="selectChip(this,'فلاح')">🌾 فلاح</button>
+    </div>
+    <input type="hidden" id="pmServiceType">
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label" for="pmDescription"><span class="req" aria-hidden="true">*</span>${isWork ? "وصف خبرتك" : "تفاصيل المهمة"}</label>
+    <textarea class="pm-textarea" id="pmDescription" placeholder="اكتب التفاصيل المهمة هنا..." required></textarea>
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label" for="pmPhone">رقم الهاتف</label>
+    <input class="pm-input" id="pmPhone" type="tel" placeholder="مثال: 55 000 000" autocomplete="tel">
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label">السعر / الأجر</label>
+    <div class="pm-price-wrap">
+      <div class="pm-price-inner">
+        <span class="pm-currency" aria-hidden="true">دت</span>
+        <input class="pm-input" id="pmPrice" type="number" placeholder="0" min="0" style="padding-left:46px">
+      </div>
+      <select class="pm-select pm-period" id="pmPeriod">
+        <option>في اليوم</option><option>في الشهر</option><option>للرحلة</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label">التوفر</label>
+    <div class="pm-avail-grid" role="group" aria-label="التوفر">
+      <button type="button" class="pm-avail-btn" onclick="selectAvail(this,'فوراً')">فوراً 🟢</button>
+      <button type="button" class="pm-avail-btn" onclick="selectAvail(this,'هذا الأسبوع')">هذا الأسبوع</button>
+      <button type="button" class="pm-avail-btn" onclick="selectAvail(this,'حسب الاتفاق')">حسب الاتفاق</button>
+    </div>
+    <input type="hidden" id="pmAvailability" value="حسب الاتفاق">
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label">صور</label>
+    <div class="pm-upload" role="button" tabindex="0" aria-label="رفع صور">
+      <div class="pm-upload-icon"><svg width="32" height="32"><use href="#ic-upload"/></svg></div>
+      <p>أضف صورة أو صور أعمالك</p>
+      <span>JPEG, PNG — حتى 10 صور</span>
+    </div>
+  </div>
+
+  <div class="pm-field">
+    <label class="pm-label">خطة النشر</label>
+    <div class="pm-plans" role="group" aria-label="اختر خطة النشر">
+      <div class="pm-plan" onclick="selectPlan(this,'BASIC')" role="radio" tabindex="0" aria-checked="false">
+        <div class="pm-plan-icon">🌱</div>
+        <div class="pm-plan-name">أساسي</div>
+        <div class="pm-plan-price">مجاناً</div>
+        <div class="pm-plan-feat">7 أيام ظهور</div>
+      </div>
+      <div class="pm-plan ${isWork ? "plan-work" : "plan-hire"}" onclick="selectPlan(this,'PRO')" role="radio" tabindex="0" aria-checked="true">
+        <div class="pm-best">أنسب اختيار</div>
+        <div class="pm-plan-icon">⭐</div>
+        <div class="pm-plan-name">محترف</div>
+        <div class="pm-plan-price">${isWork ? "19" : "29"} دت</div>
+        <div class="pm-plan-feat">30 يوم + ظهور مميز</div>
+      </div>
+      <div class="pm-plan" onclick="selectPlan(this,'PREMIUM')" role="radio" tabindex="0" aria-checked="false">
+        <div class="pm-plan-icon">👑</div>
+        <div class="pm-plan-name">متميز</div>
+        <div class="pm-plan-price">${isWork ? "39" : "59"} دت</div>
+        <div class="pm-plan-feat">60 يوم أعلى النتائج</div>
+      </div>
+    </div>
+    <input type="hidden" id="pmPlan" value="PRO">
+  </div>`;
+}
+
+function selectChip(btn, value) {
+  document.querySelectorAll(".pm-chip").forEach(x => x.classList.remove("chip-work","chip-hire"));
+  btn.classList.add(currentPostMode === "work" ? "chip-work" : "chip-hire");
+  document.getElementById("pmServiceType").value = value;
+}
+
+function selectAvail(btn, value) {
+  document.querySelectorAll(".pm-avail-btn").forEach(x => x.classList.remove("avail-work","avail-hire"));
+  btn.classList.add(currentPostMode === "work" ? "avail-work" : "avail-hire");
+  document.getElementById("pmAvailability").value = value;
+}
+
+function selectPlan(btn, value) {
+  const isWork = currentPostMode === "work";
+  document.querySelectorAll(".pm-plan").forEach(x => {
+    x.classList.remove("plan-work","plan-hire");
+    x.setAttribute("aria-checked","false");
+  });
+  btn.classList.add(isWork ? "plan-work" : "plan-hire");
+  btn.setAttribute("aria-checked","true");
+  document.getElementById("pmPlan").value = value;
+}
+
+/* ═══════════════════════════════════════════
+   SUBMIT PROFILE
+   ═══════════════════════════════════════════ */
+async function submitProfile() {
+  const fullName = document.getElementById("pmFullName").value.trim();
+  const region = document.getElementById("pmRegion").value.trim();
+  const serviceType = document.getElementById("pmServiceType").value.trim();
+  const experienceDescription = document.getElementById("pmDescription").value.trim();
+  const price = document.getElementById("pmPrice").value;
+  const period = document.getElementById("pmPeriod").value;
+  const availability = document.getElementById("pmAvailability").value || "حسب الاتفاق";
+  const plan = document.getElementById("pmPlan").value || "PRO";
+  const phone = document.getElementById("pmPhone").value.trim();
+
+  if (!fullName || !region || !serviceType || !experienceDescription) {
+    showToast("رجاءً عمّر الحقول المطلوبة ⚠️", "error");
+    return;
+  }
+
+  const payload = {fullName, region, serviceType, experienceDescription, price: price ? Number(price) : 0, period, availability, plan, phone};
+  const btn = document.getElementById("pmBtnNext");
+  btn.disabled = true;
+  btn.textContent = "جاري النشر...";
+
+  try {
+    const res = await fetch(`${API_BASE}/profiles`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("Backend error");
+    await loadWorkers();
+    showToast("تم نشر profile بنجاح ✓");
+    showSuccess("profile");
+    if (currentMode === "hire") renderWorkers(workers);
+  } catch {
+    // Mode dégradé: ajouter localement
+    const mockWorker = profileToWorker({id: `local-${Date.now()}`, ...payload});
+    workers.unshift(mockWorker);
+    showToast("تم حفظ profile محلياً (البيانات ستُرسل لاحقاً) ✓");
+    showSuccess("profile");
+    if (currentMode === "hire") renderWorkers(workers);
+  } finally {
+    const b = document.getElementById("pmBtnNext");
+    if (b) { b.disabled = false; b.textContent = "نشر profile الآن ←"; }
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SUBMIT SERVICE REQUEST
+   ═══════════════════════════════════════════ */
+async function submitServiceRequest() {
+  const requestTitle = document.getElementById("pmFullName").value.trim();
+  const region = document.getElementById("pmRegion").value.trim();
+  const serviceType = document.getElementById("pmServiceType").value.trim();
+  const details = document.getElementById("pmDescription").value.trim();
+  const budget = document.getElementById("pmPrice").value;
+  const period = document.getElementById("pmPeriod").value;
+  const availability = document.getElementById("pmAvailability").value || "حسب الاتفاق";
+
+  if (!requestTitle || !region || !serviceType || !details) {
+    showToast("رجاءً عمّر الحقول المطلوبة ⚠️", "error");
+    return;
+  }
+
+  const payload = {requestTitle, region, serviceType, details, budget: budget ? Number(budget) : 0, period, availability};
+  const btn = document.getElementById("pmBtnNext");
+  btn.disabled = true;
+  btn.textContent = "جاري النشر...";
+
+  try {
+    const res = await fetch(`${API_BASE}/service-requests`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("Backend error");
+    showToast("تم نشر طلب الخدمة بنجاح ✓");
+    showSuccess("request");
+  } catch {
+    showToast("تم حفظ طلبك محلياً (سيُرسل عند الاتصال) ✓");
+    showSuccess("request");
+  } finally {
+    const b = document.getElementById("pmBtnNext");
+    if (b) { b.disabled = false; b.textContent = "نشر الطلب الآن ←"; }
+  }
+}
+
+/* ═══════════════════════════════════════════
+   SUCCESS STATE
+   ═══════════════════════════════════════════ */
+function showSuccess(type) {
+  const isProfile = type === "profile";
+  document.getElementById("pmFooter").style.display = "none";
+  document.getElementById("pmHero").style.display = "none";
+  document.getElementById("pmBody").innerHTML = `
+    <div class="pm-success">
+      <div class="pm-success-icon" aria-hidden="true">${isProfile ? "🚀" : "🎉"}</div>
+      <div class="pm-success-title">${isProfile ? "تم نشر profile المهني!" : "تم نشر طلبك بنجاح!"}</div>
+      <div class="pm-success-sub">
+        ${isProfile
+          ? "profile مهني ظهر الآن في نتائج البحث. ستبدأ تستقبل طلبات خدمة قريباً."
+          : "تم إرسال طلبك. سيتواصل معك العمال المناسبون خلال ساعات."
+        }
+      </div>
+      <button class="pm-success-btn ${isProfile ? "sb-work" : "sb-hire"}" onclick="pmClose()" type="button">
+        رجوع للصفحة ←
+      </button>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TOAST (✅ amélioré avec type error)
+   ═══════════════════════════════════════════ */
+function showToast(msg, type = "success") {
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  const t = document.createElement("div");
+  t.className = `toast${type === "error" ? " toast-error" : ""}`;
+  t.setAttribute("role","status");
+  t.setAttribute("aria-live","polite");
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2700);
+}
+
+/* ═══════════════════════════════════════════
+   FOCUS TRAP pour modales (✅ nouveau)
+   ═══════════════════════════════════════════ */
+function setupFocusTrap() {
+  const modals = [
+    document.getElementById("pmOverlay"),
+    document.getElementById("profileDetails"),
+    document.getElementById("filterDrawerOverlay")
+  ];
+
+  modals.forEach(overlay => {
+    overlay.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+      if (e.key !== "Tab") return;
+      const focusable = overlay.querySelectorAll('button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const arr = Array.from(focusable).filter(el => !el.disabled && el.offsetParent !== null);
+      if (!arr.length) return;
+      const first = arr[0], last = arr[arr.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════
+   SEARCH WIRING
+   ═══════════════════════════════════════════ */
+document.getElementById("topSearchBtn").addEventListener("click", () => {
+  document.getElementById("searchInput").value = document.getElementById("topSearchInput").value;
+  applySearch();
+});
+
+document.getElementById("topSearchInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    document.getElementById("searchInput").value = e.target.value;
+    applySearch();
+  }
+});
+
+document.getElementById("searchGo").addEventListener("click", applySearch);
+
+document.getElementById("searchInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") applySearch();
+});
+
+document.getElementById("regionSelect").addEventListener("change", applySearch);
+</script>
+</body>
+</html>

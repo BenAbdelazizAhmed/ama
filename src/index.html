@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AMANAFARM — منصة الفلاحة والحيوانات الأولى في تونس</title>
+<meta name="description" content="بيع وشراء الحيوانات والمنتجات الفلاحية في تونس. أكثر من 15 ألف إعلان لخرفان، أبقار، دواجن، وخدمات فلاحية في كامل 24 ولاية."/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="AMANAFARM — منصة الفلاحة والحيوانات الأولى في تونس"/>
+<meta property="og:type" content="website"/>
+<!-- ═══ SECURITY HEADERS (à mettre côté serveur aussi) ═══ -->
+<!-- Content-Security-Policy dans meta est limité mais indique l'intention -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<link rel="canonical" href="https://amanafarm.tn/"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- ═══ FIX #12: Lucide avec version épinglée + intégrité ═══ -->
+<script src="https://unpkg.com/lucide@0.427.0/dist/umd/lucide.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN SYSTEM — variables inchangées (bonnes)
+═══════════════════════════════════════════════════ */
+:root{
+  --green:#0f7a3c;--green-dark:#084d25;--green-mid:#1a9e50;
+  --green-light:#e6f7ed;--green-xlight:#f0faf4;--gold:#c8820a;
+  --gold-light:#fff8e6;--text:#0d1f14;--text-2:#3d5247;
+  --muted:#6b7d72;--border:#dde8e1;--border-2:#c8ddd1;
+  --bg:#f4f8f5;--white:#fff;--red:#c0392b;--wa:#25D366;--wa-dark:#1da851;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:0 6px 24px rgba(0,0,0,.10);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.14);
+  --shadow-xl:0 28px 72px rgba(0,0,0,.18);
+  --radius:14px;--radius-lg:22px;--radius-xl:30px;
+  --transition:.18s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;direction:rtl;background:var(--bg);color:var(--text);font-size:15px;line-height:1.65;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:'Cairo',sans-serif;border:none;outline:none;cursor:pointer}
+img{display:block;max-width:100%;height:auto}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:99px}
+
+/* ─── ANNOUNCEMENT BAR ─── */
+.ann-bar{min-height:36px;padding:7px 20px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;font-size:12.5px;font-weight:700}
+.ann-badge{background:rgba(255,255,255,.18);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:900;border:1px solid rgba(255,255,255,.25)}
+.ann-dot{width:7px;height:7px;border-radius:50%;background:#6ee89a;animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* ─── HEADER ─── */
+.header{height:72px;background:#fff;display:flex;align-items:center;gap:16px;padding:0 40px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+.logo{display:flex;align-items:center;gap:10px;min-width:190px;text-decoration:none;flex-shrink:0}
+.logo-mark{width:44px;height:44px;border-radius:13px;background:var(--green-light);display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border)}
+.logo-texts .name{font-size:19px;font-weight:900;color:var(--green-dark);line-height:1.2}
+.logo-texts .tagline{font-size:10px;color:var(--muted);font-weight:600}
+.search-wrap{flex:1;max-width:500px;height:44px;border:1.5px solid var(--border);border-radius:99px;display:flex;background:var(--bg);overflow:hidden;transition:var(--transition)}
+.search-wrap:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.1);background:#fff}
+.search-wrap input{flex:1;background:transparent;padding:0 16px;font-size:13.5px;color:var(--text)}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-btn{width:80px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:5px;border-radius:0 99px 99px 0;flex-shrink:0;min-height:44px}
+
+.header-actions{display:flex;align-items:center;gap:6px;margin-right:auto;flex-shrink:0}
+
+/* ═══ FIX #1: Auth state géré par classes CSS — plus de style inline !important ═══ */
+.auth-only{display:none}
+body.logged-in .auth-only{display:flex}
+body.logged-in .guest-only{display:none}
+.guest-only{display:flex}
+
+.hact{width:48px;height:48px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);position:relative;background:transparent;transition:var(--transition)}
+.hact:hover{background:var(--green-xlight);color:var(--green)}
+.hact.active-panel{background:var(--green-light);color:var(--green)}
+.hact-label{font-size:8.5px;font-weight:800;line-height:1}
+.hbadge{position:absolute;top:5px;right:5px;background:var(--green);color:#fff;border-radius:99px;font-size:8px;min-width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-weight:900;border:1.5px solid #fff;transition:var(--transition)}
+.hbadge.red{background:var(--red)}
+.hbadge.hidden{opacity:0;pointer-events:none}
+.divider-v{width:1px;height:30px;background:var(--border);margin:0 2px;flex-shrink:0}
+
+.btn-login-header{height:40px;padding:0 18px;border-radius:99px;border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:900;color:var(--text-2);display:flex;align-items:center;gap:7px;transition:var(--transition)}
+.btn-login-header:hover{border-color:var(--green);color:var(--green);background:var(--green-xlight)}
+.btn-post-header{height:40px;padding:0 18px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;gap:7px;transition:var(--transition)}
+.btn-post-header:hover{opacity:.9;transform:translateY(-1px)}
+
+.user-block{display:flex;align-items:center;gap:9px;padding:5px 13px 5px 9px;border-radius:99px;border:1.5px solid var(--border);cursor:pointer;background:#fff;transition:var(--transition);position:relative}
+.user-block:hover{border-color:var(--green);background:var(--green-xlight)}
+.user-avt{width:34px;height:34px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid var(--border);font-size:17px;flex-shrink:0}
+.user-avt img{width:100%;height:100%;object-fit:cover}
+.greet{font-size:9px;color:var(--muted);line-height:1}
+.uname{font-size:12.5px;font-weight:900;white-space:nowrap;color:var(--text)}
+
+/* Dropdown */
+.user-dropdown{position:absolute;top:calc(100% + 10px);left:0;min-width:215px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:2000;overflow:hidden;display:none;animation:fadeDown .15s ease}
+.user-dropdown.show{display:block}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.ud-header{padding:14px 16px;background:var(--green-xlight);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.ud-avt{width:42px;height:42px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid var(--border);flex-shrink:0}
+.ud-name{font-size:13px;font-weight:900;line-height:1.2}
+.ud-email{font-size:10.5px;color:var(--muted);margin-top:1px}
+.ud-item{display:flex;align-items:center;gap:9px;padding:10px 16px;font-size:13px;font-weight:700;color:var(--text-2);cursor:pointer;transition:.1s}
+.ud-item:hover{background:var(--bg);color:var(--green)}
+.ud-item.danger{color:var(--red)}
+.ud-item.danger:hover{background:#fff5f5}
+.ud-divider{height:1px;background:var(--border);margin:3px 0}
+
+/* ─── NAVBAR ─── */
+.navbar{height:46px;background:#fff;display:flex;align-items:center;padding:0 40px;border-bottom:1px solid var(--border);gap:6px;position:sticky;top:72px;z-index:999}
+.navbar ul{display:flex;list-style:none;gap:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.navbar ul::-webkit-scrollbar{display:none}
+.navbar li a{height:46px;padding:0 13px;display:flex;align-items:center;gap:6px;font-weight:800;font-size:12.5px;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;transition:var(--transition)}
+.navbar li a:hover,.navbar li a.active{color:var(--green);border-bottom-color:var(--green)}
+.nb-spacer{flex:1}
+.nb-post-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;font-weight:900;font-size:12.5px;white-space:nowrap;transition:var(--transition)}
+.nb-post-btn:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ─── SIDE PANELS ─── */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:2999;display:none;backdrop-filter:blur(4px)}
+.panel-overlay.show{display:block}
+.side-panel{position:fixed;top:0;left:0;width:400px;height:100vh;background:#fff;z-index:3000;box-shadow:var(--shadow-xl);transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.side-panel.open{transform:translateX(0)}
+.panel-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.panel-head h3{font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px}
+.panel-close{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:300;cursor:pointer;transition:var(--transition);border:none;min-width:44px;min-height:44px}
+.panel-close:hover{background:var(--border);color:var(--text)}
+.panel-body{flex:1;overflow-y:auto;padding:16px}
+.panel-footer{padding:14px 16px;border-top:1px solid var(--border);flex-shrink:0}
+
+/* Cart panel */
+.cart-item{display:flex;align-items:center;gap:11px;padding:13px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px}
+.cart-img{width:56px;height:56px;border-radius:10px;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid var(--border);overflow:hidden}
+.cart-img img{width:100%;height:100%;object-fit:cover}
+.cart-info{flex:1;min-width:0}
+.cart-name{font-size:13px;font-weight:900;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-price{font-size:13px;color:var(--green);font-weight:800}
+.cart-loc{font-size:11px;color:var(--muted);margin-top:2px}
+/* ═══ FIX #13: touch targets >= 44px ═══ */
+.cart-remove{width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid var(--border);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:var(--transition);flex-shrink:0}
+.cart-remove:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.cart-empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.cart-empty-icon{font-size:48px;margin-bottom:12px}
+.cart-empty p{font-size:13.5px;font-weight:700}
+.cart-empty-sub{font-size:12px;margin-top:6px;opacity:.7}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:13px;background:var(--green-xlight);border-radius:var(--radius);border:1px solid var(--border-2);margin-bottom:11px}
+.cart-total-label{font-size:13.5px;font-weight:800}
+.cart-total-val{font-size:19px;font-weight:900;color:var(--green)}
+.checkout-btn{width:100%;padding:13px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;font-weight:900;font-size:14px;cursor:pointer;transition:var(--transition)}
+.checkout-btn:hover{opacity:.9}
+
+/* Messages panel */
+.conv-item{display:flex;gap:11px;padding:13px;border-radius:var(--radius);cursor:pointer;transition:var(--transition);border:1px solid transparent;margin-bottom:4px}
+.conv-item:hover{background:var(--bg);border-color:var(--border)}
+.conv-item.unread{background:var(--green-xlight);border-color:var(--border-2)}
+.conv-avt{width:46px;height:46px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:21px;border:2px solid var(--border);flex-shrink:0}
+.conv-body{flex:1;min-width:0}
+.conv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.conv-name{font-size:13px;font-weight:900}
+.conv-time{font-size:10px;color:var(--muted)}
+.conv-msg{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-msg-btn{width:100%;padding:12px;border-radius:99px;background:var(--green-light);color:var(--green);font-weight:900;font-size:13.5px;border:1.5px solid var(--border-2);cursor:pointer;transition:var(--transition)}
+.new-msg-btn:hover{background:var(--green);color:#fff}
+
+/* Notifications panel */
+.notif-item{display:flex;gap:11px;padding:13px;border-radius:var(--radius);border:1px solid transparent;margin-bottom:7px;transition:var(--transition);cursor:pointer}
+.notif-item:hover{background:var(--bg)}
+.notif-item.unread{background:var(--green-xlight);border-color:var(--border-2)}
+.notif-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.notif-icon.green{background:var(--green-light)}
+.notif-icon.gold{background:var(--gold-light)}
+.notif-icon.red{background:#ffeaea}
+.notif-body{flex:1}
+.notif-title{font-size:13px;font-weight:900;margin-bottom:2px}
+.notif-sub{font-size:11.5px;color:var(--muted);line-height:1.6}
+.notif-time{font-size:10px;color:var(--muted);margin-top:4px}
+.mark-read-btn{width:100%;padding:11px;border-radius:99px;background:var(--bg);color:var(--muted);font-weight:800;font-size:13px;border:1.5px solid var(--border);cursor:pointer;transition:var(--transition)}
+.mark-read-btn:hover{background:var(--green-light);color:var(--green)}
+
+/* Add panel */
+.add-panel{width:560px}
+.form-section{margin-bottom:18px}
+.form-section-title{font-size:12.5px;font-weight:900;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:900;margin-bottom:5px;color:var(--text-2)}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:13.5px;background:#fff;transition:var(--transition);color:var(--text)}
+.field textarea{resize:vertical;min-height:75px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.09)}
+.field input.err,.field select.err{border-color:var(--red)}
+.fields-row-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.photo-upload-area{border:2px dashed var(--border-2);border-radius:var(--radius);padding:24px;text-align:center;background:var(--bg);cursor:pointer;transition:var(--transition)}
+.photo-upload-area:hover{border-color:var(--green);background:var(--green-xlight)}
+.photo-upload-area input{display:none}
+.photo-upload-icon{font-size:32px;margin-bottom:7px}
+.photo-upload-txt{font-size:13px;font-weight:700;color:var(--muted)}
+.photo-upload-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.photo-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.photo-preview{width:68px;height:68px;border-radius:10px;object-fit:cover;border:2px solid var(--border)}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cat-btn{border:1.5px solid var(--border);border-radius:12px;padding:11px 5px;text-align:center;cursor:pointer;transition:var(--transition);background:#fff}
+.cat-btn:hover{border-color:var(--green);background:var(--green-xlight)}
+.cat-btn.selected{border-color:var(--green);background:var(--green-light)}
+.cat-btn-icon{font-size:22px;margin-bottom:4px}
+.cat-btn-txt{font-size:11px;font-weight:800}
+.submit-annonce-btn{width:100%;padding:14px;border-radius:99px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;font-weight:900;font-size:14px;cursor:pointer;transition:var(--transition)}
+.submit-annonce-btn:hover{opacity:.9}
+.submit-annonce-btn:disabled{opacity:.5;cursor:not-allowed}
+.success-annonce{text-align:center;padding:36px 20px}
+.success-annonce-icon{font-size:60px;margin-bottom:14px}
+.success-annonce h3{font-size:19px;font-weight:900;margin-bottom:7px}
+.success-annonce p{font-size:13px;color:var(--muted);line-height:1.8}
+
+/* ─── HERO ─── */
+.hero{
+  position: relative;
+  overflow: hidden;
+
+  /* BACKGROUND IMAGE */
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7,32,16,0.78) 0%,
+      rgba(15,122,60,0.55) 35%,
+      rgba(15,122,60,0.40) 60%,
+      rgba(15,122,60,0.58) 100%
+    ),
+    url("assets/waas.png") center center / cover no-repeat;
+
+  min-height: 820px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 90px 70px;
+  isolation: isolate;
+}
+
+/* Optional cinematic overlay */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at top left,
+      rgba(255,255,255,0.18),
+      transparent 30%),
+    radial-gradient(circle at bottom right,
+      rgba(0,0,0,0.28),
+      transparent 35%);
+  z-index:-1;
+}
+
+/* Blur glass effect */
+.hero-content{
+  position: relative;
+  z-index: 2;
+}
+
+/* Better readability */
+.hero-text .line1{
+  color:#e8f6ea;
+  font-size:34px;
+  font-weight:600;
+  margin-bottom:12px;
+}
+
+.hero-text .line2{
+  font-size:110px;
+  line-height:0.95;
+  font-weight:900;
+  color:#fff;
+  margin:0 0 22px;
+  text-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+
+.hero-text .line2 em{
+  color:#9df0a8;
+  font-style:normal;
+}
+
+.hero-text .line3{
+  color:#f4fff5;
+  font-size:25px;
+  line-height:2;
+  max-width:780px;
+  opacity:.96;
+}
+
+/* Buttons */
+.hero-btns{
+  display:flex;
+  gap:18px;
+  margin-top:38px;
+}
+
+.btn-hero-primary{
+  background:#fff;
+  color:var(--green);
+  border:none;
+  border-radius:999px;
+  padding:18px 34px;
+  font-size:22px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 10px 35px rgba(0,0,0,.18);
+  transition:.3s;
+}
+
+.btn-hero-primary:hover{
+  transform:translateY(-3px);
+}
+
+.btn-hero-outline{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(8px);
+  color:#fff;
+  border-radius:999px;
+  padding:18px 34px;
+  font-size:22px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-hero-outline:hover{
+  background:rgba(255,255,255,.16);
+}
+
+/* Trust card */
+.trust-box{
+  width:420px;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.4);
+  border-radius:36px;
+  padding:34px;
+  box-shadow:0 25px 70px rgba(0,0,0,.22);
+}
+
+/* Mobile */
+@media (max-width: 992px){
+
+  .hero{
+    flex-direction:column;
+    padding:60px 24px;
+    min-height:auto;
+    text-align:center;
+  }
+
+  .hero-text .line1{
+    font-size:24px;
+  }
+
+  .hero-text .line2{
+    font-size:64px;
+  }
+
+  .hero-text .line3{
+    font-size:18px;
+    line-height:1.9;
+  }
+
+  .hero-btns{
+    flex-direction:column;
+    width:100%;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-outline{
+    width:100%;
+  }
+
+  .trust-box{
+    width:100%;
+    margin-top:40px;
+  }
+}
+.btn-hero-primary,.btn-hero-outline{padding:13px 26px;border-radius:99px;font-size:14px;font-weight:900;display:flex;align-items:center;gap:8px;transition:var(--transition);cursor:pointer;min-height:44px}
+.btn-hero-primary{background:#fff;color:var(--green-dark);box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.26)}
+.btn-hero-outline{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28);backdrop-filter:blur(10px)}
+.btn-hero-outline:hover{background:rgba(255,255,255,.18)}
+.hero-proof{display:flex;gap:24px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.13);flex-wrap:wrap}
+.proof-num{font-size:22px;font-weight:900;color:#fff;line-height:1}
+.proof-lbl{font-size:10px;color:rgba(255,255,255,.62);font-weight:700;margin-top:2px}
+
+/* Trust box */
+.trust-box{background:rgba(255,255,255,.97);border-radius:var(--radius-lg);padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.26)}
+.trust-head{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.trust-icon{width:48px;height:48px;border-radius:13px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trust-head h3{font-size:15px;font-weight:900;line-height:1.2}
+.trust-head p{font-size:10px;color:var(--muted);margin-top:2px}
+.trust-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-weight:700;font-size:13px}
+.trust-item:last-of-type{border-bottom:none}
+.check{width:22px;height:22px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.trust-cta{width:100%;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;padding:12px;border-radius:99px;font-weight:900;font-size:13.5px;margin-top:11px;cursor:pointer;transition:var(--transition);min-height:44px}
+.trust-cta:hover{opacity:.9}
+.trust-note{text-align:center;font-size:10px;color:var(--muted);margin-top:8px}
+
+/* ─── HOW / WHY / TESTI ─── */
+.how-section,.why-section,.testimonials-section,.services-section,.partners-section{padding:52px 80px;background:#fff;border-bottom:1px solid var(--border)}
+.testimonials-section{background:linear-gradient(135deg,var(--green-xlight),#fff)}
+.partners-section{background:var(--bg)}
+.section-label{display:inline-flex;align-items:center;gap:7px;background:var(--green-light);color:var(--green);padding:5px 13px;border-radius:99px;font-size:11.5px;font-weight:900;margin-bottom:11px}
+.section-title{font-size:25px;font-weight:900;color:var(--text);margin-bottom:6px}
+.section-sub{font-size:14px;color:var(--muted);max-width:500px;line-height:1.8}
+.how-grid,.why-grid,.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px}
+.how-card,.why-card,.testi-card,.service-card,.plogo{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:22px;transition:var(--transition)}
+.how-card:hover,.why-card:hover,.service-card:hover,.plogo:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--green)}
+.how-card{text-align:center}
+.how-step-num{width:42px;height:42px;border-radius:50%;background:var(--green-light);color:var(--green);font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:2px solid var(--border-2)}
+.how-icon,.why-icon,.svc-card-icon,.plogo-icon{width:54px;height:54px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:1.5px solid var(--border);color:var(--green)}
+.how-card h4,.service-card h4{font-size:13.5px;font-weight:900;margin-bottom:6px}
+.how-card p,.service-card p,.why-txt p{font-size:12px;color:var(--muted);line-height:1.8}
+.why-card{display:flex;gap:14px}
+.why-icon{margin:0;flex-shrink:0}
+.why-txt strong{font-size:13.5px;font-weight:900;display:block;margin-bottom:5px}
+
+/* ─── MARKET LAYOUT ─── */
+.layout{display:grid;grid-template-columns:252px 1fr;gap:18px;padding:20px 40px;max-width:1400px;margin:0 auto}
+.box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.box-header,.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.box-title,.section-header h3{font-size:15px;font-weight:900}
+.section-header a{color:var(--green);font-size:12px;font-weight:900;display:flex;align-items:center;gap:4px}
+.svc-item{display:flex;align-items:center;gap:11px;padding:10px 9px;border-radius:12px;cursor:pointer;margin-bottom:2px;transition:var(--transition)}
+.svc-item:hover{background:var(--bg)}
+.svc-icon{width:42px;height:42px;border-radius:12px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid var(--border);color:var(--green)}
+.svc-txt strong{display:block;font-size:13px;font-weight:900;line-height:1.2}
+.svc-txt span{font-size:11px;color:var(--muted)}
+.map-mini{width:100%;height:110px;border-radius:13px;background:linear-gradient(135deg,var(--green-dark),#1a7a42);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;flex-direction:column;gap:3px;margin-top:14px}
+.map-mini h5{font-size:13px;font-weight:900}
+.map-mini p{font-size:11px;opacity:.8}
+
+/* Filters */
+.filters-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.filter-pills{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}
+.filter-pills::-webkit-scrollbar{display:none}
+.pill{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:900;white-space:nowrap;border:1.5px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:var(--transition);min-height:36px}
+.pill.active,.pill:hover{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.sort-select{height:36px;padding:0 13px;border:1.5px solid var(--border);border-radius:99px;font-size:12px;font-weight:800;color:var(--muted);background:#fff}
+
+/* Ad cards */
+.ads-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.ad-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;transition:var(--transition);cursor:pointer}
+.ad-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--border-2)}
+.ad-photo{height:170px;position:relative;overflow:hidden;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.ad-photo-emoji{font-size:58px;position:relative;z-index:0}
+.ad-photo img{width:100%;height:100%;object-fit:cover;transition:.35s;position:absolute;inset:0;z-index:1}
+.ad-card:hover .ad-photo img{transform:scale(1.06)}
+.card-badges{position:absolute;top:9px;right:9px;display:flex;flex-direction:column;gap:4px;z-index:2}
+.card-badge{padding:2px 8px;border-radius:99px;font-size:10px;font-weight:900}
+.badge-featured{background:var(--gold);color:#fff}
+.badge-new{background:var(--green);color:#fff}
+.badge-verified{background:rgba(255,255,255,.92);color:var(--green)}
+/* ═══ FIX #13: touch target >= 44px pour heart ═══ */
+.heart-btn{position:absolute;bottom:9px;left:9px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--muted);z-index:2;transition:var(--transition);cursor:pointer;border:none}
+.heart-btn:hover{background:#fff;color:var(--red)}
+.heart-btn.liked{color:var(--red)}
+.ad-body{padding:13px}
+.ad-name{font-size:13.5px;font-weight:900;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-loc{color:var(--muted);font-size:11px;display:flex;align-items:center;gap:3px;margin-bottom:9px}
+.ad-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px}
+.ad-chip{background:var(--bg);padding:3px 9px;border-radius:99px;font-size:10px;font-weight:800;color:var(--text-2);border:1px solid var(--border)}
+.seller-row{display:flex;align-items:center;gap:7px;padding:7px 0 9px;border-top:1px solid var(--border);margin-bottom:9px}
+.seller-avt{width:26px;height:26px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;border:1.5px solid var(--border);flex-shrink:0}
+.seller-name{font-size:11px;font-weight:800;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.verified-tag{background:var(--green-light);color:var(--green);font-size:9px;font-weight:900;padding:2px 6px;border-radius:99px;white-space:nowrap}
+.seller-rating{font-size:11px;font-weight:900;color:var(--gold);white-space:nowrap}
+.ad-bottom{display:flex;justify-content:space-between;align-items:center;gap:7px}
+.ad-price{font-size:19px;font-weight:900;color:var(--green);white-space:nowrap}
+.ad-price span{font-size:10.5px;color:var(--muted);font-weight:700}
+.card-actions{display:flex;gap:6px}
+/* ═══ FIX #13: touch targets >= 44px pour boutons cards ═══ */
+.details-btn,.whatsapp-btn{padding:10px 14px;border-radius:99px;font-size:11px;font-weight:900;cursor:pointer;transition:var(--transition);white-space:nowrap;min-height:36px;display:flex;align-items:center}
+.details-btn{background:var(--green-light);color:var(--green);border:1.5px solid rgba(15,122,60,.14)}
+.details-btn:hover{background:var(--green);color:#fff}
+.whatsapp-btn{background:var(--wa);color:#fff}
+.whatsapp-btn:hover{background:var(--wa-dark)}
+
+/* Testi */
+.testi-card{background:#fff}
+.testi-stars{color:var(--gold);font-size:13px;margin-bottom:9px}
+.testi-text{font-size:13px;line-height:1.9;color:var(--text-2);margin-bottom:14px;font-weight:500}
+.testi-author{display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid var(--border)}
+/* ═══ FIX #6: avatars témoignages — initiales au lieu d'emojis ═══ */
+.testi-avt{width:40px;height:40px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--green);border:2px solid var(--border);flex-shrink:0}
+.testi-name{font-size:13px;font-weight:900}
+.testi-loc{font-size:11px;color:var(--muted)}
+.testi-result{margin-top:3px;background:var(--green-light);color:var(--green);font-size:10px;font-weight:900;padding:2px 7px;border-radius:99px;display:inline-block}
+
+/* Services */
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px}
+.service-card{text-align:center;cursor:pointer}
+/* ═══ FIX #7: partenaires — style amélioré, vrais noms ═══ */
+.partner-logos{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}
+.plogo{background:#fff;text-align:center;padding:18px 12px}
+.plogo-icon{width:54px;height:54px;border-radius:16px;background:var(--green-light);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:1.5px solid var(--border)}
+.plogo-abbr{font-size:15px;font-weight:900;color:var(--green)}
+.pname{font-weight:900;font-size:13px;margin-top:8px}
+.psub{font-size:10px;color:var(--muted)}
+/* ═══ FIX #8: badge "coming soon" propre pour services non disponibles ═══ */
+.soon-badge{display:inline-flex;align-items:center;gap:4px;background:var(--gold-light);color:var(--gold);font-size:10px;font-weight:900;padding:3px 9px;border-radius:99px;margin-top:6px;border:1px solid rgba(200,130,10,.2)}
+
+/* CTA section */
+.cta-section{margin:0 80px 30px;background:linear-gradient(135deg,var(--green-dark) 0%,#1b8c44 50%,#23a854 100%);border-radius:var(--radius-xl);padding:44px 52px;display:flex;align-items:center;justify-content:space-between;gap:28px;overflow:hidden}
+.cta-text{color:#fff}
+.cta-text h2{font-size:24px;font-weight:900;margin-bottom:7px}
+.cta-text p{font-size:13.5px;opacity:.87}
+.cta-actions{display:flex;gap:11px;flex-wrap:wrap}
+.cta-btn-white,.cta-btn-outline{padding:13px 24px;border-radius:99px;font-weight:900;font-size:13.5px;display:flex;align-items:center;gap:7px;cursor:pointer;transition:var(--transition);min-height:44px}
+.cta-btn-white{background:#fff;color:var(--green-dark)}
+.cta-btn-white:hover{transform:translateY(-2px)}
+.cta-btn-outline{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+.cta-btn-outline:hover{background:rgba(255,255,255,.2)}
+
+/* ─── PAGINATION ─── */
+.pagination{display:flex;justify-content:center;gap:7px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.page-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-weight:900;font-size:12.5px;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+.page-btn:hover,.page-btn.active{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.page-info{font-size:12px;color:var(--muted);font-weight:700;align-self:center}
+
+/* ─── MODALS ─── */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}
+.modal.show{display:flex}
+.modal-card{width:min(540px,100%);background:#fff;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl)}
+.modal-head{padding:17px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.modal-head h3{font-size:15px;font-weight:900}
+.close-modal{width:44px;height:44px;border-radius:50%;background:var(--bg);font-size:20px;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);border:none}
+.close-modal:hover{background:var(--border)}
+.modal-body{padding:18px}
+.modal-img{height:210px;border-radius:var(--radius);overflow:hidden;margin-bottom:14px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:68px}
+.modal-img img{width:100%;height:100%;object-fit:cover}
+.modal-price{color:var(--green);font-size:22px;font-weight:900;margin-top:7px}
+.modal-note{margin-top:11px;padding:11px;border-radius:12px;background:var(--gold-light);font-size:12px;color:var(--text-2);line-height:1.7}
+.modal-actions{display:flex;gap:9px;margin-top:16px}
+.modal-actions button,.modal-actions a{flex:1;text-align:center;padding:13px;border-radius:99px;font-weight:900;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:var(--transition);min-height:44px}
+.modal-wa{background:var(--wa);color:#fff}
+.modal-wa:hover{background:var(--wa-dark)}
+.modal-cart{background:var(--green-light);color:var(--green);border:1.5px solid rgba(15,122,60,.14)}
+.modal-cart:hover{background:var(--green);color:#fff}
+
+/* ─── AUTH MODAL ─── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}
+.overlay.show{display:flex}
+.auth-modal{width:min(530px,100%);background:#fff;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl)}
+.auth-banner{background:linear-gradient(135deg,var(--green-dark),#23a854);padding:26px;color:#fff;position:relative}
+.close-auth{position:absolute;top:14px;left:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:none}
+.banner-logo{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.auth-tabs{display:flex;background:rgba(255,255,255,.12);border-radius:99px;padding:3px}
+.auth-tab{flex:1;text-align:center;padding:10px;border-radius:99px;font-size:13px;font-weight:900;color:rgba(255,255,255,.7);background:transparent;cursor:pointer;transition:var(--transition);border:none;min-height:40px}
+.auth-tab.active{background:#fff;color:var(--green-dark)}
+.auth-body{padding:24px 26px 26px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.field-auth{margin-bottom:14px}
+.field-auth label{display:block;font-size:12px;font-weight:900;margin-bottom:6px}
+.field-wrap{position:relative;display:flex;align-items:center}
+.field-icon{position:absolute;right:13px;color:var(--muted);pointer-events:none}
+.field-auth input{width:100%;height:46px;border:1.5px solid var(--border);border-radius:12px;padding:0 42px 0 14px;font-size:13.5px;background:#fff;transition:var(--transition)}
+.field-auth input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,122,60,.1)}
+.field-auth input.input-err{border-color:var(--red)}
+.err-msg{font-size:11px;color:var(--red);font-weight:700;margin-top:4px;display:none}
+.err-msg.show{display:block}
+.submit-btn{width:100%;height:48px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:#fff;border-radius:13px;font-size:14.5px;font-weight:900;cursor:pointer;transition:var(--transition)}
+.submit-btn:hover{opacity:.9}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.form-extras{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:12px}
+.forgot-link{font-weight:900;color:var(--green);cursor:pointer}
+.or-divider{display:flex;align-items:center;gap:9px;margin:14px 0}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.or-divider span{font-size:11px;color:var(--muted);font-weight:800}
+.terms-note{text-align:center;font-size:11px;color:var(--muted);margin-top:13px}
+.terms-note a{color:var(--green);font-weight:900}
+.social-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.social-btn{height:44px;border:1.5px solid var(--border);border-radius:11px;background:#fff;font-weight:900;font-size:12.5px;cursor:pointer;transition:var(--transition)}
+.social-btn.disabled-btn{opacity:.45;cursor:not-allowed}
+.social-coming{font-size:10.5px;color:var(--muted);text-align:center;margin-bottom:4px;font-weight:700}
+.fields-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.phone-wrap{display:flex}
+.phone-prefix{height:46px;border:1.5px solid var(--border);border-radius:12px 0 0 12px;border-left:none;padding:0 10px;background:var(--bg);font-size:12.5px;font-weight:900;color:var(--muted);display:flex;align-items:center;white-space:nowrap;flex-shrink:0}
+.phone-wrap .field-auth{flex:1;margin-bottom:0}
+.phone-wrap input{border-radius:0 12px 12px 0!important}
+.steps-indicator{display:flex;align-items:center;margin-bottom:20px}
+.step-item-r{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:900;color:var(--muted)}
+.step-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:var(--transition);font-size:11px;font-weight:900}
+.step-item-r.active .step-dot,.step-item-r.done .step-dot{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 3px;transition:.3s}
+.step-item-r.done~.step-line{background:var(--green)}
+.reg-step{display:none}
+.reg-step.active{display:block}
+.step-nav{display:flex;gap:9px;margin-top:18px}
+.back-btn{height:44px;flex:0 0 78px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-weight:900;color:var(--muted);cursor:pointer;transition:var(--transition)}
+.back-btn:hover{border-color:var(--green);color:var(--green)}
+.reg-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.reg-cat{border:1.5px solid var(--border);border-radius:12px;padding:11px 5px;text-align:center;cursor:pointer;transition:var(--transition)}
+.reg-cat:hover{border-color:var(--green);background:var(--green-xlight)}
+.reg-cat.selected{border-color:var(--green);background:var(--green-light)}
+.pw-strength-wrap{margin-top:5px;height:4px;border-radius:99px;background:var(--border);overflow:hidden}
+.pw-strength-bar{height:100%;border-radius:99px;transition:.3s;width:0}
+.pw-strength-bar.weak{background:#e74c3c;width:33%}
+.pw-strength-bar.medium{background:var(--gold);width:66%}
+.pw-strength-bar.strong{background:var(--green);width:100%}
+.pw-strength-label{font-size:10px;font-weight:800;margin-top:3px}
+.rate-notice{background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:700;color:#856404;margin-bottom:12px;display:none}
+.rate-notice.show{display:block}
+
+/* ─── LEGAL MODAL ─── */
+.legal-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:6000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.legal-modal.show{display:flex}
+.legal-card{width:min(700px,100%);max-height:85vh;background:#fff;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);display:flex;flex-direction:column}
+.legal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--green-xlight)}
+.legal-head h2{font-size:16px;font-weight:900;color:var(--green-dark)}
+.legal-body{padding:22px;overflow-y:auto;font-size:13px;line-height:2;color:var(--text-2)}
+.legal-body h3{font-size:14.5px;font-weight:900;color:var(--text);margin:18px 0 7px}
+.legal-body ul{padding-right:18px;margin-bottom:9px}
+.legal-body ul li{margin-bottom:4px}
+
+/* ─── TOAST ─── */
+.toast-wrap{position:fixed;bottom:86px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--green);color:#fff;padding:12px 18px;border-radius:13px;font-weight:900;font-size:13px;box-shadow:var(--shadow-lg);max-width:300px;animation:slideIn .25s ease;display:flex;align-items:center;gap:7px;pointer-events:auto}
+.toast.error{background:var(--red)}
+.toast.info{background:#1565c0}
+.toast.fadeout{animation:slideOut .25s ease forwards}
+@keyframes slideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(16px)}}
+
+/* ─── LOADING / EMPTY ─── */
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 11px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-box,.empty-box{grid-column:1/-1;text-align:center;padding:36px;background:var(--bg);border:1px dashed var(--border);border-radius:var(--radius);color:var(--muted);font-weight:800}
+
+/* ─── FOOTER ─── */
+footer{background:var(--green-dark);color:#fff;padding:38px 80px 22px}
+.footer-grid{display:grid;grid-template-columns:210px 1fr 1fr 1fr;gap:38px;margin-bottom:28px}
+.ft-name{font-size:19px;font-weight:900}
+.ft-tag{font-size:11px;opacity:.6;margin-bottom:14px}
+.ft-brand p{font-size:12px;opacity:.7;line-height:1.8;margin-bottom:16px}
+.ft-social{display:flex;gap:7px}
+/* ═══ FIX #5: icônes sociales SVG propres ═══ */
+.ft-soc{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;transition:var(--transition);color:#fff}
+.ft-soc:hover{background:rgba(255,255,255,.2)}
+.ft-soc svg{width:16px;height:16px;fill:currentColor}
+.ft-col h4{font-size:12.5px;font-weight:900;margin-bottom:12px}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.ft-col a{font-size:12px;opacity:.65;cursor:pointer;transition:var(--transition)}
+.ft-col a:hover{opacity:1}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:18px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.copy,.ft-legal-note{font-size:11px;opacity:.5}
+.ft-bottom-links{display:flex;gap:16px}
+.ft-bottom-links a{font-size:11px;opacity:.55;cursor:pointer;transition:var(--transition)}
+.ft-bottom-links a:hover{opacity:1}
+
+/* ─── MOBILE NAV ─── */
+.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:62px;background:#fff;border-top:1px solid var(--border);z-index:4000;box-shadow:0 -6px 20px rgba(0,0,0,.07)}
+.mobile-bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9.5px;font-weight:900;color:var(--muted);cursor:pointer;text-decoration:none;min-height:44px}
+.mobile-bottom-nav a.active{color:var(--green)}
+.mobile-plus{transform:translateY(-13px)}
+.mobile-plus span{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 18px rgba(15,122,60,.35)}
+
+/* ═══ FIX #9: focus visible pour accessibilité clavier ═══ */
+:focus-visible{outline:3px solid var(--green);outline-offset:2px;border-radius:4px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr;padding:16px 24px}
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+  .add-panel{width:100%}
+}
+@media(max-width:900px){
+  body{padding-bottom:68px}
+  .header{height:auto;padding:11px 16px;flex-wrap:wrap;position:relative}
+  .search-wrap{order:3;width:100%;max-width:none;flex:none}
+  .header-actions{margin-right:0}
+  .navbar{top:0;position:relative;padding:0 16px}
+  .nb-post-btn{display:none}
+  .hero{grid-template-columns:1fr;padding:32px 20px 70px;min-height:480px}
+  .hero-text .line2{font-size:36px}
+  .hero-right{display:none}
+  .hero-proof{gap:14px}
+  .how-section,.why-section,.testimonials-section,.services-section,.partners-section{padding:32px 20px}
+  .how-grid,.why-grid,.testi-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .ads-grid{grid-template-columns:1fr}
+  .partner-logos{grid-template-columns:repeat(2,1fr)}
+  .cta-section{margin:0 20px 22px;flex-direction:column;text-align:center;padding:32px 24px}
+  footer{padding:28px 20px 80px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .ft-bottom{flex-direction:column;text-align:center}
+  .mobile-bottom-nav{display:flex}
+  .side-panel{width:100%}
+}
+@media(max-width:540px){
+  .fields-row,.footer-grid{grid-template-columns:1fr}
+  .hero-text .line2{font-size:28px}
+  .modal-actions{flex-direction:column}
+  .reg-cats{grid-template-columns:repeat(2,1fr)}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .social-btns{grid-template-columns:1fr}
+  .cta-actions{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ FIX #10: toast container unique ═══ -->
+<div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="false"></div>
+
+<div class="ann-bar">
+  <div class="ann-dot"></div>
+  <span>أعلن مجانًا وبيع أسرع في كامل تونس</span>
+  <span class="ann-badge">نشر الإعلان الأول مجاني 🎉</span>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="header" role="banner">
+  <a href="#" class="logo" aria-label="AMANAFARM الرئيسية">
+    <div class="logo-mark"><i data-lucide="leaf" width="22" height="22" stroke="var(--green)" stroke-width="2.5" aria-hidden="true"></i></div>
+    <div class="logo-texts">
+      <div class="name">AMANAFARM</div>
+      <div class="tagline">منصة الفلاحة والحيوانات الأولى في تونس</div>
+    </div>
+  </a>
+
+  <div class="search-wrap" role="search">
+    <input id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات">
+    <button class="search-btn" id="searchBtn" aria-label="تنفيذ البحث">
+      <i data-lucide="search" width="14" aria-hidden="true"></i> بحث
+    </button>
+  </div>
+
+  <div class="header-actions">
+    <!-- ══ AUTH ONLY ══ -->
+    <button class="hact auth-only" id="cartAction" aria-label="السلة">
+      <i data-lucide="shopping-cart" width="19" aria-hidden="true"></i>
+      <div class="hact-label">السلة</div>
+      <span class="hbadge hidden" id="cartBadge" aria-hidden="true">0</span>
+    </button>
+    <button class="hact auth-only" id="messagesAction" aria-label="الرسائل">
+      <i data-lucide="message-circle" width="19" aria-hidden="true"></i>
+      <div class="hact-label">رسائل</div>
+      <span class="hbadge hidden" id="msgBadge" aria-hidden="true">0</span>
+    </button>
+    <button class="hact auth-only" id="notifAction" aria-label="الإشعارات">
+      <i data-lucide="bell" width="19" aria-hidden="true"></i>
+      <div class="hact-label">إشعارات</div>
+      <span class="hbadge red hidden" id="notifBadge" aria-hidden="true">0</span>
+    </button>
+
+    <div class="divider-v auth-only"></div>
+
+    <!-- ══ GUEST ══ -->
+    <button class="btn-login-header guest-only" id="btnLoginHeader">
+      <i data-lucide="user" width="15" aria-hidden="true"></i> تسجيل الدخول
+    </button>
+    <button class="btn-post-header guest-only" id="btnPostGuest">
+      <i data-lucide="plus" width="14" aria-hidden="true"></i> أعلن مجاناً
+    </button>
+
+    <!-- ══ USER BLOCK ══ -->
+    <div class="user-block auth-only" id="userAction" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+      <div class="user-avt" id="userAvatar"><i data-lucide="user" width="17" stroke="var(--muted)" aria-hidden="true"></i></div>
+      <div>
+        <div class="greet">مرحباً،</div>
+        <div class="uname" id="userName">—</div>
+      </div>
+      <i data-lucide="chevron-down" width="13" stroke="var(--muted)" aria-hidden="true"></i>
+      <div class="user-dropdown" id="userDropdown" role="menu">
+        <div class="ud-header">
+          <div class="ud-avt" id="udAvt" aria-hidden="true">🌿</div>
+          <div>
+            <div class="ud-name" id="udName"></div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
+        </div>
+        <div class="ud-item" role="menuitem" tabindex="0" onclick="openPanel('add');closeDropdown()"><i data-lucide="file-plus" width="15" aria-hidden="true"></i> إعلاناتي</div>
+        <div class="ud-item" role="menuitem" tabindex="0" onclick="openPanel('cart');closeDropdown()"><i data-lucide="shopping-cart" width="15" aria-hidden="true"></i> سلتي</div>
+        <div class="ud-item" role="menuitem" tabindex="0" onclick="closeDropdown();showComingSoon('المفضلة')"><i data-lucide="heart" width="15" aria-hidden="true"></i> المفضلة</div>
+        <div class="ud-item" role="menuitem" tabindex="0" onclick="closeDropdown();showComingSoon('الإعدادات')"><i data-lucide="settings" width="15" aria-hidden="true"></i> الإعدادات</div>
+        <div class="ud-divider" role="separator"></div>
+        <div class="ud-item danger" role="menuitem" tabindex="0" onclick="doLogout();closeDropdown()"><i data-lucide="log-out" width="15" aria-hidden="true"></i> تسجيل الخروج</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" aria-label="التنقل الرئيسي">
+  <ul>
+    <li><a class="active" href="#"><i data-lucide="home" width="14" aria-hidden="true"></i> الرئيسية</a></li>
+    <li><a href="#market"><i data-lucide="beef" width="14" aria-hidden="true"></i> الحيوانات</a></li>
+    <li><a href="#services-section"><i data-lucide="wrench" width="14" aria-hidden="true"></i> الخدمات</a></li>
+    <li><a href="#" onclick="openLegal('about');return false"><i data-lucide="info" width="14" aria-hidden="true"></i> من نحن</a></li>
+  </ul>
+  <div class="nb-spacer"></div>
+  <button class="nb-post-btn" id="navPostBtn"><i data-lucide="plus" width="15" aria-hidden="true"></i> أضف إعلانك مجاناً</button>
+</nav>
+
+<!-- ═══════════ PANEL OVERLAY ═══════════ -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+<!-- ════ CART PANEL ════ -->
+<div class="side-panel" id="cartPanel" role="dialog" aria-modal="true" aria-label="سلة المشتريات">
+  <div class="panel-head">
+    <h3><i data-lucide="shopping-cart" width="17" aria-hidden="true"></i> سلة المشتريات</h3>
+    <button class="panel-close" onclick="closePanel()" aria-label="إغلاق السلة">×</button>
+  </div>
+  <div class="panel-body" id="cartBody"></div>
+  <div class="panel-footer" id="cartFooter"></div>
+</div>
+
+<!-- ════ MESSAGES PANEL ════ -->
+<div class="side-panel" id="messagesPanel" role="dialog" aria-modal="true" aria-label="الرسائل">
+  <div class="panel-head">
+    <h3><i data-lucide="message-circle" width="17" aria-hidden="true"></i> الرسائل</h3>
+    <button class="panel-close" onclick="closePanel()" aria-label="إغلاق الرسائل">×</button>
+  </div>
+  <div class="panel-body" id="messagesBody"></div>
+  <div class="panel-footer">
+    <button class="new-msg-btn" onclick="showComingSoon('ميزة الرسائل')">✏️ رسالة جديدة</button>
+  </div>
+</div>
+
+<!-- ════ NOTIF PANEL ════ -->
+<div class="side-panel" id="notifPanel" role="dialog" aria-modal="true" aria-label="الإشعارات">
+  <div class="panel-head">
+    <h3><i data-lucide="bell" width="17" aria-hidden="true"></i> الإشعارات</h3>
+    <button class="panel-close" onclick="closePanel()" aria-label="إغلاق الإشعارات">×</button>
+  </div>
+  <div class="panel-body" id="notifBody"></div>
+  <div class="panel-footer">
+    <button class="mark-read-btn" onclick="markAllRead()">✓ تعليم الكل كمقروء</button>
+  </div>
+</div>
+
+<!-- ════ ADD PANEL ════ -->
+<div class="side-panel add-panel" id="addPanel" role="dialog" aria-modal="true" aria-label="إضافة إعلان">
+  <div class="panel-head">
+    <h3><i data-lucide="file-plus" width="17" aria-hidden="true"></i> أضف إعلانك مجاناً</h3>
+    <button class="panel-close" onclick="closePanel()" aria-label="إغلاق نموذج الإعلان">×</button>
+  </div>
+  <div class="panel-body" id="addBody">
+    <div id="addForm">
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="grid" width="13" aria-hidden="true"></i> الفئة</div>
+        <div class="cat-grid" id="addCatGrid" role="radiogroup" aria-label="اختر الفئة">
+          <div class="cat-btn selected" data-cat="أغنام" onclick="selectCat(this)" role="radio" aria-checked="true" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐑</div><div class="cat-btn-txt">أغنام</div></div>
+          <div class="cat-btn" data-cat="أبقار" onclick="selectCat(this)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐄</div><div class="cat-btn-txt">أبقار</div></div>
+          <div class="cat-btn" data-cat="دواجن" onclick="selectCat(this)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐔</div><div class="cat-btn-txt">دواجن</div></div>
+          <div class="cat-btn" data-cat="ماعز" onclick="selectCat(this)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🐐</div><div class="cat-btn-txt">ماعز</div></div>
+          <div class="cat-btn" data-cat="منتجات" onclick="selectCat(this)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🌾</div><div class="cat-btn-txt">منتجات</div></div>
+          <div class="cat-btn" data-cat="خدمات" onclick="selectCat(this)" role="radio" aria-checked="false" tabindex="0"><div class="cat-btn-icon" aria-hidden="true">🚚</div><div class="cat-btn-txt">خدمات</div></div>
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="file-text" width="13" aria-hidden="true"></i> معلومات الإعلان</div>
+        <div class="field">
+          <label for="addTitle">عنوان الإعلان <abbr title="مطلوب">*</abbr></label>
+          <input type="text" id="addTitle" placeholder="مثال: خروف بربري ممتاز للبيع" maxlength="100" autocomplete="off">
+        </div>
+        <div class="fields-row-2">
+          <div class="field">
+            <label for="addPrice">السعر (دت) <abbr title="مطلوب">*</abbr></label>
+            <input type="number" id="addPrice" placeholder="1450" min="1" max="999999">
+          </div>
+          <div class="field">
+            <label for="addWilaya">الولاية <abbr title="مطلوب">*</abbr></label>
+            <select id="addWilaya">
+              <option value="">اختر الولاية</option>
+              <option>تونس</option><option>أريانة</option><option>بن عروس</option><option>منوبة</option>
+              <option>نابل</option><option>زغوان</option><option>بنزرت</option><option>باجة</option>
+              <option>جندوبة</option><option>الكاف</option><option>سليانة</option><option>سوسة</option>
+              <option>المنستير</option><option>المهدية</option><option>صفاقس</option><option>القيروان</option>
+              <option>القصرين</option><option>سيدي بوزيد</option><option>قابس</option><option>مدنين</option>
+              <option>تطاوين</option><option>قفصة</option><option>توزر</option><option>قبلي</option>
+            </select>
+          </div>
+        </div>
+        <div class="fields-row-2">
+          <div class="field"><label for="addWeight">الوزن</label><input type="text" id="addWeight" placeholder="مثال: 55 كغ" maxlength="30"></div>
+          <div class="field">
+            <label for="addGender">الجنس</label>
+            <select id="addGender"><option value="">اختر</option><option>ذكر</option><option>أنثى</option><option>مجموعة</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="addDesc">وصف الإعلان</label>
+          <textarea id="addDesc" placeholder="الحالة الصحية، التطعيمات، مميزات أخرى..." maxlength="1000"></textarea>
+        </div>
+        <div class="field">
+          <label for="addPhone">رقم الهاتف (واتساب) <abbr title="مطلوب">*</abbr></label>
+          <input type="tel" id="addPhone" placeholder="XX XXX XXX" maxlength="15" autocomplete="tel">
+        </div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title"><i data-lucide="image" width="13" aria-hidden="true"></i> الصور</div>
+        <label class="photo-upload-area" for="addPhotos">
+          <input type="file" id="addPhotos" multiple accept="image/jpeg,image/png,image/webp" onchange="previewPhotos(this)">
+          <div class="photo-upload-icon" aria-hidden="true">📸</div>
+          <div class="photo-upload-txt">انقر لإضافة صور</div>
+          <div class="photo-upload-sub">JPG، PNG — حتى 5 صور (2MB لكل صورة)</div>
+        </label>
+        <div class="photo-previews" id="photoPreviews" aria-label="معاينة الصور"></div>
+      </div>
+    </div>
+    <div class="success-annonce" id="addSuccess" style="display:none">
+      <div class="success-annonce-icon" aria-hidden="true">🎉</div>
+      <h3>تم نشر إعلانك بنجاح!</h3>
+      <p>إعلانك الآن مرئي لآلاف المستخدمين في كامل تونس.<br>ستتلقى رسائل واتساب مباشرة من المشترين.</p>
+      <br>
+      <button class="submit-annonce-btn" onclick="resetAddForm()">نشر إعلان آخر</button>
+    </div>
+  </div>
+  <div class="panel-footer" id="addFooter">
+    <button class="submit-annonce-btn" id="submitAnnonceBtn" onclick="submitAnnonce()">
+      <i data-lucide="send" width="15" aria-hidden="true"></i> نشر الإعلان مجاناً
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" aria-label="الصفحة الرئيسية">
+  <div class="hero-content">
+    <div class="hero-badge"><div class="ann-dot" style="width:8px;height:8px" aria-hidden="true"></div> المنصة رقم 1 في تونس لبيع وشراء الحيوانات</div>
+    <div class="hero-text">
+      <div class="line1">كل ما تحتاجه في عالم</div>
+      <h1 class="line2">الفلاحة<br>و<em>الحيوانات</em></h1>
+      <div class="line3">بيع خروفك، اشري بقرتك، وتواصل مع المربين في كامل تونس —<br>بسهولة، بأمان، وبسعر عادل.</div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-hero-primary" id="addAnnonceBtn"><i data-lucide="plus-circle" width="17" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
+      <button class="btn-hero-outline" id="browseBtn"><i data-lucide="search" width="17" aria-hidden="true"></i> تصفح الإعلانات</button>
+    </div>
+    <div class="hero-proof" role="list" aria-label="إحصائيات المنصة">
+      <div role="listitem"><div class="proof-num">+1,200</div><div class="proof-lbl">مستخدم مسجل</div></div>
+      <div role="listitem"><div class="proof-num">+850</div><div class="proof-lbl">إعلان منشور</div></div>
+      <div role="listitem"><div class="proof-num">+400</div><div class="proof-lbl">عملية ناجحة</div></div>
+      <div role="listitem"><div class="proof-num">4.7 ★</div><div class="proof-lbl">تقييم المستخدمين</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="trust-box">
+      <div class="trust-head">
+        <div class="trust-icon"><i data-lucide="shield-check" width="24" stroke="var(--green)" aria-hidden="true"></i></div>
+        <div><h3>معاملات آمنة 100%</h3><p>نضمن لك الأمان في كل خطوة</p></div>
+      </div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> بائعون موثوقون ومراجعون يدوياً</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> تواصل مباشر عبر واتساب</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> دعم فني متاح على البريد الإلكتروني</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> إعلانات مراجعة قبل النشر</div>
+      <button class="trust-cta" id="trustCtaBtn">أضف إعلانك مجاناً — أقل من دقيقتين</button>
+      <div class="trust-note">✓ بدون بطاقة بنكية · بدون التزام</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOW ═══════════ -->
+<section class="how-section">
+  <div class="section-label"><i data-lucide="zap" width="12" aria-hidden="true"></i> سهل وسريع</div>
+  <h2 class="section-title">كيف تشتغل المنصة؟</h2>
+  <p class="section-sub">ثلاث خطوات بسيطة تفصلك عن بيع أو شراء الحيوان الذي تريد.</p>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-step-num" aria-hidden="true">1</div><div class="how-icon"><i data-lucide="user-plus" width="26" aria-hidden="true"></i></div><h4>أنشئ حسابك</h4><p>سجّل في أقل من دقيقتين واختر إن كنت مشتري أو بائع.</p></div>
+    <div class="how-card"><div class="how-step-num" aria-hidden="true">2</div><div class="how-icon"><i data-lucide="file-plus" width="26" aria-hidden="true"></i></div><h4>أضف إعلانك أو ابحث</h4><p>انشر إعلانك بصور واضحة أو فلتر حسب النوع والولاية والسعر.</p></div>
+    <div class="how-card"><div class="how-step-num" aria-hidden="true">3</div><div class="how-icon"><i data-lucide="message-circle" width="26" aria-hidden="true"></i></div><h4>تواصل وأتم الصفقة</h4><p>تحدث مع البائع مباشرة عبر واتساب وأتم الصفقة بأمان.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ MARKET ═══════════ -->
+<div class="layout" id="market">
+  <aside aria-label="خدمات جانبية">
+    <div class="box">
+      <div class="box-header"><div class="box-title">خدمات سريعة</div></div>
+      <!-- ═══ FIX #3: services avec badge "قريباً" visible, pas de toast trompeur ═══ -->
+      <div class="svc-item" onclick="openServiceModal('transport')">
+        <div class="svc-icon"><i data-lucide="truck" width="18" aria-hidden="true"></i></div>
+        <div class="svc-txt"><strong>نقل الحيوانات</strong><span>داخل وخارج تونس</span><div><span class="soon-badge">قريباً</span></div></div>
+      </div>
+      <div class="svc-item" onclick="openServiceModal('vet')">
+        <div class="svc-icon"><i data-lucide="stethoscope" width="18" aria-hidden="true"></i></div>
+        <div class="svc-txt"><strong>استشارة بيطرية</strong><span>تواصل مع طبيب بيطري</span><div><span class="soon-badge">قريباً</span></div></div>
+      </div>
+      <div class="svc-item" onclick="openServiceModal('pharmacy')">
+        <div class="svc-icon"><i data-lucide="pill" width="18" aria-hidden="true"></i></div>
+        <div class="svc-txt"><strong>الصيدلية البيطرية</strong><span>أدوية ولقاحات</span><div><span class="soon-badge">قريباً</span></div></div>
+      </div>
+      <div class="svc-item" onclick="openServiceModal('products')">
+        <div class="svc-icon"><i data-lucide="wheat" width="18" aria-hidden="true"></i></div>
+        <div class="svc-txt"><strong>منتجات فلاحية</strong><span>أعلاف، بذور، أسمدة</span><div><span class="soon-badge">قريباً</span></div></div>
+      </div>
+      <div class="map-mini" role="img" aria-label="خريطة تغطية تونس">
+        <i data-lucide="map-pin" width="20" aria-hidden="true"></i>
+        <h5>تغطية كامل تونس</h5>
+        <p>24 ولاية — خدمات قريبة منك</p>
+      </div>
+    </div>
+  </aside>
+  <main>
+    <div class="box">
+      <div class="section-header">
+        <h3>أحدث الإعلانات</h3>
+        <a href="#market">عرض الكل <i data-lucide="arrow-left" width="12" aria-hidden="true"></i></a>
+      </div>
+      <div class="filters-row" role="toolbar" aria-label="أدوات تصفية الإعلانات">
+        <div class="filter-pills" role="group" aria-label="تصفية حسب الفئة">
+          <button class="pill active" data-filter="all">الكل</button>
+          <button class="pill" data-filter="أغنام">🐑 أغنام</button>
+          <button class="pill" data-filter="أبقار">🐄 أبقار</button>
+          <button class="pill" data-filter="دواجن">🐔 دواجن</button>
+          <button class="pill" data-filter="ماعز">🐐 ماعز</button>
+          <button class="pill" data-filter="featured">⭐ مميز</button>
+        </div>
+        <label for="sortSelect" class="sr-only">ترتيب حسب</label>
+        <select class="sort-select" id="sortSelect" aria-label="ترتيب النتائج">
+          <option value="newest">الأحدث</option>
+          <option value="cheap">الأرخص</option>
+          <option value="expensive">الأغلى</option>
+        </select>
+      </div>
+      <div class="ads-grid" id="adsGrid" aria-live="polite" aria-label="قائمة الإعلانات">
+        <div class="loading-box"><div class="spinner" aria-hidden="true"></div>جاري تحميل الإعلانات...</div>
+      </div>
+      <div class="pagination" id="pagination" role="navigation" aria-label="التنقل بين الصفحات"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════ WHY ═══════════ -->
+<section class="why-section">
+  <div class="section-label"><i data-lucide="thumbs-up" width="12" aria-hidden="true"></i> لماذا AMANAFARM؟</div>
+  <h2 class="section-title">الفرق الحقيقي معنا</h2>
+  <p class="section-sub">لسنا مجرد موقع إعلانات — نحن بنينا منظومة كاملة للفلاح التونسي.</p>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-icon"><i data-lucide="message-circle" width="22" aria-hidden="true"></i></div><div class="why-txt"><strong>تواصل مباشر في ثانية</strong><p>اضغط واتساب وتحدث مع البائع مباشرة دون وسيط.</p></div></div>
+    <div class="why-card"><div class="why-icon"><i data-lucide="shield-check" width="22" aria-hidden="true"></i></div><div class="why-txt"><strong>بائعون موثوقون</strong><p>إعلانات حقيقية فقط مع طبقة ثقة ومراجعة يدوية.</p></div></div>
+    <div class="why-card"><div class="why-icon"><i data-lucide="map-pin" width="22" aria-hidden="true"></i></div><div class="why-txt"><strong>مصمّم للسوق التونسي</strong><p>24 ولاية، أسعار بالدينار التونسي، وتصنيفات محلية.</p></div></div>
+  </div>
+</section>
+
+<!-- ═══════════ TESTIMONIALS — FIX #6: avatars initiales ═══════════ -->
+<section class="testimonials-section">
+  <div class="section-label"><i data-lucide="star" width="12" aria-hidden="true"></i> آراء حقيقية</div>
+  <h2 class="section-title">قالوا عن AMANAFARM</h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars" aria-label="تقييم 5 نجوم">★★★★★</div>
+      <p class="testi-text">نشرت إعلاني في 5 دقائق وبعت خروفي في 3 أيام. ما توقعتش يكون بهالسرعة.</p>
+      <div class="testi-author">
+        <div class="testi-avt" aria-hidden="true">م.ش</div>
+        <div><div class="testi-name">محمد الشريف</div><div class="testi-loc">سوسة</div><span class="testi-result">باع 3 خرفان خلال أسبوع</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars" aria-label="تقييم 5 نجوم">★★★★★</div>
+      <p class="testi-text">لقيت بقرة حلوب بسعر منطقي ومن ولاية قريبة. الموقع سهّل عليّ كثير.</p>
+      <div class="testi-author">
+        <div class="testi-avt" aria-hidden="true">ف.س</div>
+        <div><div class="testi-name">فاطمة بن سالم</div><div class="testi-loc">صفاقس</div><span class="testi-result">اشترت بقرة هولشتاين</span></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars" aria-label="تقييم 5 نجوم">★★★★★</div>
+      <p class="testi-text">الموقع سهّل عليّ البحث كثيرًا، وجدت ما أبحث عنه في أقل من يوم.</p>
+      <div class="testi-author">
+        <div class="testi-avt" aria-hidden="true">ح.ر</div>
+        <div><div class="testi-name">الحاج رضا</div><div class="testi-loc">قابس</div><span class="testi-result">مستخدم منذ التأسيس</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SERVICES — FIX #3: badges "قريباً" visibles ═══════════ -->
+<section class="services-section" id="services-section">
+  <div class="section-label"><i data-lucide="grid" width="12" aria-hidden="true"></i> خدماتنا</div>
+  <h2 class="section-title">كل ما تحتاجه في مكان واحد</h2>
+  <p class="section-sub">من البيع والشراء إلى الطب البيطري والنقل — منصة تتطور باستمرار.</p>
+  <div class="services-grid">
+    <div class="service-card" onclick="openServiceModal('transport')">
+      <div class="svc-card-icon"><i data-lucide="truck" width="24" aria-hidden="true"></i></div>
+      <h4>نقل الحيوانات</h4><p>شاحنات متخصصة لنقل بهايمك بأمان.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card" onclick="openServiceModal('vet')">
+      <div class="svc-card-icon"><i data-lucide="stethoscope" width="24" aria-hidden="true"></i></div>
+      <h4>استشارة بيطرية</h4><p>تواصل مع بيطريين معتمدين في جهتك.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card" onclick="openServiceModal('pharmacy')">
+      <div class="svc-card-icon"><i data-lucide="pill" width="24" aria-hidden="true"></i></div>
+      <h4>الصيدلية البيطرية</h4><p>أدوية ولقاحات ومكملات.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card" onclick="openServiceModal('products')">
+      <div class="svc-card-icon"><i data-lucide="wheat" width="24" aria-hidden="true"></i></div>
+      <h4>منتجات فلاحية</h4><p>أعلاف، بذور، أسمدة.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PARTNERS — FIX #7 ═══════════ -->
+<section class="partners-section">
+  <div class="section-label"><i data-lucide="handshake" width="12" aria-hidden="true"></i> شركاؤنا</div>
+  <h2 class="section-title">شركاؤنا الموثوقون</h2>
+  <div class="partner-logos">
+    <div class="plogo"><div class="plogo-icon"><div class="plogo-abbr">ATB</div></div><div class="pname">ATB</div><div class="psub">بنك شريك</div></div>
+    <div class="plogo"><div class="plogo-icon"><div class="plogo-abbr">OTD</div></div><div class="pname">OTD</div><div class="psub">الديوان التونسي للتنمية الفلاحية</div></div>
+    <div class="plogo"><div class="plogo-icon"><div class="plogo-abbr">UTAP</div></div><div class="pname">UTAP</div><div class="psub">اتحاد الفلاحين</div></div>
+    <div class="plogo"><div class="plogo-icon"><div class="plogo-abbr">CRDA</div></div><div class="pname">CRDA</div><div class="psub">التنمية الفلاحية الجهوية</div></div>
+    <div class="plogo"><div class="plogo-icon"><div class="plogo-abbr">SMSA</div></div><div class="pname">SMSA</div><div class="psub">شركات خدمات فلاحية</div></div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<div class="cta-section">
+  <div class="cta-text"><h2>جاهز تبيع أو تشتري؟</h2><p>انضم لأكثر من ألف مستخدم نشط. أول إعلان مجاناً وبدون أي التزام.</p></div>
+  <div class="cta-actions">
+    <button class="cta-btn-white" id="ctaPost"><i data-lucide="plus" width="15" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
+    <button class="cta-btn-outline" id="ctaBrowse"><i data-lucide="search" width="15" aria-hidden="true"></i> تصفح الإعلانات</button>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER — FIX #5: vraies icônes SVG sociales ═══════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="ft-brand">
+      <div class="ft-name">AMANAFARM</div>
+      <div class="ft-tag">منصة الفلاحة والحيوانات الأولى في تونس</div>
+      <p>سوق رقمي متكامل يربط المربين والمستثمرين وجميع الخدمات الفلاحية.</p>
+      <div class="ft-social">
+        <a class="ft-soc" href="#" aria-label="Facebook" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a class="ft-soc" href="#" aria-label="Instagram" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
+        <a class="ft-soc" href="#" aria-label="YouTube" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#084d25"/></svg>
+        </a>
+        <a class="ft-soc" href="#" aria-label="LinkedIn" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="ft-col"><h4>الحيوانات والمنتجات</h4><ul><li><a href="#market" onclick="filterByCategory('أغنام')">أغنام وخرفان</a></li><li><a href="#market" onclick="filterByCategory('أبقار')">أبقار وعجول</a></li><li><a href="#market" onclick="filterByCategory('دواجن')">دواجن وطيور</a></li><li><a href="#market" onclick="filterByCategory('منتجات')">أعلاف ومنتجات</a></li></ul></div>
+    <div class="ft-col"><h4>الخدمات</h4><ul><li><a onclick="openServiceModal('transport')">نقل الحيوانات</a></li><li><a onclick="openServiceModal('vet')">استشارات بيطرية</a></li><li><a onclick="openServiceModal('pharmacy')">الصيدلية البيطرية</a></li><li><a onclick="openServiceModal('products')">المنتجات الفلاحية</a></li></ul></div>
+    <div class="ft-col"><h4>المنصة</h4><ul>
+      <li><a onclick="openLegal('about')">من نحن</a></li>
+      <li><a onclick="openLegal('contact')">اتصل بنا</a></li>
+      <li><a onclick="openLegal('terms')">شروط الاستخدام</a></li>
+      <li><a onclick="openLegal('privacy')">سياسة الخصوصية</a></li>
+    </ul></div>
+  </div>
+  <div class="ft-bottom">
+    <div><div class="copy">© 2026 AMANAFARM — جميع الحقوق محفوظة</div></div>
+    <div class="ft-bottom-links">
+      <a onclick="openLegal('terms')">الشروط</a>
+      <a onclick="openLegal('privacy')">الخصوصية</a>
+      <a onclick="openLegal('contact')">الدعم</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════ MOBILE NAV ═══════════ -->
+<nav class="mobile-bottom-nav" aria-label="التنقل السفلي">
+  <a href="#" class="active" aria-label="الرئيسية"><i data-lucide="home" width="19" aria-hidden="true"></i><span>الرئيسية</span></a>
+  <a href="#market" aria-label="السوق"><i data-lucide="search" width="19" aria-hidden="true"></i><span>السوق</span></a>
+  <a href="#" class="mobile-plus" id="mobAdd" aria-label="إضافة إعلان"><span aria-hidden="true">+</span></a>
+  <a href="#" id="mobMessages" aria-label="الرسائل"><i data-lucide="message-circle" width="19" aria-hidden="true"></i><span>رسائل</span></a>
+  <!-- ═══ FIX #4: profile mobile — logique correcte ═══ -->
+  <a href="#" id="mobProfile" aria-label="حسابي"><i data-lucide="user" width="19" aria-hidden="true"></i><span>حسابي</span></a>
+</nav>
+
+<!-- ═══════════ AD DETAIL MODAL ═══════════ -->
+<div class="modal" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">تفاصيل الإعلان</h3>
+      <button class="close-modal" onclick="closeModal('detailsModal')" aria-label="إغلاق التفاصيل">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-img" id="modalImgWrap"></div>
+      <div class="ad-meta" id="modalMeta"></div>
+      <p id="modalLocation" style="color:var(--muted);font-size:13px;margin-top:8px;display:flex;align-items:center;gap:4px"></p>
+      <p id="modalDescription" style="font-size:13px;color:var(--text-2);margin-top:8px;line-height:1.8"></p>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-note"><strong>نصيحة AMANAFARM:</strong> تأكد من مشاهدة الحيوان شخصياً أو عبر مكالمة مرئية قبل الدفع.</div>
+      <div class="modal-actions">
+        <a href="#" id="modalWhatsapp" class="modal-wa" target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle" width="15" aria-hidden="true"></i> واتساب</a>
+        <button class="modal-cart" id="modalCartBtn"><i data-lucide="shopping-cart" width="14" aria-hidden="true"></i> أضف للسلة</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SERVICE COMING SOON MODAL ═══════════ -->
+<div class="modal" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="serviceModalTitle">خدمة قريباً</h3>
+      <button class="close-modal" onclick="closeModal('serviceModal')" aria-label="إغلاق">×</button>
+    </div>
+    <div class="modal-body" id="serviceModalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════ AUTH MODAL ═══════════ -->
+<div class="overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authModalHeading">
+  <div class="auth-modal">
+    <div class="auth-banner">
+      <button class="close-auth" onclick="closeModal('authOverlay')" aria-label="إغلاق نافذة تسجيل الدخول">×</button>
+      <div class="banner-logo"><span style="font-size:28px" aria-hidden="true">🌿</span><div id="authModalHeading"><div style="font-size:18px;font-weight:900">AMANAFARM</div><div style="font-size:10px;opacity:.72">المنصة الأولى للفلاحة وتربية الحيوانات في تونس</div></div></div>
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin" onclick="switchAuthTab('login')">🔐 دخول</button>
+        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister" onclick="switchAuthTab('register')">✨ حساب جديد</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <!-- LOGIN -->
+      <div class="tab-panel active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
+        <div class="rate-notice" id="loginRateNotice" role="alert">⏳ محاولات كثيرة — يرجى الانتظار دقيقة.</div>
+        <p class="social-coming">⚠️ تسجيل الدخول الاجتماعي سيكون متاحاً قريباً</p>
+        <div class="social-btns">
+          <button class="social-btn disabled-btn" aria-disabled="true" onclick="toast('Google قريباً — استخدم البريد الآن','info')">🇬 Google</button>
+          <button class="social-btn disabled-btn" aria-disabled="true" onclick="toast('Facebook قريباً — استخدم البريد الآن','info')">f Facebook</button>
+        </div>
+        <div class="or-divider"><span>أو بالبريد الإلكتروني</span></div>
+        <div class="field-auth">
+          <label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label>
+          <div class="field-wrap"><span class="field-icon" aria-hidden="true"><i data-lucide="mail" width="15"></i></span><input type="text" id="loginEmail" placeholder="exemple@email.com" autocomplete="username"></div>
+          <div class="err-msg" id="loginEmailErr" role="alert">يرجى إدخال بريد أو هاتف صحيح</div>
+        </div>
+        <div class="field-auth">
+          <label for="loginPassword">كلمة المرور</label>
+          <div class="field-wrap"><span class="field-icon" aria-hidden="true"><i data-lucide="lock" width="15"></i></span><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password"></div>
+          <div class="err-msg" id="loginPasswordErr" role="alert">بيانات الدخول غير صحيحة</div>
+        </div>
+        <div class="form-extras">
+          <!-- ═══ FIX #2: remember me fonctionnel ═══ -->
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="rememberMe" style="accent-color:var(--green)"> تذكرني (30 يوم)</label>
+          <span class="forgot-link" onclick="switchAuthTab('forgot')" role="button" tabindex="0">نسيت كلمة المرور؟</span>
+        </div>
+        <button class="submit-btn" id="loginBtn" onclick="doLogin()">🔐 تسجيل الدخول</button>
+        <div class="terms-note">بتسجيل الدخول أنت توافق على <a href="#" onclick="openLegal('terms');return false">شروط الاستخدام</a></div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="tab-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
+        <div class="steps-indicator" aria-label="مراحل التسجيل">
+          <div class="step-item-r active" id="si1"><div class="step-dot" aria-current="step">1</div><div>معلوماتك</div></div>
+          <div class="step-line" id="sl1"></div>
+          <div class="step-item-r" id="si2"><div class="step-dot">2</div><div>الأمان</div></div>
+          <div class="step-line" id="sl2"></div>
+          <div class="step-item-r" id="si3"><div class="step-dot">3</div><div>تخصيص</div></div>
+        </div>
+        <div class="reg-step active" id="regStep1">
+          <div class="fields-row">
+            <div class="field-auth"><label for="regFirst">الاسم الأول</label><div class="field-wrap"><input type="text" id="regFirst" placeholder="محمد" autocomplete="given-name"></div><div class="err-msg" id="regFirstErr" role="alert">الاسم مطلوب</div></div>
+            <div class="field-auth"><label for="regLast">اسم العائلة</label><div class="field-wrap"><input type="text" id="regLast" placeholder="البراهمي" autocomplete="family-name"></div><div class="err-msg" id="regLastErr" role="alert">اسم العائلة مطلوب</div></div>
+          </div>
+          <div class="field-auth"><label for="regEmail">البريد الإلكتروني</label><div class="field-wrap"><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email"></div><div class="err-msg" id="regEmailErr" role="alert">بريد غير صحيح</div></div>
+          <div class="field-auth"><label for="regPhone">رقم الهاتف</label><div class="phone-wrap"><div class="phone-prefix" aria-label="رمز تونس">🇹🇳 +216</div><div class="field-auth" style="flex:1;margin-bottom:0"><input type="tel" id="regPhone" placeholder="XX XXX XXX" autocomplete="tel"></div></div><div class="err-msg" id="regPhoneErr" role="alert">رقم غير صحيح</div></div>
+          <div class="step-nav"><button class="submit-btn" onclick="goRegStep(2)">التالي ←</button></div>
+        </div>
+        <div class="reg-step" id="regStep2">
+          <div class="field-auth">
+            <label for="regPassword">كلمة المرور</label>
+            <div class="field-wrap"><input type="password" id="regPassword" placeholder="8 أحرف على الأقل" autocomplete="new-password" oninput="checkPwStrength(this.value)"></div>
+            <div class="pw-strength-wrap" role="meter" aria-label="قوة كلمة المرور"><div class="pw-strength-bar" id="pwBar"></div></div>
+            <div class="pw-strength-label" id="pwLabel" aria-live="polite"></div>
+            <div class="err-msg" id="regPasswordErr" role="alert">8 أحرف حد أدنى</div>
+          </div>
+          <div class="field-auth"><label for="regConfirm">تأكيد كلمة المرور</label><div class="field-wrap"><input type="password" id="regConfirm" placeholder="أعد كلمة المرور" autocomplete="new-password"></div><div class="err-msg" id="regConfirmErr" role="alert">كلمتا المرور غير متطابقتين</div></div>
+          <div class="step-nav"><button class="back-btn" onclick="goRegStep(1)">← رجوع</button><button class="submit-btn" onclick="goRegStep(3)">التالي ←</button></div>
+        </div>
+        <div class="reg-step" id="regStep3">
+          <p style="font-size:12.5px;font-weight:800;margin-bottom:10px">اختر تخصصك:</p>
+          <div class="reg-cats" role="radiogroup" aria-label="التخصص">
+            <div class="reg-cat selected" data-cat="تربية الحيوانات" onclick="selectRegCat(this)" role="radio" aria-checked="true" tabindex="0"><div style="font-size:22px" aria-hidden="true">🐑</div><div>تربية الحيوانات</div></div>
+            <div class="reg-cat" data-cat="منتجات فلاحية" onclick="selectRegCat(this)" role="radio" aria-checked="false" tabindex="0"><div style="font-size:22px" aria-hidden="true">🌾</div><div>منتجات فلاحية</div></div>
+            <div class="reg-cat" data-cat="نقل وخدمات" onclick="selectRegCat(this)" role="radio" aria-checked="false" tabindex="0"><div style="font-size:22px" aria-hidden="true">🚚</div><div>نقل وخدمات</div></div>
+          </div>
+          <div class="step-nav"><button class="back-btn" onclick="goRegStep(2)">← رجوع</button><button class="submit-btn" onclick="doRegister()">🎉 إنشاء الحساب</button></div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="tab-panel" id="panelSuccess">
+        <div style="text-align:center;padding:14px">
+          <div style="font-size:50px" aria-hidden="true">✅</div>
+          <h2 id="successTitle" style="margin:11px 0 7px;font-size:19px">مرحباً بك!</h2>
+          <p id="successSub" style="color:var(--muted);font-size:13px">تم تسجيل دخولك بنجاح.</p>
+          <br>
+          <button class="submit-btn" onclick="closeModal('authOverlay')">ابدأ الاستخدام ←</button>
+        </div>
+      </div>
+
+      <!-- FORGOT -->
+      <div class="tab-panel" id="panelForgot">
+        <div style="text-align:center;margin-bottom:16px"><div style="font-size:34px" aria-hidden="true">🔑</div><h3 style="margin-top:7px">استعادة كلمة المرور</h3><p style="font-size:12px;color:var(--muted);margin-top:3px">سنرسل لك رابط الاستعادة</p></div>
+        <div class="field-auth"><label for="forgotInput">البريد الإلكتروني أو الهاتف</label><div class="field-wrap"><span class="field-icon" aria-hidden="true"><i data-lucide="mail" width="15"></i></span><input type="text" id="forgotInput" placeholder="exemple@email.com" autocomplete="email"></div></div>
+        <button class="submit-btn" onclick="doForgot()">📤 إرسال رابط الاستعادة</button>
+        <div style="text-align:center;margin-top:13px"><span class="forgot-link" onclick="switchAuthTab('login')" role="button" tabindex="0">← رجوع للدخول</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ LEGAL MODAL ═══════════ -->
+<div class="legal-modal" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="legal-card">
+    <div class="legal-head">
+      <h2 id="legalTitle">شروط الاستخدام</h2>
+      <button class="close-modal" onclick="closeModal('legalModal')" aria-label="إغلاق">×</button>
+    </div>
+    <div class="legal-body" id="legalBody"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT — VERSION CORRIGÉE
+══════════════════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+
+/* ══════════════════════════════════════════════════
+   FIX #1 — STORAGE SÉCURISÉ
+   - sessionStorage pour session courte
+   - localStorage avec expiry pour "remember me"
+   - Token en mémoire uniquement (jamais persisté)
+══════════════════════════════════════════════════ */
+const LS={
+  get(k,f=null){try{const r=localStorage.getItem(k);if(!r)return f;const p=JSON.parse(r);if(p&&p.__exp&&Date.now()>p.__exp){localStorage.removeItem(k);return f;}return p&&p.__val!==undefined?p.__val:p;}catch{return f;}},
+  set(k,v,ttlMs=null){try{const wrap=ttlMs?{__val:v,__exp:Date.now()+ttlMs}:v;localStorage.setItem(k,JSON.stringify(wrap));}catch{}},
+  del(k){try{localStorage.removeItem(k);}catch{}}
+};
+const SS={
+  get(k,f=null){try{const v=sessionStorage.getItem(k);return v!==null?JSON.parse(v):f;}catch{return f;}},
+  set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));}catch{}},
+  del(k){try{sessionStorage.removeItem(k);}catch{}}
+};
+
+/* ══ TOKEN EN MÉMOIRE SEULEMENT (FIX sécurité) ══ */
+let _token=null;
+const getToken=()=>_token;
+const setToken=t=>{_token=t;};
+
+/* ══ DONNÉES DÉMO ══ */
+const DEFAULT_ANIMALS=[
+  {id:1,name:"خروف بربري ممتاز",category:"أغنام",price:1450,location:"قابس",weight:"55 كغ",gender:"ذكر",age:"2 سنوات",healthStatus:"ممتازة",emoji:"🐑",sellerName:"محمد الشريف",sellerRating:4.9,featured:true,verified:true,phone:"21621000001",description:"خروف بربري أصيل، تربية طبيعية، بدون أمراض. مناسب للعروسة والإقامة. السعر قابل للتفاوض."},
+  {id:2,name:"بقرة حلوب هولشتاين",category:"أبقار",price:6800,location:"بن عروس",weight:"450 كغ",gender:"أنثى",age:"3 سنوات",healthStatus:"ممتازة",emoji:"🐄",sellerName:"فاطمة بن علي",sellerRating:4.7,featured:false,verified:true,phone:"21621000002",description:"بقرة هولشتاين منتجة، حلب يومي 20 لتر، صحة ممتازة، لقاحات محدثة."},
+  {id:3,name:"دجاج بلدي — الدزينة",category:"دواجن",price:150,location:"نابل",weight:"بيولوجي",gender:"12 قطعة",age:"متوفر",emoji:"🐔",sellerName:"علي الحمروني",sellerRating:4.8,featured:false,verified:true,phone:"21621000003",description:"دجاج بلدي تربية طبيعية، غذاء عضوي بدون هرمونات."},
+  {id:4,name:"ماعز أرضي — ذكر",category:"ماعز",price:1250,location:"سيدي بوزيد",weight:"38 كغ",gender:"ذكر",age:"18 شهر",emoji:"🐐",sellerName:"الحاج رضا",sellerRating:5.0,featured:true,verified:true,phone:"21621000004",description:"ماعز أرضي ذكر بصحة ممتازة، تربية في الهواء الطلق، لقاحات محدثة."},
+  {id:5,name:"عجل فريزيان — للبيع",category:"أبقار",price:3200,location:"سوسة",weight:"180 كغ",gender:"ذكر",age:"8 أشهر",emoji:"🐂",sellerName:"بشير المنصوري",sellerRating:4.6,featured:false,verified:false,phone:"21621000005",description:"عجل فريزيان بصحة جيدة، غذاء متوازن."},
+  {id:6,name:"خرفان عيد — مجموعة 5",category:"أغنام",price:5500,location:"تونس",weight:"70-80 كغ",gender:"مجموعة 5",age:"3-4 سنوات",emoji:"🐑",sellerName:"مزرعة البركة",sellerRating:4.9,featured:true,verified:true,phone:"21621000006",description:"مجموعة 5 خرفان جاهزة، وزن ممتاز، بدون مرض، سعر مجموعة."}
+];
+
+const USER_NOTIFS=[
+  {icon:'green',emoji:'🐑',title:'إعلانك تم مشاهدته 47 مرة',sub:'خروف بربري ممتاز — قابس',time:'منذ 10 دقائق',read:false},
+  {icon:'gold',emoji:'⭐',title:'رسالة جديدة من مشتري',sub:'شخص ما أرسل رسالة بخصوص إعلانك',time:'منذ 25 دقيقة',read:false},
+  {icon:'red',emoji:'🔥',title:'إعلانات جديدة قريبة منك',sub:'3 إعلانات جديدة في منطقتك',time:'منذ ساعة',read:false},
+  {icon:'green',emoji:'✅',title:'حساب تم التحقق منه',sub:'حسابك الآن موثق — يمكنك الإعلان بحرية',time:'أمس',read:true}
+];
+
+/* ══ STATE ══ */
+const state={
+  user: null,
+  cart: LS.get('af_cart',[]),
+  favs: LS.get('af_favs',[]),
+  selectedAd: null,
+  addCategory: 'أغنام',
+  regCategory: 'تربية الحيوانات',
+  notifs: [...USER_NOTIFS.map(n=>({...n}))],
+};
+
+/* ══ FIX #2: Restauration session avec remember me ══ */
+(function restoreSession(){
+  const remembered=LS.get('af_user_remember'); // avec TTL 30 jours
+  const sessUser=SS.get('af_user');
+  if(remembered){state.user=remembered;}
+  else if(sessUser){state.user=sessUser;}
+})();
+
+let animalsCache=loadAnimals();
+let currentPanel=null;
+let currentPage=1;
+const PAGE_SIZE=6;
+
+const $=id=>document.getElementById(id);
+const v=id=>($( id)?.value||'').trim();
+const fmt=n=>Number.isFinite(+n)?(+n).toLocaleString('fr-FR'):n;
+/* ══ FIX sécurité XSS: esc robuste ══ */
+const esc=s=>{
+  if(typeof s!=='string')s=String(s||'');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
+};
+
+/* ══ HASH PASSWORD ══ */
+async function hashPassword(pw){
+  const enc=new TextEncoder().encode(pw);
+  const buf=await crypto.subtle.digest('SHA-256',enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ══ RATE LIMIT ══ */
+const loginAttempts={count:0,blockedUntil:0};
+function isRateLimited(){return Date.now()<loginAttempts.blockedUntil;}
+function registerAttempt(){
+  loginAttempts.count++;
+  if(loginAttempts.count>=5){loginAttempts.blockedUntil=Date.now()+60000;loginAttempts.count=0;return true;}
+  return false;
+}
+
+/* ══ ANIMALS PERSISTENCE ══ */
+function loadAnimals(){
+  const saved=LS.get('af_animals',null);
+  if(!saved)return[...DEFAULT_ANIMALS];
+  const savedMap=new Map(saved.map(a=>[a.id,a]));
+  DEFAULT_ANIMALS.forEach(d=>{if(!savedMap.has(d.id))saved.push(d);});
+  return saved.slice(0,200);
+}
+function saveAnimals(list){LS.set('af_animals',list.slice(0,200));}
+
+/* ══════════════════════════════════════════════════
+   FIX #10 — TOAST SYSTEM MULTI-MESSAGES
+══════════════════════════════════════════════════ */
+window.toast=function(msg,type='success'){
+  const wrap=$('toastWrap');
+  const el=document.createElement('div');
+  el.className='toast'+(type==='error'?' error':type==='info'?' info':'');
+  el.setAttribute('role','status');
+  el.textContent=msg;
+  wrap.appendChild(el);
+  setTimeout(()=>{
+    el.classList.add('fadeout');
+    setTimeout(()=>el.remove(),260);
+  },2400);
+};
+
+/* ══ PW STRENGTH ══ */
+window.checkPwStrength=function(pw){
+  const bar=$('pwBar'),lbl=$('pwLabel');if(!bar)return;
+  bar.className='pw-strength-bar';
+  if(!pw.length){bar.style.width='0';if(lbl)lbl.textContent='';return;}
+  let s=0;
+  if(pw.length>=8)s++;
+  if(/[A-Za-z]/.test(pw))s++;
+  if(/[0-9]/.test(pw))s++;
+  if(/[^A-Za-z0-9]/.test(pw))s++;
+  if(s<=1){bar.classList.add('weak');if(lbl){lbl.textContent='ضعيفة';lbl.style.color='#e74c3c';}}
+  else if(s<=2){bar.classList.add('medium');if(lbl){lbl.textContent='متوسطة';lbl.style.color='var(--gold)';}}
+  else{bar.classList.add('strong');if(lbl){lbl.textContent='قوية ✓';lbl.style.color='var(--green)';}}
+};
+
+/* ══════════════════════════════════════════════════
+   FIX #1 — AUTH STATE UI PROPRE (sans style inline)
+══════════════════════════════════════════════════ */
+function applyAuthState(){
+  const loggedIn=!!state.user;
+  document.body.classList.toggle('logged-in',loggedIn);
+  // Les classes CSS .auth-only / .guest-only gèrent le display
+  const ua=$('userAction');
+  if(ua)ua.setAttribute('aria-expanded','false');
+
+  if(loggedIn){
+    const u=state.user;
+    $('userName').textContent=esc(u.fullName||u.email||'مستخدم');
+    $('udAvt').textContent=u.avatar||'🌿';
+    $('udName').textContent=esc(u.fullName||'مستخدم');
+    $('udEmail').textContent=esc(u.email||'');
+    $('userAvatar').innerHTML=`<span style="font-size:17px" aria-hidden="true">${u.avatar||'🌿'}</span>`;
+    renderNotifPanel();
+    renderMessagesPanel();
+    updateCartBadge();
+    updateNotifBadge();
+    updateMsgBadge();
+  } else {
+    $('userName').textContent='—';
+    $('userAvatar').innerHTML='<i data-lucide="user" width="17" stroke="var(--muted)" aria-hidden="true"></i>';
+    lucide.createIcons({nodes:[$('userAvatar')]});
+  }
+}
+
+/* ══ CART ══ */
+function updateCartBadge(){
+  const n=state.cart.length,b=$('cartBadge');
+  if(b){b.textContent=n;b.classList.toggle('hidden',n===0);b.setAttribute('aria-label',`${n} عناصر في السلة`);}
+}
+function saveCart(){LS.set('af_cart',state.cart);updateCartBadge();}
+function addToCart(ad){
+  if(state.cart.find(x=>x.id===ad.id)){toast('هذا الإعلان موجود مسبقاً في السلة','info');return;}
+  state.cart.push(ad);saveCart();toast('تمت إضافة الإعلان للسلة 🛒');
+}
+window.removeFromCart=function(id){state.cart=state.cart.filter(x=>x.id!==id);saveCart();renderCart();};
+
+function renderCart(){
+  const body=$('cartBody'),footer=$('cartFooter');
+  if(!state.cart.length){
+    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon" aria-hidden="true">🛒</div><p>السلة فارغة</p><p class="cart-empty-sub">أضف إعلانات تعجبك من السوق</p></div>';
+    footer.innerHTML='';return;
+  }
+  body.innerHTML=state.cart.map(item=>`
+    <div class="cart-item">
+      <div class="cart-img" aria-hidden="true">${item.emoji||'🐑'}</div>
+      <div class="cart-info">
+        <div class="cart-name">${esc(item.name)}</div>
+        <div class="cart-price">${fmt(item.price)} دت</div>
+        <div class="cart-loc">📍 ${esc(item.location)}</div>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart(${Number(item.id)})" aria-label="حذف ${esc(item.name)} من السلة">×</button>
+    </div>`).join('');
+  const total=state.cart.reduce((s,x)=>s+(+x.price||0),0);
+  footer.innerHTML=`
+    <div class="cart-total-row"><span class="cart-total-label">الإجمالي التقديري</span><span class="cart-total-val">${fmt(total)} دت</span></div>
+    <button class="checkout-btn" onclick="showComingSoon('الدفع الإلكتروني')">متابعة للدفع</button>`;
+}
+
+/* ══ NOTIFS ══ */
+function updateNotifBadge(){
+  const n=state.notifs.filter(x=>!x.read).length,b=$('notifBadge');
+  if(b){b.textContent=n;b.classList.toggle('hidden',n===0);}
+}
+function renderNotifPanel(){
+  const body=$('notifBody');if(!body)return;
+  if(!state.notifs.length){body.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-weight:800">لا توجد إشعارات</div>';return;}
+  body.innerHTML=state.notifs.map((n,i)=>`
+    <div class="notif-item${n.read?'':' unread'}" onclick="markNotifRead(${i})" role="button" tabindex="0" aria-label="${esc(n.title)}${n.read?'':' - غير مقروء'}">
+      <div class="notif-icon ${n.icon}" aria-hidden="true">${n.emoji}</div>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.title)}</div>
+        <div class="notif-sub">${esc(n.sub)}</div>
+        <div class="notif-time">${esc(n.time)}</div>
+      </div>
+    </div>`).join('');
+}
+window.markNotifRead=function(i){if(state.notifs[i])state.notifs[i].read=true;renderNotifPanel();updateNotifBadge();};
+window.markAllRead=function(){state.notifs.forEach(n=>n.read=true);renderNotifPanel();updateNotifBadge();toast('تم تعليم جميع الإشعارات كمقروءة ✓');};
+
+/* ══ MESSAGES ══ */
+function updateMsgBadge(){
+  const b=$('msgBadge');if(b){b.textContent=0;b.classList.add('hidden');}
+}
+function renderMessagesPanel(){
+  const body=$('messagesBody');if(!body)return;
+  body.innerHTML=`
+    <div style="text-align:center;padding:36px 16px;color:var(--muted)">
+      <div style="font-size:44px;margin-bottom:12px" aria-hidden="true">💬</div>
+      <p style="font-size:14px;font-weight:900;color:var(--text-2)">مرحباً، ${esc(state.user?.fullName||'مستخدم')}!</p>
+      <p style="font-size:12.5px;margin-top:6px">ستظهر هنا المحادثات مع البائعين والمشترين.</p>
+      <p style="font-size:11.5px;margin-top:10px;color:var(--green);font-weight:800">ميزة الرسائل الكاملة قيد التطوير</p>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   FIX #11 — PANELS avec focus trap basique
+══════════════════════════════════════════════════ */
+window.openPanel=function(name){
+  if(!state.user){openAuthModal('login');toast('سجّل الدخول أولاً للوصول لهذه الميزة','error');return;}
+  closePanel(false);
+  currentPanel=name;
+  const panelId={cart:'cartPanel',messages:'messagesPanel',notif:'notifPanel',add:'addPanel'}[name];
+  const panel=$(panelId);
+  if(!panel)return;
+  panel.classList.add('open');
+  $('panelOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  const actMap={cart:'cartAction',messages:'messagesAction',notif:'notifAction'};
+  if(actMap[name])$(actMap[name])?.classList.add('active-panel');
+  if(name==='cart')renderCart();
+  if(name==='notif'){renderNotifPanel();updateNotifBadge();}
+  if(name==='messages'){renderMessagesPanel();}
+  // Focus trap: focus le premier bouton du panel
+  setTimeout(()=>{
+    const closeBtn=panel.querySelector('.panel-close');
+    if(closeBtn)closeBtn.focus();
+  },50);
+};
+
+window.closePanel=function(restore=true){
+  document.querySelectorAll('.side-panel').forEach(p=>p.classList.remove('open'));
+  $('panelOverlay').classList.remove('show');
+  document.querySelectorAll('.hact').forEach(b=>b.classList.remove('active-panel'));
+  if(restore)document.body.style.overflow='';
+  currentPanel=null;
+};
+
+/* ══ DROPDOWN ══ */
+let dropOpen=false;
+window.closeDropdown=()=>{
+  const dd=$('userDropdown');
+  dd.classList.remove('show');
+  dropOpen=false;
+  $('userAction')?.setAttribute('aria-expanded','false');
+};
+
+$('userAction').addEventListener('click',e=>{
+  if(!state.user){openAuthModal('login');return;}
+  e.stopPropagation();
+  dropOpen=!dropOpen;
+  $('userDropdown').classList.toggle('show',dropOpen);
+  $('userAction').setAttribute('aria-expanded',String(dropOpen));
+});
+$('userAction').addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();$('userAction').click();}
+  if(e.key==='Escape')closeDropdown();
+});
+// ═══ FIX: fermeture dropdown sur clic document mais pas sur le userAction lui-même ═══
+document.addEventListener('click',e=>{
+  if(!$('userAction').contains(e.target))closeDropdown();
+});
+$('userDropdown').addEventListener('click',e=>e.stopPropagation());
+
+/* ══ AUTH ══ */
+window.openAuthModal=function(tab='login'){
+  $('authOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  switchAuthTab(tab);
+  setTimeout(()=>{
+    const firstInput=$('authOverlay').querySelector('input:not([disabled])');
+    if(firstInput)firstInput.focus();
+  },100);
+};
+window.closeModal=function(id){
+  $(id)?.classList.remove('show');
+  document.body.style.overflow='';
+};
+window.switchAuthTab=function(tab){
+  const panels=['panelLogin','panelRegister','panelSuccess','panelForgot'];
+  panels.forEach(p=>$(p)?.classList.remove('active'));
+  ['tabLogin','tabRegister'].forEach(t=>{
+    const el=$(t);
+    if(el){el.classList.remove('active');el.setAttribute('aria-selected','false');}
+  });
+  const pId='panel'+tab[0].toUpperCase()+tab.slice(1);
+  $(pId)?.classList.add('active');
+  if(tab==='login'){$('tabLogin')?.classList.add('active');$('tabLogin')?.setAttribute('aria-selected','true');}
+  if(tab==='register'){$('tabRegister')?.classList.add('active');$('tabRegister')?.setAttribute('aria-selected','true');}
+};
+
+function clearErrors(){
+  document.querySelectorAll('.input-err').forEach(e=>e.classList.remove('input-err'));
+  document.querySelectorAll('.err-msg.show').forEach(e=>e.classList.remove('show'));
+}
+function showErr(inputId,errId){$(inputId)?.classList.add('input-err');$(errId)?.classList.add('show');}
+
+let currentRegStep=1;
+window.goRegStep=function(n){
+  if(n>currentRegStep&&!validateRegStep(currentRegStep))return;
+  currentRegStep=n;
+  document.querySelectorAll('.reg-step').forEach(s=>s.classList.remove('active'));
+  $('regStep'+n)?.classList.add('active');
+  for(let i=1;i<=3;i++){
+    const si=$('si'+i);if(!si)continue;
+    si.classList.remove('active','done');
+    const dot=si.querySelector('.step-dot');
+    if(i<n){si.classList.add('done');dot?.removeAttribute('aria-current');}
+    if(i===n){si.classList.add('active');dot?.setAttribute('aria-current','step');}
+  }
+};
+
+function validateRegStep(step){
+  clearErrors();let ok=true;
+  if(step===1){
+    if(v('regFirst').length<2){showErr('regFirst','regFirstErr');ok=false;}
+    if(v('regLast').length<2){showErr('regLast','regLastErr');ok=false;}
+    if(!v('regEmail').match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){showErr('regEmail','regEmailErr');ok=false;}
+    if(v('regPhone').replace(/\D/g,'').length<8){showErr('regPhone','regPhoneErr');ok=false;}
+  }
+  if(step===2){
+    if(v('regPassword').length<8){showErr('regPassword','regPasswordErr');ok=false;}
+    if(v('regPassword')!==v('regConfirm')){showErr('regConfirm','regConfirmErr');ok=false;}
+  }
+  return ok;
+}
+
+window.selectRegCat=function(el){
+  document.querySelectorAll('.reg-cat').forEach(c=>{c.classList.remove('selected');c.setAttribute('aria-checked','false');});
+  el.classList.add('selected');el.setAttribute('aria-checked','true');
+  state.regCategory=el.dataset.cat;
+};
+
+/* ══════════════════════════════════════════════════
+   LOGIN — FIX #2: remember me fonctionnel
+══════════════════════════════════════════════════ */
+window.doLogin=async function(){
+  if(isRateLimited()){
+    $('loginRateNotice')?.classList.add('show');
+    const remain=Math.ceil((loginAttempts.blockedUntil-Date.now())/1000);
+    toast(`⏳ انتظر ${remain} ثانية قبل المحاولة مجدداً`,'error');
+    return;
+  }
+  $('loginRateNotice')?.classList.remove('show');
+  clearErrors();
+  let ok=true;
+  const emailVal=v('loginEmail');const pwVal=v('loginPassword');
+  const isEmail=emailVal.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+  const isPhone=emailVal.replace(/\D/g,'').length>=8;
+  if(!isEmail&&!isPhone){showErr('loginEmail','loginEmailErr');ok=false;}
+  if(pwVal.length<3){showErr('loginPassword','loginPasswordErr');ok=false;}
+  if(!ok)return;
+  const btn=$('loginBtn');btn.disabled=true;btn.textContent='...جاري التحقق';
+  const pwHash=await hashPassword(pwVal);
+  const remember=$('rememberMe')?.checked||false;
+
+  try{
+    const ctrl=new AbortController();
+    const tid=setTimeout(()=>ctrl.abort(),5000);
+    const res=await fetch('https://api.amanafarm.tn/api/auth/login',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      credentials:'include',signal:ctrl.signal,
+      body:JSON.stringify({email:emailVal,passwordHash:pwHash})
+    });
+    clearTimeout(tid);
+    if(res.ok){
+      const data=await res.json();
+      if(data.token)setToken(data.token);
+      finalizeLogin({fullName:data.fullName||data.email,email:data.email,avatar:'🌿',role:data.role||'CLIENT'},false,remember);
+      btn.disabled=false;btn.textContent='🔐 تسجيل الدخول';
+      return;
+    }
+    registerAttempt();
+    showErr('loginPassword','loginPasswordErr');
+  }catch(e){
+    // Fallback démo local
+    const users=LS.get('af_registered_users',[]);
+    const found=users.find(u=>u.email===emailVal||u.phone===emailVal.replace(/\s/g,''));
+    if(found&&found.passwordHash===pwHash){
+      finalizeLogin({fullName:found.fullName,email:found.email,avatar:'🌿',role:'CLIENT'},false,remember);
+      btn.disabled=false;btn.textContent='🔐 تسجيل الدخول';
+      return;
+    }
+    if(registerAttempt())$('loginRateNotice')?.classList.add('show');
+    else showErr('loginPassword','loginPasswordErr');
+  }
+  btn.disabled=false;btn.textContent='🔐 تسجيل الدخول';
+};
+
+/* ══ REGISTER ══ */
+window.doRegister=async function(){
+  if(!validateRegStep(1)||!validateRegStep(2))return;
+  const btn=document.querySelector('#regStep3 .submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='...جاري الإنشاء';}
+  const pwHash=await hashPassword(v('regPassword'));
+  const payload={
+    firstName:v('regFirst').substring(0,50),
+    lastName:v('regLast').substring(0,50),
+    email:v('regEmail').substring(0,100),
+    phone:v('regPhone').replace(/\s/g,'').substring(0,15),
+    passwordHash:pwHash,
+    category:state.regCategory,
+    fullName:(v('regFirst')+' '+v('regLast')).trim()
+  };
+  const users=LS.get('af_registered_users',[]);
+  if(users.find(u=>u.email===payload.email)){
+    toast('هذا البريد الإلكتروني مستخدم مسبقاً','error');
+    if(btn){btn.disabled=false;btn.textContent='🎉 إنشاء الحساب';}
+    return;
+  }
+  users.push(payload);LS.set('af_registered_users',users);
+  try{
+    const ctrl=new AbortController();
+    setTimeout(()=>ctrl.abort(),5000);
+    await fetch('https://api.amanafarm.tn/api/auth/register',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      credentials:'include',signal:ctrl.signal,
+      body:JSON.stringify(payload)
+    });
+  }catch(e){}
+  finalizeLogin({fullName:payload.fullName,email:payload.email,avatar:'🌿',role:'CLIENT'},true,false);
+  if(btn){btn.disabled=false;btn.textContent='🎉 إنشاء الحساب';}
+};
+
+/* ══ FIX #2: finalizeLogin avec remember me ══ */
+function finalizeLogin(user,isNew=false,remember=false){
+  state.user=user;
+  state.notifs=[...USER_NOTIFS.map(n=>({...n}))];
+  // Stockage selon "remember me"
+  if(remember){
+    LS.set('af_user_remember',user,30*24*60*60*1000); // 30 jours
+  }else{
+    LS.del('af_user_remember');
+  }
+  SS.set('af_user',user); // toujours en session
+  applyAuthState();
+  $('successTitle').textContent=isNew?`أهلاً وسهلاً، ${esc(user.fullName||user.email)} 🎉`:`مرحباً مجدداً، ${esc(user.fullName||user.email)}!`;
+  $('successSub').textContent=isNew?'تم إنشاء حسابك بنجاح!':'تم تسجيل دخولك بنجاح ✅';
+  switchAuthTab('success');
+  toast(isNew?'تم إنشاء الحساب ✅':'أهلاً بك مجدداً ✅');
+  lucide.createIcons();
+}
+
+window.doLogout=function(){
+  state.user=null;setToken(null);
+  state.cart=[];LS.del('af_cart');
+  LS.del('af_user_remember');
+  SS.del('af_user');
+  applyAuthState();
+  updateCartBadge();
+  closePanel();closeDropdown();
+  toast('تم تسجيل الخروج بنجاح 👋');
+  lucide.createIcons();
+};
+
+window.doForgot=function(){
+  if(!v('forgotInput')){toast('يرجى إدخال البريد أو الهاتف','error');return;}
+  toast('📤 تم إرسال رابط الاستعادة على بريدك');
+  setTimeout(()=>switchAuthTab('login'),2000);
+};
+
+/* ══ ADD ANNONCE ══ */
+window.selectCat=function(el){
+  document.querySelectorAll('#addCatGrid .cat-btn').forEach(c=>{
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked','false');
+  });
+  el.classList.add('selected');
+  el.setAttribute('aria-checked','true');
+  state.addCategory=el.dataset.cat;
+};
+window.previewPhotos=function(input){
+  const wrap=$('photoPreviews');wrap.innerHTML='';
+  [...input.files].slice(0,5).forEach(f=>{
+    if(f.size>2*1024*1024){toast('حجم الصورة يجب أن يكون أقل من 2MB','error');return;}
+    if(!['image/jpeg','image/png','image/webp'].includes(f.type)){toast('نوع الملف غير مدعوم','error');return;}
+    const url=URL.createObjectURL(f);
+    const img=document.createElement('img');
+    img.src=url;img.className='photo-preview';
+    img.alt='معاينة صورة الإعلان';
+    img.onload=()=>URL.revokeObjectURL(url); // libère mémoire
+    wrap.appendChild(img);
+  });
+};
+window.submitAnnonce=function(){
+  if(!state.user){openAuthModal('login');toast('سجّل الدخول أولاً','error');return;}
+  const title=v('addTitle'),price=v('addPrice'),wilaya=v('addWilaya'),phone=v('addPhone');
+  if(!title||title.length<3){$('addTitle').classList.add('err');toast('أضف عنواناً للإعلان (3 أحرف على الأقل)','error');return;}
+  if(!price||+price<=0||+price>999999){$('addPrice').classList.add('err');toast('أضف سعراً صحيحاً (أكبر من صفر)','error');return;}
+  if(!wilaya){$('addWilaya').classList.add('err');toast('اختر الولاية','error');return;}
+  if(!phone||phone.replace(/\D/g,'').length<8){$('addPhone').classList.add('err');toast('أضف رقم هاتف صحيح','error');return;}
+  const btn=$('submitAnnonceBtn');btn.disabled=true;btn.textContent='...جاري النشر';
+  setTimeout(()=>{
+    const newAd={
+      id:Date.now(),
+      name:esc(title.substring(0,100)),
+      category:state.addCategory,
+      price:Math.min(+price,999999),
+      location:wilaya,
+      weight:esc(v('addWeight').substring(0,30)),
+      gender:v('addGender'),
+      age:'جديد',
+      emoji:getCatEmoji(state.addCategory),
+      sellerName:esc(state.user.fullName.substring(0,50)),
+      sellerRating:5.0,
+      featured:false,
+      verified:true,
+      // ═══ FIX sécurité: téléphone pas stocké en clair dans le rendu ═══
+      phone:phone.replace(/\D/g,'').substring(0,15),
+      description:esc(v('addDesc').substring(0,1000))
+    };
+    animalsCache.unshift(newAd);
+    saveAnimals(animalsCache);
+    currentPage=1;
+    applyFilter();
+    $('addForm').style.display='none';
+    $('addSuccess').style.display='block';
+    $('addFooter').style.display='none';
+    btn.disabled=false;btn.textContent='🚀 نشر الإعلان مجاناً';
+    toast('تم نشر إعلانك بنجاح! 🎉');
+  },900);
+};
+window.resetAddForm=function(){
+  $('addForm').style.display='block';$('addSuccess').style.display='none';$('addFooter').style.display='block';
+  ['addTitle','addPrice','addWeight','addDesc','addPhone'].forEach(id=>{if($(id)){$(id).value='';$(id).classList.remove('err');}});
+  $('addWilaya').value='';$('addGender').value='';$('photoPreviews').innerHTML='';
+  document.querySelectorAll('#addCatGrid .cat-btn').forEach(c=>{
+    c.classList.remove('selected');c.setAttribute('aria-checked','false');
+  });
+  const first=document.querySelector('#addCatGrid .cat-btn');
+  if(first){first.classList.add('selected');first.setAttribute('aria-checked','true');}
+  state.addCategory='أغنام';
+};
+function getCatEmoji(cat){return{أغنام:'🐑',أبقار:'🐄',دواجن:'🐔',ماعز:'🐐',منتجات:'🌾',خدمات:'🚚'}[cat]||'🐑';}
+
+/* ══════════════════════════════════════════════════
+   FIX #11 — RENDER ANIMALS (lucide appelé une seule fois)
+══════════════════════════════════════════════════ */
+let lucideInitialized=false;
+function renderAnimals(list){
+  const grid=$('adsGrid');
+  if(!list.length){grid.innerHTML='<div class="empty-box" role="status">🔍 لا توجد إعلانات تطابق البحث</div>';$('pagination').innerHTML='';return;}
+  const totalPages=Math.ceil(list.length/PAGE_SIZE);
+  if(currentPage>totalPages)currentPage=1;
+  const paginated=list.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
+  const favSet=new Set((state.favs||[]).map(String));
+  grid.innerHTML=paginated.map(a=>{
+    const liked=favSet.has(String(a.id))?'liked':'';
+    const chips=[a.weight,a.gender,a.age,a.healthStatus].filter(Boolean).map(x=>`<div class="ad-chip">${esc(x)}</div>`).join('');
+    return `
+    <article class="ad-card" data-id="${Number(a.id)}" tabindex="0" role="article" aria-label="${esc(a.name)} — ${fmt(a.price)} دت">
+      <div class="ad-photo">
+        ${a.imageUrl?`<img src="${esc(a.imageUrl)}" alt="${esc(a.name)}" loading="lazy">`:''}
+        <span class="ad-photo-emoji" aria-hidden="true">${a.emoji||'🐑'}</span>
+        <div class="card-badges" aria-label="شارات الإعلان">
+          ${a.featured?'<span class="card-badge badge-featured" aria-label="إعلان مميز">⭐ مميز</span>':'<span class="card-badge badge-new" aria-label="إعلان جديد">جديد</span>'}
+          ${a.verified?'<span class="card-badge badge-verified" aria-label="بائع موثق">موثق ✓</span>':''}
+        </div>
+        <button class="heart-btn${liked?' liked':''}" data-id="${Number(a.id)}" onclick="toggleFav(event,${Number(a.id)})" aria-label="${liked?'إزالة من المفضلة':'إضافة للمفضلة'}" aria-pressed="${liked?'true':'false'}">
+          <i data-lucide="heart" width="14" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="ad-body">
+        <div class="ad-name">${esc(a.name)}</div>
+        <div class="ad-loc"><i data-lucide="map-pin" width="11" aria-hidden="true"></i> ${esc(a.location)}</div>
+        <div class="ad-meta" aria-label="تفاصيل">${chips}</div>
+        <div class="seller-row">
+          <div class="seller-avt" aria-hidden="true">🌿</div>
+          <div class="seller-name">${esc(a.sellerName||'بائع موثق')}</div>
+          ${a.verified?'<span class="verified-tag" aria-label="بائع موثق">موثق ✓</span>':''}
+          <div class="seller-rating" aria-label="تقييم ${a.sellerRating||4.8}">⭐ ${a.sellerRating||4.8}</div>
+        </div>
+        <div class="ad-bottom">
+          <div class="ad-price">${fmt(a.price)} <span>دت</span></div>
+          <div class="card-actions">
+            <button class="details-btn" onclick="openDetails(${Number(a.id)})" aria-label="تفاصيل ${esc(a.name)}">تفاصيل</button>
+            <button class="whatsapp-btn" onclick="openWa(event,${Number(a.id)})" aria-label="تواصل عبر واتساب">واتساب</button>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+  // ═══ FIX #11: lucide appelé une seule fois sur le grid ═══
+  lucide.createIcons({nodes:[grid]});
+  renderPagination(totalPages,list.length);
+}
+
+function renderPagination(total,totalItems){
+  const pg=$('pagination');if(!pg)return;
+  if(total<=1){pg.innerHTML='';return;}
+  let html=`<span class="page-info">${totalItems} إعلان · صفحة ${currentPage}/${total}</span>`;
+  const maxShow=5;
+  let start=Math.max(1,currentPage-Math.floor(maxShow/2));
+  let end=Math.min(total,start+maxShow-1);
+  if(end-start+1<maxShow)start=Math.max(1,end-maxShow+1);
+  if(start>1)html+=`<button class="page-btn" onclick="gotoPage(1)" aria-label="الصفحة الأولى">1</button>${start>2?'<span aria-hidden="true" style="align-self:center;color:var(--muted)">…</span>':''}`;
+  for(let i=start;i<=end;i++)html+=`<button class="page-btn${i===currentPage?' active':''}" onclick="gotoPage(${i})" aria-label="الصفحة ${i}"${i===currentPage?' aria-current="page"':''}>${i}</button>`;
+  if(end<total)html+=`${end<total-1?'<span aria-hidden="true" style="align-self:center;color:var(--muted)">…</span>':''}<button class="page-btn" onclick="gotoPage(${total})" aria-label="الصفحة الأخيرة">${total}</button>`;
+  pg.innerHTML=html;
+}
+window.gotoPage=function(n){currentPage=n;applyFilter();$('market').scrollIntoView({behavior:'smooth',block:'start'});};
+
+/* ══ FAVS ══ */
+window.toggleFav=function(e,id){
+  e.stopPropagation();
+  if(!state.user){openAuthModal('login');toast('سجّل الدخول لحفظ المفضلة','error');return;}
+  const sid=String(id),btn=e.currentTarget;
+  if((state.favs||[]).includes(sid)){
+    state.favs=state.favs.filter(x=>x!==sid);
+    btn.classList.remove('liked');
+    btn.setAttribute('aria-label','إضافة للمفضلة');
+    btn.setAttribute('aria-pressed','false');
+    toast('تمت الإزالة من المفضلة');
+  }else{
+    if(!state.favs)state.favs=[];
+    state.favs.push(sid);
+    btn.classList.add('liked');
+    btn.setAttribute('aria-label','إزالة من المفضلة');
+    btn.setAttribute('aria-pressed','true');
+    toast('❤️ تمت الإضافة إلى المفضلة');
+  }
+  LS.set('af_favs',state.favs);
+};
+
+/* ══ DETAILS MODAL ══ */
+window.openDetails=function(id){
+  const a=animalsCache.find(x=>x.id===id);if(!a)return;
+  state.selectedAd=a;
+  $('modalTitle').textContent=esc(a.name);
+  $('modalImgWrap').innerHTML=a.imageUrl
+    ?`<img src="${esc(a.imageUrl)}" alt="${esc(a.name)}" style="width:100%;height:100%;object-fit:cover">`
+    :`<span aria-hidden="true" style="font-size:68px">${a.emoji||'🐑'}</span>`;
+  $('modalLocation').innerHTML=`<i data-lucide="map-pin" width="12" aria-hidden="true"></i> ${esc(a.location)}`;
+  $('modalDescription').textContent=a.description||'';
+  $('modalPrice').textContent=fmt(a.price)+' دت';
+  $('modalMeta').innerHTML=[a.weight,a.gender,a.age,a.healthStatus].filter(Boolean).map(x=>`<div class="ad-chip">${esc(x)}</div>`).join('');
+  $('modalWhatsapp').onclick=ev=>{ev.preventDefault();openWaForAd(a);};
+  $('detailsModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  lucide.createIcons({nodes:[$('detailsModal')]});
+  // Focus sur close btn
+  setTimeout(()=>$('detailsModal').querySelector('.close-modal')?.focus(),50);
+};
+
+$('modalCartBtn').addEventListener('click',()=>{
+  if(!state.user){openAuthModal('login');toast('سجّل الدخول لإضافة للسلة','error');return;}
+  if(state.selectedAd)addToCart(state.selectedAd);
+});
+window.openWa=function(e,id){e.stopPropagation();const a=animalsCache.find(x=>x.id===id);if(a)openWaForAd(a);};
+function openWaForAd(a){
+  let phone=String(a.phone||'').replace(/\D/g,'');
+  if(phone.length===8)phone='216'+phone;
+  if(!/^\d{11,12}$/.test(phone)){toast('رقم الهاتف غير صحيح','error');return;}
+  const name=a.name.replace(/[^\u0600-\u06FFa-zA-Z0-9 ]/g,'').substring(0,50);
+  const msg=encodeURIComponent(`مرحبا، نحب نسأل على ${name} بسعر ${fmt(a.price)} دت في ${a.location}`);
+  window.open(`https://wa.me/${phone}?text=${msg}`,'_blank','noopener,noreferrer');
+}
+
+/* ══ FILTER ══ */
+let filterTimer=null;
+function applyFilter(){
+  currentPage=1;
+  const q=v('searchInput').toLowerCase();
+  const filter=document.querySelector('.pill.active')?.dataset.filter||'all';
+  const sort=$('sortSelect')?.value||'newest';
+  let list=[...animalsCache];
+  if(filter!=='all'&&filter!=='featured')list=list.filter(a=>(a.category||'').includes(filter));
+  if(filter==='featured')list=list.filter(a=>a.featured);
+  if(q)list=list.filter(a=>(a.name+' '+a.category+' '+a.location+' '+(a.sellerName||'')).toLowerCase().includes(q));
+  if(sort==='cheap')list.sort((a,b)=>a.price-b.price);
+  if(sort==='expensive')list.sort((a,b)=>b.price-a.price);
+  renderAnimals(list);
+}
+function debouncedFilter(){clearTimeout(filterTimer);filterTimer=setTimeout(applyFilter,300);}
+
+/* ══ FIX #4: filterByCategory pour liens footer ══ */
+window.filterByCategory=function(cat){
+  document.querySelectorAll('.pill').forEach(p=>{
+    p.classList.toggle('active',p.dataset.filter===cat);
+  });
+  applyFilter();
+};
+
+/* ══════════════════════════════════════════════════
+   FIX #3 — SERVICE MODAL (au lieu de toasts)
+══════════════════════════════════════════════════ */
+const SERVICE_INFO={
+  transport:{title:'نقل الحيوانات',icon:'🚛',desc:'خدمة نقل متخصصة لجميع أنواع الحيوانات بشاحنات مجهزة ومعتمدة في كامل تونس.',eta:'متوفر في الربع الثالث من 2026'},
+  vet:{title:'استشارة بيطرية',icon:'🩺',desc:'تواصل مع بيطريين معتمدين من منطقتك لاستشارة فورية أو زيارة ميدانية.',eta:'متوفر في الربع الثاني من 2026'},
+  pharmacy:{title:'الصيدلية البيطرية',icon:'💊',desc:'طلب الأدوية واللقاحات والمكملات الغذائية مع توصيل مباشر.',eta:'متوفر في الربع الثالث من 2026'},
+  products:{title:'المنتجات الفلاحية',icon:'🌾',desc:'أعلاف، بذور، أسمدة ومستلزمات فلاحية من موردين موثوقين.',eta:'متوفر في 2027'}
+};
+window.openServiceModal=function(type){
+  const s=SERVICE_INFO[type];if(!s)return;
+  $('serviceModalTitle').textContent=s.title;
+  $('serviceModalBody').innerHTML=`
+    <div style="text-align:center;padding:16px 8px">
+      <div style="font-size:52px;margin-bottom:14px" aria-hidden="true">${s.icon}</div>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.8;margin-bottom:16px">${esc(s.desc)}</p>
+      <div style="background:var(--gold-light);border:1px solid rgba(200,130,10,.25);border-radius:12px;padding:12px 16px;font-size:13px;font-weight:800;color:var(--gold)">
+        🗓 ${esc(s.eta)}
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:14px">للإعلام عند الإطلاق، اشترك في قائمة الانتظار:</p>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="email" placeholder="بريدك الإلكتروني" style="flex:1;height:40px;border:1.5px solid var(--border);border-radius:99px;padding:0 14px;font-size:13px;font-family:'Cairo',sans-serif" id="waitlistEmail">
+        <button onclick="submitWaitlist()" style="padding:0 18px;background:var(--green);color:#fff;border-radius:99px;font-weight:900;font-size:13px;cursor:pointer;height:40px;min-width:90px;font-family:'Cairo',sans-serif">تسجيل</button>
+      </div>
+    </div>`;
+  $('serviceModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>$('waitlistEmail')?.focus(),100);
+};
+window.submitWaitlist=function(){
+  const email=$('waitlistEmail')?.value?.trim();
+  if(!email||!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){toast('أضف بريدًا صحيحًا','error');return;}
+  closeModal('serviceModal');
+  toast('✅ تم تسجيلك في قائمة الانتظار!');
+};
+
+/* ══ FIX: showComingSoon propre ══ */
+window.showComingSoon=function(name){
+  toast(`${esc(name)} — قيد التطوير وسيكون متاحاً قريباً`,'info');
+};
+
+/* ══ LEGAL ══ */
+const LEGAL={
+  terms:{title:'شروط الاستخدام',body:`<h3>1. قبول الشروط</h3><p>باستخدامك منصة AMANAFARM، فإنك توافق على الالتزام بهذه الشروط.</p><h3>2. طبيعة الخدمة</h3><p>AMANAFARM منصة إعلانات مبوبة تربط البائعين والمشترين في تونس. نحن لسنا طرفاً في أي صفقة.</p><h3>3. التزامات المستخدم</h3><ul><li>تقديم معلومات صحيحة عند التسجيل ونشر الإعلانات</li><li>عدم نشر إعلانات كاذبة أو مضللة</li><li>احترام القوانين التونسية المتعلقة بتجارة الحيوانات</li><li>عدم استخدام المنصة لأغراض غير مشروعة</li></ul><h3>4. إخلاء المسؤولية</h3><p>لا تتحمل AMANAFARM مسؤولية أي نزاعات بين المستخدمين. نوصي بالتحقق من الحيوانات قبل إتمام أي صفقة.</p><h3>5. القانون المطبق</h3><p>تخضع هذه الشروط للقانون التونسي.</p><p style="font-size:11px;color:var(--muted);margin-top:18px">آخر تحديث: يناير 2026</p>`},
+  privacy:{title:'سياسة الخصوصية',body:`<h3>1. البيانات التي نجمعها</h3><ul><li>معلومات التسجيل: الاسم، البريد الإلكتروني، رقم الهاتف</li><li>بيانات الإعلانات والصور والموقع</li><li>بيانات الاستخدام المجهولة</li></ul><h3>2. كيف نستخدم بياناتك</h3><ul><li>تشغيل وتحسين خدمات المنصة</li><li>التواصل معك بشأن حسابك</li><li>منع الاحتيال وضمان الأمان</li></ul><h3>3. حماية البيانات</h3><p>نطبق إجراءات أمنية صارمة تشمل تشفير كلمات المرور وبروتوكول HTTPS.</p><h3>4. حقوقك</h3><ul><li>حق الوصول إلى بياناتك</li><li>حق تصحيح البيانات</li><li>حق حذف حسابك</li></ul><h3>5. التواصل</h3><p>📧 privacy@amanafarm.tn</p><p style="font-size:11px;color:var(--muted);margin-top:18px">آخر تحديث: يناير 2026</p>`},
+  about:{title:'من نحن',body:`<h3>قصتنا</h3><p>AMANAFARM وُلدت من رحم الحاجة الحقيقية للفلاح التونسي. أطلقنا المنصة في 2026 بهدف واحد: بناء سوق رقمي شفاف وآمن لكل من يعمل في قطاع تربية الحيوانات والإنتاج الفلاحي.</p><h3>مهمتنا</h3><p>تمكين الفلاح التونسي من الوصول إلى أوسع سوق ممكن في كامل 24 ولاية.</p><h3>قيمنا</h3><ul><li><strong>الأمانة:</strong> لذلك اخترنا AMANAFARM</li><li><strong>السهولة:</strong> إعلانك الأول في أقل من دقيقتين</li><li><strong>الشفافية:</strong> لا رسوم خفية</li><li><strong>الدعم:</strong> فريق يتكلم لغتك</li></ul><h3>اتصل بنا</h3><p>📧 contact@amanafarm.tn</p>`},
+  contact:{title:'اتصل بنا',body:`<h3>نحن هنا لمساعدتك</h3><p>فريق دعم AMANAFARM متاح طوال الأسبوع.</p><h3>قنوات التواصل</h3><ul><li>📧 support@amanafarm.tn</li><li>💬 واتساب للدعم: أرسل لنا عبر صفحة الشركة</li></ul><h3>للإبلاغ عن إعلان مزيف</h3><p>📧 report@amanafarm.tn — نتخذ الإجراء خلال 24 ساعة.</p><h3>أوقات الدعم</h3><p>الاثنين—الجمعة: 8ص – 8م<br>السبت: 9ص – 5م</p>`}
+};
+window.openLegal=function(page){
+  const c=LEGAL[page];if(!c)return;
+  $('legalTitle').textContent=c.title;
+  $('legalBody').innerHTML=c.body;
+  $('legalModal').classList.add('show');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>$('legalModal').querySelector('.close-modal')?.focus(),50);
+};
+
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+  applyAuthState();
+  updateCartBadge();
+
+  setTimeout(()=>renderAnimals(animalsCache),200);
+
+  // Search
+  $('searchBtn').addEventListener('click',applyFilter);
+  $('searchInput').addEventListener('input',debouncedFilter);
+  $('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')applyFilter();});
+
+  // Pills
+  document.querySelectorAll('.pill').forEach(p=>{
+    p.addEventListener('click',()=>{
+      document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      currentPage=1;
+      applyFilter();
+    });
+  });
+  $('sortSelect').addEventListener('change',applyFilter);
+
+  // Header actions
+  $('cartAction').addEventListener('click',()=>openPanel('cart'));
+  $('messagesAction').addEventListener('click',()=>openPanel('messages'));
+  $('notifAction').addEventListener('click',()=>openPanel('notif'));
+
+  // Boutons guest
+  $('btnLoginHeader').addEventListener('click',()=>openAuthModal('login'));
+  $('btnPostGuest').addEventListener('click',()=>{openAuthModal('login');});
+
+  // Post buttons
+  const goPost=()=>{if(!state.user){openAuthModal('login');toast('سجّل الدخول لإضافة إعلان','error');return;}openPanel('add');};
+  $('addAnnonceBtn').addEventListener('click',goPost);
+  $('trustCtaBtn').addEventListener('click',goPost);
+  $('ctaPost').addEventListener('click',goPost);
+  $('navPostBtn').addEventListener('click',goPost);
+  $('mobAdd').addEventListener('click',e=>{e.preventDefault();goPost();});
+
+  // Browse
+  const goBrowse=()=>$('market').scrollIntoView({behavior:'smooth'});
+  $('browseBtn').addEventListener('click',goBrowse);
+  $('ctaBrowse').addEventListener('click',goBrowse);
+
+  // ═══ FIX #4: Mobile nav — logique corrigée ═══
+  $('mobMessages').addEventListener('click',e=>{
+    e.preventDefault();
+    if(!state.user){openAuthModal('login');return;}
+    openPanel('messages');
+  });
+  $('mobProfile').addEventListener('click',e=>{
+    e.preventDefault();
+    if(!state.user){
+      openAuthModal('login');
+    }else{
+      // Ouvre le dropdown du profil si connecté
+      $('userAction').click();
+    }
+  });
+
+  // Modal close on backdrop
+  $('detailsModal').addEventListener('click',e=>{if(e.target.id==='detailsModal')closeModal('detailsModal');});
+  $('authOverlay').addEventListener('click',e=>{if(e.target.id==='authOverlay')closeModal('authOverlay');});
+  $('legalModal').addEventListener('click',e=>{if(e.target.id==='legalModal')closeModal('legalModal');});
+  $('serviceModal').addEventListener('click',e=>{if(e.target.id==='serviceModal')closeModal('serviceModal');});
+
+  // Escape ferme tout
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      closeModal('detailsModal');
+      closeModal('authOverlay');
+      closeModal('legalModal');
+      closeModal('serviceModal');
+      closePanel();
+      closeDropdown();
+    }
+  });
+
+  // Card keyboard nav
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&e.target.classList.contains('ad-card')){
+      const id=Number(e.target.dataset.id);
+      if(id)openDetails(id);
+    }
+  });
+
+  // Input error clear
+  document.querySelectorAll('.field input,.field select').forEach(el=>{
+    el.addEventListener('input',()=>el.classList.remove('err'));
+    el.addEventListener('change',()=>el.classList.remove('err'));
+  });
+
+  // sr-only style
+  const style=document.createElement('style');
+  style.textContent='.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}';
+  document.head.appendChild(style);
+});
+
+})();
+</script>
+</body>
+</html>
