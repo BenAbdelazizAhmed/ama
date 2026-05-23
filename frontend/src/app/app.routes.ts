@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
   },
   {
     path: "animals/:id",
-    loadComponent: () => import("./components/animal-detail/animal-detail.component").then(m => m.AnimalDetailComponent),
+    loadComponent: () => import("./components/animal-detail").then(m => m.AnimalDetailComponent),
   },
   {
     path: "services",
@@ -20,6 +20,10 @@ export const appRoutes: Routes = [
   {
     path: "wholesale",
     loadComponent: () => import("./components/wholesale/wholesale.component").then(m => m.WholesaleComponent),
+  },
+  {
+    path: "products/:id",
+    loadComponent: () => import("./components/product-detail/product-detail.component").then(m => m.ProductDetailComponent),
   },
   {
     path: "products",

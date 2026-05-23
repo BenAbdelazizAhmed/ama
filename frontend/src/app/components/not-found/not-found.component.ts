@@ -61,9 +61,9 @@ import { RouterLink } from '@angular/router';
     }
     h1 {
       margin: 0;
-      font-family: "Aref Ruqaa Ink", serif;
-      font-size: clamp(42px, 8vw, 92px);
-      line-height: 1.05;
+      font-size: clamp(36px, 7vw, 76px);
+      line-height: 1.12;
+      font-weight: 950;
     }
     p {
       margin: 18px auto 0;

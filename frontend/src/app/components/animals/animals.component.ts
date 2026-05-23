@@ -11,6 +11,8 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { timeout } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
 
@@ -77,7 +79,7 @@ interface ToastMsg {
 export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('marketSection') marketSectionRef!: ElementRef;
 
-  private readonly API = 'http://localhost:8081/api/animals';
+  private readonly API = `${environment.apiBaseUrl}/api/animals`;
 
   animals: AnimalResponse[] = [];
   filteredList: AnimalResponse[] = [];
@@ -87,12 +89,13 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   loadError = '';
 
   currentPage = 1;
-  readonly PAGE_SIZE = 8;
+  readonly PAGE_SIZE = 12;
   totalPages = 1;
 
   activeCategory = 'الكل';
   saleFilter: 'all' | 'single' | 'bulk' = 'all';
   addListingMode: 'single' | 'bulk' = 'single';
+  activeWholesaleSupplier: string | null = null;
   sortValue = 'newest';
   searchQuery = '';
   priceMin: number | null = null;
@@ -101,6 +104,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   favIds = new Set<number>();
   showAddModal = false;
+  publishStep = 1;
 
   addForm = this.freshForm();
   addErrors: Record<string, boolean> = {};
@@ -114,6 +118,63 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly CATEGORIES = [
     'الكل', 'أغنام', 'أبقار', 'ماعز', 'دواجن', 'خيول', 'جمال', 'أرانب',
+  ];
+
+  readonly wholesaleSuppliers = [
+    {
+      id: 'rahbet-warda',
+      name: 'رحبة وردة',
+      category: 'أغنام',
+      wilaya: 'سيدي بوزيد',
+      offer: 'قطعان نعاج وخرفان بالجملة',
+      count: 18,
+      imageUrl: 'assets/prod-sheep.jpg',
+    },
+    {
+      id: 'fermet-elbaraka',
+      name: 'فرمة البركة',
+      category: 'دواجن',
+      wilaya: 'بن عروس',
+      offer: 'كتاكيت ودجاج بلدي بالجملة',
+      count: 120,
+      imageUrl: 'assets/prod-chicken.jpg',
+    },
+    {
+      id: 'fermet-ennour',
+      name: 'فرمة النور',
+      category: 'ماعز',
+      wilaya: 'نابل',
+      offer: 'ماعز حلوبة وجديان للتربية',
+      count: 24,
+      imageUrl: 'assets/prod-goat.jpg',
+    },
+    {
+      id: 'souq-elkef',
+      name: 'سوق الكاف',
+      category: 'أبقار',
+      wilaya: 'الكاف',
+      offer: 'عجول وأبقار للتسمين',
+      count: 14,
+      imageUrl: 'assets/prod-cow.jpg',
+    },
+    {
+      id: 'djej-sfax',
+      name: 'دجاج صفاقس',
+      category: 'دواجن',
+      wilaya: 'صفاقس',
+      offer: 'دجاج وكتاكيت بالكميات',
+      count: 200,
+      imageUrl: 'assets/djj.png',
+    },
+    {
+      id: 'arneb-sahel',
+      name: 'أرانب الساحل',
+      category: 'أرانب',
+      wilaya: 'المنستير',
+      offer: 'أرانب منتجة بالجملة',
+      count: 60,
+      imageUrl: 'assets/arnb.png',
+    },
   ];
 
   readonly CAT_EMOJIS: Record<string, string> = {
@@ -155,27 +216,27 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadAnimals() {
-    this.isLoading = true;
     this.loadError = '';
+    this.animals = this.getMockAnimals();
+    this.isLoading = false;
+    this.applyFilter();
+    setTimeout(() => this.refreshIcons());
 
-    this.http.get<AnimalResponse[]>(this.API).subscribe({
+    this.http.get<AnimalResponse[]>(this.API).pipe(timeout(1200)).subscribe({
       next: (data) => {
         this.zone.run(() => {
           const realAnimals = (data ?? []).map(a => this.normalise(a));
           const mockAnimals = this.getMockAnimals().filter(mock => !realAnimals.some(real => real.id === mock.id));
-          this.animals = [...realAnimals, ...mockAnimals];
+          if (realAnimals.length) this.animals = [...realAnimals, ...mockAnimals];
           this.isLoading = false;
           this.applyFilter();
           setTimeout(() => this.refreshIcons());
         });
       },
-      error: (err) => {
+      error: () => {
         this.zone.run(() => {
-          this.animals = this.getMockAnimals();
           this.isLoading = false;
           this.loadError = '';
-          this.applyFilter();
-          setTimeout(() => this.refreshIcons());
         });
       },
     });
@@ -197,6 +258,13 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   applyFilter() {
     this.currentPage = 1;
     let list = [...this.animals];
+
+    if (this.activeWholesaleSupplier) {
+      const supplier = this.wholesaleSuppliers.find(s => s.id === this.activeWholesaleSupplier);
+      if (supplier) {
+        list = list.filter(a => this.isBulkAd(a) && a.sellerName === supplier.name);
+      }
+    }
 
     if (this.activeCategory !== 'الكل') {
       list = list.filter(a => a.category === this.activeCategory);
@@ -253,12 +321,31 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   filterBySale(type: 'all' | 'single' | 'bulk') {
     this.saleFilter = type;
+    if (type !== 'bulk') this.activeWholesaleSupplier = null;
     this.applyFilter();
   }
 
   filterSaleAll() { this.filterBySale('all'); }
   filterSaleSingle() { this.filterBySale('single'); }
   filterSaleBulk() { this.filterBySale('bulk'); }
+
+  browseWholesaleSupplier(supplier: { id: string; category: string }) {
+    this.activeWholesaleSupplier = supplier.id;
+    this.saleFilter = 'bulk';
+    this.activeCategory = supplier.category;
+    this.searchQuery = '';
+    this.applyFilter();
+    setTimeout(() => this.scrollToMarket(), 40);
+  }
+
+  browseAllWholesale() {
+    this.activeWholesaleSupplier = null;
+    this.saleFilter = 'bulk';
+    this.activeCategory = 'الكل';
+    this.searchQuery = '';
+    this.applyFilter();
+    setTimeout(() => this.scrollToMarket(), 40);
+  }
 
   get saleAllActive(): boolean { return this.saleFilter === 'all'; }
   get saleSingleActive(): boolean { return this.saleFilter === 'single'; }
@@ -281,6 +368,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   resetFilters() {
     this.activeCategory = 'الكل';
     this.saleFilter = 'all';
+    this.activeWholesaleSupplier = null;
     this.searchQuery = '';
     this.priceMin = null;
     this.priceMax = null;
@@ -301,6 +389,18 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get totalAds(): number { return this.animals.length; }
+
+  get totalBulkAds(): number {
+    return this.animals.filter(a => this.isBulkAd(a)).length;
+  }
+
+  get totalSingleAds(): number {
+    return this.animals.filter(a => !this.isBulkAd(a)).length;
+  }
+
+  getWholesaleSupplierCount(supplierName: string): number {
+    return this.animals.filter(a => this.isBulkAd(a) && a.sellerName === supplierName).length;
+  }
 
   get avgPrice(): number {
     if (!this.animals.length) return 0;
@@ -366,8 +466,10 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addErrors = {};
     this.imgPreviews = [];
     this.imgFiles = [];
+    this.publishStep = 1;
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('animal-publish-open');
     setTimeout(() => this.refreshIcons());
   }
 
@@ -396,7 +498,26 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   closeAddModal() {
     this.showAddModal = false;
+    this.publishStep = 1;
     document.body.style.overflow = '';
+    document.body.classList.remove('animal-publish-open');
+  }
+
+  goPublishStep(step: number) {
+    this.publishStep = Math.min(4, Math.max(1, step));
+    setTimeout(() => this.refreshIcons());
+  }
+
+  nextPublishStep() {
+    if (this.publishStep === 2 && !this.validateAnimalStep()) {
+      this.showToast('كمّل عنوان الإعلان والسعر', 'warn');
+      return;
+    }
+    this.goPublishStep(this.publishStep + 1);
+  }
+
+  prevPublishStep() {
+    this.goPublishStep(this.publishStep - 1);
   }
 
   freshForm(): AnimalRequest & { sellerName: string } {
@@ -453,6 +574,13 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.addForm.sellerName.trim()) this.addErrors['sellerName'] = true;
     if (!this.addForm.phone.trim()) this.addErrors['phone'] = true;
     return Object.keys(this.addErrors).length === 0;
+  }
+
+  validateAnimalStep(): boolean {
+    this.addErrors = {};
+    if (!this.addForm.title.trim()) this.addErrors['title'] = true;
+    if (!this.addForm.price || Number(this.addForm.price) <= 0) this.addErrors['price'] = true;
+    return !this.addErrors['title'] && !this.addErrors['price'];
   }
 
   submitAdd() {
@@ -566,6 +694,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       vetCertificate: extra.vetCertificate ?? false,
       featured: extra.featured ?? false,
       trustedSeller: extra.trustedSeller ?? true,
+      sellerName: extra.sellerName || '',
       status: 'ACTIVE',
       userId: 0,
       createdAt: extra.createdAt || now.toISOString(),
@@ -580,7 +709,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
         { featured: true, age: '8 أشهر', description: 'خروف صحة باهية، مناسب للتربية والتسمين.' }),
       item(102, 'قطيع نعاج للبيع بالجملة', 'أغنام', 620, 'سيدي بوزيد', 'المكناسي',
         'https://commons.wikimedia.org/wiki/Special:FilePath/Flock%20of%20sheep.jpg',
-        { priceType: 'PER_HEAD', description: 'بيع بالجملة: قطيع 18 راس نعاج بصحة ممتازة. [bulk]', deliveryAvailable: false }),
+        { priceType: 'PER_HEAD', sellerName: 'رحبة وردة', description: 'بيع بالجملة: قطيع 18 راس نعاج بصحة ممتازة. [bulk]', deliveryAvailable: false }),
       item(103, 'عجلة حلوب صغيرة', 'أبقار', 2850, 'باجة', 'تستور',
         'https://commons.wikimedia.org/wiki/Special:FilePath/Holstein%20cow.jpg',
         { featured: true, vetCertificate: true, age: 'سنة ونصف', gender: 'أنثى', description: 'عجلة حلوب من سلالة منتجة مع متابعة صحية.' }),
@@ -595,7 +724,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
         { age: '4 أشهر', description: 'جدي صغير صحة ممتازة وسلالة محلية مقاومة.' }),
       item(107, 'دجاج بلدي بيّاض', 'دواجن', 18, 'أريانة', 'سكرة',
         'https://commons.wikimedia.org/wiki/Special:FilePath/Free%20range%20chickens.jpg',
-        { priceType: 'PER_HEAD', gender: 'أنثى', description: 'دجاج بلدي بيّاض، متوفر عدد محترم.' }),
+        { priceType: 'PER_HEAD', sellerName: 'فرمة البركة', gender: 'أنثى', description: 'بيع بالجملة: دجاج بلدي بيّاض، متوفر عدد محترم. [bulk]' }),
       item(108, 'كتاكيت عمر أسبوع', 'دواجن', 3, 'بن عروس', 'مرناق',
         'https://commons.wikimedia.org/wiki/Special:FilePath/Chicks.jpg',
         { priceType: 'PER_HEAD', age: 'أسبوع', description: 'كتاكيت نشيطة، تصلح للتربية المنزلية.' }),
@@ -617,6 +746,18 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       item(114, 'صغار أرانب للتربية', 'أرانب', 15, 'سوسة', 'مساكن',
         'https://commons.wikimedia.org/wiki/Special:FilePath/Baby%20rabbits.jpg',
         { priceType: 'PER_HEAD', age: 'شهر', trustedSeller: false, description: 'صغار أرانب بصحة جيدة، مناسبة للمبتدئين.' }),
+      item(115, 'قطيع ماعز حلوبة بالجملة', 'ماعز', 880, 'نابل', 'قرمبالية',
+        'https://commons.wikimedia.org/wiki/Special:FilePath/Damascus%20goat.jpg',
+        { priceType: 'PER_HEAD', sellerName: 'فرمة النور', gender: 'أنثى', description: 'بيع بالجملة: قطيع ماعز حلوبة وجديان للتربية. [bulk]' }),
+      item(116, 'عجول تسمين بالجملة', 'أبقار', 3300, 'الكاف', 'تاجروين',
+        'https://commons.wikimedia.org/wiki/Special:FilePath/Brown%20bull.jpg',
+        { priceType: 'PER_HEAD', sellerName: 'سوق الكاف', age: 'سنة', description: 'بيع بالجملة: عجول تسمين متقاربة في الوزن. [bulk]' }),
+      item(117, 'كتاكيت بالجملة للمربين', 'دواجن', 2, 'صفاقس', 'طينة',
+        'https://commons.wikimedia.org/wiki/Special:FilePath/Chicks.jpg',
+        { priceType: 'PER_HEAD', sellerName: 'دجاج صفاقس', age: 'أسبوع', description: 'بيع بالجملة: كتاكيت نشيطة للمربين. [bulk]' }),
+      item(118, 'أرانب منتجة بالجملة', 'أرانب', 24, 'المنستير', 'جمال',
+        'https://commons.wikimedia.org/wiki/Special:FilePath/Domestic%20rabbit.jpg',
+        { priceType: 'PER_HEAD', sellerName: 'أرانب الساحل', gender: 'أنثى', description: 'بيع بالجملة: أرانب منتجة، ذكور وإناث حسب الطلب. [bulk]' }),
     ];
   }
 }

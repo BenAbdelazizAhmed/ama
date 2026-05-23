@@ -2,22 +2,23 @@
   <div class="wholesale-hero__content">
     <div class="eyebrow">سوق الجملة</div>
     <h1>بيع وشراء بالكميات، بطريقة أوضح وأسرع</h1>
-    <p>قطعان، أعلاف، معدات، وبضائع فلاحية بالجملة. اعرض الكمية، السعر، الولاية، وتواصل مباشرة مع المورد.</p>
+    <p>
+      قطعان، أعلاف، معدات، وبرودويات فلاحية بالجملة. اعرض الكمية، السعر، الولاية،
+      وتواصل مباشرة مع المورد.
+    </p>
     <div class="hero-actions">
       <button type="button" class="btn-primary" (click)="showForm = true">
         <i data-lucide="plus-circle" width="17" height="17"></i>
         أضف عرض جملة
       </button>
-      <a routerLink="/animals" class="btn-secondary">
-        سوق الحيوانات
-      </a>
+      <a routerLink="/animals" class="btn-secondary">سوق الحيوانات</a>
     </div>
   </div>
 
   <div class="wholesale-hero__panel" aria-label="مؤشرات سوق الجملة">
     <div>
       <strong>{{ items.length || 0 }}</strong>
-      <span>عرض ناشط</span>
+      <span>عرض نشط</span>
     </div>
     <div>
       <strong>24</strong>

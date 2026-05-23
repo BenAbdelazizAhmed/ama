@@ -80,6 +80,61 @@
   </div>
 </div>
 
+<section class="wholesale-hub" dir="rtl" aria-label="موردون يبيعون بالجملة">
+  <div class="wholesale-hub__head">
+    <div>
+      <h2>فلتر حسب المورد</h2>
+    </div>
+    <button type="button" class="wholesale-hub__cta" (click)="openAddModal('bulk')">
+      <i data-lucide="warehouse" width="15" height="15"></i>
+      بيع بالجملة
+    </button>
+  </div>
+
+  <div class="wholesale-hub__grid">
+    <button
+      type="button"
+      class="wholesale-card wholesale-card--all"
+      [class.wholesale-card--active]="saleBulkActive && !activeWholesaleSupplier"
+      (click)="browseAllWholesale()"
+    >
+      <span class="wholesale-card__icon">
+        <i data-lucide="store" width="20" height="20"></i>
+      </span>
+      <span class="wholesale-card__body">
+        <strong>كل السوق</strong>
+        <small>{{ totalBulkAds }} عروض بالجملة</small>
+      </span>
+      <span class="wholesale-card__count">
+        <b>{{ totalBulkAds }}</b>
+        <small>عرض</small>
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="wholesale-card"
+      [class.wholesale-card--active]="activeWholesaleSupplier === supplier.id"
+      *ngFor="let supplier of wholesaleSuppliers"
+      (click)="browseWholesaleSupplier(supplier)"
+    >
+      <span class="wholesale-card__icon">
+        <img *ngIf="supplier.imageUrl" [src]="supplier.imageUrl" [alt]="supplier.name" loading="lazy" />
+        <i *ngIf="!supplier.imageUrl" data-lucide="warehouse" width="20" height="20"></i>
+      </span>
+      <span class="wholesale-card__body">
+        <strong>{{ supplier.name }}</strong>
+        <small>{{ getWholesaleSupplierCount(supplier.name) }} عرض بالجملة</small>
+      </span>
+      <span class="wholesale-card__count">
+        <b>{{ getWholesaleSupplierCount(supplier.name) }}</b>
+        <small>عرض</small>
+      </span>
+    </button>
+  </div>
+
+</section>
+
 <section class="market-layout" #marketSection aria-label="سوق الإعلانات" dir="rtl">
   <aside class="sidebar">
     <div class="box">
@@ -120,6 +175,27 @@
       </div>
     </div>
 
+    <div class="box sale-side-box">
+      <div class="box-title">
+        <i data-lucide="shopping-basket" width="15" height="15"></i>
+        نوع البيع
+      </div>
+      <div class="sale-side-list">
+        <button type="button" [class.active]="saleAllActive" (click)="filterSaleAll()">
+          <span>كل السوق</span>
+          <b>{{ totalAds }}</b>
+        </button>
+        <button type="button" [class.active]="saleSingleActive" (click)="filterSaleSingle()">
+          <span>بالكعبة</span>
+          <b>{{ totalSingleAds }}</b>
+        </button>
+        <button type="button" [class.active]="saleBulkActive" (click)="filterSaleBulk()">
+          <span>بالجملة</span>
+          <b>{{ totalBulkAds }}</b>
+        </button>
+      </div>
+    </div>
+
     <div class="box">
       <div class="box-title">
         <i data-lucide="layout-grid" width="15" height="15"></i>
@@ -141,6 +217,7 @@
         </div>
       </div>
     </div>
+
   </aside>
 
   <main>
@@ -150,10 +227,33 @@
     </div>
 
     <ng-container *ngIf="!isLoading">
-      <div class="content-header">
-        <h2>{{ activeCategory === 'الكل' ? 'آخر الإعلانات' : activeCategory }}</h2>
-        <div class="result-info">
-          <strong>{{ filteredList.length }}</strong> إعلان متاح
+      <div class="result-filter-panel">
+        <div class="market-search">
+          <i data-lucide="search" width="15" height="15"></i>
+          <input
+            type="text"
+            placeholder="لوّج: خروف، بقرة، دجاج..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="debouncedFilter()"
+          />
+          <button *ngIf="searchQuery" type="button" (click)="clearSearch()" aria-label="مسح البحث">×</button>
+        </div>
+
+        <div class="sale-tabs" aria-label="نوع البيع">
+          <button type="button" [class.active]="saleAllActive" (click)="filterSaleAll()">الكل</button>
+          <button type="button" [class.active]="saleSingleActive" (click)="filterSaleSingle()">بالكعبة</button>
+          <button type="button" [class.active]="saleBulkActive" (click)="filterSaleBulk()">بالجملة</button>
+        </div>
+
+        <div class="category-rail" aria-label="الفئات">
+          <button
+            *ngFor="let cat of CATEGORIES"
+            class="filter-btn"
+            [class.active]="activeCategory === cat"
+            (click)="filterByCategory(cat)"
+          >
+            {{ cat }}
+          </button>
         </div>
       </div>
 
@@ -251,7 +351,7 @@
   aria-label="إضافة إعلان"
   dir="rtl"
 >
-  <div class="modal-card" (click)="$event.stopPropagation()">
+  <div class="modal-card publish-flow-card" [class.publish-step-two]="publishStep === 2" (click)="$event.stopPropagation()">
     <div class="modal-head">
       <h3>{{ addListingMode === 'bulk' ? 'انشر عرض بيع بالجملة' : 'انشر إعلان بيع بالكعبة' }}</h3>
       <button class="close-modal-btn" (click)="closeAddModal()" aria-label="إغلاق">×</button>
@@ -263,7 +363,7 @@
         <button type="button" [class.active]="addListingMode === 'bulk'" (click)="setBulkListingMode()">بيع بالجملة</button>
       </div>
 
-      <div class="publish-intro publish-intro--animal">
+      <div class="publish-intro publish-intro--animal" *ngIf="publishStep === 1">
         <div>
           <span class="publish-kicker">{{ addListingMode === 'bulk' ? 'بيع بالجملة' : 'بيع بالكعبة' }}</span>
           <h4>{{ addListingMode === 'bulk' ? 'قطيع واضح + عدد رؤوس + سوم للراس' : 'صور واضحة + معلومات صحيحة = شاري أسرع' }}</h4>
@@ -273,14 +373,16 @@
       </div>
 
       <div class="publish-steps">
-        <span class="active">الصور</span>
-        <span>معلومات الحيوان</span>
-        <span>البائع</span>
+        <button type="button" [class.active]="publishStep === 1" (click)="goPublishStep(1)">الصور</button>
+        <button type="button" [class.active]="publishStep === 2" (click)="goPublishStep(2)">الأساسيات</button>
+        <button type="button" [class.active]="publishStep === 3" (click)="goPublishStep(3)">التفاصيل</button>
+        <button type="button" [class.active]="publishStep === 4" (click)="goPublishStep(4)">البائع</button>
       </div>
 
-      <div class="form-section-title">صور الإعلان</div>
+      <div class="form-section-title" *ngIf="publishStep === 1">صور الإعلان</div>
       <div
         class="img-drop-zone"
+        *ngIf="publishStep === 1"
         (click)="fileInput.click()"
         (drop)="onDrop($event)"
         (dragover)="onDragOver($event)"
@@ -309,15 +411,15 @@
         </div>
       </div>
 
-      <div class="form-section-title">معلومات الحيوان</div>
+      <div class="form-section-title" *ngIf="publishStep === 2">الأساسيات</div>
 
-      <div class="field">
+      <div class="field" *ngIf="publishStep === 2">
         <label for="ad-title">عنوان الإعلان *</label>
         <input id="ad-title" [(ngModel)]="addForm.title" [class.err]="addErrors['title']" placeholder="مثال: خروف سليم للبيع" />
         <span class="field-err" *ngIf="addErrors['title']">الخانة هاذي مطلوبة</span>
       </div>
 
-      <div class="fields-row-2">
+      <div class="fields-row-2" *ngIf="publishStep === 2">
         <div class="field">
           <label for="ad-category">الفئة</label>
           <select id="ad-category" [(ngModel)]="addForm.category">
@@ -331,12 +433,14 @@
         </div>
       </div>
 
-      <div class="field bulk-heads-field" *ngIf="addListingMode === 'bulk'">
+      <div class="field bulk-heads-field" *ngIf="publishStep === 2 && addListingMode === 'bulk'">
         <label for="bulk-heads">عدد الرؤوس</label>
         <input id="bulk-heads" type="number" min="2" [(ngModel)]="bulkHeads" placeholder="مثال: 20" />
       </div>
 
-      <div class="fields-row-2">
+      <div class="form-section-title" *ngIf="publishStep === 3">التفاصيل والموقع</div>
+
+      <div class="fields-row-2" *ngIf="publishStep === 3">
         <div class="field">
           <label for="ad-price-type">نوع السعر</label>
           <select id="ad-price-type" [(ngModel)]="addForm.priceType">
@@ -356,7 +460,7 @@
         </div>
       </div>
 
-      <div class="fields-row-3">
+      <div class="fields-row-3" *ngIf="publishStep === 3">
         <div class="field">
           <label for="ad-gender">الجنس</label>
           <select id="ad-gender" [(ngModel)]="addForm.gender">
@@ -379,7 +483,7 @@
         </div>
       </div>
 
-      <div class="fields-row-2">
+      <div class="fields-row-2" *ngIf="publishStep === 3">
         <div class="field">
           <label for="ad-wilaya">الولاية</label>
           <select id="ad-wilaya" [(ngModel)]="addForm.wilaya">
@@ -392,14 +496,14 @@
         </div>
       </div>
 
-      <div class="field">
+      <div class="field" *ngIf="publishStep === 3">
         <label for="ad-desc">وصف الإعلان</label>
         <textarea id="ad-desc" [(ngModel)]="addForm.description" rows="3" placeholder="زيد تفاصيل تساعد الشاري..."></textarea>
       </div>
 
-      <div class="form-section-title">معلومات البائع</div>
+      <div class="form-section-title" *ngIf="publishStep === 4">معلومات البائع</div>
 
-      <div class="fields-row-2">
+      <div class="fields-row-2" *ngIf="publishStep === 4">
         <div class="field">
           <label for="ad-seller">اسم البائع *</label>
           <input id="ad-seller" [(ngModel)]="addForm.sellerName" [class.err]="addErrors['sellerName']" placeholder="اسمك الكامل" />
@@ -412,26 +516,28 @@
         </div>
       </div>
 
-      <div class="check-row">
+      <div class="check-row" *ngIf="publishStep === 4">
         <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.featured" /> إعلان مميز</label>
         <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.trustedSeller" /> بائع موثوق</label>
         <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.deliveryAvailable" /> توصيل متاح</label>
         <label class="check-item"><input type="checkbox" [(ngModel)]="addForm.vetCertificate" /> شهادة بيطرية</label>
       </div>
 
-      <div class="publish-trust-note">
+      <div class="publish-trust-note" *ngIf="publishStep === 4">
         <i data-lucide="shield-check" width="15" height="15"></i>
         <span>AMANAFARM تشجع الصور الحقيقية ومعلومات الصحة الواضحة. الشاري يثق أكثر كي تكون التفاصيل كاملة.</span>
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="submit-btn" (click)="submitAdd()" [disabled]="addSubmitting">
+      <button class="cancel-btn" type="button" *ngIf="publishStep > 1" (click)="prevPublishStep()">رجوع</button>
+      <button class="submit-btn" type="button" *ngIf="publishStep < 4" (click)="nextPublishStep()">التالي</button>
+      <button class="submit-btn" type="button" *ngIf="publishStep === 4" (click)="submitAdd()" [disabled]="addSubmitting">
         <span *ngIf="!addSubmitting">نشر إعلان موثوق</span>
         <span *ngIf="addSubmitting" class="spinner-inline"></span>
         <span *ngIf="addSubmitting">جاري النشر...</span>
       </button>
-      <button class="cancel-btn" (click)="closeAddModal()">إلغاء</button>
+      <button class="cancel-btn" type="button" (click)="closeAddModal()">إلغاء</button>
     </div>
   </div>
 </div>

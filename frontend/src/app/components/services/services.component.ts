@@ -4,7 +4,8 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, timeout } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    INTERFACES
@@ -192,7 +193,7 @@ const MOCK_JOBS: Job[] = [
 export class ServicesComponent implements OnInit, OnDestroy {
   
 
-  private readonly API = 'http://localhost:8081/api';
+  private readonly API = `${environment.apiBaseUrl}/api`;
 
   /* â”€â”€ Mode â”€â”€ */
   currentMode: 'hire' | 'work' = 'hire';
@@ -365,36 +366,42 @@ export class ServicesComponent implements OnInit, OnDestroy {
      DATA LOADING
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   loadAll(): void {
-    this.isLoading = true;
     this.loadError = '';
+    this.workers = this.seedWorkers();
+    this.jobs = this.seedJobs();
+    this.isLoading = false;
+    this.applyFilters();
 
     const workers$ = this.http.get<any[]>(`${this.API}/workers`).pipe(
-      map(list => list.map(w => this.mapWorker(w)))
+      timeout(1200),
+      map(list => list.map(w => this.mapWorker(w))),
+      catchError(() => of([] as Worker[])),
     );
 
     const profiles$ = this.http.get<any[]>(`${this.API}/profiles`).pipe(
-      map(list => list.map(p => this.profileToWorker(p)))
+      timeout(1200),
+      map(list => list.map(p => this.profileToWorker(p))),
+      catchError(() => of([] as Worker[])),
     );
 
     const jobs$ = this.http.get<any[]>(`${this.API}/jobs`).pipe(
-      map(list => list.map(j => this.mapJob(j)))
+      timeout(1200),
+      map(list => list.map(j => this.mapJob(j))),
+      catchError(() => of([] as Job[])),
     );
 
     forkJoin([workers$, profiles$, jobs$]).subscribe({
       next: ([workers, profiles, jobs]) => {
         const cleanWorkers = [...workers, ...profiles].filter(w => this.isCleanWorker(w));
-        this.workers = cleanWorkers.length ? cleanWorkers : this.seedWorkers();
-        this.jobs    = jobs.length ? jobs : this.seedJobs();
+        const cleanJobs = jobs.filter(j => this.isCleanJob(j));
+        if (cleanWorkers.length) this.workers = cleanWorkers;
+        if (cleanJobs.length) this.jobs = cleanJobs;
         this.applyFilters();
         this.isLoading = false;
       },
       error: () => {
-        this.workers = this.seedWorkers();
-        this.jobs = this.seedJobs();
-        this.applyFilters();
         this.isLoading = false;
         this.loadError = '';
-        this.showToast('الخادم غير متصل حالياً، عرضنا لك بيانات نموذجية للتجربة');
       },
     });
   }
@@ -613,6 +620,11 @@ export class ServicesComponent implements OnInit, OnDestroy {
   private isCleanWorker(w: Worker): boolean {
     const text = [w.name, w.title, w.location, w.experience, w.priceUnit, w.skills].join(' ');
     return !!w.name?.trim() && !text.includes('????') && !text.includes('Ø') && !text.includes('Ù');
+  }
+
+  private isCleanJob(j: Job): boolean {
+    const text = [j.title, j.employer, j.location, j.description, j.jobType, j.period].join(' ');
+    return !!j.title?.trim() && !text.includes('????') && !text.includes('Ø') && !text.includes('Ù');
   }
 
   private filterJobs(): void {

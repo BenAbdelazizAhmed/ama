@@ -8,8 +8,10 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { Subject, firstValueFrom, timeout } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
 
@@ -202,7 +204,7 @@ const PAGE_SIZE = 12;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent implements OnInit, OnDestroy {
-  private readonly API_BASE = 'http://localhost:8081/api';
+  private readonly API_BASE = `${environment.apiBaseUrl}/api`;
   readonly PROD_CATEGORIES = PROD_CATEGORIES;
   readonly PROD_CAT_EMOJIS = PROD_CAT_EMOJIS;
   readonly PROD_CAT_ICONS = PROD_CAT_ICONS;
@@ -263,7 +265,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<void>();
   private destroy$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef, private http: HttpClient) {}
+  constructor(private cdr: ChangeDetectorRef, private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(() => this.applyFilter());
@@ -277,21 +279,25 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   async loadProducts(): Promise<void> {
-    this.isLoading = true;
     this.loadError = '';
+    this.products = this.getMockProducts();
+    this.companies = this.buildCompanyList();
+    this.isLoading = false;
+    this.applyFilter();
     this.cdr.markForCheck();
 
     try {
-      const data = await firstValueFrom(this.http.get<BackendProduct[]>(`${this.API_BASE}/products`));
-      this.products = (data || []).map(p => this.mapBackendProduct(p));
-      if (!this.products.length) this.products = this.getMockProducts();
-      this.companies = this.buildCompanyList();
-      this.applyFilter();
+      const data = await firstValueFrom(
+        this.http.get<BackendProduct[]>(`${this.API_BASE}/products`).pipe(timeout(1200)),
+      );
+      const backendProducts = (data || []).map(p => this.mapBackendProduct(p));
+      if (backendProducts.length) {
+        this.products = backendProducts;
+        this.companies = this.buildCompanyList();
+        this.applyFilter();
+      }
     } catch {
-      this.products = this.getMockProducts();
-      this.companies = this.buildCompanyList();
       this.loadError = '';
-      this.applyFilter();
     } finally {
       this.isLoading = false;
       this.cdr.markForCheck();
@@ -439,7 +445,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   getPageTitle(): string {
     if (this.activeCompany) return `برودويات ${this.getCompany(this.activeCompany)?.name ?? ''}`;
     if (this.activeCategory !== 'الكل') return this.activeCategory;
-    return 'آخر البرودويات';
+    return 'كل البرودويات';
   }
 
   trackById(_index: number, item: Product): string { return item.id; }
@@ -454,6 +460,36 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   categoryIcon(category?: string): string {
     return PROD_CAT_ICONS[category || ''] || 'package';
+  }
+
+  sellerName(product: Product): string {
+    return product.sellerType === 'company'
+      ? product.companyName || 'مورد موثوق'
+      : product.sellerName || 'بائع موثوق';
+  }
+
+  sellerSubtitle(product: Product): string {
+    if (product.sellerType === 'company') return product.companyTagline || 'شركة فلاحية على AMANAFARM';
+    return product.wilaya ? `بائع من ${product.wilaya}` : 'بائع مباشر';
+  }
+
+  sellerVerified(product: Product): boolean {
+    return !!(product.companyVerified || product.sellerVerified || product.certified);
+  }
+
+  postedLabel(product: Product): string {
+    if (!product.createdAt) return 'منذ وقت قريب';
+    const diff = Date.now() - new Date(product.createdAt).getTime();
+    const days = Math.max(0, Math.floor(diff / 86400000));
+    if (days <= 0) return 'اليوم';
+    if (days === 1) return 'البارح';
+    return `منذ ${days} أيام`;
+  }
+
+  similarProducts(product: Product): Product[] {
+    return this.products
+      .filter(p => p.id !== product.id && (p.category === product.category || p.sellerType === product.sellerType))
+      .slice(0, 4);
   }
 
   isFav(id: string): boolean { return this.favIds.has(id); }
@@ -471,10 +507,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openDetail(product: Product): void {
-    this.selectedProduct = product;
-    this.showDetail = true;
-    document.body.style.overflow = 'hidden';
-    this.cdr.markForCheck();
+    this.router.navigate(['/products', product.id]);
   }
 
   closeDetail(): void {
@@ -494,7 +527,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   shareProduct(product: Product): void {
-    const url = `${window.location.origin}/products?id=${encodeURIComponent(product.id)}`;
+    const url = `${window.location.origin}/products/${encodeURIComponent(product.id)}`;
     const text = `${product.name} - ${this.fmt(product.price)} دت`;
     if (navigator.share) navigator.share({ title: product.name, text, url }).catch(() => {});
     else navigator.clipboard.writeText(url).then(() => this.showToast('success', 'الرابط تنسخ'));
@@ -695,7 +728,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'كيس 25كغ', quantity: '200 كيس', wilaya: 'صفاقس', origin: 'تونس', inStock: true,
         featured: true, deliveryAvailable: true, certified: true, sellerType: 'company', companyId: 'smsa',
         companyName: 'SMSA صفاقس', companyVerified: true, phone: '55123456', createdAt: new Date('2024-11-01'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Hay%20bales.JPG',
+        imageUrl: 'assets/prod-sheep.jpg',
         description: 'علف متوازن للأغنام فيه فيتامينات ومعادن ضرورية.',
       },
       {
@@ -703,13 +736,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'جرعة', quantity: '500 جرعة', wilaya: 'تونس', origin: 'فرنسا', inStock: true,
         certified: true, sellerType: 'company', companyId: 'vetpharma', companyName: 'VetPharma TN',
         companyVerified: true, phone: '71987654', createdAt: new Date('2024-10-15'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Spikevax%20Bivalent%20Vaccine%20Vial.jpg',
+        imageUrl: 'assets/services/vet-pharmacy.svg',
       },
       {
         id: '3', name: 'ماكينة حلب آلية', category: 'معدات', price: 850, priceType: 'NEGOTIABLE',
         wilaya: 'المنستير', origin: 'إيطاليا', inStock: true, sellerType: 'company', companyId: 'agritech',
         companyName: 'AgriTech Maghreb', companyVerified: false, phone: '52111222', createdAt: new Date('2024-09-20'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Milking%20Machine.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
         description: 'ماكينة حلب أوتوماتيكية مناسبة للمزارع الصغيرة والمتوسطة.',
       },
       {
@@ -717,40 +750,40 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'علبة 50 بذرة', wilaya: 'نابل', origin: 'هولندا', inStock: true, certified: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'محمد العجمي', sellerVerified: true,
         sellerRating: '4.9', phone: '98765432', createdAt: new Date('2024-11-10'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Tomato%20seedlings%20%28464346184%29.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
       },
       {
         id: '5', name: 'سماد عضوي كومبوست', category: 'سماد', price: 25, priceType: 'PER_TON',
         unit: 'كيس 50كغ', wilaya: 'القيروان', origin: 'تونس', inStock: true, sellerType: 'individual',
         sellerName: 'فاطمة بن سالم', sellerVerified: false, sellerRating: '4.6', phone: '97543210', createdAt: new Date('2024-10-05'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Compost%20pile.JPG',
+        imageUrl: 'assets/hero-clean.jpg',
       },
       {
         id: '6', name: 'لوازم تربية الدواجن', category: 'لوازم', price: 130, priceType: 'FIXED',
         wilaya: 'أريانة', inStock: false, sellerType: 'company', companyId: 'agritech',
         companyName: 'AgriTech Maghreb', phone: '52111222', createdAt: new Date('2024-08-30'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Comedero%20met%C3%A1lico%20de%20tolva%20para%20aves.jpg',
+        imageUrl: 'assets/prod-chicken.jpg',
       },
       {
         id: '7', name: 'عسل طبيعي جبلي', category: 'برودويات طبيعية', price: 35, priceType: 'PER_KG',
         wilaya: 'الكاف', origin: 'تونس', inStock: true, certified: true, deliveryAvailable: true,
         sellerType: 'individual', sellerName: 'يوسف الغريبي', sellerVerified: true, sellerRating: '5.0',
         phone: '93123987', createdAt: new Date('2024-11-12'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Jars%20of%20Honey.jpg',
+        imageUrl: 'assets/hero-clean.jpg',
         description: 'عسل جبلي طبيعي 100% من مناطق الكاف.',
       },
       {
         id: '8', name: 'علف إبل مركب', category: 'علف', price: 55, priceType: 'PER_TON',
         unit: 'كيس 50كغ', wilaya: 'توزر', origin: 'تونس', inStock: true, sellerType: 'company',
         companyId: 'smsa', companyName: 'SMSA صفاقس', companyVerified: true, phone: '55123456', createdAt: new Date('2024-10-22'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Hay%20Bales.jpg',
+        imageUrl: 'assets/prod-cow.jpg',
       },
       {
         id: '9', name: 'شعير مجروش للتسمين', category: 'علف', price: 38, priceType: 'FIXED',
         unit: 'كيس 40كغ', quantity: '160 كيس', wilaya: 'سيدي بوزيد', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'علي المكي', sellerVerified: true,
         sellerRating: '4.7', phone: '22444555', createdAt: new Date('2024-11-14'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Barley%20grain.jpg',
+        imageUrl: 'assets/prod-sheep.jpg',
         description: 'شعير نظيف ومغربل مناسب لتسمين الأغنام والأبقار.',
       },
       {
@@ -758,7 +791,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'قنطار', quantity: '40 قنطار', wilaya: 'جندوبة', origin: 'تونس', inStock: true,
         certified: true, sellerType: 'company', companyId: 'green-seeds', companyName: 'Green Seeds TN',
         companyVerified: true, phone: '71222444', createdAt: new Date('2024-11-08'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Seed%20potatoes.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
         description: 'بذور بطاطا منتقاة للموسم الشتوي مع شهادة جودة.',
       },
       {
@@ -766,14 +799,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'ظرف 100 بذرة', wilaya: 'نابل', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'سمير بن عمر', sellerVerified: false,
         sellerRating: '4.4', phone: '55666777', createdAt: new Date('2024-10-28'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Chili%20pepper%20seeds.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
       },
       {
         id: '12', name: 'مضاد طفيليات للأغنام', category: 'دوا بيطري', price: 32, priceType: 'PER_UNIT',
         unit: 'قارورة 100مل', quantity: '90 قارورة', wilaya: 'سوسة', origin: 'إسبانيا', inStock: true,
         certified: true, sellerType: 'company', companyId: 'vetpharma', companyName: 'VetPharma TN',
         companyVerified: true, phone: '71987654', createdAt: new Date('2024-11-05'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Veterinary%20medicine.jpg',
+        imageUrl: 'assets/services/vet-pharmacy.svg',
         description: 'منتج بيطري مراجع للاستعمال تحت إشراف مختص.',
       },
       {
@@ -781,14 +814,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'علبة', wilaya: 'بن عروس', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'نادر الشابي', sellerVerified: true,
         sellerRating: '4.8', phone: '50777888', createdAt: new Date('2024-10-18'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Vitamin%20supplements.jpg',
+        imageUrl: 'assets/services/vet-pharmacy.svg',
       },
       {
         id: '14', name: 'محراث صغير للجرار', category: 'معدات', price: 1250, priceType: 'NEGOTIABLE',
         wilaya: 'باجة', origin: 'تركيا', inStock: true, deliveryAvailable: true,
         sellerType: 'company', companyId: 'agritech', companyName: 'AgriTech Maghreb',
         companyVerified: true, phone: '52111222', createdAt: new Date('2024-11-02'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Plough.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
         description: 'محراث قوي للأراضي المتوسطة، يصلح للجرارات الصغيرة.',
       },
       {
@@ -796,14 +829,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         wilaya: 'قابس', origin: 'إيطاليا', inStock: true, sellerType: 'individual',
         sellerName: 'رياض الدريدي', sellerVerified: true, sellerRating: '4.6',
         phone: '28889900', createdAt: new Date('2024-09-28'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Water%20pump.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
       },
       {
         id: '16', name: 'معالف بلاستيك للأغنام', category: 'لوازم', price: 28, priceType: 'PER_UNIT',
         unit: 'قطعة', quantity: '75 قطعة', wilaya: 'القصرين', origin: 'تونس', inStock: true,
         sellerType: 'company', companyId: 'farm-tools', companyName: 'FarmTools Tunisie',
         companyVerified: true, phone: '73444555', createdAt: new Date('2024-11-11'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Sheep%20feeder.jpg',
+        imageUrl: 'assets/prod-sheep.jpg',
         description: 'معالف خفيفة وسهلة التنظيف للحظائر الصغيرة.',
       },
       {
@@ -811,14 +844,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'لفة 25م', wilaya: 'مدنين', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'خالد التومي',
         sellerVerified: false, sellerRating: '4.3', phone: '29990011', createdAt: new Date('2024-10-02'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Wire%20mesh.jpg',
+        imageUrl: 'assets/services/farm-products.svg',
       },
       {
         id: '18', name: 'سماد NPK متوازن', category: 'سماد', price: 72, priceType: 'FIXED',
         unit: 'كيس 50كغ', quantity: '120 كيس', wilaya: 'صفاقس', origin: 'تونس', inStock: true,
         certified: true, sellerType: 'company', companyId: 'green-seeds', companyName: 'Green Seeds TN',
         companyVerified: true, phone: '71222444', createdAt: new Date('2024-11-09'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Fertilizer.jpg',
+        imageUrl: 'assets/hero-clean.jpg',
         description: 'سماد مناسب للخضر والأشجار المثمرة مع استعمال واضح.',
       },
       {
@@ -826,14 +859,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'طن', wilaya: 'سليانة', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'منصف السليتي', sellerVerified: true,
         sellerRating: '4.9', phone: '93334455', createdAt: new Date('2024-10-24'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Manure.jpg',
+        imageUrl: 'assets/hero-clean.jpg',
       },
       {
         id: '20', name: 'زيت زيتون بكر ممتاز', category: 'برودويات طبيعية', price: 22, priceType: 'PER_KG',
         unit: 'لتر', quantity: '300 لتر', wilaya: 'المهدية', origin: 'تونس', inStock: true,
         certified: true, deliveryAvailable: true, sellerType: 'company', companyId: 'natural-farm',
         companyName: 'Natural Farm', companyVerified: true, phone: '74222111', createdAt: new Date('2024-11-15'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Olive%20oil%20bottle.jpg',
+        imageUrl: 'assets/hero-clean.jpg',
         description: 'زيت زيتون تونسي من العصر الأول، مناسب للبيع بالجملة.',
       },
       {
@@ -841,7 +874,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         unit: 'كغ', wilaya: 'قبلي', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'حياة النفزاوي', sellerVerified: true,
         sellerRating: '4.8', phone: '95556677', createdAt: new Date('2024-11-07'),
-        imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Deglet%20Nour%20dates.jpg',
+        imageUrl: 'assets/hero-clean.jpg',
         description: 'تمر دقلة نور جودة ممتازة، متوفر للتفصيل والجملة.',
       },
     ];

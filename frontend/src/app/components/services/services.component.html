@@ -83,6 +83,11 @@
 
 <div class="services-tabs-bar">
   <div class="services-tabs-bar__inner">
+    <div class="services-mode-tabs" role="group" aria-label="نوع الخدمة">
+      <button type="button" [class.active]="currentMode === 'hire'" (click)="setMode('hire')">نلقى عامل</button>
+      <button type="button" [class.active]="currentMode === 'work'" (click)="setMode('work')">نلقى خدمة</button>
+    </div>
+
     <button type="button" class="filter-pill" [class.active]="currentFilter === 'all'" (click)="applyFilter('all')">الكل</button>
     <button type="button" class="filter-pill" [class.active]="currentFilter === 'available'" *ngIf="currentMode === 'hire'" (click)="applyFilter('available')">متاح الآن</button>
     <button type="button" class="filter-pill" [class.active]="currentFilter === 'top'" *ngIf="currentMode === 'hire'" (click)="applyFilter('top')">الأعلى تقييماً</button>

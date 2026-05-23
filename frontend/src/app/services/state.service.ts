@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export interface AnimalAd {
   id: number;
@@ -178,7 +179,7 @@ export class StateService {
   readonly products = signal<Product[]>([]);
   readonly wholesale = signal<WholesaleItem[]>([]);
 
-  private apiBase = 'http://localhost:8081';
+  private apiBase = environment.apiBaseUrl;
   private _token: string | null = null;
   private static readonly LS_ANIMALS = 'af_animals_cache';
 

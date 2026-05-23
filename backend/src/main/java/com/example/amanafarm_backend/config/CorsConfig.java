@@ -2,6 +2,7 @@ package com.example.amanafarm_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -13,11 +14,15 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    /** Cannot use "*" as allowed origin when allowCredentials is true; use patterns instead. */
-    private static final List<String> ALLOWED_ORIGIN_PATTERNS = Arrays.asList(
-            "http://localhost:*",
-            "http://127.0.0.1:*"
-    );
+    @Value("${app.cors.allowed-origin-patterns:http://localhost:*,http://127.0.0.1:*}")
+    private String allowedOriginPatterns;
+
+    private List<String> allowedOriginPatterns() {
+        return Arrays.stream(allowedOriginPatterns.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toList();
+    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -25,7 +30,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOriginPatterns(ALLOWED_ORIGIN_PATTERNS.toArray(String[]::new))
+                        .allowedOriginPatterns(allowedOriginPatterns().toArray(String[]::new))
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
@@ -36,7 +41,7 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(ALLOWED_ORIGIN_PATTERNS);
+        config.setAllowedOriginPatterns(allowedOriginPatterns());
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

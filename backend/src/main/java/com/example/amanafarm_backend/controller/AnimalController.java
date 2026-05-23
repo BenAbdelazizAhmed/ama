@@ -14,7 +14,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/animals")
 @RequiredArgsConstructor
-@CrossOrigin(originPatterns = {"http://localhost:*", "http://127.0.0.1:*"})
 public class AnimalController {
 
     private final AnimalService animalService;

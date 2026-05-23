@@ -3,6 +3,7 @@ import { NgIf } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { StateService, AnimalAd, UserInfo } from './services/state.service';
+import { environment } from '../environments/environment';
 
 declare const lucide: any;
 @Component({
@@ -53,7 +54,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   uploadedPhotos: File[] = [];
   private routerIconSub?: Subscription;
 
-  private readonly API_BASE = 'http://localhost:8081';
+  private readonly API_BASE = environment.apiBaseUrl;
 
   constructor(public state: StateService, private router: Router, private zone: NgZone) {
     effect(() => {
@@ -422,7 +423,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     if (!body) return;
     if (!this.notifs.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-weight:800">لا توجد إشعارات حالياً</div>'; return; }
     body.innerHTML = this.notifs.map((n: any, i: number) => `
-      <div class="notif-item${n.read ? '' : ' unread'}" onclick="document.querySelector('app-root')?.markNotifRead(${i})" role="button" tabindex="0">
+      <div class="notif-item${n.read ? '' : ' unread'}" data-notif-index="${i}" role="button" tabindex="0">
         <div class="notif-icon ${n.icon}" aria-hidden="true">${n.emoji}</div>
         <div class="notif-body">
           <div class="notif-title">${this.esc(n.title)}</div>
@@ -431,6 +432,16 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         </div>
       </div>
     `).join('');
+    body.querySelectorAll<HTMLElement>('[data-notif-index]').forEach(item => {
+      const mark = () => this.markNotifRead(Number(item.dataset['notifIndex']));
+      item.addEventListener('click', mark);
+      item.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          mark();
+        }
+      });
+    });
   }
 
   markNotifRead(i: number) { this.state.markNotifRead(i); this.renderNotifPanel(); this.updateNotifBadge(); }
@@ -465,7 +476,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     grid.innerHTML = paginated.map((a: any) => {
       const liked = this.state.isFav(a.id) ? ' liked' : '';
       const chips = [a.weight, a.gender, a.age, a.healthStatus].filter(Boolean).map((x: string) => `<div class="ad-chip">${this.esc(x)}</div>`).join('');
-      const imgHtml = a.imageUrl ? `<img src="${this.esc(a.imageUrl)}" alt="${this.esc(a.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">` : '';
+      const imgHtml = a.imageUrl ? `<img data-card-img src="${this.esc(a.imageUrl)}" alt="${this.esc(a.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">` : '';
       return `
         <article class="ad-card" data-id="${Number(a.id)}" tabindex="0" role="article" aria-label="${this.esc(a.name)} - ${this.fmt(a.price)} دت">
           <div class="ad-photo">
@@ -498,6 +509,14 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
           </div>
         </article>`;
     }).join('');
+    (grid as HTMLElement).querySelectorAll('[data-card-img]').forEach((node: Element) => {
+      const img = node as HTMLImageElement;
+      img.addEventListener('error', () => {
+        img.style.display = 'none';
+        const fallback = img.nextElementSibling as HTMLElement | null;
+        if (fallback) fallback.style.display = 'flex';
+      }, { once: true });
+    });
     if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [grid] });
     this.renderPagination(totalPages, list.length);
   }

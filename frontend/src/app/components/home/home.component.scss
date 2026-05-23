@@ -153,10 +153,10 @@
 }
 
 .pricing-card--featured {
-  color: #fff;
+  color: #f8fff9;
   background:
-    linear-gradient(145deg, rgba(10, 74, 42, 0.98), rgba(22, 101, 52, 0.96)),
-    radial-gradient(circle at 20% 20%, rgba(201, 161, 72, 0.28), transparent 28%);
+    radial-gradient(circle at 18% 16%, rgba(241, 199, 91, 0.32), transparent 30%),
+    linear-gradient(145deg, #08351f 0%, #0f5b34 58%, #154426 100%);
   border-color: rgba(201, 161, 72, 0.45);
 }
 
@@ -165,7 +165,7 @@
 .pricing-card--featured .pricing-price span,
 .pricing-card--featured .pricing-features,
 .pricing-card--featured .pricing-top p {
-  color: #fff;
+  color: #f8fff9;
 }
 
 .pricing-badge {
@@ -180,8 +180,9 @@
 }
 
 .pricing-card--featured .pricing-badge {
-  background: #f1c75b;
-  color: #17301f;
+  background: linear-gradient(135deg, #f7d86d, #d99a19);
+  color: #142b1f;
+  box-shadow: 0 10px 24px rgba(241, 199, 91, 0.2);
 }
 
 .pricing-top h3 {
@@ -257,8 +258,8 @@
 }
 
 .pricing-card--featured .pricing-cta {
-  background: #f1c75b;
-  color: #17301f;
+  background: linear-gradient(135deg, #f7d86d, #d99a19);
+  color: #142b1f;
 }
 
 .pricing-cta:hover,
@@ -1438,4 +1439,28 @@
   .hero-proof {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+}
+
+/* Fix featured Boost card contrast: keep it readable even after global overrides */
+.pricing-grid--pro .pricing-card--featured {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(241, 199, 91, 0.34), transparent 30%),
+    linear-gradient(145deg, #08351f 0%, #0f5b34 58%, #154426 100%) !important;
+  color: #f8fff9 !important;
+  border-color: rgba(241, 199, 91, 0.5) !important;
+}
+
+.pricing-grid--pro .pricing-card--featured .pricing-top h3,
+.pricing-grid--pro .pricing-card--featured .pricing-top p,
+.pricing-grid--pro .pricing-card--featured .pricing-price strong,
+.pricing-grid--pro .pricing-card--featured .pricing-price span,
+.pricing-grid--pro .pricing-card--featured .pricing-features,
+.pricing-grid--pro .pricing-card--featured .pricing-features li {
+  color: #f8fff9 !important;
+}
+
+.pricing-grid--pro .pricing-card--featured .pricing-badge,
+.pricing-grid--pro .pricing-card--featured .pricing-cta {
+  background: linear-gradient(135deg, #f7d86d, #d99a19) !important;
+  color: #142b1f !important;
 }
