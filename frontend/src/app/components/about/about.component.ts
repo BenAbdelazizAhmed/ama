@@ -47,6 +47,10 @@ export class AboutComponent implements AfterViewInit {
   get totalListings() { return this.totalAnimals + this.totalProducts + this.totalWholesale; }
 
   openAddPanel() {
+    if (!this.state.user()) {
+      window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
+      return;
+    }
     window.location.href = '/';
   }
 }

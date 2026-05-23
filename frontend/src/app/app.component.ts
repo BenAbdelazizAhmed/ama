@@ -117,6 +117,15 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.lastScrollY = Math.max(0, y);
   }
 
+  @HostListener('window:amanafarm-login-required', ['$event'])
+  onLoginRequired(event?: CustomEvent<{ action?: string }>) {
+    if (this.user) return;
+    const action = event?.detail?.action;
+    if (action) sessionStorage.setItem('amanafarm-pending-action', action);
+    this.openAuthModal('login');
+    this.toast('سجّل الدخول باش تنجم تضيف في AMANAFARM', 'error');
+  }
+
   toggleTheme() {
     this.darkMode = !this.darkMode;
     document.documentElement.classList.toggle('theme-dark', this.darkMode);
@@ -309,6 +318,11 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.setText('successSub', isNew ? 'تم إنشاء حسابك بنجاح.' : 'تم تسجيل دخولك بنجاح.');
     this.switchAuthTab('success');
     this.toast(isNew ? 'تم إنشاء الحساب بنجاح' : 'أهلاً بك من جديد');
+    const pendingAction = sessionStorage.getItem('amanafarm-pending-action') || '';
+    if (pendingAction) this.closeModal('authOverlay');
+    window.dispatchEvent(new CustomEvent('amanafarm-authenticated', {
+      detail: { action: pendingAction },
+    }));
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 

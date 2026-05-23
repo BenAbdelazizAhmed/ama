@@ -72,16 +72,16 @@ export class AnimalDetailComponent implements OnDestroy, AfterViewInit {
   private toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
 
   readonly detailPhotos = [
-    'https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=900&q=85',
-    'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=900&q=85',
-    'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=900&q=85',
-    'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=900&q=85',
-    'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=900&q=85',
+    'assets/prod-sheep.jpg',
+    'assets/hero-sheep.png',
+    'assets/za.png',
+    'assets/ba3.png',
+    'assets/fafa.png',
   ];
 
   readonly similarDetailItems = [
-    { name: 'خروف برقي سليانة',    location: 'سليانة',   price: '1,250', image: 'https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=250&q=70', badge: 'جديد'  },
-    { name: 'خروف سيدي القيروان', location: 'القيروان',  price: '1,380', image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=250&q=70', badge: 'مميز'  },
+    { name: 'خروف برقي سليانة',    location: 'سليانة',   price: '1,250', image: 'assets/prod-sheep.jpg', badge: 'جديد'  },
+    { name: 'خروف سيدي القيروان', location: 'القيروان',  price: '1,380', image: 'assets/hero-sheep.png', badge: 'مميز'  },
     { name: 'خروف محلي القصرين',  location: 'القصرين',  price: '1,100', image: '', badge: 'جديد' },
     { name: 'خروف برقي صفاقس',    location: 'صفاقس',    price: '1,300', image: '', badge: ''     },
     { name: 'خروف سيدي بوزيد',    location: 'سيدي بوزيد', price: '1,600', image: '', badge: ''  },

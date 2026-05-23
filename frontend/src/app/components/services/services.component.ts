@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { StateService } from '../../services/state.service';
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    INTERFACES
@@ -130,7 +131,7 @@ const MOCK_WORKERS: Worker[] = [
     responseTime: 'فوراً', price: 90, priceUnit: 'دت/يوم', available: true,
     skills: 'تربية الدجاج,إنتاج البيض,إدارة مزرعة',
     avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80',
-    coverUrl: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=80',
+    coverUrl: 'assets/prod-chicken.jpg',
     description: 'خبرة في تربية الدواجن وإدارة مزارع البيض.',
     phone: '21644000004'
   },
@@ -350,7 +351,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     { value: 'PRO', icon: '', name: 'محترف', price: '29 دت', feat: '30 يوم + ظهور مميز', best: true },
     { value: 'PREMIUM', icon: '', name: 'متميز', price: '59 دت', feat: '60 يوم أعلى النتائج', best: false },
   ];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public state: StateService) {}
 
   /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      LIFECYCLE
@@ -496,7 +497,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         experience: '6 سنوات', rating: 5, reviewCount: 22, completedJobs: 60,
         responseTime: 'فوراً', price: 90, priceUnit: 'دت/يوم', available: true,
         skills: 'تربية الدجاج,إنتاج البيض,إدارة مزرعة',
-        coverUrl: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1200&q=80',
+        coverUrl: 'assets/prod-chicken.jpg',
         avatarUrl: 'https://ui-avatars.com/api/?name=Fatma&background=0f7a3c&color=fff&size=200',
         description: 'خبرة عملية في تربية الدواجن ومتابعة جودة الإنتاج.',
         phone: '21644000004'
@@ -679,6 +680,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
      PRO MODAL
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   openProModal(mode: 'hire' | 'work'): void {
+    if (!this.requireLogin()) return;
     this.proMode     = mode;
     this.proFormType = mode === 'hire' ? 'request' : 'worker';
     this.proStep     = 1;
@@ -697,6 +699,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
 
   openJobModal(): void {
+    if (!this.requireLogin()) return;
     this.proMode     = 'hire';
     this.proFormType = 'job';
     this.proStep     = 1;
@@ -763,6 +766,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
 
   submitProForm(): void {
+    if (!this.requireLogin()) return;
     this.isSubmittingPro = true;
 
     const f = this.proForm;
@@ -843,6 +847,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
      ADD MODAL (action bar)
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   openAddModal(): void {
+    if (!this.requireLogin()) return;
     this.unifiedForm  = this.blankUnifiedForm();
     this.unifiedForm.formType = this.currentMode === 'hire' ? 'worker' : 'profile';
     this.addModalStep = 1;
@@ -889,6 +894,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
 
   submitAddForm(): void {
+    if (!this.requireLogin()) return;
     if (!this.unifiedForm.fullName || !this.unifiedForm.serviceType || !this.unifiedForm.region || !this.unifiedForm.description) {
       this.showToast('رجاءً عمّر الحقول المطلوبة', 'error'); return;
     }
@@ -987,6 +993,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
 
   requestService(w: Worker): void {
+    if (!this.requireLogin()) return;
     const payload = {
       requestTitle: `طلب خدمة: ${w.title}`,
       region: w.location,
@@ -1024,6 +1031,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
      SAVE / FAVOURITES
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   toggleSave(id: string): void {
+    if (!this.requireLogin()) return;
     if (this.savedIds.has(id)) {
       this.savedIds.delete(id);
       this.showToast('تم حذف البروفايل من المفضلة');
@@ -1063,7 +1071,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
   /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      JOB ACTIONS
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-  applyToJob(id: string): void { this.showToast('تم إرسال طلب التقديم'); }
+  applyToJob(id: string): void {
+    if (!this.requireLogin()) return;
+    this.showToast('تم إرسال طلب التقديم');
+  }
 
   /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      HELPERS
@@ -1110,6 +1121,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
       avatarPreview: '', coverPreview: '', experience: '', skills: '',
       employer: '', jobType: 'دوام كامل', deadline: ''
     };
+  }
+
+  private requireLogin(): boolean {
+    if (this.state.user()) return true;
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
+    return false;
   }
 
   /* â”€â”€ Toast â”€â”€ */

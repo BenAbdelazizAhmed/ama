@@ -7,7 +7,7 @@
       وتواصل مباشرة مع المورد.
     </p>
     <div class="hero-actions">
-      <button type="button" class="btn-primary" (click)="showForm = true">
+      <button type="button" class="btn-primary" (click)="openForm()">
         <i data-lucide="plus-circle" width="17" height="17"></i>
         أضف عرض جملة
       </button>
@@ -37,59 +37,67 @@
       <div class="section-kicker">العروض المتاحة</div>
       <h2>اختار عرض يناسب الكمية والسعر</h2>
     </div>
-    <button type="button" class="btn-compact" (click)="showForm = !showForm">
-      {{ showForm ? 'إغلاق النموذج' : 'نشر عرض جديد' }}
+    <button type="button" class="btn-compact" *ngIf="!showForm" (click)="openForm()">
+      نشر عرض جديد
+    </button>
+    <button type="button" class="btn-compact" *ngIf="showForm" (click)="closeForm()">
+      إغلاق النموذج
     </button>
   </div>
 
-  <section class="form-card" *ngIf="showForm">
-    <div class="form-card__head">
-      <h3>إضافة عرض جملة</h3>
-      <p>املأ المعلومات الأساسية فقط. التفاصيل الواضحة تزيد الثقة وتسرّع البيع.</p>
-    </div>
+  <section class="form-overlay" *ngIf="showForm" (click)="closeForm()" role="dialog" aria-modal="true" aria-label="إضافة عرض جملة">
+    <div class="form-card" id="wholesaleForm" (click)="$event.stopPropagation()">
+      <div class="form-card__head">
+        <div>
+          <h3>إضافة عرض جملة</h3>
+          <p>املأ المعلومات الأساسية فقط. التفاصيل الواضحة تزيد الثقة وتسرّع البيع.</p>
+        </div>
+        <button type="button" class="form-close" (click)="closeForm()" aria-label="إغلاق النموذج">×</button>
+      </div>
 
-    <div class="form-grid">
-      <label class="field wide">
-        <span>عنوان العرض</span>
-        <input [(ngModel)]="form.title" placeholder="مثال: قطيع أغنام للبيع بالجملة" />
-      </label>
-      <label class="field">
-        <span>الفئة</span>
-        <input [(ngModel)]="form.category" placeholder="أغنام، أعلاف، معدات..." />
-      </label>
-      <label class="field">
-        <span>اسم المورد</span>
-        <input [(ngModel)]="form.supplierName" placeholder="اسم الشركة أو البائع" />
-      </label>
-      <label class="field">
-        <span>الولاية</span>
-        <input [(ngModel)]="form.location" placeholder="صفاقس، سوسة، تونس..." />
-      </label>
-      <label class="field">
-        <span>السعر</span>
-        <input [(ngModel)]="form.price" type="number" min="0" placeholder="0" />
-      </label>
-      <label class="field">
-        <span>وحدة السعر</span>
-        <input [(ngModel)]="form.priceUnit" placeholder="للرأس، للطن، للكيس..." />
-      </label>
-      <label class="field">
-        <span>أقل كمية</span>
-        <input [(ngModel)]="form.minQuantity" type="number" min="1" placeholder="10" />
-      </label>
-      <label class="field">
-        <span>رقم الهاتف</span>
-        <input [(ngModel)]="form.contactPhone" placeholder="+216 55 123 456" dir="ltr" />
-      </label>
-      <label class="field wide">
-        <span>وصف مختصر</span>
-        <textarea [(ngModel)]="form.description" placeholder="اذكر الكمية، الحالة، النقل، وطريقة الاتفاق."></textarea>
-      </label>
-    </div>
+      <div class="form-grid">
+        <label class="field wide">
+          <span>عنوان العرض</span>
+          <input [(ngModel)]="form.title" placeholder="مثال: قطيع أغنام للبيع بالجملة" />
+        </label>
+        <label class="field">
+          <span>الفئة</span>
+          <input [(ngModel)]="form.category" placeholder="أغنام، أعلاف، معدات..." />
+        </label>
+        <label class="field">
+          <span>اسم المورد</span>
+          <input [(ngModel)]="form.supplierName" placeholder="اسم الشركة أو البائع" />
+        </label>
+        <label class="field">
+          <span>الولاية</span>
+          <input [(ngModel)]="form.location" placeholder="صفاقس، سوسة، تونس..." />
+        </label>
+        <label class="field">
+          <span>السعر</span>
+          <input [(ngModel)]="form.price" type="number" min="0" placeholder="0" />
+        </label>
+        <label class="field">
+          <span>وحدة السعر</span>
+          <input [(ngModel)]="form.priceUnit" placeholder="للرأس، للطن، للكيس..." />
+        </label>
+        <label class="field">
+          <span>أقل كمية</span>
+          <input [(ngModel)]="form.minQuantity" type="number" min="1" placeholder="10" />
+        </label>
+        <label class="field">
+          <span>رقم الهاتف</span>
+          <input [(ngModel)]="form.contactPhone" placeholder="+216 55 123 456" dir="ltr" />
+        </label>
+        <label class="field wide">
+          <span>وصف مختصر</span>
+          <textarea [(ngModel)]="form.description" placeholder="اذكر الكمية، الحالة، النقل، وطريقة الاتفاق."></textarea>
+        </label>
+      </div>
 
-    <div class="form-actions">
-      <button type="button" class="btn-primary" (click)="addItem()">نشر العرض</button>
-      <button type="button" class="btn-text" (click)="showForm = false">إلغاء</button>
+      <div class="form-actions">
+        <button type="button" class="btn-primary" (click)="addItem()">نشر العرض</button>
+        <button type="button" class="btn-text" (click)="closeForm()">إلغاء</button>
+      </div>
     </div>
   </section>
 
@@ -120,7 +128,7 @@
     <div class="empty-state" *ngIf="items.length === 0">
       <h3>ما فماش عروض جملة حالياً</h3>
       <p>كن أول واحد ينشر عرض واضح للكميات الكبيرة.</p>
-      <button type="button" class="btn-primary" (click)="showForm = true">أضف أول عرض</button>
+      <button type="button" class="btn-primary" (click)="openForm()">أضف أول عرض</button>
     </div>
   </section>
 </main>

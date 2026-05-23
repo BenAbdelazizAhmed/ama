@@ -534,7 +534,7 @@
   background:
     radial-gradient(circle at 14% 20%, rgba(212,154,34,.20), transparent 28%),
     linear-gradient(120deg, rgba(5, 31, 17, .98), rgba(15, 107, 57, .88), rgba(15, 107, 57, .38)),
-    url("https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat;
+    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat;
 }
 
 .page-hero-content {
@@ -2497,7 +2497,7 @@
   }
 }
 
-/* Animal photos: always show the full uploaded image */
+/* Animal photos: use real listing photos as strong card visuals */
 .ad-photo {
   aspect-ratio: 4 / 3 !important;
   height: auto !important;
@@ -2518,9 +2518,9 @@
 .ad-photo-main {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
   object-position: center !important;
-  padding: 10px !important;
+  padding: 0 !important;
   transform: none !important;
 }
 
@@ -3321,7 +3321,7 @@
   padding: 40px 32px 34px !important;
   background:
     linear-gradient(135deg, rgba(15, 61, 42, .94), rgba(31, 138, 85, .86)),
-    url('https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1800&q=80') center/cover !important;
+    url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80') center/cover !important;
   color: #fff;
 }
 
@@ -4825,8 +4825,8 @@
 .ad-photo-main {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
-  padding: 5px !important;
+  object-fit: cover !important;
+  padding: 0 !important;
 }
 
 .card-badges {
@@ -5156,7 +5156,7 @@
   border: 1px solid rgba(255,255,255,.24) !important;
   background:
     linear-gradient(135deg, rgba(15,61,42,.95), rgba(31,138,85,.84)),
-    url("https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat !important;
+    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80") center / cover no-repeat !important;
   box-shadow: 0 22px 58px rgba(19,49,31,.16) !important;
 }
 

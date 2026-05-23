@@ -230,7 +230,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       origin: item?.origin || undefined,
       wilaya: item?.wilaya || item?.location || undefined,
       description: item?.description || undefined,
-      imageUrl: item?.imageUrl || undefined,
+      imageUrl: item?.imageUrl || this.productImageFor(id, item?.title || item?.name, item?.category),
       inStock: item?.inStock ?? true,
       featured: !!item?.featured,
       deliveryAvailable: !!item?.deliveryAvailable,
@@ -261,7 +261,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         wilaya: 'المهدية',
         description:
           'زيت زيتون بكر ممتاز من إنتاج تونسي، معروض بكميات مناسبة للعائلات، المطاعم، والمحلات. الجودة مراجعة والتسليم متاح حسب الولاية والكمية.',
-        imageUrl: 'assets/hero-clean.jpg',
+        imageUrl: this.productImageFor('20'),
         inStock: true,
         featured: true,
         deliveryAvailable: true,
@@ -285,7 +285,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         origin: 'تونس',
         wilaya: 'صفاقس',
         description: 'علف متوازن مناسب للأغنام، متوفر بكميات محترمة ومع إمكانية التوصيل حسب الولاية.',
-        imageUrl: 'assets/prod-sheep.jpg',
+        imageUrl: this.productImageFor('1'),
         inStock: true,
         featured: true,
         deliveryAvailable: true,
@@ -309,7 +309,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         origin: 'هولندا',
         wilaya: 'نابل',
         description: 'بذور طماطم هجينة مناسبة للموسم، إنتاجية جيدة وموجهة للفلاحين الباحثين عن جودة ثابتة.',
-        imageUrl: 'assets/services/farm-products.svg',
+        imageUrl: this.productImageFor('4'),
         inStock: true,
         deliveryAvailable: true,
         certified: true,
@@ -330,7 +330,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         origin: 'تونس',
         wilaya: 'الكاف',
         description: 'عسل جبلي طبيعي من مناطق الكاف، مناسب للاستهلاك العائلي أو البيع بالجملة حسب الكمية.',
-        imageUrl: 'assets/hero-clean.jpg',
+        imageUrl: this.productImageFor('7'),
         inStock: true,
         deliveryAvailable: true,
         certified: true,
@@ -350,5 +350,24 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     } catch {
       // Decorative icons should never block the page.
     }
+  }
+
+  private productImageFor(id?: string, name = '', category = ''): string {
+    const img = (photoId: string) => `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=1000&q=82`;
+    const byId: Record<string, string> = {
+      '1': img('photo-1574323347407-f5e1ad6d020b'),
+      '4': img('photo-1592924357228-91a4daadcfea'),
+      '7': img('photo-1587049352846-4a222e784d38'),
+      '20': img('photo-1474979266404-7eaacbcd87c5'),
+    };
+
+    if (id && byId[id]) return byId[id];
+
+    const text = `${name} ${category}`.toLowerCase();
+    if (text.includes('زيت') || text.includes('olive')) return byId['20'];
+    if (text.includes('عسل')) return byId['7'];
+    if (text.includes('طماطم')) return byId['4'];
+    if (text.includes('علف') || text.includes('شعير')) return byId['1'];
+    return img('photo-1500382017468-9049fed747ef');
   }
 }

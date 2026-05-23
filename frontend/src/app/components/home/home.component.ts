@@ -80,6 +80,10 @@ export class HomeComponent {
   get totalListings() { return this.animals.length + this.products.length + this.wholesale.length; }
 
   goPost() {
+    if (!this.state.user()) {
+      window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
+      return;
+    }
     void this.router.navigate(['/animals']);
   }
 

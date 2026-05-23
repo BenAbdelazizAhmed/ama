@@ -4,6 +4,7 @@
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 import { Subject, firstValueFrom, timeout } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { StateService } from '../../services/state.service';
 
 declare const lucide: any;
 
@@ -256,6 +258,15 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   showAddModal = false;
   addSubmitting = false;
+  addStep = 1;
+  readonly addStepLabels = ['البائع', 'الصورة', 'الأساسيات', 'السعر والكمية', 'التواصل'];
+  readonly addStepHints = [
+    'اختار هل الإعلان باسم شخص أو شركة.',
+    'حط صورة واضحة للبرودوي باش تزيد الثقة.',
+    'اكتب اسم البرودوي، الفئة، الولاية، والمنشأ.',
+    'كمّل السعر، نوع السعر، الوحدة، الكمية، والوصف.',
+    'حط معلومات التواصل وخيارات الإعلان قبل النشر.',
+  ];
   addErrors: Record<string, boolean> = {};
   addForm: AddForm = this.emptyAddForm();
 
@@ -264,8 +275,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private favIds = new Set<string>();
   private searchSubject = new Subject<void>();
   private destroy$ = new Subject<void>();
+  private pendingOpenAdd = false;
 
-  constructor(private cdr: ChangeDetectorRef, private http: HttpClient, private router: Router) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
+    private router: Router,
+    public state: StateService,
+  ) {}
 
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(() => this.applyFilter());
@@ -276,6 +293,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     if (this.toastTimer) clearTimeout(this.toastTimer);
+  }
+
+  @HostListener('window:amanafarm-authenticated', ['$event'])
+  onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
+    const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
+    if (!this.pendingOpenAdd && action !== 'product-add') return;
+    this.pendingOpenAdd = false;
+    sessionStorage.removeItem('amanafarm-pending-action');
+    setTimeout(() => {
+      if (action === 'product-add-company') this.openCompanyAddModal();
+      else this.openAddModal();
+    }, 80);
   }
 
   async loadProducts(): Promise<void> {
@@ -432,11 +461,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   get formProgress(): number {
-    const fields: (keyof AddForm)[] = ['name', 'price', 'phone'];
-    if (this.addForm.sellerType === 'company') fields.push('companyName');
-    else fields.push('sellerName');
-    const filled = fields.filter(f => !!this.addForm[f]).length;
-    return Math.round((filled / fields.length) * 100);
+    return Math.round((this.addStep / this.addStepLabels.length) * 100);
   }
 
   getCategoryCount(cat: string): number { return cat === 'الكل' ? this.products.length : this.products.filter(p => p.category === cat).length; }
@@ -460,6 +485,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   categoryIcon(category?: string): string {
     return PROD_CAT_ICONS[category || ''] || 'package';
+  }
+
+  productImageClass(product: Product): string {
+    return product.imageUrl?.toLowerCase().endsWith('.svg') ? 'pcard__img--vector' : 'pcard__img--photo';
   }
 
   sellerName(product: Product): string {
@@ -496,6 +525,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   toggleFav(event: Event, id: string): void {
     event.stopPropagation();
+    if (!this.requireLogin()) return;
     if (this.favIds.has(id)) {
       this.favIds.delete(id);
       this.showToast('warn', 'تنحّى من المفضلة');
@@ -534,14 +564,17 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openAddModal(): void {
+    if (!this.requireLogin('product-add')) return;
     this.addForm = this.emptyAddForm();
     this.addErrors = {};
+    this.addStep = 1;
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
     this.cdr.markForCheck();
   }
 
   openCompanyAddModal(): void {
+    if (!this.requireLogin('product-add-company')) return;
     this.addForm = { ...this.emptyAddForm(), sellerType: 'company' };
     if (this.activeCompany) {
       const company = this.getCompany(this.activeCompany);
@@ -549,6 +582,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this.addForm.companyTagline = company?.description ?? '';
     }
     this.addErrors = {};
+    this.addStep = 1;
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
     this.cdr.markForCheck();
@@ -580,7 +614,57 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.addForm.imageFile = undefined;
   }
 
+  setAddStep(step: number): void {
+    const next = Math.min(this.addStepLabels.length, Math.max(1, step));
+    if (next > this.addStep && !this.validateCurrentAddStep()) return;
+    this.addStep = next;
+    this.cdr.markForCheck();
+    this.refreshIcons();
+  }
+
+  nextAddStep(): void {
+    this.setAddStep(this.addStep + 1);
+  }
+
+  prevAddStep(): void {
+    this.addErrors = {};
+    this.setAddStep(this.addStep - 1);
+  }
+
+  private validateCurrentAddStep(): boolean {
+    this.addErrors = {};
+    let valid = true;
+
+    if (this.addStep === 1 && this.addForm.sellerType === 'company' && !this.addForm.companyName?.trim()) {
+      this.addErrors['companyName'] = true;
+      valid = false;
+    }
+
+    if (this.addStep === 3) {
+      if (!this.addForm.name?.trim()) { this.addErrors['name'] = true; valid = false; }
+    }
+
+    if (this.addStep === 4) {
+      if (!this.addForm.price || this.addForm.price <= 0) { this.addErrors['price'] = true; valid = false; }
+    }
+
+    if (this.addStep === 5) {
+      if (!this.addForm.phone?.trim()) { this.addErrors['phone'] = true; valid = false; }
+      if (this.addForm.sellerType === 'individual' && !this.addForm.sellerName?.trim()) {
+        this.addErrors['sellerName'] = true;
+        valid = false;
+      }
+    }
+
+    if (!valid) {
+      this.showToast('error', 'كمّل الخانات المطلوبة في الخطوة هذه');
+      this.cdr.markForCheck();
+    }
+    return valid;
+  }
+
   async submitAdd(): Promise<void> {
+    if (!this.requireLogin()) return;
     this.addErrors = {};
     let valid = true;
     if (!this.addForm.name?.trim()) { this.addErrors['name'] = true; valid = false; }
@@ -618,6 +702,20 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   scrollToProducts(): void { document.getElementById('products-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+  private requireLogin(action = ''): boolean {
+    if (this.state.user()) return true;
+    this.pendingOpenAdd = action.startsWith('product-add');
+    if (action) sessionStorage.setItem('amanafarm-pending-action', action);
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
+    const authOverlay = document.getElementById('authOverlay');
+    if (authOverlay) {
+      authOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    this.showToast('warn', 'سجّل الدخول باش تنجم تنشر برودوي');
+    return false;
+  }
 
   private emptyAddForm(): AddForm {
     return {
@@ -667,7 +765,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       origin: p.origin || undefined,
       wilaya,
       description: p.description || undefined,
-      imageUrl: p.imageUrl || undefined,
+      imageUrl: this.normalizeImageUrl(p.imageUrl),
       inStock: p.inStock ?? true,
       featured: p.featured ?? false,
       deliveryAvailable: p.deliveryAvailable ?? false,
@@ -721,8 +819,65 @@ export class ProductsComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  private normalizeImageUrl(url?: string): string | undefined {
+    const raw = String(url || '').trim();
+    if (!raw) return undefined;
+    if (raw.startsWith('data:') || raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    if (raw.startsWith('/uploads/') || raw.startsWith('uploads/')) {
+      const clean = raw.startsWith('/') ? raw : `/${raw}`;
+      return `${environment.apiBaseUrl}${clean}`;
+    }
+    return raw.replace(/^\/assets\//, 'assets/');
+  }
+
+  private realProductImage(product: Product): string {
+    const text = `${product.name} ${product.category}`.toLowerCase();
+    const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=82`;
+    const byId: Record<string, string> = {
+      '1': img('photo-1574323347407-f5e1ad6d020b'),
+      '2': img('photo-1585435557343-3b092031a831'),
+      '3': img('photo-1527847263472-aa5338d178b8'),
+      '4': img('photo-1592924357228-91a4daadcfea'),
+      '5': img('photo-1464226184884-fa280b87c399'),
+      '6': 'assets/prod-chicken.jpg',
+      '7': img('photo-1587049352846-4a222e784d38'),
+      '8': img('photo-1500382017468-9049fed747ef'),
+      '9': img('photo-1605000797499-95a51c5269ae'),
+      '10': img('photo-1518977676601-b53f82aba655'),
+      '11': img('photo-1526346698789-22fd84314424'),
+      '12': img('photo-1587854692152-cbe660dbde88'),
+      '13': 'assets/djj.png',
+      '14': img('photo-1500937386664-56d1dfef3854'),
+      '15': img('photo-1500937386664-56d1dfef3854'),
+      '16': img('photo-1500382017468-9049fed747ef'),
+      '17': img('photo-1495107334309-fcf20504a5ab'),
+      '18': img('photo-1416879595882-3373a0480b5b'),
+      '19': img('photo-1501004318641-b39e6451bec6'),
+      '20': img('photo-1474979266404-7eaacbcd87c5'),
+      '21': img('photo-1601493700631-2b16ec4b4716'),
+    };
+
+    if (byId[product.id]) return byId[product.id];
+
+    if (text.includes('زيت') || text.includes('olive')) return img('photo-1474979266404-7eaacbcd87c5');
+    if (text.includes('عسل')) return img('photo-1587049352846-4a222e784d38');
+    if (text.includes('تمر')) return img('photo-1601493700631-2b16ec4b4716');
+    if (text.includes('طماطم')) return img('photo-1592924357228-91a4daadcfea');
+    if (text.includes('بطاطا')) return img('photo-1518977676601-b53f82aba655');
+    if (text.includes('فلفل')) return img('photo-1526346698789-22fd84314424');
+    if (text.includes('بذور')) return img('photo-1416879595882-3373a0480b5b');
+    if (text.includes('محراث') || text.includes('جرار')) return img('photo-1527847263472-aa5338d178b8');
+    if (text.includes('مضخة') || text.includes('معدات')) return img('photo-1500937386664-56d1dfef3854');
+    if (text.includes('دوا') || text.includes('لقاح') || text.includes('طفيليات') || text.includes('فيتامينات')) return img('photo-1585435557343-3b092031a831');
+    if (text.includes('سماد') || text.includes('كومبوست')) return img('photo-1464226184884-fa280b87c399');
+    if (text.includes('دواجن')) return 'assets/prod-chicken.jpg';
+    if (text.includes('معالف') || text.includes('لوازم') || text.includes('شبك')) return img('photo-1500382017468-9049fed747ef');
+    if (text.includes('علف') || text.includes('شعير')) return img('photo-1574323347407-f5e1ad6d020b');
+    return img('photo-1500382017468-9049fed747ef');
+  }
+
   private getMockProducts(): Product[] {
-    return [
+    const products: Product[] = [
       {
         id: '1', name: 'علف مركب للأغنام 25كغ', category: 'علف', price: 45, priceType: 'FIXED',
         unit: 'كيس 25كغ', quantity: '200 كيس', wilaya: 'صفاقس', origin: 'تونس', inStock: true,
@@ -878,5 +1033,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'تمر دقلة نور جودة ممتازة، متوفر للتفصيل والجملة.',
       },
     ];
+
+    return products.map(product => ({
+      ...product,
+      imageUrl: this.realProductImage(product),
+    }));
   }
 }

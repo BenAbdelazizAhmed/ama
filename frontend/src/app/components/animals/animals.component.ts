@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { StateService } from '../../services/state.service';
 
 declare const lucide: any;
 
@@ -199,6 +200,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private zone: NgZone,
+    public state: StateService,
   ) {}
 
   ngOnInit() {
@@ -431,6 +433,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleFav(event: Event, id: number) {
     event.stopPropagation();
+    if (!this.requireLogin()) return;
     if (this.favIds.has(id)) {
       this.favIds.delete(id);
       this.showToast('تنحّى من المفضلة', 'info');
@@ -455,6 +458,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openAddModal(mode: 'single' | 'bulk' = 'single') {
+    if (!this.requireLogin()) return;
     this.addListingMode = mode;
     this.addForm = this.freshForm();
     if (mode === 'bulk') {
@@ -584,6 +588,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   submitAdd() {
+    if (!this.requireLogin()) return;
     if (!this.validateAdd()) { this.showToast('عبّي الخانات المطلوبة', 'warn'); return; }
     this.addSubmitting = true;
 
@@ -665,6 +670,40 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
+  private requireLogin(): boolean {
+    if (this.state.user()) return true;
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
+    return false;
+  }
+
+  private realAnimalImage(category: string, title = '', id = 0): string {
+    const text = `${category} ${title}`.toLowerCase();
+    const pick = (images: string[]) => images[Math.abs(id) % images.length];
+
+    if (text.includes('دواجن') || text.includes('دجاج') || text.includes('كتاكيت')) {
+      return pick(['assets/prod-chicken.jpg', 'assets/djj.png', 'assets/coq.png', 'assets/cok.png']);
+    }
+    if (text.includes('أبقار') || text.includes('عجلة') || text.includes('ثور') || text.includes('عجول')) {
+      return pick(['assets/prod-cow.jpg', 'assets/bagra.png', 'assets/bagraa.jpg']);
+    }
+    if (text.includes('ماعز') || text.includes('جدي')) {
+      return pick(['assets/prod-goat.jpg', 'assets/aza.png', 'assets/ba3.png']);
+    }
+    if (text.includes('خيول') || text.includes('فرس') || text.includes('مهر')) {
+      return pick(['assets/fafa.png', 'assets/fa.png', 'assets/f1.png']);
+    }
+    if (text.includes('جمال') || text.includes('ناقة') || text.includes('جمل')) {
+      return pick(['assets/ds.png', 'assets/frm.png', 'assets/ft.png']);
+    }
+    if (text.includes('أرانب')) {
+      return pick(['assets/arnb.png', 'assets/woa.png', 'assets/waas.png']);
+    }
+    if (text.includes('أغنام') || text.includes('خروف') || text.includes('نعاج')) {
+      return pick(['assets/prod-sheep.jpg', 'assets/hero-sheep.png', 'assets/za.png', 'assets/ba3.png']);
+    }
+    return pick(['assets/prod-sheep.jpg', 'assets/prod-cow.jpg', 'assets/prod-goat.jpg']);
+  }
+
   private getMockAnimals(): AnimalResponse[] {
     const now = new Date();
     const item = (
@@ -674,89 +713,73 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       price: number,
       wilaya: string,
       zone: string,
-      image: string,
       extra: Partial<AnimalResponse> = {},
-    ): AnimalResponse => ({
-      id,
-      title,
-      description: extra.description || 'إعلان واضح بمعلومات أساسية وصور حقيقية للتواصل المباشر.',
-      category,
-      price,
-      priceType: extra.priceType || 'NEGOTIABLE',
-      wilaya,
-      zone,
-      age: extra.age || 'صغير',
-      gender: extra.gender || 'ذكر',
-      healthStatus: extra.healthStatus || 'ممتازة',
-      phone: extra.phone || '55123456',
-      contactMethod: 'WHATSAPP',
-      deliveryAvailable: extra.deliveryAvailable ?? true,
-      vetCertificate: extra.vetCertificate ?? false,
-      featured: extra.featured ?? false,
-      trustedSeller: extra.trustedSeller ?? true,
-      sellerName: extra.sellerName || '',
-      status: 'ACTIVE',
-      userId: 0,
-      createdAt: extra.createdAt || now.toISOString(),
-      images: [image],
-      imageUrls: [image],
-      mainImageUrl: image,
-    });
+    ): AnimalResponse => {
+      const realImage = this.realAnimalImage(category, title, id);
+      return {
+        id,
+        title,
+        description: extra.description || 'إعلان واضح بمعلومات أساسية وصور حقيقية للتواصل المباشر.',
+        category,
+        price,
+        priceType: extra.priceType || 'NEGOTIABLE',
+        wilaya,
+        zone,
+        age: extra.age || 'صغير',
+        gender: extra.gender || 'ذكر',
+        healthStatus: extra.healthStatus || 'ممتازة',
+        phone: extra.phone || '55123456',
+        contactMethod: 'WHATSAPP',
+        deliveryAvailable: extra.deliveryAvailable ?? true,
+        vetCertificate: extra.vetCertificate ?? false,
+        featured: extra.featured ?? false,
+        trustedSeller: extra.trustedSeller ?? true,
+        sellerName: extra.sellerName || '',
+        status: 'ACTIVE',
+        userId: 0,
+        createdAt: extra.createdAt || now.toISOString(),
+        images: [realImage],
+        imageUrls: [realImage],
+        mainImageUrl: realImage,
+      };
+    };
 
     return [
       item(101, 'خروف عربي للتربية', 'أغنام', 780, 'صفاقس', 'عقارب',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Awassi%20sheep.jpg',
         { featured: true, age: '8 أشهر', description: 'خروف صحة باهية، مناسب للتربية والتسمين.' }),
       item(102, 'قطيع نعاج للبيع بالجملة', 'أغنام', 620, 'سيدي بوزيد', 'المكناسي',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Flock%20of%20sheep.jpg',
         { priceType: 'PER_HEAD', sellerName: 'رحبة وردة', description: 'بيع بالجملة: قطيع 18 راس نعاج بصحة ممتازة. [bulk]', deliveryAvailable: false }),
       item(103, 'عجلة حلوب صغيرة', 'أبقار', 2850, 'باجة', 'تستور',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Holstein%20cow.jpg',
         { featured: true, vetCertificate: true, age: 'سنة ونصف', gender: 'أنثى', description: 'عجلة حلوب من سلالة منتجة مع متابعة صحية.' }),
       item(104, 'ثور تسمين قوي', 'أبقار', 4200, 'جندوبة', 'طبرقة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Brown%20bull.jpg',
         { age: 'سنتين', description: 'ثور للتسمين، وزن باهي وقابل للمعاينة.' }),
       item(105, 'ماعز شامية حلوبة', 'ماعز', 950, 'نابل', 'قرمبالية',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Damascus%20goat.jpg',
         { gender: 'أنثى', vetCertificate: true, description: 'ماعز حلوبة، هادئة ومناسبة لمزرعة صغيرة.' }),
       item(106, 'جدي صغير للتربية', 'ماعز', 360, 'القيروان', 'حفوز',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Goat%20kid.jpg',
         { age: '4 أشهر', description: 'جدي صغير صحة ممتازة وسلالة محلية مقاومة.' }),
       item(107, 'دجاج بلدي بيّاض', 'دواجن', 18, 'أريانة', 'سكرة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Free%20range%20chickens.jpg',
         { priceType: 'PER_HEAD', sellerName: 'فرمة البركة', gender: 'أنثى', description: 'بيع بالجملة: دجاج بلدي بيّاض، متوفر عدد محترم. [bulk]' }),
       item(108, 'كتاكيت عمر أسبوع', 'دواجن', 3, 'بن عروس', 'مرناق',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Chicks.jpg',
         { priceType: 'PER_HEAD', age: 'أسبوع', description: 'كتاكيت نشيطة، تصلح للتربية المنزلية.' }),
       item(109, 'فرس عربية للتدريب', 'خيول', 6800, 'القصرين', 'سبيطلة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Arabian%20horse.jpg',
         { featured: true, gender: 'أنثى', age: '4 سنوات', vetCertificate: true, description: 'فرس عربية هادئة ومروّضة، مناسبة للهواية والتدريب.' }),
       item(110, 'مهر صغير بصحة ممتازة', 'خيول', 2400, 'منوبة', 'طبربة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Foal.jpg',
         { age: '10 أشهر', description: 'مهر صغير من أم عربية، قابل للمعاينة.' }),
       item(111, 'ناقة حلوب', 'جمال', 5200, 'تطاوين', 'رمادة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Dromedary%20camel.jpg',
         { gender: 'أنثى', age: '5 سنوات', featured: true, description: 'ناقة حلوب متعودة على الرعي، صحة ممتازة.' }),
       item(112, 'جمل صغير للتربية', 'جمال', 3100, 'مدنين', 'بن قردان',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Young%20camel.jpg',
         { age: 'سنة', description: 'جمل صغير قوي ومناسب للتربية.' }),
       item(113, 'أرانب بلدية منتجة', 'أرانب', 28, 'المنستير', 'جمال',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Domestic%20rabbit.jpg',
         { priceType: 'PER_HEAD', gender: 'أنثى', description: 'أرانب منتجة، متوفر ذكور وإناث حسب الطلب.' }),
       item(114, 'صغار أرانب للتربية', 'أرانب', 15, 'سوسة', 'مساكن',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Baby%20rabbits.jpg',
         { priceType: 'PER_HEAD', age: 'شهر', trustedSeller: false, description: 'صغار أرانب بصحة جيدة، مناسبة للمبتدئين.' }),
       item(115, 'قطيع ماعز حلوبة بالجملة', 'ماعز', 880, 'نابل', 'قرمبالية',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Damascus%20goat.jpg',
         { priceType: 'PER_HEAD', sellerName: 'فرمة النور', gender: 'أنثى', description: 'بيع بالجملة: قطيع ماعز حلوبة وجديان للتربية. [bulk]' }),
       item(116, 'عجول تسمين بالجملة', 'أبقار', 3300, 'الكاف', 'تاجروين',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Brown%20bull.jpg',
         { priceType: 'PER_HEAD', sellerName: 'سوق الكاف', age: 'سنة', description: 'بيع بالجملة: عجول تسمين متقاربة في الوزن. [bulk]' }),
       item(117, 'كتاكيت بالجملة للمربين', 'دواجن', 2, 'صفاقس', 'طينة',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Chicks.jpg',
         { priceType: 'PER_HEAD', sellerName: 'دجاج صفاقس', age: 'أسبوع', description: 'بيع بالجملة: كتاكيت نشيطة للمربين. [bulk]' }),
       item(118, 'أرانب منتجة بالجملة', 'أرانب', 24, 'المنستير', 'جمال',
-        'https://commons.wikimedia.org/wiki/Special:FilePath/Domestic%20rabbit.jpg',
         { priceType: 'PER_HEAD', sellerName: 'أرانب الساحل', gender: 'أنثى', description: 'بيع بالجملة: أرانب منتجة، ذكور وإناث حسب الطلب. [bulk]' }),
     ];
   }
