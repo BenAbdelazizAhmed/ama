@@ -212,9 +212,10 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.route.queryParamMap.subscribe(params => {
       const publish = params.get('publish');
       const token = params.get('open') || publish || '';
-      if (publish !== 'animal' || !token || token === this.lastPublishOpenToken) return;
+      if (publish !== 'animal' && publish !== 'animal-bulk') return;
+      if (!token || token === this.lastPublishOpenToken) return;
       this.lastPublishOpenToken = token;
-      setTimeout(() => this.openAddModal(), 80);
+      setTimeout(() => this.openAddModal(publish === 'animal-bulk' ? 'bulk' : 'single'), 80);
     });
     this.loadAnimals();
   }
@@ -222,10 +223,10 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:amanafarm-authenticated', ['$event'])
   onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
     const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
-    if (!this.pendingOpenAdd && action !== 'animal-add') return;
+    if (!this.pendingOpenAdd && action !== 'animal-add' && action !== 'animal-add-bulk') return;
     this.pendingOpenAdd = false;
     sessionStorage.removeItem('amanafarm-pending-action');
-    setTimeout(() => this.openAddModal(), 80);
+    setTimeout(() => this.openAddModal(action === 'animal-add-bulk' ? 'bulk' : 'single'), 80);
   }
 
   ngAfterViewInit() {
@@ -250,7 +251,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.zone.run(() => {
           const realAnimals = (data ?? []).map(a => this.normalise(a));
-          this.animals = realAnimals;
+          this.animals = realAnimals.length ? realAnimals : this.getMockAnimals();
           this.isLoading = false;
           this.applyFilter();
           setTimeout(() => this.refreshIcons());
@@ -258,11 +259,11 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: () => {
         this.zone.run(() => {
-          this.animals = [];
-          this.filteredList = [];
-          this.pagedList = [];
+          this.animals = this.getMockAnimals();
           this.isLoading = false;
-          this.loadError = 'تعذر تحميل الإعلانات من الخادم. تأكد من تشغيل الـ backend.';
+          this.loadError = '';
+          this.applyFilter();
+          setTimeout(() => this.refreshIcons());
         });
       },
     });
@@ -493,6 +494,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openAddModal(mode: 'single' | 'bulk' = 'single') {
+    if (!this.ensureLoggedInForPublish(mode)) return;
     this.addListingMode = mode;
     this.addForm = this.freshForm();
     if (mode === 'bulk') {
@@ -516,6 +518,15 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openSingleAddModal() { this.openAddModal('single'); }
   openBulkAddModal() { this.openAddModal('bulk'); }
+
+  private ensureLoggedInForPublish(mode: 'single' | 'bulk'): boolean {
+    if (this.state.isLoggedIn()) return true;
+    const action = mode === 'bulk' ? 'animal-add-bulk' : 'animal-add';
+    this.pendingOpenAdd = true;
+    sessionStorage.setItem('amanafarm-pending-action', action);
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
+    return false;
+  }
 
   setAddListingMode(mode: 'single' | 'bulk') {
     this.addListingMode = mode;
@@ -794,41 +805,41 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     return [
-      item(101, 'خروف عربي للتربية', 'أغنام', 780, 'صفاقس', 'عقارب',
+      item(101, 'خروف عربي للتربية', 'أغنام', 1350, 'صفاقس', 'عقارب',
         { featured: true, age: '8 أشهر', description: 'خروف صحة باهية، مناسب للتربية والتسمين.' }),
-      item(102, 'قطيع نعاج للبيع بالجملة', 'أغنام', 620, 'سيدي بوزيد', 'المكناسي',
+      item(102, 'قطيع نعاج للبيع بالجملة', 'أغنام', 950, 'سيدي بوزيد', 'المكناسي',
         { priceType: 'PER_HEAD', sellerName: 'رحبة وردة', description: 'بيع بالجملة: قطيع 18 راس نعاج بصحة ممتازة. [bulk]', deliveryAvailable: false }),
-      item(103, 'عجلة حلوب صغيرة', 'أبقار', 2850, 'باجة', 'تستور',
+      item(103, 'عجلة حلوب صغيرة', 'أبقار', 4800, 'باجة', 'تستور',
         { featured: true, vetCertificate: true, age: 'سنة ونصف', gender: 'أنثى', description: 'عجلة حلوب من سلالة منتجة مع متابعة صحية.' }),
-      item(104, 'ثور تسمين قوي', 'أبقار', 4200, 'جندوبة', 'طبرقة',
+      item(104, 'ثور تسمين قوي', 'أبقار', 6200, 'جندوبة', 'طبرقة',
         { age: 'سنتين', description: 'ثور للتسمين، وزن باهي وقابل للمعاينة.' }),
-      item(105, 'ماعز شامية حلوبة', 'ماعز', 950, 'نابل', 'قرمبالية',
+      item(105, 'ماعز شامية حلوبة', 'ماعز', 980, 'نابل', 'قرمبالية',
         { gender: 'أنثى', vetCertificate: true, description: 'ماعز حلوبة، هادئة ومناسبة لمزرعة صغيرة.' }),
-      item(106, 'جدي صغير للتربية', 'ماعز', 360, 'القيروان', 'حفوز',
+      item(106, 'جدي صغير للتربية', 'ماعز', 420, 'القيروان', 'حفوز',
         { age: '4 أشهر', description: 'جدي صغير صحة ممتازة وسلالة محلية مقاومة.' }),
-      item(107, 'دجاج بلدي بيّاض', 'دواجن', 18, 'أريانة', 'سكرة',
+      item(107, 'دجاج بلدي بيّاض', 'دواجن', 28, 'أريانة', 'سكرة',
         { priceType: 'PER_HEAD', sellerName: 'فرمة البركة', gender: 'أنثى', description: 'بيع بالجملة: دجاج بلدي بيّاض، متوفر عدد محترم. [bulk]' }),
-      item(108, 'كتاكيت عمر أسبوع', 'دواجن', 3, 'بن عروس', 'مرناق',
+      item(108, 'كتاكيت عمر أسبوع', 'دواجن', 3.5, 'بن عروس', 'مرناق',
         { priceType: 'PER_HEAD', age: 'أسبوع', description: 'كتاكيت نشيطة، تصلح للتربية المنزلية.' }),
-      item(109, 'فرس عربية للتدريب', 'خيول', 6800, 'القصرين', 'سبيطلة',
+      item(109, 'فرس عربية للتدريب', 'خيول', 7600, 'القصرين', 'سبيطلة',
         { featured: true, gender: 'أنثى', age: '4 سنوات', vetCertificate: true, description: 'فرس عربية هادئة ومروّضة، مناسبة للهواية والتدريب.' }),
-      item(110, 'مهر صغير بصحة ممتازة', 'خيول', 2400, 'منوبة', 'طبربة',
+      item(110, 'مهر صغير بصحة ممتازة', 'خيول', 3200, 'منوبة', 'طبربة',
         { age: '10 أشهر', description: 'مهر صغير من أم عربية، قابل للمعاينة.' }),
-      item(111, 'ناقة حلوب', 'جمال', 5200, 'تطاوين', 'رمادة',
+      item(111, 'ناقة حلوب', 'جمال', 6500, 'تطاوين', 'رمادة',
         { gender: 'أنثى', age: '5 سنوات', featured: true, description: 'ناقة حلوب متعودة على الرعي، صحة ممتازة.' }),
-      item(112, 'جمل صغير للتربية', 'جمال', 3100, 'مدنين', 'بن قردان',
+      item(112, 'جمل صغير للتربية', 'جمال', 3900, 'مدنين', 'بن قردان',
         { age: 'سنة', description: 'جمل صغير قوي ومناسب للتربية.' }),
-      item(113, 'أرانب بلدية منتجة', 'أرانب', 28, 'المنستير', 'جمال',
+      item(113, 'أرانب بلدية منتجة', 'أرانب', 35, 'المنستير', 'جمال',
         { priceType: 'PER_HEAD', gender: 'أنثى', description: 'أرانب منتجة، متوفر ذكور وإناث حسب الطلب.' }),
-      item(114, 'صغار أرانب للتربية', 'أرانب', 15, 'سوسة', 'مساكن',
+      item(114, 'صغار أرانب للتربية', 'أرانب', 20, 'سوسة', 'مساكن',
         { priceType: 'PER_HEAD', age: 'شهر', trustedSeller: false, description: 'صغار أرانب بصحة جيدة، مناسبة للمبتدئين.' }),
-      item(115, 'قطيع ماعز حلوبة بالجملة', 'ماعز', 880, 'نابل', 'قرمبالية',
+      item(115, 'قطيع ماعز حلوبة بالجملة', 'ماعز', 900, 'نابل', 'قرمبالية',
         { priceType: 'PER_HEAD', sellerName: 'فرمة النور', gender: 'أنثى', description: 'بيع بالجملة: قطيع ماعز حلوبة وجديان للتربية. [bulk]' }),
-      item(116, 'عجول تسمين بالجملة', 'أبقار', 3300, 'الكاف', 'تاجروين',
+      item(116, 'عجول تسمين بالجملة', 'أبقار', 4300, 'الكاف', 'تاجروين',
         { priceType: 'PER_HEAD', sellerName: 'سوق الكاف', age: 'سنة', description: 'بيع بالجملة: عجول تسمين متقاربة في الوزن. [bulk]' }),
-      item(117, 'كتاكيت بالجملة للمربين', 'دواجن', 2, 'صفاقس', 'طينة',
+      item(117, 'كتاكيت بالجملة للمربين', 'دواجن', 2.8, 'صفاقس', 'طينة',
         { priceType: 'PER_HEAD', sellerName: 'دجاج صفاقس', age: 'أسبوع', description: 'بيع بالجملة: كتاكيت نشيطة للمربين. [bulk]' }),
-      item(118, 'أرانب منتجة بالجملة', 'أرانب', 24, 'المنستير', 'جمال',
+      item(118, 'أرانب منتجة بالجملة', 'أرانب', 32, 'المنستير', 'جمال',
         { priceType: 'PER_HEAD', sellerName: 'أرانب الساحل', gender: 'أنثى', description: 'بيع بالجملة: أرانب منتجة، ذكور وإناث حسب الطلب. [bulk]' }),
     ];
   }

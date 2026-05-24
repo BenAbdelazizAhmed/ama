@@ -120,6 +120,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
     void this.router.navigate(['/animals']);
   }
 
+  publishProduct(): void {
+    this.openPublishRoute('/products', 'product');
+  }
+
+  registerSupplier(): void {
+    this.openPublishRoute('/products', 'product-company');
+  }
+
+  publishAnimal(): void {
+    this.openPublishRoute('/animals', 'animal');
+  }
+
+  publishBulkAnimal(): void {
+    this.openPublishRoute('/animals', 'animal-bulk');
+  }
+
+  browseProducts(): void {
+    void this.router.navigate(['/products']);
+  }
+
+  browseAnimals(): void {
+    void this.router.navigate(['/animals']);
+  }
+
+  private openPublishRoute(route: '/animals' | '/products', publish: string): void {
+    void this.router.navigate([route], {
+      queryParams: { publish, open: Date.now() },
+    });
+  }
+
   prevTesti(): void {
     this.currentTestimonial = this.currentTestimonial === 0 ? this.testimonials.length - 1 : this.currentTestimonial - 1;
     setTimeout(() => this.refreshIcons(), 0);

@@ -1,8 +1,8 @@
 <main class="about-page" dir="rtl">
-  <section class="about-hero">
-    <div class="about-hero__content about-fade-up">
+  <section class="about-hero about-fade-up" aria-labelledby="aboutHeroTitle">
+    <div class="about-hero__content">
       <span class="about-kicker">AMANAFARM</span>
-      <h1>نحلّ مشكلة حقيقية في السوق الفلاحي</h1>
+      <h1 id="aboutHeroTitle">نحلّ مشكلة حقيقية في السوق الفلاحي</h1>
       <p>
         البيع والشراء في الفلاحة يحتاج وضوح، سرعة، وثقة. لذلك صممنا تجربة تجعل الإعلان مفهوماً،
         البحث سهلاً، والتواصل بين الطرفين مباشراً.
@@ -12,48 +12,52 @@
         <a routerLink="/products" class="btn-ghost">شوف المنتجات</a>
       </div>
     </div>
-    <div class="about-hero__stats about-fade-up" aria-label="AMANAFARM">
-      <div>
-        <strong>24</strong>
-        <span>ولاية</span>
-      </div>
-      <div>
-        <strong>4</strong>
-        <span>أسواق</span>
-      </div>
-      <div>
-        <strong>0</strong>
-        <span>وسطاء</span>
-      </div>
-      <div>
-        <strong>RTL</strong>
-        <span>تجربة عربية</span>
-      </div>
+
+    <div class="about-hero__stats" aria-label="إحصائيات AMANAFARM">
+      <div><strong>24</strong><span>ولاية</span></div>
+      <div><strong>4</strong><span>أسواق كبرى</span></div>
+      <div><strong>0</strong><span>وسطاء</span></div>
+      <div><strong>RTL</strong><span>تجربة عربية</span></div>
     </div>
   </section>
 
-  <section class="about-section about-section--values">
+  <section class="about-section values-section">
+    <div class="values-lead about-fade-up">
+      <div>
+        <span class="section-label">قيمنا الأساسية</span>
+        <h2>الثقة، السرعة، والتنظيم</h2>
+        <p>
+          نحن لا نبيع المنتجات فقط، بل نبني جسور التواصل بين الفلاح والمشتري في بيئة رقمية
+          واضحة ومدروسة لتناسب احتياجات السوق التونسي.
+        </p>
+      </div>
+      <figure class="values-image">
+        <img src="assets/image.png" alt="فلاحون تونسيون في حقل زيتون" loading="lazy" />
+        <figcaption>فلاحون موثقون</figcaption>
+      </figure>
+    </div>
+
     <div class="value-grid">
       <article class="value-card about-fade-up">
         <span>ثقة</span>
-        <h2>إعلانات أوضح</h2>
+        <h3>إعلانات أوضح</h3>
         <p>صور، سعر، ولاية، ووصف مختصر يساعد المشتري يفهم العرض من أول نظرة.</p>
       </article>
       <article class="value-card about-fade-up">
         <span>سرعة</span>
-        <h2>تواصل مباشر</h2>
+        <h3>تواصل مباشر</h3>
         <p>واتساب وهاتف بدون وسطاء، حتى تتحرك الصفقة بسرعة وبأقل مجهود.</p>
       </article>
       <article class="value-card about-fade-up">
         <span>تنظيم</span>
-        <h2>سوق واحد متكامل</h2>
+        <h3>سوق واحد متكامل</h3>
         <p>حيوانات، منتجات، خدمات، وجملة في نفس المنصة مع فلترة واضحة.</p>
       </article>
     </div>
   </section>
 
   <section class="about-section vision-section">
-    <div class="vision-copy about-fade-up">
+    <div class="section-head about-fade-up">
       <span class="section-label">الرؤية</span>
       <h2>نحو منصة تونسية مرجعية للفلاحة والحيوانات</h2>
       <p>
@@ -61,67 +65,53 @@
         يقارن منتجات، ويتواصل مع أشخاص موثوقين.
       </p>
     </div>
-    <aside class="difference-card about-fade-up">
-      <h3>شنوّة يميّزنا؟</h3>
-      <ul>
-        <li>واجهة عربية RTL بسيطة وواضحة.</li>
-        <li>تصميم مناسب للهاتف قبل كل شيء.</li>
-        <li>إعلانات مجانية وخدمات مدفوعة اختيارية فقط.</li>
-        <li>هوية بصرية تجمع الفلاحة، تونس، والثقة.</li>
-      </ul>
-    </aside>
+
+    <div class="vision-bento">
+      <article class="difference-card about-fade-up">
+        <h3>شنوّة يميّزنا؟</h3>
+        <ul>
+          <li>واجهة عربية RTL بسيطة وواضحة.</li>
+          <li>تصميم مناسب للهاتف قبل كل شيء.</li>
+          <li>إعلانات مجانية وخدمات مدفوعة اختيارية فقط.</li>
+          <li>هوية بصرية تجمع الفلاحة، تونس، والثقة.</li>
+        </ul>
+      </article>
+      <article class="coverage-card about-fade-up">
+        <span>تغطية وطنية</span>
+        <strong>كامل تونس</strong>
+        <p>من الشمال للجنوب، المنصة مصممة باش تخدم كل فلاح ومربّي ومورد.</p>
+      </article>
+    </div>
   </section>
 
   <section class="about-section process-section">
     <div class="section-head about-fade-up">
       <span class="section-label">طريقة العمل</span>
-      <h2>تجربة قصيرة من البحث إلى الصفقة</h2>
+      <h2>كيفاش تخدم المنصة؟</h2>
     </div>
 
     <div class="steps-grid">
-      <article class="step-card about-fade-up">
-        <strong>01</strong>
-        <h3>لوّج</h3>
-        <p>اختار الفئة، الولاية، السعر، ونوع البيع.</p>
-      </article>
-      <article class="step-card about-fade-up">
-        <strong>02</strong>
-        <h3>قارن</h3>
-        <p>شوف الصور والمعلومات قبل ما تتواصل.</p>
-      </article>
-      <article class="step-card about-fade-up">
-        <strong>03</strong>
-        <h3>تواصل</h3>
-        <p>كلم البائع أو المهني مباشرة عبر الهاتف أو واتساب.</p>
-      </article>
-      <article class="step-card about-fade-up">
-        <strong>04</strong>
-        <h3>كمّل الصفقة</h3>
-        <p>رتب المعاينة، النقل، أو الخدمة بطريقة آمنة.</p>
-      </article>
+      <article class="step-card about-fade-up"><strong>01</strong><h3>لوّج</h3><p>استعمل الفلاتر باش تلقى حاجتك بالضبط.</p></article>
+      <article class="step-card about-fade-up"><strong>02</strong><h3>قارن</h3><p>شوف التصاور والمواصفات وقارن بين العروض.</p></article>
+      <article class="step-card about-fade-up"><strong>03</strong><h3>تواصل</h3><p>اتصل بصاحب العرض مباشرة واسأل على التفاصيل.</p></article>
+      <article class="step-card about-fade-up"><strong>04</strong><h3>كمّل الصفقة</h3><p>تفاهموا على الموعد والمكان وكمّل البيعة بكل ثقة.</p></article>
     </div>
   </section>
 
   <section class="about-section contact-section" id="contact">
-    <div class="section-head about-fade-up">
-      <span class="section-label">تواصل معنا</span>
-      <h2>فريق AMANAFARM قريب منك</h2>
-      <p>اقتراح، شراكة، دعم، أو خدمة مهنية: نسمعوك ونردّ عليك في أقرب وقت.</p>
-    </div>
-
     <div class="contact-grid">
       <a class="contact-card about-fade-up" href="mailto:contact@amanafarm.tn">
-        <small>البريد الإلكتروني</small>
+        <small>راسلنا على</small>
         <strong>contact&#64;amanafarm.tn</strong>
         <span>نرد خلال 24 ساعة</span>
       </a>
       <a class="contact-card about-fade-up" href="https://wa.me/21653159799" target="_blank" rel="noopener">
-        <small>الهاتف</small>
+        <small>واتساب مباشر</small>
         <strong>+216 53 159 799</strong>
         <span>دعم وشراكات عبر واتساب</span>
       </a>
       <div class="contact-card about-fade-up">
-        <small>التغطية</small>
+        <small>نغطي حالياً</small>
         <strong>كامل تونس</strong>
         <span>24 ولاية</span>
       </div>

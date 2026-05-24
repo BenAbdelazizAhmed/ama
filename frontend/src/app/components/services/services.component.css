@@ -3001,15 +3001,13 @@ input[type=range] { width: 100%; accent-color: var(--green); }
   }
 }
 
-/* Absolute hero edge reset: no right/left space inside or outside the hero */
+/* Keep the hero inside the page width; 100vw creates horizontal scrollbars on Windows. */
 :host-context(body) > .services-hero,
 :host > .services-hero {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  width: calc(100% - 28px) !important;
+  max-width: calc(100% - 28px) !important;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
 }
 
 :host-context(body) > .services-hero .services-hero__inner,
@@ -3108,5 +3106,116 @@ input[type=range] { width: 100%; accent-color: var(--green); }
   :host > .services-hero {
     padding: 28px 18px !important;
     border-radius: 20px !important;
+  }
+}
+
+/* Final services hero readability and scroll guard */
+:host {
+  display: block !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+:host > .services-hero {
+  overflow: hidden !important;
+}
+
+:host > .services-hero .services-hero__inner {
+  row-gap: 12px !important;
+}
+
+:host > .services-hero p {
+  display: block !important;
+  max-width: 620px !important;
+  margin: 12px 18px 0 0 !important;
+  line-height: 1.95 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+:host > .services-hero .mode-switch {
+  margin: 18px 18px 0 0 !important;
+  transform: none !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+@media (max-width: 680px) {
+  :host > .services-hero {
+    width: calc(100% - 18px) !important;
+    margin-inline: 9px !important;
+    padding: 24px 14px !important;
+  }
+
+  :host > .services-hero h1 {
+    font-size: clamp(30px, 10vw, 42px) !important;
+    line-height: 1.18 !important;
+  }
+
+  :host > .services-hero p,
+  :host > .services-hero .mode-switch {
+    margin-right: 0 !important;
+    justify-self: stretch !important;
+  }
+
+  :host > .services-hero .mode-switch {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  :host > .services-hero .mode-switch button {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-inline: 10px !important;
+    white-space: normal !important;
+    line-height: 1.25 !important;
+  }
+}
+
+/* Absolute horizontal-scroll kill switch for services page */
+:host,
+:host * {
+  max-width: 100%;
+}
+
+:host {
+  width: 100% !important;
+  overflow-x: clip !important;
+}
+
+:host > .services-hero,
+:host .services-tabs-bar,
+:host .services-layout,
+:host .services-section,
+:host .service-board {
+  width: calc(100% - 28px) !important;
+  max-width: calc(100% - 28px) !important;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+  overflow-x: clip !important;
+}
+
+:host > .services-hero .services-hero__inner,
+:host > .services-hero .services-hero__content,
+:host > .services-hero .services-stats,
+:host > .services-hero .mode-switch {
+  min-width: 0 !important;
+}
+
+/* Match the actual browser viewport width like the other market sections. */
+:host > .services-hero {
+  width: calc(100vw - 28px) !important;
+  max-width: calc(100vw - 28px) !important;
+  margin-left: calc(50% - 50vw + 14px) !important;
+  margin-right: calc(50% - 50vw + 14px) !important;
+}
+
+@media (max-width: 680px) {
+  :host > .services-hero {
+    width: calc(100vw - 18px) !important;
+    max-width: calc(100vw - 18px) !important;
+    margin-left: calc(50% - 50vw + 9px) !important;
+    margin-right: calc(50% - 50vw + 9px) !important;
   }
 }

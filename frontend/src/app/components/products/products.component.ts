@@ -291,9 +291,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const publish = params.get('publish');
       const token = params.get('open') || publish || '';
-      if (publish !== 'product' || !token || token === this.lastPublishOpenToken) return;
+      if (publish !== 'product' && publish !== 'product-company') return;
+      if (!token || token === this.lastPublishOpenToken) return;
       this.lastPublishOpenToken = token;
-      setTimeout(() => this.openAddModal(), 80);
+      setTimeout(() => {
+        if (publish === 'product-company') this.openCompanyAddModal();
+        else this.openAddModal();
+      }, 80);
     });
     this.loadProducts();
   }
@@ -573,6 +577,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openAddModal(): void {
+    if (!this.ensureLoggedInForPublish('product-add')) return;
     this.addForm = this.emptyAddForm();
     this.addErrors = {};
     this.addStep = 1;
@@ -583,6 +588,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openCompanyAddModal(): void {
+    if (!this.ensureLoggedInForPublish('product-add-company')) return;
     this.addForm = { ...this.emptyAddForm(), sellerType: 'company' };
     if (this.activeCompany) {
       const company = this.getCompany(this.activeCompany);
@@ -595,6 +601,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
     document.body.style.overflow = 'hidden';
     this.cdr.markForCheck();
     setTimeout(() => this.presentAddModal());
+  }
+
+  private ensureLoggedInForPublish(action: 'product-add' | 'product-add-company'): boolean {
+    if (this.state.isLoggedIn()) return true;
+    this.pendingOpenAdd = true;
+    sessionStorage.setItem('amanafarm-pending-action', action);
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
+    return false;
   }
 
   closeAddModal(): void {
@@ -898,7 +912,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private getMockProducts(): Product[] {
     const products: Product[] = [
       {
-        id: '1', name: 'علف مركب للأغنام 25كغ', category: 'علف', price: 45, priceType: 'FIXED',
+        id: '1', name: 'علف مركب للأغنام 25كغ', category: 'علف', price: 36, priceType: 'FIXED',
         unit: 'كيس 25كغ', quantity: '200 كيس', wilaya: 'صفاقس', origin: 'تونس', inStock: true,
         featured: true, deliveryAvailable: true, certified: true, sellerType: 'company', companyId: 'smsa',
         companyName: 'SMSA صفاقس', companyVerified: true, phone: '55123456', createdAt: new Date('2024-11-01'),
@@ -906,40 +920,40 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'علف متوازن للأغنام فيه فيتامينات ومعادن ضرورية.',
       },
       {
-        id: '2', name: 'لقاح بيطري معتمد', category: 'دوا بيطري', price: 8.5, priceType: 'PER_UNIT',
+        id: '2', name: 'لقاح بيطري معتمد', category: 'دوا بيطري', price: 12, priceType: 'PER_UNIT',
         unit: 'جرعة', quantity: '500 جرعة', wilaya: 'تونس', origin: 'فرنسا', inStock: true,
         certified: true, sellerType: 'company', companyId: 'vetpharma', companyName: 'VetPharma TN',
         companyVerified: true, phone: '71987654', createdAt: new Date('2024-10-15'),
         imageUrl: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=900&q=80',
       },
       {
-        id: '3', name: 'ماكينة حلب آلية', category: 'معدات', price: 850, priceType: 'NEGOTIABLE',
+        id: '3', name: 'ماكينة حلب آلية', category: 'معدات', price: 1450, priceType: 'NEGOTIABLE',
         wilaya: 'المنستير', origin: 'إيطاليا', inStock: true, sellerType: 'company', companyId: 'agritech',
         companyName: 'AgriTech Maghreb', companyVerified: false, phone: '52111222', createdAt: new Date('2024-09-20'),
         imageUrl: 'https://images.unsplash.com/photo-1527847263472-aa5338d178b8?w=900&q=80',
         description: 'ماكينة حلب أوتوماتيكية مناسبة للمزارع الصغيرة والمتوسطة.',
       },
       {
-        id: '4', name: 'بذور طماطم هجينة', category: 'بذور', price: 12, priceType: 'PER_UNIT',
+        id: '4', name: 'بذور طماطم هجينة', category: 'بذور', price: 18, priceType: 'PER_UNIT',
         unit: 'علبة 50 بذرة', wilaya: 'نابل', origin: 'هولندا', inStock: true, certified: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'محمد العجمي', sellerVerified: true,
         sellerRating: '4.9', phone: '98765432', createdAt: new Date('2024-11-10'),
         imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80',
       },
       {
-        id: '5', name: 'سماد عضوي كومبوست', category: 'سماد', price: 25, priceType: 'PER_TON',
+        id: '5', name: 'سماد عضوي كومبوست', category: 'سماد', price: 95, priceType: 'PER_TON',
         unit: 'كيس 50كغ', wilaya: 'القيروان', origin: 'تونس', inStock: true, sellerType: 'individual',
         sellerName: 'فاطمة بن سالم', sellerVerified: false, sellerRating: '4.6', phone: '97543210', createdAt: new Date('2024-10-05'),
         imageUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80',
       },
       {
-        id: '6', name: 'لوازم تربية الدواجن', category: 'لوازم', price: 130, priceType: 'FIXED',
+        id: '6', name: 'لوازم تربية الدواجن', category: 'لوازم', price: 165, priceType: 'FIXED',
         wilaya: 'أريانة', inStock: false, sellerType: 'company', companyId: 'agritech',
         companyName: 'AgriTech Maghreb', phone: '52111222', createdAt: new Date('2024-08-30'),
         imageUrl: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=900&q=80',
       },
       {
-        id: '7', name: 'عسل طبيعي جبلي', category: 'برودويات طبيعية', price: 35, priceType: 'PER_KG',
+        id: '7', name: 'عسل طبيعي جبلي', category: 'برودويات طبيعية', price: 42, priceType: 'PER_KG',
         wilaya: 'الكاف', origin: 'تونس', inStock: true, certified: true, deliveryAvailable: true,
         sellerType: 'individual', sellerName: 'يوسف الغريبي', sellerVerified: true, sellerRating: '5.0',
         phone: '93123987', createdAt: new Date('2024-11-12'),
@@ -947,13 +961,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'عسل جبلي طبيعي 100% من مناطق الكاف.',
       },
       {
-        id: '8', name: 'علف إبل مركب', category: 'علف', price: 55, priceType: 'PER_TON',
+        id: '8', name: 'علف إبل مركب', category: 'علف', price: 54, priceType: 'FIXED',
         unit: 'كيس 50كغ', wilaya: 'توزر', origin: 'تونس', inStock: true, sellerType: 'company',
         companyId: 'smsa', companyName: 'SMSA صفاقس', companyVerified: true, phone: '55123456', createdAt: new Date('2024-10-22'),
         imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&q=80',
       },
       {
-        id: '9', name: 'شعير مجروش للتسمين', category: 'علف', price: 38, priceType: 'FIXED',
+        id: '9', name: 'شعير مجروش للتسمين', category: 'علف', price: 48, priceType: 'FIXED',
         unit: 'كيس 40كغ', quantity: '160 كيس', wilaya: 'سيدي بوزيد', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'علي المكي', sellerVerified: true,
         sellerRating: '4.7', phone: '22444555', createdAt: new Date('2024-11-14'),
@@ -961,7 +975,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'شعير نظيف ومغربل مناسب لتسمين الأغنام والأبقار.',
       },
       {
-        id: '10', name: 'بذور بطاطا موسمية', category: 'بذور', price: 95, priceType: 'PER_UNIT',
+        id: '10', name: 'بذور بطاطا موسمية', category: 'بذور', price: 135, priceType: 'PER_UNIT',
         unit: 'قنطار', quantity: '40 قنطار', wilaya: 'جندوبة', origin: 'تونس', inStock: true,
         certified: true, sellerType: 'company', companyId: 'green-seeds', companyName: 'Green Seeds TN',
         companyVerified: true, phone: '71222444', createdAt: new Date('2024-11-08'),
@@ -969,14 +983,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'بذور بطاطا منتقاة للموسم الشتوي مع شهادة جودة.',
       },
       {
-        id: '11', name: 'بذور فلفل حار', category: 'بذور', price: 18, priceType: 'PER_UNIT',
+        id: '11', name: 'بذور فلفل حار', category: 'بذور', price: 24, priceType: 'PER_UNIT',
         unit: 'ظرف 100 بذرة', wilaya: 'نابل', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'سمير بن عمر', sellerVerified: false,
         sellerRating: '4.4', phone: '55666777', createdAt: new Date('2024-10-28'),
         imageUrl: 'https://images.unsplash.com/photo-1526346698789-22fd84314424?w=900&q=80',
       },
       {
-        id: '12', name: 'مضاد طفيليات للأغنام', category: 'دوا بيطري', price: 32, priceType: 'PER_UNIT',
+        id: '12', name: 'مضاد طفيليات للأغنام', category: 'دوا بيطري', price: 38, priceType: 'PER_UNIT',
         unit: 'قارورة 100مل', quantity: '90 قارورة', wilaya: 'سوسة', origin: 'إسبانيا', inStock: true,
         certified: true, sellerType: 'company', companyId: 'vetpharma', companyName: 'VetPharma TN',
         companyVerified: true, phone: '71987654', createdAt: new Date('2024-11-05'),
@@ -984,14 +998,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'منتج بيطري مراجع للاستعمال تحت إشراف مختص.',
       },
       {
-        id: '13', name: 'فيتامينات دواجن', category: 'دوا بيطري', price: 21, priceType: 'FIXED',
+        id: '13', name: 'فيتامينات دواجن', category: 'دوا بيطري', price: 26, priceType: 'FIXED',
         unit: 'علبة', wilaya: 'بن عروس', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'نادر الشابي', sellerVerified: true,
         sellerRating: '4.8', phone: '50777888', createdAt: new Date('2024-10-18'),
         imageUrl: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=900&q=80',
       },
       {
-        id: '14', name: 'محراث صغير للجرار', category: 'معدات', price: 1250, priceType: 'NEGOTIABLE',
+        id: '14', name: 'محراث صغير للجرار', category: 'معدات', price: 1850, priceType: 'NEGOTIABLE',
         wilaya: 'باجة', origin: 'تركيا', inStock: true, deliveryAvailable: true,
         sellerType: 'company', companyId: 'agritech', companyName: 'AgriTech Maghreb',
         companyVerified: true, phone: '52111222', createdAt: new Date('2024-11-02'),
@@ -999,14 +1013,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'محراث قوي للأراضي المتوسطة، يصلح للجرارات الصغيرة.',
       },
       {
-        id: '15', name: 'مضخة ماء فلاحية', category: 'معدات', price: 420, priceType: 'FIXED',
+        id: '15', name: 'مضخة ماء فلاحية', category: 'معدات', price: 690, priceType: 'FIXED',
         wilaya: 'قابس', origin: 'إيطاليا', inStock: true, sellerType: 'individual',
         sellerName: 'رياض الدريدي', sellerVerified: true, sellerRating: '4.6',
         phone: '28889900', createdAt: new Date('2024-09-28'),
         imageUrl: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80',
       },
       {
-        id: '16', name: 'معالف بلاستيك للأغنام', category: 'لوازم', price: 28, priceType: 'PER_UNIT',
+        id: '16', name: 'معالف بلاستيك للأغنام', category: 'لوازم', price: 35, priceType: 'PER_UNIT',
         unit: 'قطعة', quantity: '75 قطعة', wilaya: 'القصرين', origin: 'تونس', inStock: true,
         sellerType: 'company', companyId: 'farm-tools', companyName: 'FarmTools Tunisie',
         companyVerified: true, phone: '73444555', createdAt: new Date('2024-11-11'),
@@ -1014,14 +1028,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'معالف خفيفة وسهلة التنظيف للحظائر الصغيرة.',
       },
       {
-        id: '17', name: 'شبك حماية للمزرعة', category: 'لوازم', price: 65, priceType: 'FIXED',
+        id: '17', name: 'شبك حماية للمزرعة', category: 'لوازم', price: 95, priceType: 'FIXED',
         unit: 'لفة 25م', wilaya: 'مدنين', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'خالد التومي',
         sellerVerified: false, sellerRating: '4.3', phone: '29990011', createdAt: new Date('2024-10-02'),
         imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=80',
       },
       {
-        id: '18', name: 'سماد NPK متوازن', category: 'سماد', price: 72, priceType: 'FIXED',
+        id: '18', name: 'سماد NPK متوازن', category: 'سماد', price: 92, priceType: 'FIXED',
         unit: 'كيس 50كغ', quantity: '120 كيس', wilaya: 'صفاقس', origin: 'تونس', inStock: true,
         certified: true, sellerType: 'company', companyId: 'green-seeds', companyName: 'Green Seeds TN',
         companyVerified: true, phone: '71222444', createdAt: new Date('2024-11-09'),
@@ -1029,14 +1043,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'سماد مناسب للخضر والأشجار المثمرة مع استعمال واضح.',
       },
       {
-        id: '19', name: 'سماد أغنام طبيعي', category: 'سماد', price: 18, priceType: 'PER_TON',
+        id: '19', name: 'سماد أغنام طبيعي', category: 'سماد', price: 80, priceType: 'PER_TON',
         unit: 'طن', wilaya: 'سليانة', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'منصف السليتي', sellerVerified: true,
         sellerRating: '4.9', phone: '93334455', createdAt: new Date('2024-10-24'),
         imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=80',
       },
       {
-        id: '20', name: 'زيت زيتون بكر ممتاز', category: 'برودويات طبيعية', price: 22, priceType: 'PER_KG',
+        id: '20', name: 'زيت زيتون بكر ممتاز', category: 'برودويات طبيعية', price: 24, priceType: 'PER_KG',
         unit: 'لتر', quantity: '300 لتر', wilaya: 'المهدية', origin: 'تونس', inStock: true,
         certified: true, deliveryAvailable: true, sellerType: 'company', companyId: 'natural-farm',
         companyName: 'Natural Farm', companyVerified: true, phone: '74222111', createdAt: new Date('2024-11-15'),
@@ -1044,7 +1058,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'زيت زيتون تونسي من العصر الأول، مناسب للبيع بالجملة.',
       },
       {
-        id: '21', name: 'تمر دقلة نور', category: 'برودويات طبيعية', price: 12, priceType: 'PER_KG',
+        id: '21', name: 'تمر دقلة نور', category: 'برودويات طبيعية', price: 14, priceType: 'PER_KG',
         unit: 'كغ', wilaya: 'قبلي', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'حياة النفزاوي', sellerVerified: true,
         sellerRating: '4.8', phone: '95556677', createdAt: new Date('2024-11-07'),
@@ -1060,7 +1074,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'طماطم موسمية طازجة من نابل، مناسبة للمطاعم والتجار.',
       },
       {
-        id: '23', name: 'بطاطا موسمية من جندوبة', category: 'خضر', price: 1.9, priceType: 'PER_KG',
+        id: '23', name: 'بطاطا موسمية من جندوبة', category: 'خضر', price: 2.2, priceType: 'PER_KG',
         unit: 'كغ', quantity: '2 طن', wilaya: 'جندوبة', origin: 'تونس', inStock: true,
         deliveryAvailable: true, sellerType: 'company', companyId: 'north-farm',
         companyName: 'North Farm', companyVerified: true, phone: '55222333', createdAt: new Date('2024-11-13'),
@@ -1068,7 +1082,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'بطاطا نظيفة ومفرزة، متوفرة بكميات للتجار.',
       },
       {
-        id: '24', name: 'فلفل حار تونسي', category: 'خضر', price: 4.5, priceType: 'PER_KG',
+        id: '24', name: 'فلفل حار تونسي', category: 'خضر', price: 5.5, priceType: 'PER_KG',
         unit: 'كغ', quantity: '350 كغ', wilaya: 'القيروان', origin: 'تونس', inStock: true,
         sellerType: 'individual', sellerName: 'سليم القيرواني', sellerVerified: true,
         sellerRating: '4.6', phone: '55333444', createdAt: new Date('2024-11-06'),
@@ -1076,7 +1090,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'فلفل حار تونسي بنكهة قوية، مناسب للصناعات الغذائية.',
       },
       {
-        id: '25', name: 'سماد عضوي تونسي', category: 'سماد', price: 25, priceType: 'PER_TON',
+        id: '25', name: 'سماد عضوي تونسي', category: 'سماد', price: 95, priceType: 'PER_TON',
         unit: 'طن', quantity: '12 طن', wilaya: 'سليانة', origin: 'تونس', inStock: true,
         sellerType: 'company', companyId: 'bio-sol', companyName: 'BioSol Tunisie',
         companyVerified: true, phone: '55444555', createdAt: new Date('2024-10-30'),
@@ -1084,7 +1098,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         description: 'سماد عضوي مخمر ومناسب للأشجار والخضروات.',
       },
       {
-        id: '26', name: 'مضخة ماء فلاحية', category: 'معدات', price: 420, priceType: 'FIXED',
+        id: '26', name: 'مضخة ماء فلاحية', category: 'معدات', price: 690, priceType: 'FIXED',
         unit: 'وحدة', quantity: '8 وحدات', wilaya: 'قابس', origin: 'إيطاليا', inStock: true,
         deliveryAvailable: true, sellerType: 'individual', sellerName: 'رياض الدريدي',
         sellerVerified: true, sellerRating: '4.6', phone: '28889900', createdAt: new Date('2024-09-28'),

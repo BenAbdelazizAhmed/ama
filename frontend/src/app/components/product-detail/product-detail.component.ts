@@ -403,16 +403,16 @@ export class ProductDetailComponent implements OnDestroy {
     });
 
     return [
-      base('1', 'علف مركب للأغنام 25كغ', 'أعلاف', 45, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&q=80'),
-      base('4', 'بذور طماطم هجينة', 'بذور', 12, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
-      base('7', 'عسل طبيعي جبلي', 'برودويات طبيعية', 35, 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=900&q=80'),
-      base('20', 'زيت زيتون بكر ممتاز', 'برودويات طبيعية', 22, 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=900&q=80'),
-      base('21', 'تمر دقلة نور من قبلي', 'برودويات طبيعية', 12, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=900&q=80'),
+      base('1', 'علف مركب للأغنام 25كغ', 'أعلاف', 36, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&q=80'),
+      base('4', 'بذور طماطم هجينة', 'بذور', 18, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
+      base('7', 'عسل طبيعي جبلي', 'برودويات طبيعية', 42, 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=900&q=80'),
+      base('20', 'زيت زيتون بكر ممتاز', 'برودويات طبيعية', 24, 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=900&q=80'),
+      base('21', 'تمر دقلة نور من قبلي', 'برودويات طبيعية', 14, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=900&q=80'),
       base('22', 'طماطم موسمية من نابل', 'خضر', 2.8, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
-      base('23', 'بطاطا موسمية من جندوبة', 'خضر', 1.9, 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=900&q=80'),
-      base('24', 'فلفل حار تونسي', 'خضر', 4.5, 'https://images.unsplash.com/photo-1526346698789-22fd84314424?w=900&q=80'),
-      base('25', 'سماد عضوي تونسي', 'سماد', 25, 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80'),
-      base('26', 'مضخة ماء فلاحية', 'معدات', 420, 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80'),
+      base('23', 'بطاطا موسمية من جندوبة', 'خضر', 2.2, 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=900&q=80'),
+      base('24', 'فلفل حار تونسي', 'خضر', 5.5, 'https://images.unsplash.com/photo-1526346698789-22fd84314424?w=900&q=80'),
+      base('25', 'سماد عضوي تونسي', 'سماد', 95, 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80'),
+      base('26', 'مضخة ماء فلاحية', 'معدات', 690, 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80'),
     ];
   }
 }

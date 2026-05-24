@@ -229,7 +229,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   resultsSub = 'عمال وخدمات تنجم تقارن بينهم';
 
   /* â”€â”€ Hero text â”€â”€ */
-  heroTitle = 'لقى العامل المناسب لمزرعتك';
+  heroTitle = 'القى العامل المناسب لمزرعتك';
   heroSub = 'لوّج على عامل فلاحي، قارن السعر والتقييم وتواصل مباشرة.';
   trustTitle = 'تبحث على عامل؟';
   trustSub = 'انشر طلبك أو تواصل مع بروفايل مناسب';
@@ -533,7 +533,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.searchQuery   = '';
 
     if (mode === 'hire') {
-      this.heroTitle         = 'لقى العامل المناسب لمزرعتك بسرعة';
+      this.heroTitle         = 'القى العامل المناسب لمزرعتك بسرعة';
       this.heroSub           = 'لوّج على راعي، بيطري، سائق أو عامل فلاحي، وشوف البروفايل والسعر والتواصل قبل ما تختار.';
       this.searchPlaceholder = 'مثال: راعي أغنام، بيطري، سائق...';
       this.resultsSub        = 'اختار عامل مناسب أو انشر طلبك باش يتواصلوا معاك';

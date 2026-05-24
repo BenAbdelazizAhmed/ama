@@ -68,6 +68,40 @@
       <strong>لقى</strong>
     </a>
   </div>
+
+  <div class="home-market-actions" aria-label="إجراءات سريعة للسوق">
+    <div class="home-market-actions__group">
+      <span>سوق البرودويات</span>
+      <button type="button" (click)="publishProduct()">
+        <i data-lucide="package-plus" width="16" aria-hidden="true"></i>
+        انشر برودوي
+      </button>
+      <button type="button" (click)="registerSupplier()">
+        <i data-lucide="building-2" width="16" aria-hidden="true"></i>
+        سجّل كمورد
+      </button>
+      <button type="button" class="home-market-actions__ghost" (click)="browseProducts()">
+        <i data-lucide="search" width="16" aria-hidden="true"></i>
+        شوف السوق
+      </button>
+    </div>
+
+    <div class="home-market-actions__group">
+      <span>سوق الحيوانات</span>
+      <button type="button" (click)="publishAnimal()">
+        <i data-lucide="beef" width="16" aria-hidden="true"></i>
+        انشر إعلان حيوان
+      </button>
+      <button type="button" (click)="publishBulkAnimal()">
+        <i data-lucide="warehouse" width="16" aria-hidden="true"></i>
+        بيع قطيع
+      </button>
+      <button type="button" class="home-market-actions__ghost" (click)="browseAnimals()">
+        <i data-lucide="search" width="16" aria-hidden="true"></i>
+        شوف السوق
+      </button>
+    </div>
+  </div>
 </section>
 
 <section class="monetization-section" aria-labelledby="monetization-title">

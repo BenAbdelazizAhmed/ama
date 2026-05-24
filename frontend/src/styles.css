@@ -5498,3 +5498,65 @@ body app-about * {
     grid-template-columns: 1fr !important;
   }
 }
+/* Final services overflow fix: remove the left horizontal scrollbar/green strip. */
+html,
+body,
+app-root,
+.app-main-shell,
+body app-services {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+body app-services {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  contain: paint !important;
+}
+
+body app-services > .services-hero,
+body app-services > section,
+body app-services .services-tabs-bar,
+body app-services .services-layout,
+body app-services .services-section,
+body app-services .service-board {
+  box-sizing: border-box !important;
+  width: calc(100% - 28px) !important;
+  max-width: calc(100% - 28px) !important;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+  overflow-x: hidden !important;
+  transform: none !important;
+}
+
+body app-services > .services-hero {
+  left: auto !important;
+  right: auto !important;
+  margin-inline: 14px !important;
+}
+
+body app-services *,
+body app-services *::before,
+body app-services *::after {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Final viewport-width lock: services hero must match the full page sections. */
+body app-services > .services-hero.services-hero.services-hero {
+  width: calc(100vw - 28px) !important;
+  max-width: calc(100vw - 28px) !important;
+  margin-left: calc(50% - 50vw + 14px) !important;
+  margin-right: calc(50% - 50vw + 14px) !important;
+}
+
+@media (max-width: 680px) {
+  body app-services > .services-hero.services-hero.services-hero {
+    width: calc(100vw - 18px) !important;
+    max-width: calc(100vw - 18px) !important;
+    margin-left: calc(50% - 50vw + 9px) !important;
+    margin-right: calc(50% - 50vw + 9px) !important;
+  }
+}

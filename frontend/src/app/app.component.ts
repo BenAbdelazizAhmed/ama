@@ -176,11 +176,18 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private syncPublishHeaderDom(): void {
     this.updatePublishCtaState();
-    this.setHidden('publishHeaderBtn', !this.user || !this.canPublishPrimary);
+    this.setHidden('publishHeaderBtn', !!this.user && !this.canPublishPrimary);
     this.setText('publishHeaderLabel', this.publishLabel);
   }
 
   goPublish(): void {
+    if (!this.user) {
+      sessionStorage.setItem('amanafarm-pending-action', 'publish');
+      this.openAuthModal('login');
+      this.toast('سجّل الدخول باش تنجم تنشر إعلان', 'error');
+      return;
+    }
+
     const role = String(this.user?.role || '').toLowerCase();
     if (role.includes('service')) {
       void this.router.navigate(['/services']);
@@ -189,7 +196,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
     const canPublishAnimal = this.state.canPublish('animal');
     const canPublishProduct = this.state.canPublish('product');
-    if (!this.user || (canPublishAnimal && canPublishProduct)) {
+    if (canPublishAnimal && canPublishProduct) {
       this.showPublishChooser = true;
       setTimeout(() => this.refreshIcons());
       return;
