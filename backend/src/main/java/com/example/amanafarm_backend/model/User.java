@@ -1,6 +1,7 @@
 package com.example.amanafarm_backend.model;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "users")
@@ -20,6 +21,9 @@ public class User {
     private String password;
     private String role;
     private String avatar;
+    private String authProvider;
+    private String providerId;
+    private Instant lastLoginAt;
 
     @Column(columnDefinition = "LONGTEXT")
     private String profilePhoto;
@@ -88,6 +92,30 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public Instant getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(Instant lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public String getProfilePhoto() {

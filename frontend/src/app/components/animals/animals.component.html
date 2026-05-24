@@ -282,7 +282,7 @@
         >
           <div class="ad-photo">
             <img *ngIf="ad.mainImageUrl" class="ad-photo-bg" [src]="ad.mainImageUrl" alt="" aria-hidden="true" loading="lazy" />
-            <img *ngIf="ad.mainImageUrl" class="ad-photo-main" [src]="ad.mainImageUrl" [alt]="ad.title" loading="lazy" (error)="ad.mainImageUrl = ''" />
+            <img *ngIf="ad.mainImageUrl" class="ad-photo-main" [src]="ad.mainImageUrl" [alt]="ad.title" loading="lazy" (error)="setAnimalImageFallback(ad)" />
             <span class="ad-photo-emoji" [class.hidden]="ad.mainImageUrl">{{ ad.category?.slice(0, 1) || 'ح' }}</span>
 
             <div class="multi-img-badge" *ngIf="ad.imageUrls && ad.imageUrls.length > 1">

@@ -17,7 +17,42 @@
     <link rel="canonical" href="https://amanafarm.tn/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa+Ink:wght@400;700&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa+Ink:wght@400;700&family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      html:not(.app-ready) body {
+        margin: 0;
+        background: #f4f8f5;
+      }
+
+      html:not(.app-ready) app-root {
+        opacity: 0;
+      }
+
+      .app-boot {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: grid;
+        place-items: center;
+        background: #f4f8f5;
+        color: #0d1f14;
+        transition: opacity .18s ease, visibility .18s ease;
+      }
+
+      .app-boot__mark {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: #0f7a3c;
+        box-shadow: 0 16px 38px rgba(15, 122, 60, .18);
+      }
+
+      html.app-ready .app-boot {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+    </style>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -28,9 +63,13 @@
         "areaServed": "TN"
       }
     </script>
-    <script src="https://unpkg.com/lucide@0.427.0/dist/umd/lucide.min.js"></script>
+    <script defer src="https://unpkg.com/lucide@0.427.0/dist/umd/lucide.min.js"></script>
   </head>
   <body>
+    <div class="app-boot" aria-hidden="true">
+      <div class="app-boot__mark"></div>
+    </div>
     <app-root></app-root>
+    <noscript>AMANAFARM يحتاج JavaScript للعمل.</noscript>
   </body>
 </html>

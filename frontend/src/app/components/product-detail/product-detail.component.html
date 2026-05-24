@@ -1,285 +1,168 @@
-<main class="product-detail-page" dir="rtl">
-  <section class="detail-loading" *ngIf="isLoading && !product" aria-label="جاري تحميل البرودوي">
-    <div class="skeleton skeleton-hero"></div>
-    <div class="skeleton-grid">
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
+<div class="detail-page" dir="rtl">
+  <section class="detail-loading" *ngIf="isLoading">
+    <div class="skeleton skeleton-media"></div>
+    <div class="skeleton-layout">
+      <div class="skeleton skeleton-body"></div>
+      <div class="skeleton skeleton-side"></div>
     </div>
   </section>
 
-  <section class="detail-empty" *ngIf="!isLoading && !product">
-    <div class="empty-icon"><i data-lucide="package-x" width="38" height="38"></i></div>
-    <h1>ما لقيناش البرودوي</h1>
-    <p>الإعلان غير موجود أو تم حذفه من السوق.</p>
-    <button type="button" (click)="goBack()">الرجوع للسوق</button>
+  <section class="detail-error" *ngIf="!isLoading && loadError">
+    <div class="error-mark">404</div>
+    <h1>المنتج غير موجود</h1>
+    <p>{{ loadError }}</p>
+    <a routerLink="/products">الرجوع للمنتجات</a>
   </section>
 
-  <ng-container *ngIf="product as p">
-    <nav class="detail-nav" aria-label="مسار الصفحة">
-      <button type="button" class="back-btn" (click)="goBack()">
-        <i data-lucide="arrow-right" width="17" height="17"></i>
-        رجوع للسوق
-      </button>
+  <ng-container *ngIf="!isLoading && !loadError">
+    <ng-container *ngIf="product as p">
+      <div class="detail-wrap">
+        <nav class="breadcrumb" aria-label="مسار الصفحة">
+          <a routerLink="/">الرئيسية</a>
+          <span>›</span>
+          <a routerLink="/products">المنتجات</a>
+          <span>›</span>
+          <strong>{{ p.title }}</strong>
+        </nav>
 
-      <div class="breadcrumb">
-        <span>الرئيسية</span>
-        <i data-lucide="chevron-left" width="13" height="13"></i>
-        <span>البرودويات</span>
-        <i data-lucide="chevron-left" width="13" height="13"></i>
-        <strong>{{ p.category }}</strong>
-        <i data-lucide="chevron-left" width="13" height="13"></i>
-        <strong>{{ p.name }}</strong>
+        <main class="market-grid">
+          <section class="product-gallery">
+            <div class="thumb-strip" *ngIf="detailPhotos.length > 1">
+              <button
+                class="thumb"
+                type="button"
+                *ngFor="let img of detailPhotos; trackBy: trackByImage"
+                [class.active]="activeImage === img"
+                (click)="selectImage(img)"
+                aria-label="اختيار صورة"
+              >
+                <img [src]="img" alt="" loading="lazy" decoding="async">
+              </button>
+            </div>
+
+            <div class="media-frame">
+              <img [src]="activeImage" [alt]="p.title" (error)="onImageError()" loading="eager" decoding="async">
+              <div class="media-badges">
+                <span *ngIf="p.certified">موثوق</span>
+                <span *ngIf="p.featured">مميز</span>
+                <span *ngIf="p.deliveryAvailable">توصيل</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="product-info">
+            <article class="summary-panel">
+              <span class="eyebrow">{{ p.category }} · {{ p.origin }}</span>
+              <h1>{{ p.title }}</h1>
+              <div class="meta-row">
+                <span>{{ p.wilaya }}</span>
+                <span>{{ postedLabel(p.createdAt) }}</span>
+                <span>{{ stockLabel(p) }}</span>
+              </div>
+            </article>
+
+            <article class="price-panel">
+              <span>السعر</span>
+              <strong>{{ fmt(p.price) }} د.ت</strong>
+              <em>/ {{ p.unit }} · {{ priceTypeLabel(p.priceType) }}</em>
+              <b [class.sold]="!p.inStock">{{ stockLabel(p) }}</b>
+            </article>
+
+            <article class="info-panel">
+              <div class="section-title">
+                <h2>معلومات المنتج</h2>
+                <span>كل التفاصيل المهمة قبل التواصل</span>
+              </div>
+              <div class="info-grid">
+                <div class="info-cell" *ngFor="let spec of specs; trackBy: trackBySpec">
+                  <span>{{ spec.label }}</span>
+                  <strong>{{ spec.value }}</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="description-panel">
+              <div class="section-title">
+                <h2>الوصف</h2>
+                <span>معلومات البائع حول هذا الإعلان</span>
+              </div>
+              <p>{{ p.description }}</p>
+              <div class="quick-tags">
+                <span *ngIf="p.certified">جودة مضمونة</span>
+                <span>إنتاج تونسي</span>
+                <span *ngIf="p.deliveryAvailable">توصيل متاح</span>
+              </div>
+            </article>
+          </section>
+
+          <aside class="seller-rail">
+            <article class="seller-card">
+              <div class="seller-top">
+                <div class="avatar">{{ p.sellerName.slice(0, 1) }}</div>
+                <div>
+                  <h2>{{ p.sellerName }}</h2>
+                  <p>{{ p.sellerSubtitle }}</p>
+                </div>
+              </div>
+
+              <div class="seller-stats">
+                <div>
+                  <strong>{{ p.sellerRating }} ★</strong>
+                  <span>تقييم</span>
+                </div>
+                <div>
+                  <strong>{{ p.deliveryAvailable ? 'متاح' : 'حسب الاتفاق' }}</strong>
+                  <span>التوصيل</span>
+                </div>
+              </div>
+
+              <p class="login-note" *ngIf="!isLoggedIn">سجّل الدخول للتواصل مع البائع</p>
+              <button class="btn primary" type="button" (click)="contactSeller()">تواصل مع البائع</button>
+              <button class="btn whatsapp" type="button" (click)="openWhatsapp()">واتساب</button>
+              <button class="btn outline" type="button" (click)="toggleFav()">{{ isFav ? 'محفوظ' : 'حفظ في المفضلة' }}</button>
+            </article>
+
+            <article class="safety-card">
+              <h3>نصائح أمان</h3>
+              <ul>
+                <li>عاين المنتج أو اطلب صور حديثة قبل الدفع.</li>
+                <li>ثبّت الكمية والتوصيل والسعر النهائي بوضوح.</li>
+                <li>لا ترسل المال قبل التأكد من البائع.</li>
+                <li>قابل البائع في مكان آمن عند الاستلام.</li>
+              </ul>
+            </article>
+          </aside>
+        </main>
+
+        <section class="similar-section" *ngIf="similarProducts.length">
+          <div class="section-head">
+            <h2>منتجات مشابهة</h2>
+            <a routerLink="/products">عرض الكل</a>
+          </div>
+
+          <div class="similar-grid">
+            <a class="similar-card" *ngFor="let item of similarProducts; trackBy: trackById" [routerLink]="['/products', item.id]">
+              <div class="similar-image">
+                <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async">
+                <span>متوفر</span>
+              </div>
+              <div class="similar-body">
+                <small>{{ item.category }} · {{ item.wilaya }}</small>
+                <strong>{{ item.title }}</strong>
+                <em>{{ fmt(item.price) }} د.ت</em>
+              </div>
+            </a>
+          </div>
+        </section>
       </div>
-    </nav>
 
-    <p class="muted-note" *ngIf="loadError">{{ loadError }}</p>
-
-    <section class="detail-shell">
-      <article class="product-frame">
-        <div class="gallery-card">
-          <div class="main-image">
-            <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name" loading="eager" (error)="handleImageError(p)" />
-            <div *ngIf="!p.imageUrl" class="image-fallback" aria-hidden="true">
-              <i [attr.data-lucide]="categoryIcon(p.category)" width="78" height="78"></i>
-            </div>
-
-            <div class="image-badges">
-              <span *ngIf="isVerified(p)" class="badge badge-trust">موثوق</span>
-              <span *ngIf="p.featured" class="badge badge-gold">مميز</span>
-              <span *ngIf="p.deliveryAvailable" class="badge badge-blue">توصيل</span>
-            </div>
-          </div>
-
-          <div class="thumb-row" aria-label="صور البرودوي">
-            <button type="button" class="thumb active">
-              <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name" (error)="handleImageError(p)" />
-              <i *ngIf="!p.imageUrl" [attr.data-lucide]="categoryIcon(p.category)" width="23" height="23"></i>
-            </button>
-            <button type="button" class="thumb soft"><i data-lucide="image" width="23" height="23"></i></button>
-            <button type="button" class="thumb soft"><i data-lucide="play-circle" width="23" height="23"></i></button>
-          </div>
+      <div class="mobile-cta">
+        <div>
+          <strong>{{ fmt(p.price) }} د.ت</strong>
+          <span>/ {{ p.unit }}</span>
         </div>
-
-        <div class="product-info">
-          <div class="title-line">
-            <div>
-              <span class="eyebrow">{{ p.sellerType === 'company' ? 'إعلان شركة مراجع' : 'إعلان بائع موثوق' }}</span>
-              <h1>{{ p.name }}</h1>
-            </div>
-            <span class="stock-pill" [class.stock-pill-out]="p.inStock === false">
-              {{ p.inStock === false ? 'نفد المخزون' : 'متوفر الآن' }}
-            </span>
-          </div>
-
-          <div class="meta-line">
-            <span><i data-lucide="map-pin" width="15" height="15"></i>{{ p.wilaya || 'تونس' }}</span>
-            <span><i data-lucide="package" width="15" height="15"></i>{{ p.category }}</span>
-            <span><i data-lucide="clock-3" width="15" height="15"></i>{{ postedLabel(p) }}</span>
-          </div>
-
-          <div class="quick-specs">
-            <div *ngIf="p.unit"><i data-lucide="scale" width="18" height="18"></i><span>الوحدة</span><strong>{{ p.unit }}</strong></div>
-            <div *ngIf="p.quantity"><i data-lucide="boxes" width="18" height="18"></i><span>الكمية</span><strong>{{ p.quantity }}</strong></div>
-            <div><i data-lucide="truck" width="18" height="18"></i><span>التوصيل</span><strong>{{ p.deliveryAvailable ? 'متاح' : 'حسب الاتفاق' }}</strong></div>
-            <div><i data-lucide="shield-check" width="18" height="18"></i><span>الجودة</span><strong>{{ p.certified ? 'مراجع' : 'قيد التثبت' }}</strong></div>
-          </div>
-        </div>
-      </article>
-
-      <aside class="side-column">
-        <section class="side-price-card">
-          <div class="side-price-row">
-            <strong>{{ fmt(p.price) }}</strong>
-            <span>د.ت</span>
-          </div>
-          <p>{{ formatPriceType(p.priceType) || 'قابل للتفاوض' }}</p>
-
-          <button type="button" class="side-whatsapp" (click)="openWhatsapp(p)">
-            <i data-lucide="message-circle" width="18" height="18"></i>
-            تواصل واتساب
-          </button>
-          <button type="button" class="side-call" (click)="openWhatsapp(p)">
-            <i data-lucide="phone" width="17" height="17"></i>
-            اتصل بالبائع
-          </button>
-          <div class="side-icon-actions">
-            <button type="button" [class.active]="isFav" (click)="toggleFav()">
-              <i data-lucide="heart" width="16" height="16"></i>
-              حفظ
-            </button>
-            <button type="button" (click)="share(p)">
-              <i data-lucide="share-2" width="16" height="16"></i>
-              مشاركة
-            </button>
-          </div>
-
-          <div class="delivery-box">
-            <h3>خيارات التوصيل</h3>
-            <div>
-              <span><i data-lucide="truck" width="15" height="15"></i> التوصيل بواسطة البائع</span>
-              <strong>{{ p.deliveryAvailable ? 'متوفر' : 'حسب الاتفاق' }}</strong>
-            </div>
-            <div>
-              <span><i data-lucide="shield-check" width="15" height="15"></i> التوصيل عبر منصتنا</span>
-              <strong>متوفر</strong>
-            </div>
-            <button type="button">احسب تكلفة التوصيل</button>
-          </div>
-        </section>
-
-        <section class="seller-card">
-          <div class="side-title">
-            <i data-lucide="user-check" width="18" height="18"></i>
-            <strong>معلومات البائع</strong>
-          </div>
-          <div class="seller-head">
-            <div class="seller-avatar">{{ sellerName(p).slice(0, 1) }}</div>
-            <div>
-              <strong>{{ sellerName(p) }}</strong>
-              <span>{{ sellerSubtitle(p) }}</span>
-            </div>
-            <small *ngIf="isVerified(p)">موثق</small>
-          </div>
-
-          <div class="seller-stats">
-            <div><strong>{{ p.sellerRating || '4.8' }}</strong><span>تقييم</span></div>
-            <div><strong>12</strong><span>إعلانات</span></div>
-            <div><strong>1 سا</strong><span>رد</span></div>
-          </div>
-        </section>
-      </aside>
-    </section>
-
-    <section class="detail-lower-shell">
-      <section class="tabs-card">
-        <div class="tabs-nav">
-          <button type="button" [class.active]="activeTab === 'description'" (click)="switchTab('description')">
-            <i data-lucide="file-text" width="16" height="16"></i>
-            تفاصيل المنتج
-          </button>
-          <button type="button" [class.active]="activeTab === 'location'" (click)="switchTab('location')">
-            <i data-lucide="map-pin" width="16" height="16"></i>
-            الموقع
-          </button>
-          <button type="button" [class.active]="activeTab === 'reviews'" (click)="switchTab('reviews')">
-            <i data-lucide="star" width="16" height="16"></i>
-            التقييمات
-          </button>
-          <button type="button" [class.active]="activeTab === 'similar'" (click)="switchTab('similar')">
-            <i data-lucide="layout-grid" width="16" height="16"></i>
-            منتجات مشابهة
-          </button>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'description'">
-          <article class="content-card description-card">
-            <div class="section-title">
-              <span>الوصف</span>
-              <h2>كل المعلومات المهمة قبل التواصل</h2>
-            </div>
-            <p>
-              {{ p.description || 'برودوي فلاحي معروض على AMANAFARM. تثبت من الكمية والجودة وطريقة التسليم قبل الاتفاق.' }}
-            </p>
-            <div class="desc-tags">
-              <span>جودة مضمونة</span>
-              <span>تواصل مباشر</span>
-              <span *ngIf="p.deliveryAvailable">توصيل متاح</span>
-              <span *ngIf="p.certified">مراجع</span>
-            </div>
-          </article>
-
-          <article class="content-card">
-            <div class="section-title">
-              <span>معلومات إضافية</span>
-              <h2>خصائص مهمة</h2>
-            </div>
-            <div class="fact-list">
-              <span><em>الفئة</em><strong>{{ p.category }}</strong></span>
-              <span *ngIf="p.unit"><em>الوحدة</em><strong>{{ p.unit }}</strong></span>
-              <span *ngIf="p.quantity"><em>الكمية</em><strong>{{ p.quantity }}</strong></span>
-              <span><em>المنشأ</em><strong>{{ p.origin || 'تونس' }}</strong></span>
-              <span><em>الولاية</em><strong>{{ p.wilaya || 'تونس' }}</strong></span>
-              <span><em>الحالة</em><strong>{{ p.inStock === false ? 'نفد المخزون' : 'متوفر' }}</strong></span>
-            </div>
-          </article>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'location'">
-          <article class="content-card map-card">
-            <div class="section-title">
-              <span>الموقع والتوصيل</span>
-              <h2>{{ p.wilaya || 'تونس' }}</h2>
-            </div>
-            <div class="map-preview">
-              <i data-lucide="map-pin" width="34" height="34"></i>
-              <strong>{{ p.wilaya || 'تونس' }}</strong>
-              <span>{{ p.deliveryAvailable ? 'التوصيل متاح حسب الاتفاق' : 'التسليم يتم بالاتفاق مع البائع' }}</span>
-            </div>
-          </article>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'reviews'">
-          <article class="content-card reviews-card">
-            <div class="review-score">
-              <strong>{{ p.sellerRating || '4.8' }}</strong>
-              <span>★★★★★</span>
-              <small>تقييم المورد على AMANAFARM</small>
-            </div>
-            <p>التقييمات المفصلة ستظهر هنا عند توفر مراجعات أكثر لهذا المورد.</p>
-          </article>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'similar'">
-          <article class="content-card">
-            <div class="section-title">
-              <span>منتجات مشابهة</span>
-              <h2>نفس الفئة أو نفس نوع المورد</h2>
-            </div>
-            <div class="similar-grid" *ngIf="similar.length; else noSimilar">
-              <a class="similar-card" *ngFor="let item of similar; trackBy: trackById" [routerLink]="['/products', item.id]">
-                <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.name" (error)="handleImageError(item)" />
-                <span *ngIf="!item.imageUrl" class="mini-icon"><i [attr.data-lucide]="categoryIcon(item.category)" width="22" height="22"></i></span>
-                <strong>{{ item.name }}</strong>
-                <small>{{ item.wilaya || 'تونس' }} · {{ fmt(item.price) }} دت</small>
-              </a>
-            </div>
-            <ng-template #noSimilar>
-              <p class="muted-note">ما فماش منتجات مشابهة حالياً.</p>
-            </ng-template>
-          </article>
-        </div>
-      </section>
-
-      <aside class="lower-side">
-        <section class="side-card safety-card">
-          <div class="side-title">
-            <i data-lucide="shield-check" width="18" height="18"></i>
-            <strong>تسوق بثقة وأمان</strong>
-          </div>
-          <div class="trust-list">
-            <div><span>✓</span><strong>جودة مضمونة</strong><small>منتجات مضمونة ومراجعة</small></div>
-            <div><span>د</span><strong>دفع آمن</strong><small>وسائل دفع محمية</small></div>
-            <div><span>ن</span><strong>توصيل سريع</strong><small>إلى جميع الولايات</small></div>
-            <div><span>24</span><strong>دعم 24/7</strong><small>فريق دعم متاح دائماً</small></div>
-          </div>
-        </section>
-
-        <section class="side-card" *ngIf="similar.length">
-          <div class="side-title">
-            <i data-lucide="sparkles" width="18" height="18"></i>
-            <strong>برودويات قريبة</strong>
-          </div>
-          <a class="mini-product" *ngFor="let item of similar.slice(0, 3); trackBy: trackById" [routerLink]="['/products', item.id]">
-            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.name" loading="lazy" (error)="handleImageError(item)" />
-            <span *ngIf="!item.imageUrl" class="mini-icon"><i [attr.data-lucide]="categoryIcon(item.category)" width="20" height="20"></i></span>
-            <span>
-              <strong>{{ item.name }}</strong>
-              <small>{{ item.wilaya || 'تونس' }} · {{ fmt(item.price) }} دت</small>
-            </span>
-          </a>
-        </section>
-      </aside>
-    </section>
+        <button type="button" (click)="contactSeller()">تواصل</button>
+      </div>
+    </ng-container>
   </ng-container>
-</main>
+</div>

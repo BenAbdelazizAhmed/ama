@@ -3,6 +3,7 @@ package com.example.amanafarm_backend.controller;
 import com.example.amanafarm_backend.auth.AuthResponse;
 import com.example.amanafarm_backend.auth.LoginRequest;
 import com.example.amanafarm_backend.auth.RegisterRequest;
+import com.example.amanafarm_backend.auth.SocialLoginRequest;
 import com.example.amanafarm_backend.service.AuthService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +25,10 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @PostMapping("/social")
+    public AuthResponse socialLogin(@RequestBody SocialLoginRequest request) {
+        return authService.socialLogin(request);
     }
 }

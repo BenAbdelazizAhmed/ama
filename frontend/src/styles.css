@@ -1,9 +1,29 @@
 ﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    DESIGN SYSTEM â€” variables
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap');
-
 :root {
+  --color-primary: #2E7D32;
+  --color-primary-light: #4CAF50;
+  --color-primary-dark: #1B5E20;
+  --color-secondary: #F9A825;
+  --color-secondary-light: #FFD54F;
+  --color-accent: #8D6E63;
+  --color-bg: #F9FBF7;
+  --color-bg-card: #FFFFFF;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5A5A5A;
+  --color-text-light: #9E9E9E;
+  --color-border: #E0E0E0;
+  --color-success: #43A047;
+  --color-error: #E53935;
+  --color-warning: #FB8C00;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg-token: 20px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --font-primary: "Cairo", "Readex Pro", "Segoe UI", Tahoma, sans-serif;
+  --font-secondary: "Inter", "Readex Pro", "Segoe UI", sans-serif;
   --green: #0f7a3c;
   --green-dark: #084d25;
   --green-mid: #1a9e50;
@@ -51,7 +71,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: "Cairo", sans-serif;
+  font-family: var(--font-primary);
   direction: rtl;
   background: var(--bg);
   color: var(--text);
@@ -61,7 +81,7 @@ body {
 }
 a { text-decoration: none; color: inherit; }
 button, input, select, textarea {
-  font-family: "Cairo", sans-serif;
+  font-family: var(--font-primary);
   border: none; outline: none; cursor: pointer;
 }
 img { display: block; max-width: 100%; height: auto; }
@@ -812,7 +832,10 @@ body.logged-in .guest-only { display: none; }
 .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
 .social-btn { height: 54px; border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; font-weight: 900; font-size: 13px; cursor: pointer; transition: .3s ease; color: var(--text-2); }
 .social-btn:hover { transform: translateY(-2px); border-color: #d1d5db; background: #fafafa; box-shadow: 0 10px 22px rgba(0,0,0,.06); }
-.social-btn.disabled-btn { opacity: .72; cursor: not-allowed; }
+.social-btn-google { color: #1f2937; }
+.social-btn-facebook { color: #145dbf; }
+.social-btn:disabled,
+.social-btn.disabled-btn { opacity: .72; cursor: not-allowed; transform: none; }
 .social-coming { display: none; }
 .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .phone-wrap { display: flex; }
@@ -2634,6 +2657,239 @@ footer::before {
     max-height: calc(100vh - 18px);
     border-radius: 26px;
   }
+}
+
+/* AMANAFARM production polish guardrail */
+html[dir="rtl"],
+body {
+  direction: rtl;
+}
+
+body {
+  background: var(--color-bg) !important;
+}
+
+body app-home > section,
+body app-animals > section,
+body app-products > section,
+body app-services > section,
+body app-product-detail > section,
+body app-animal-detail > section,
+body app-about > section,
+body app-wholesale > section {
+  padding-top: clamp(48px, 6vw, 80px);
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+:where(
+  .market-entry,
+  .monetization-shell,
+  .testimonials-section,
+  .services-section,
+  .partners-section,
+  .cta-section,
+  .market-layout,
+  .layout,
+  .company-hub,
+  .wholesale-hub,
+  .filter-bar-inner,
+  .detail-shell,
+  .page-shell,
+  .animal-detail-page,
+  .pd-page
+) {
+  max-width: 1280px !important;
+  margin-inline: auto !important;
+  padding-inline: 24px !important;
+}
+
+:where(
+  .pricing-card,
+  .testi-card,
+  .service-card,
+  .market-entry-card,
+  .plogo,
+  .animal-card,
+  .pcard,
+  .product-card,
+  .worker-card,
+  .job-card,
+  .seller-card,
+  .detail-box,
+  .pd-card,
+  .company-shop,
+  .wholesale-card,
+  .box,
+  .swidget
+) {
+  border-radius: 12px !important;
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease !important;
+}
+
+:where(
+  .pricing-card,
+  .testi-card,
+  .service-card,
+  .market-entry-card,
+  .plogo,
+  .animal-card,
+  .pcard,
+  .product-card,
+  .worker-card,
+  .job-card,
+  .seller-card,
+  .detail-box,
+  .pd-card,
+  .company-shop,
+  .wholesale-card
+):hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+:where(.section-title, .swidget__head, .box-title, .pd-card-title, .side-title h2, .company-hub__head h2) {
+  color: var(--color-primary-dark) !important;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 800 !important;
+  letter-spacing: 0;
+}
+
+:where(.section-sub, .card-meta, .pd-desc-text, .mini-stat__lbl, .stat-mini-lbl, .text-muted) {
+  color: var(--color-text-secondary) !important;
+  font-size: 14px;
+}
+
+:where(input, select, textarea) {
+  border: 1.5px solid var(--color-border) !important;
+  border-radius: 8px !important;
+  padding: 12px 16px;
+  background: #fff;
+  color: var(--color-text-primary);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+:where(input, select, textarea):focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 4px rgba(46,125,50,.11) !important;
+}
+
+:where(button, .submit-btn, .btn-primary, .btn-hero-primary, .pricing-cta, .details-btn, .wa-btn, .pd-btn-wa) {
+  border-radius: 8px;
+  transition: transform .15s ease, background .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+:where(button, .submit-btn, .btn-primary, .btn-hero-primary, .pricing-cta, .details-btn):active {
+  transform: scale(.98);
+}
+
+:where(button:disabled, .is-disabled) {
+  opacity: .6 !important;
+  cursor: not-allowed !important;
+}
+
+.amana-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.amana-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .amana-grid-3,
+  .amana-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  :where(
+    .market-entry,
+    .monetization-shell,
+    .testimonials-section,
+    .services-section,
+    .partners-section,
+    .cta-section,
+    .market-layout,
+    .layout,
+    .company-hub,
+    .wholesale-hub,
+    .filter-bar-inner,
+    .detail-shell,
+    .page-shell,
+    .pd-page
+  ) {
+    padding-inline: 16px !important;
+  }
+
+  .amana-grid-3,
+  .amana-grid-4 {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.header {
+  background: rgba(255,255,255,.96) !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border) !important;
+  box-shadow: 0 8px 28px rgba(27,94,32,.07) !important;
+}
+
+.btn-post-header {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light)) !important;
+  color: #1b2a16 !important;
+  box-shadow: 0 8px 20px rgba(249,168,37,.22);
+}
+
+.btn-login-header,
+.submit-btn {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+.btn-login-header:hover,
+.submit-btn:hover {
+  background: var(--color-primary-dark) !important;
+}
+
+footer {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(249,168,37,.16), transparent 32%),
+    linear-gradient(135deg, #102016, var(--color-primary-dark)) !important;
+  color: #fff !important;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.ft-name,
+.footer .ft-name {
+  color: #fff !important;
+  letter-spacing: .02em;
+}
+
+.ft-col h4 {
+  color: #fff !important;
+}
+
+.ft-col a,
+.ft-tag,
+.ft-brand p,
+.copy,
+.ft-bottom-links a {
+  color: rgba(255,255,255,.76) !important;
+}
+
+.ft-col a:hover,
+.ft-bottom-links a:hover {
+  color: var(--color-secondary-light) !important;
 }
 
 /* Final mobile polish for the global AMANAFARM header */

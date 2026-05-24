@@ -1,0 +1,4 @@
+<div class="af-image" [class.af-image--loading]="isLoading">
+  <div class="af-image__skeleton" *ngIf="isLoading"></div>
+  <img [src]="imageSrc" [alt]="alt" loading="lazy" decoding="async" (load)="onLoad()" (error)="onError()" />
+</div>

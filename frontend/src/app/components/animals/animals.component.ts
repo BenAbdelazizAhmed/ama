@@ -219,17 +219,18 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadAnimals() {
     this.loadError = '';
-    this.animals = this.getMockAnimals();
-    this.isLoading = false;
+    this.animals = [];
+    this.filteredList = [];
+    this.pagedList = [];
+    this.isLoading = true;
     this.applyFilter();
     setTimeout(() => this.refreshIcons());
 
-    this.http.get<AnimalResponse[]>(this.API).pipe(timeout(1200)).subscribe({
+    this.http.get<AnimalResponse[]>(this.API).pipe(timeout(10000)).subscribe({
       next: (data) => {
         this.zone.run(() => {
           const realAnimals = (data ?? []).map(a => this.normalise(a));
-          const mockAnimals = this.getMockAnimals().filter(mock => !realAnimals.some(real => real.id === mock.id));
-          if (realAnimals.length) this.animals = [...realAnimals, ...mockAnimals];
+          this.animals = realAnimals;
           this.isLoading = false;
           this.applyFilter();
           setTimeout(() => this.refreshIcons());
@@ -237,8 +238,11 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: () => {
         this.zone.run(() => {
+          this.animals = [];
+          this.filteredList = [];
+          this.pagedList = [];
           this.isLoading = false;
-          this.loadError = '';
+          this.loadError = 'تعذر تحميل الإعلانات من الخادم. تأكد من تشغيل الـ backend.';
         });
       },
     });
@@ -254,7 +258,18 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .filter(Boolean);
 
-    return { ...a, images: imageUrls, imageUrls, mainImageUrl: imageUrls[0] ?? '' };
+    const existingMain = a.mainImageUrl || a.imageUrls?.[0] || '';
+    const normalizedImages = imageUrls.length ? imageUrls : (existingMain ? [existingMain] : []);
+    const mainImageUrl = normalizedImages[0] || this.realAnimalImage(a.category, a.title, a.id);
+
+    return { ...a, images: normalizedImages, imageUrls: normalizedImages, mainImageUrl };
+  }
+
+  setAnimalImageFallback(ad: AnimalResponse): void {
+    const fallback = this.realAnimalImage(ad.category, ad.title, ad.id);
+    ad.mainImageUrl = fallback;
+    ad.imageUrls = [fallback, ...(ad.imageUrls || []).filter(url => url && url !== fallback)];
+    ad.images = ad.imageUrls;
   }
 
   applyFilter() {
@@ -687,7 +702,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
       return pick(['assets/prod-cow.jpg', 'assets/bagra.png', 'assets/bagraa.jpg']);
     }
     if (text.includes('ماعز') || text.includes('جدي')) {
-      return pick(['assets/prod-goat.jpg', 'assets/aza.png', 'assets/ba3.png']);
+      return pick(['assets/prod-goat.jpg', 'assets/ba3.png', 'https://images.unsplash.com/photo-1524024973431-2ad916746881?w=900&q=80']);
     }
     if (text.includes('خيول') || text.includes('فرس') || text.includes('مهر')) {
       return pick(['assets/fafa.png', 'assets/fa.png', 'assets/f1.png']);

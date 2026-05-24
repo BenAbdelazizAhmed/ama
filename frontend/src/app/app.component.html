@@ -16,13 +16,17 @@
     <div class="logo-texts"><div class="name">AMANAFARM</div><div class="tagline">منصة فلاحة موثوقة في تونس</div></div>
   </a>
   <div class="search-wrap" role="search">
-    <input #searchInput id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" (input)="debouncedFilter()" (keydown)="$event.key === 'Enter' && applyFilter()" />
-    <button class="search-btn" id="searchBtn" (click)="applyFilter()" aria-label="تنفيذ البحث"><i data-lucide="search" width="14" aria-hidden="true"></i> بحث</button>
+    <input id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" />
+    <button class="search-btn" id="searchBtn" type="button" aria-label="تنفيذ البحث"><i data-lucide="search" width="14" aria-hidden="true"></i> بحث</button>
   </div>
   <div class="header-actions">
-    <button *ngIf="!user" class="btn-login-header" id="btnLoginHeader" (click)="openAuthModal('login')">تسجيل الدخول</button>
-    <div *ngIf="user" class="user-menu-wrap">
-    <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false" (click)="toggleDropdown($event)">
+    <button class="btn-post-header" id="publishHeaderBtn" type="button" hidden>
+      <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
+      <span id="publishHeaderLabel">نشر إعلان</span>
+    </button>
+    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">تسجيل الدخول</button>
+    <div class="user-menu-wrap auth-only">
+    <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false">
       <span class="user-greeting-chip__avatar" id="userInitial">م</span>
       <span class="user-greeting-chip__body">
         <small>أهلاً</small>
@@ -37,7 +41,7 @@
           <div class="ud-email" id="udEmail"></div>
         </div>
       </div>
-      <button class="ud-item danger" type="button" role="menuitem" (click)="doLogout()">تسجيل الخروج</button>
+      <button class="ud-item danger" id="logoutBtn" type="button" role="menuitem">تسجيل الخروج</button>
     </div>
     </div>
   </div>
@@ -46,9 +50,7 @@
 <nav class="navbar" aria-label="التنقل الرئيسي">
   <ul>
     <li>
-      <a routerLink="/" routerLinkActive="active"
-         [routerLinkActiveOptions]="{exact:true}"
-         (click)="scrollTo('top')">
+      <a routerLink="/" routerLinkActive="active">
         <i data-lucide="home" width="14" aria-hidden="true"></i>
         الرئيسية
       </a>
@@ -97,10 +99,10 @@
       <div class="ft-tag">منصة الفلاحة والحيوانات الأولى في تونس</div>
       <p>سوق رقمي متكامل يربط المربين والمستثمرين وجميع الخدمات الفلاحية.</p>
       <div class="ft-social">
-        <button class="ft-soc" type="button" aria-label="Facebook" (click)="showComingSoon('Facebook')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
-        <button class="ft-soc" type="button" aria-label="Instagram" (click)="showComingSoon('Instagram')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg></button>
-        <button class="ft-soc" type="button" aria-label="YouTube" (click)="showComingSoon('YouTube')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#084d25"/></svg></button>
-        <button class="ft-soc" type="button" aria-label="LinkedIn" (click)="showComingSoon('LinkedIn')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></button>
+        <button class="ft-soc social-coming" data-social="Facebook" type="button" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
+        <button class="ft-soc social-coming" data-social="Instagram" type="button" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="ft-soc social-coming" data-social="YouTube" type="button" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#084d25"/></svg></button>
+        <button class="ft-soc social-coming" data-social="LinkedIn" type="button" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></button>
       </div>
     </div>
     <div class="ft-col">
@@ -130,7 +132,7 @@
     </div>
   </div>
   <div class="ft-bottom">
-    <div><div class="copy">© 2026 AMANAFARM — جميع الحقوق محفوظة</div></div>
+    <div><div class="copy">© 2025 AMANAFARM - جميع الحقوق محفوظة</div></div>
     <div class="ft-bottom-links">
       <a routerLink="/about">الشروط</a>
       <a routerLink="/about">الخصوصية</a>
@@ -144,26 +146,8 @@
   <a routerLink="/animals" aria-label="السوق"><i data-lucide="search" width="19" aria-hidden="true"></i><span>السوق</span></a>
   <a routerLink="/products" aria-label="المنتجات"><i data-lucide="package" width="19" aria-hidden="true"></i><span>منتجات</span></a>
   <a routerLink="/services" aria-label="الخدمات"><i data-lucide="wrench" width="19" aria-hidden="true"></i><span>خدمات</span></a>
-  <button type="button" id="mobProfile" aria-label="حسابي" (click)="!user ? openAuthModal('login') : toggleDropdown($event)"><i data-lucide="user" width="19" aria-hidden="true"></i><span>حسابي</span></button>
+  <button type="button" id="mobProfile" aria-label="حسابي"><i data-lucide="user" width="19" aria-hidden="true"></i><span>حسابي</span></button>
 </nav>
-
-<div class="modal" #detailsModal id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-card">
-    <div class="modal-head"><h3 id="modalTitle">تفاصيل الإعلان</h3><button class="close-modal" (click)="closeModal('detailsModal')" aria-label="إغلاق التفاصيل">×</button></div>
-    <div class="modal-body">
-      <div class="modal-img" id="modalImgWrap"></div>
-      <div class="ad-meta" id="modalMeta"></div>
-      <p id="modalLocation" style="color:var(--muted);font-size:13px;margin-top:8px;display:flex;align-items:center;gap:4px"></p>
-      <p id="modalDescription" style="font-size:13px;color:var(--text-2);margin-top:8px;line-height:1.8"></p>
-      <div class="modal-price" id="modalPrice"></div>
-      <div class="modal-note"><strong>نصيحة AMANAFARM:</strong> تأكد من مشاهدة الحيوان شخصياً أو عبر مكالمة مرئية قبل الدفع.</div>
-      <div class="modal-actions">
-        <button id="modalWhatsapp" class="modal-wa" type="button" (click)="selectedAd && openWa(selectedAd.id)"><i data-lucide="message-circle" width="15" aria-hidden="true"></i> واتساب</button>
-        <button class="modal-cart" id="modalCartBtn" (click)="selectedAd && addToCart(selectedAd)"><i data-lucide="shopping-cart" width="14" aria-hidden="true"></i> أضف للسلة</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="overlay" #authOverlay id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authModalHeading">
   <div class="auth-modal">
@@ -171,7 +155,7 @@
       <div class="auth-brand__image" aria-hidden="true"></div>
       <div class="auth-brand__content">
         <div class="auth-brand__logo">
-          <img src="assets/aza.png" alt="AMANAFARM" class="auth-brand__mark" width="58" height="58" />
+          <img src="assets/aza.png" alt="AMANAFARM" class="auth-brand__mark" width="58" height="58" loading="lazy" decoding="async" />
           <div id="authModalHeading">
             <strong>AMANAFARM</strong>
             <small>سوق فلاحي آمن في كامل تونس</small>
@@ -180,18 +164,18 @@
         <h2>بيع، اشري، وتواصل بثقة.</h2>
         <p>منصة مبنية للفلاحين والمربين والتجار: إعلانات موثوقة، تواصل مباشر، وتجربة بسيطة من الهاتف.</p>
         <div class="auth-brand__stats">
-          <div><strong>+500</strong><span>إعلان نشط</span></div>
-          <div><strong>24</strong><span>ولاية</span></div>
-          <div><strong>4.8</strong><span>تقييم الثقة</span></div>
+          <div><strong id="authPublishedAdsStat">0</strong><span>إعلان منشور</span></div>
+          <div><strong id="authSiteVisitsStat">0</strong><span>زيارة للموقع</span></div>
+          <div><strong id="authRegisteredUsersStat">0</strong><span>مستخدم مسجل</span></div>
         </div>
       </div>
     </aside>
 
     <section class="auth-card">
-      <button class="close-auth" (click)="closeModal('authOverlay')" aria-label="إغلاق نافذة تسجيل الدخول">×</button>
+      <button class="close-auth" id="closeAuthBtn" type="button" aria-label="إغلاق نافذة تسجيل الدخول">×</button>
       <div class="auth-tabs" role="tablist">
-        <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin" (click)="switchAuthTab('login')">دخول</button>
-        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister" (click)="switchAuthTab('register')">حساب جديد</button>
+        <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin">دخول</button>
+        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister">حساب جديد</button>
       </div>
 
       <div class="tab-panel active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
@@ -200,12 +184,15 @@
           <p>سجّل الدخول للوصول إلى حسابك وإدارة إعلاناتك بسهولة.</p>
         </div>
         <div class="rate-notice" id="loginRateNotice" role="alert">⏳ محاولات كثيرة — يرجى الانتظار دقيقة.</div>
-        <div class="social-btns"><button class="social-btn disabled-btn" aria-disabled="true">Google</button><button class="social-btn disabled-btn" aria-disabled="true">Facebook</button></div>
-        <div class="or-divider"><span>أو بالبريد الإلكتروني</span></div>
+        <div class="social-btns" id="socialLoginBtns" hidden>
+          <button class="social-btn social-btn-google" id="googleLoginBtn" type="button" hidden>Google</button>
+          <button class="social-btn social-btn-facebook" id="facebookLoginBtn" type="button" hidden>Facebook</button>
+        </div>
+        <div class="or-divider" id="socialLoginDivider" hidden><span>أو بالبريد الإلكتروني</span></div>
         <div class="field-auth"><label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label><div class="field-wrap"><span class="field-icon">✉</span><input type="text" id="loginEmail" placeholder="exemple@email.com" autocomplete="username" /></div><div class="err-msg" id="loginEmailErr" role="alert">يرجى إدخال بريد أو هاتف صحيح</div></div>
         <div class="field-auth"><label for="loginPassword">كلمة المرور</label><div class="field-wrap"><span class="field-icon">●</span><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" /></div><div class="err-msg" id="loginPasswordErr" role="alert">بيانات الدخول غير صحيحة</div></div>
-        <div class="form-extras"><label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="rememberMe" style="accent-color:var(--green)" /> تذكرني (30 يوم)</label><span class="forgot-link" (click)="switchAuthTab('forgot')" role="button" tabindex="0">نسيت كلمة المرور؟</span></div>
-        <button class="submit-btn" id="loginBtn" (click)="doLogin()">تسجيل الدخول</button>
+        <div class="form-extras"><label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="rememberMe" style="accent-color:var(--green)" /> تذكرني (30 يوم)</label><span class="forgot-link" id="forgotLink" role="button" tabindex="0">نسيت كلمة المرور؟</span></div>
+        <button class="submit-btn" id="loginBtn" type="button">تسجيل الدخول</button>
         <div class="terms-note">بتسجيل الدخول أنت توافق على <a routerLink="/about">شروط الاستخدام</a></div>
       </div>
 
@@ -223,29 +210,29 @@
           <div class="fields-row"><div class="field-auth"><label for="regFirst">الاسم الأول</label><input type="text" id="regFirst" placeholder="محمد" autocomplete="given-name" /><div class="err-msg" id="regFirstErr">الاسم مطلوب</div></div><div class="field-auth"><label for="regLast">اسم العائلة</label><input type="text" id="regLast" placeholder="البراهمي" autocomplete="family-name" /><div class="err-msg" id="regLastErr">اسم العائلة مطلوب</div></div></div>
           <div class="field-auth"><label for="regEmail">البريد الإلكتروني</label><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email" /><div class="err-msg" id="regEmailErr">بريد غير صحيح</div></div>
           <div class="field-auth"><label for="regPhone">رقم الهاتف</label><div class="phone-wrap"><div class="phone-prefix">🇹🇳 +216</div><input type="tel" id="regPhone" placeholder="XX XXX XXX" autocomplete="tel" /></div><div class="err-msg" id="regPhoneErr">رقم غير صحيح</div></div>
-          <div class="step-nav"><button class="submit-btn" (click)="goRegStep(2)">التالي ←</button></div>
+          <div class="step-nav"><button class="submit-btn" id="regNextStep1Btn" type="button">التالي ←</button></div>
         </div>
         <div class="reg-step" id="regStep2">
-          <div class="field-auth"><label for="regPassword">كلمة المرور</label><input type="password" id="regPassword" placeholder="8 أحرف على الأقل" autocomplete="new-password" (input)="checkPwStrength($event.target.value)" /><div class="pw-strength-wrap" role="meter" aria-label="قوة كلمة المرور"><div class="pw-strength-bar" id="pwBar"></div></div><div class="pw-strength-label" id="pwLabel"></div><div class="err-msg" id="regPasswordErr">8 أحرف حد أدنى</div></div>
+          <div class="field-auth"><label for="regPassword">كلمة المرور</label><input type="password" id="regPassword" placeholder="8 أحرف على الأقل" autocomplete="new-password" /><div class="pw-strength-wrap" role="meter" aria-label="قوة كلمة المرور"><div class="pw-strength-bar" id="pwBar"></div></div><div class="pw-strength-label" id="pwLabel"></div><div class="err-msg" id="regPasswordErr">8 أحرف حد أدنى</div></div>
           <div class="field-auth"><label for="regConfirm">تأكيد كلمة المرور</label><input type="password" id="regConfirm" placeholder="أعد كلمة المرور" autocomplete="new-password" /><div class="err-msg" id="regConfirmErr">كلمتا المرور غير متطابقتين</div></div>
-          <div class="step-nav"><button class="back-btn" (click)="goRegStep(1)">← رجوع</button><button class="submit-btn" (click)="goRegStep(3)">التالي ←</button></div>
+          <div class="step-nav"><button class="back-btn" id="regBackStep2Btn" type="button">← رجوع</button><button class="submit-btn" id="regNextStep2Btn" type="button">التالي ←</button></div>
         </div>
         <div class="reg-step" id="regStep3">
           <p style="font-size:12.5px;font-weight:800;margin-bottom:10px">اختر تخصصك:</p>
           <div class="reg-cats" role="radiogroup" aria-label="التخصص">
-            <div class="reg-cat selected" data-cat="تربية الحيوانات" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="true" tabindex="0"><i data-lucide="beef" width="22" aria-hidden="true"></i><div>تربية الحيوانات</div></div>
-            <div class="reg-cat" data-cat="منتجات فلاحية" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><i data-lucide="wheat" width="22" aria-hidden="true"></i><div>منتجات فلاحية</div></div>
-            <div class="reg-cat" data-cat="نقل وخدمات" (click)="selectRegCat($event.currentTarget)" role="radio" aria-checked="false" tabindex="0"><i data-lucide="truck" width="22" aria-hidden="true"></i><div>نقل وخدمات</div></div>
+            <div class="reg-cat selected" data-cat="تربية الحيوانات" id="regCatAnimals" role="radio" aria-checked="true" tabindex="0"><i data-lucide="beef" width="22" aria-hidden="true"></i><div>تربية الحيوانات</div></div>
+            <div class="reg-cat" data-cat="منتجات فلاحية" id="regCatProducts" role="radio" aria-checked="false" tabindex="0"><i data-lucide="wheat" width="22" aria-hidden="true"></i><div>منتجات فلاحية</div></div>
+            <div class="reg-cat" data-cat="نقل وخدمات" id="regCatServices" role="radio" aria-checked="false" tabindex="0"><i data-lucide="truck" width="22" aria-hidden="true"></i><div>نقل وخدمات</div></div>
           </div>
-          <div class="step-nav"><button class="back-btn" (click)="goRegStep(2)">← رجوع</button><button class="submit-btn" (click)="doRegister()">إنشاء الحساب</button></div>
+          <div class="step-nav"><button class="back-btn" id="regBackStep3Btn" type="button">← رجوع</button><button class="submit-btn" id="registerSubmitBtn" type="button">إنشاء الحساب</button></div>
         </div>
       </div>
-      <div class="tab-panel" id="panelSuccess"><div style="text-align:center;padding:14px"><div class="auth-state-icon"><i data-lucide="badge-check" width="34" aria-hidden="true"></i></div><h2 id="successTitle" style="margin:11px 0 7px;font-size:19px">مرحباً بك!</h2><p id="successSub" style="color:var(--muted);font-size:13px">تم تسجيل دخولك بنجاح.</p><br /><button class="submit-btn" (click)="closeModal('authOverlay')">ابدأ الاستخدام ←</button></div></div>
+      <div class="tab-panel" id="panelSuccess"><div style="text-align:center;padding:14px"><div class="auth-state-icon"><i data-lucide="badge-check" width="34" aria-hidden="true"></i></div><h2 id="successTitle" style="margin:11px 0 7px;font-size:19px">مرحباً بك!</h2><p id="successSub" style="color:var(--muted);font-size:13px">تم تسجيل دخولك بنجاح.</p><br /><button class="submit-btn" id="successCloseBtn" type="button">ابدأ الاستخدام ←</button></div></div>
       <div class="tab-panel" id="panelForgot">
         <div style="text-align:center;margin-bottom:16px"><div class="auth-state-icon auth-state-icon--small"><i data-lucide="key-round" width="26" aria-hidden="true"></i></div><h3 style="margin-top:7px">استعادة كلمة المرور</h3><p style="font-size:12px;color:var(--muted);margin-top:3px">سنرسل لك رابط الاستعادة</p></div>
         <div class="field-auth"><label for="forgotInput">البريد الإلكتروني أو الهاتف</label><input type="text" id="forgotInput" placeholder="exemple@email.com" autocomplete="email" /></div>
-        <button class="submit-btn" (click)="doForgot()">إرسال رابط الاستعادة</button>
-        <div style="text-align:center;margin-top:13px"><span class="forgot-link" (click)="switchAuthTab('login')" role="button" tabindex="0">← رجوع للدخول</span></div>
+        <button class="submit-btn" id="forgotSubmitBtn" type="button">إرسال رابط الاستعادة</button>
+        <div style="text-align:center;margin-top:13px"><span class="forgot-link" id="forgotBackLoginLink" role="button" tabindex="0">← رجوع للدخول</span></div>
       </div>
     </section>
   </div>

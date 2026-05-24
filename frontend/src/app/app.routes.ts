@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
   },
   {
     path: "animals/:id",
-    loadComponent: () => import("./components/animal-detail").then(m => m.AnimalDetailComponent),
+    loadComponent: () => import("./components/animal-detail/animal-detail.component").then(m => m.AnimalDetailComponent),
   },
   {
     path: "services",
@@ -23,7 +23,7 @@ export const appRoutes: Routes = [
   },
   {
     path: "products/:id",
-    loadComponent: () => import("./components/product-detail/product-detail.component").then(m => m.ProductDetailComponent),
+    loadComponent: () => import("./components/product-detail/index").then(m => m.ProductDetailComponent),
   },
   {
     path: "products",
@@ -32,6 +32,10 @@ export const appRoutes: Routes = [
   {
     path: "about",
     loadComponent: () => import("./components/about/about.component").then(m => m.AboutComponent),
+  },
+  {
+    path: "404",
+    loadComponent: () => import("./components/not-found/not-found.component").then(m => m.NotFoundComponent),
   },
   {
     path: "**",

@@ -1,0 +1,20 @@
+<article class="listing-card" [class.listing-card--sold]="isSold" dir="rtl">
+  <a class="listing-card__link" [routerLink]="route" [attr.aria-label]="title">
+    <div class="listing-card__image">
+      <app-image-with-fallback [src]="image" [alt]="title" [type]="type"></app-image-with-fallback>
+      <span class="listing-card__badge">{{ category }}</span>
+      <span class="listing-card__sold" *ngIf="isSold">مباع</span>
+      <button class="listing-card__fav" type="button" [class.is-active]="favorite" (click)="toggleFavorite($event)" aria-label="حفظ في المفضلة">♥</button>
+    </div>
+
+    <div class="listing-card__body">
+      <h3 class="listing-card__title">{{ title }}</h3>
+      <div class="listing-card__meta">
+        <span>📍 {{ location }}</span>
+        <span>📅 {{ dateLabel }}</span>
+      </div>
+      <div class="listing-card__price">{{ priceLabel }}</div>
+      <span class="listing-card__cta">{{ type === 'service' ? 'طلب الخدمة' : 'عرض التفاصيل' }}</span>
+    </div>
+  </a>
+</article>

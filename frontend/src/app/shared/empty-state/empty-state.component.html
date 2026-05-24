@@ -1,0 +1,6 @@
+<section class="empty-state" dir="rtl">
+  <div class="empty-state__icon">{{ icon }}</div>
+  <h3>{{ title }}</h3>
+  <p>{{ subtitle }}</p>
+  <button *ngIf="showReset" type="button" (click)="reset.emit()">إعادة ضبط الفلاتر</button>
+</section>

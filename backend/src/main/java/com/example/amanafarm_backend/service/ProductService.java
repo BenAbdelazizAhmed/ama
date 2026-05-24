@@ -70,7 +70,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream().map(this::mapToResponse).toList();
+        return productRepository.findAllByOrderByCreatedAtDesc().stream().map(this::mapToResponse).toList();
     }
 
     public ProductResponse getProductById(Long id) {

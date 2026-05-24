@@ -129,6 +129,7 @@ export interface WholesaleItem {
 }
 
 export interface UserInfo {
+  id?: number;
   fullName: string;
   email: string;
   avatar: string;
@@ -212,7 +213,7 @@ export class StateService {
     this.notifs.set(LS.get<Notification[]>('af_notifs', []));
     const cached = LS.get<AnimalAd[]>(StateService.LS_ANIMALS, []);
     if (cached.length) this.animals.set(cached);
-    this.loadAll();
+    this.scheduleInitialLoad();
   }
 
   /** Décode le JWT (sans vérifier la signature) pour restaurer email/rôle après un rechargement */
@@ -237,6 +238,53 @@ export class StateService {
   }
 
   get token() { return this._token; }
+
+  isLoggedIn(): boolean {
+    return !!this._token && !!this.user();
+  }
+
+  getCurrentUser(): UserInfo | null {
+    return this.user();
+  }
+
+  getToken(): string | null {
+    return this._token;
+  }
+
+  hasRole(role: string): boolean {
+    const current = this.normalizeRole(this.user()?.role);
+    return current === this.normalizeRole(role);
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const current = this.normalizeRole(this.user()?.role);
+    return roles.map(role => this.normalizeRole(role)).includes(current);
+  }
+
+  canPublish(kind: 'animal' | 'product' | 'service'): boolean {
+    const role = this.normalizeRole(this.user()?.role);
+    if (role === 'admin') return true;
+    if (kind === 'service') return role === 'service_provider';
+    return role === 'seller' || role === 'farmer';
+  }
+
+  private normalizeRole(role?: string): string {
+    const value = String(role || 'buyer').toLowerCase();
+    const map: Record<string, string> = {
+      client: 'buyer',
+      buyer: 'buyer',
+      seller: 'seller',
+      vendeur: 'seller',
+      farmer: 'farmer',
+      agriculteur: 'farmer',
+      eleveur: 'farmer',
+      service_provider: 'service_provider',
+      prestataire: 'service_provider',
+      admin: 'admin',
+    };
+    return map[value] || value;
+  }
+
   setToken(t: string | null) {
     this._token = t;
     if (t) LS.set('af_token', t);
@@ -251,6 +299,13 @@ export class StateService {
     const h: Record<string, string> = { 'Content-Type': 'application/json' };
     if (this._token) h['Authorization'] = `Bearer ${this._token}`;
     return h;
+  }
+
+  private scheduleInitialLoad(): void {
+    const run = () => void this.loadAll();
+    const idle = (window as unknown as { requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number }).requestIdleCallback;
+    if (typeof idle === 'function') idle(run, { timeout: 1500 });
+    else setTimeout(run, 600);
   }
 
   private async loadAll() {

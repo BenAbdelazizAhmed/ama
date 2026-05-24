@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { AfterViewInit, Component, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -11,8 +11,24 @@ import {
   ServiceRequest,
   JobOffer,
 } from '../../services/state.service';
+import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
+
+interface SiteStats {
+  publishedAds: number;
+  siteVisits: number;
+  registeredUsers: number;
+}
+
+interface Testimonial {
+  stars: string;
+  text: string;
+  image: string;
+  name: string;
+  loc: string;
+  result: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -21,7 +37,7 @@ declare const lucide: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, AfterViewInit {
   animals: AnimalAd[] = [];
   workers: Worker[] = [];
   products: Product[] = [];
@@ -31,7 +47,15 @@ export class HomeComponent {
   jobs: JobOffer[] = [];
   currentTestimonial = 0;
 
-  testimonials = [
+  private siteStats: SiteStats = {
+    publishedAds: 0,
+    siteVisits: 0,
+    registeredUsers: 0,
+  };
+
+  private readonly API_BASE = environment.apiBaseUrl;
+
+  readonly testimonials: Testimonial[] = [
     {
       stars: '★★★★★',
       text: 'نشرت إعلاني في دقائق، الصور كانت واضحة والتواصل جا سريع على واتساب. التجربة حسستني أن المنصة جدية.',
@@ -68,18 +92,23 @@ export class HomeComponent {
     effect(() => { this.jobs = state.jobs(); });
   }
 
-  ngAfterViewInit() {
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-    this.initRevealMotion();
+  ngOnInit(): void {
+    void this.loadSiteStats();
   }
 
-  get totalAnimals() { return this.animals.length; }
-  get totalWorkers() { return this.workers.length; }
-  get totalProfiles() { return this.profiles.length; }
-  get totalProducts() { return this.products.length; }
-  get totalListings() { return this.animals.length + this.products.length + this.wholesale.length; }
+  ngAfterViewInit(): void {
+    this.refreshIcons();
+    this.initRevealMotion();
+    this.renderHomeStats();
+  }
 
-  goPost() {
+  get totalAnimals(): number { return this.animals.length; }
+  get totalWorkers(): number { return this.workers.length; }
+  get totalProfiles(): number { return this.profiles.length; }
+  get totalProducts(): number { return this.products.length; }
+  get totalListings(): number { return this.animals.length + this.products.length + this.wholesale.length; }
+
+  goPost(): void {
     if (!this.state.user()) {
       window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
       return;
@@ -87,23 +116,27 @@ export class HomeComponent {
     void this.router.navigate(['/animals']);
   }
 
-  browseAds() {
+  browseAds(): void {
     void this.router.navigate(['/animals']);
   }
 
-  prevTesti() {
+  prevTesti(): void {
     this.currentTestimonial = this.currentTestimonial === 0 ? this.testimonials.length - 1 : this.currentTestimonial - 1;
-    setTimeout(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 0);
+    setTimeout(() => this.refreshIcons(), 0);
   }
 
-  nextTesti() {
+  nextTesti(): void {
     this.currentTestimonial = this.currentTestimonial === this.testimonials.length - 1 ? 0 : this.currentTestimonial + 1;
-    setTimeout(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 0);
+    setTimeout(() => this.refreshIcons(), 0);
   }
 
-  private initRevealMotion() {
+  private refreshIcons(): void {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  private initRevealMotion(): void {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(
-      'app-home .home-trust-strip, app-home .market-entry, app-home .home-process, app-home .why-section, app-home .monetization-section, app-home .testimonials-section, app-home .services-section, app-home .partners-section, app-home .cta-section, app-home .home-trust-strip > div, app-home .market-entry-card, app-home .process-card, app-home .why-card, app-home .pricing-card, app-home .testi-card, app-home .service-card, app-home .plogo',
+      'app-home .market-entry, app-home .monetization-section, app-home .testimonials-section, app-home .services-section, app-home .partners-section, app-home .cta-section, app-home .market-entry-card, app-home .pricing-card, app-home .testi-card, app-home .service-card, app-home .plogo',
     ));
 
     nodes.forEach((el, index) => {
@@ -125,5 +158,57 @@ export class HomeComponent {
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
     nodes.forEach(el => observer.observe(el));
+  }
+
+  private async loadSiteStats(): Promise<void> {
+    try {
+      const res = await fetch(`${this.API_BASE}/api/stats/overview`);
+      const data = await this.safeJson(res);
+      if (!res.ok) return;
+      this.siteStats = {
+        publishedAds: this.toStatNumber(data['publishedAds']),
+        siteVisits: this.toStatNumber(data['siteVisits']),
+        registeredUsers: this.toStatNumber(data['registeredUsers']),
+      };
+    } catch {
+      this.siteStats = {
+        publishedAds: this.totalListings,
+        siteVisits: 0,
+        registeredUsers: this.state.user() ? 1 : 0,
+      };
+    } finally {
+      this.renderHomeStats();
+    }
+  }
+
+  private renderHomeStats(): void {
+    this.setText('homeRegisteredUsersStat', this.formatStat(this.siteStats.registeredUsers));
+    this.setText('homePublishedAdsStat', this.formatStat(this.siteStats.publishedAds));
+    this.setText('homeSiteVisitsStat', this.formatStat(this.siteStats.siteVisits));
+  }
+
+  private setText(id: string, value: string): void {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
+  private formatStat(value: number): string {
+    const n = Number(value || 0);
+    if (n >= 1000000) return `+${(n / 1000000).toFixed(1).replace('.0', '')}M`;
+    if (n >= 1000) return `+${(n / 1000).toFixed(1).replace('.0', '')}K`;
+    return String(n);
+  }
+
+  private async safeJson(res: Response): Promise<Record<string, unknown>> {
+    try {
+      return await res.json() as Record<string, unknown>;
+    } catch {
+      return {};
+    }
+  }
+
+  private toStatNumber(value: unknown): number {
+    const n = Number(value ?? 0);
+    return Number.isFinite(n) ? n : 0;
   }
 }

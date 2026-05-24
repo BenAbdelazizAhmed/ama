@@ -1,6 +1,7 @@
 package com.example.amanafarm_backend.service;
 
 import com.example.amanafarm_backend.model.User;
+import com.example.amanafarm_backend.model.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +34,8 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("uid", user.getId());
         claims.put("email", user.getEmail());
-        claims.put("role", user.getRole());
+        claims.put("role", UserRole.normalize(user.getRole()));
+        claims.put("authProvider", user.getAuthProvider());
 
         String subject = user.getEmail();
         if (subject == null || subject.isBlank()) {

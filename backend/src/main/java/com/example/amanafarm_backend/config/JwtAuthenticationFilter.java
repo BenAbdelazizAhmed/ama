@@ -6,12 +6,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,10 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var claims = jwtService.parseToken(token);
             if (claims != null) {
                 String email = claims.getSubject();
-                Long userId = claims.get("uid", Long.class);
                 String role = claims.get("role", String.class);
-                var auth = new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
-                auth.setDetails(new org.springframework.security.core.userdetails.User(email, "", Collections.emptyList()));
+                var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + (role == null ? "BUYER" : role)));
+                var auth = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                auth.setDetails(new org.springframework.security.core.userdetails.User(email, "", authorities));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }

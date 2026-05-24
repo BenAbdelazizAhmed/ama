@@ -11,9 +11,9 @@
       <button class="btn-hero-outline" (click)="browseAds()"><i data-lucide="search" width="17" aria-hidden="true"></i> تصفح الإعلانات</button>
     </div>
     <div class="hero-proof" role="list" aria-label="إحصائيات المنصة">
-      <div role="listitem"><div class="proof-num">+{{ totalListings || 1200 }}</div><div class="proof-lbl">مستخدم مسجل</div></div>
-      <div role="listitem"><div class="proof-num">+{{ totalAnimals + totalProducts + wholesale.length || 850 }}</div><div class="proof-lbl">إعلان منشور</div></div>
-      <div role="listitem"><div class="proof-num">+400</div><div class="proof-lbl">عملية ناجحة</div></div>
+      <div role="listitem"><div class="proof-num" id="homeRegisteredUsersStat">0</div><div class="proof-lbl">مستخدم مسجل</div></div>
+      <div role="listitem"><div class="proof-num" id="homePublishedAdsStat">0</div><div class="proof-lbl">إعلان منشور</div></div>
+      <div role="listitem"><div class="proof-num" id="homeSiteVisitsStat">0</div><div class="proof-lbl">زيارة للموقع</div></div>
       <div role="listitem"><div class="proof-num">4.7 ★</div><div class="proof-lbl">تقييم المستخدمين</div></div>
     </div>
   </div>
@@ -192,7 +192,7 @@
       <div class="testi-stars" aria-label="تقييم 5 نجوم">{{ t.stars }}</div>
       <p class="testi-text">{{ t.text }}</p>
       <div class="testi-author">
-        <img class="testi-avt-img" [src]="t.image" [alt]="t.name">
+        <img class="testi-avt-img" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async">
         <div><div class="testi-name">{{ t.name }}</div><div class="testi-loc">{{ t.loc }}</div><span class="testi-result">{{ t.result }}</span></div>
       </div>
     </div>
@@ -205,22 +205,22 @@
   <p class="section-sub">من البيع والشراء إلى الطب البيطري والنقل — منصة تتطور باستمرار.</p>
   <div class="services-grid">
     <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/animal-transport.svg" alt="نقل الحيوانات"></div>
+      <div class="svc-card-icon"><img src="assets/services/animal-transport.svg" alt="نقل الحيوانات" loading="lazy" decoding="async"></div>
       <h4>نقل الحيوانات</h4><p>شاحنات متخصصة لنقل بهايمك بأمان.</p>
       <span class="soon-badge">قريباً في 2026</span>
     </div>
     <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/vet-consult.svg" alt="استشارة بيطرية"></div>
+      <div class="svc-card-icon"><img src="assets/services/vet-consult.svg" alt="استشارة بيطرية" loading="lazy" decoding="async"></div>
       <h4>استشارة بيطرية</h4><p>تواصل مع بيطريين معتمدين في جهتك.</p>
       <span class="soon-badge">قريباً في 2026</span>
     </div>
     <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/vet-pharmacy.svg" alt="الصيدلية البيطرية"></div>
+      <div class="svc-card-icon"><img src="assets/services/vet-pharmacy.svg" alt="الصيدلية البيطرية" loading="lazy" decoding="async"></div>
       <h4>الصيدلية البيطرية</h4><p>أدوية ولقاحات ومكملات.</p>
       <span class="soon-badge">قريباً في 2026</span>
     </div>
     <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/farm-products.svg" alt="منتجات فلاحية"></div>
+      <div class="svc-card-icon"><img src="assets/services/farm-products.svg" alt="منتجات فلاحية" loading="lazy" decoding="async"></div>
       <h4>منتجات فلاحية</h4><p>أعلاف، بذور، أسمدة.</p>
       <span class="soon-badge">قريباً في 2026</span>
     </div>
@@ -232,27 +232,27 @@
   <h2 class="section-title">شركاؤنا الموثوقون</h2>
   <div class="partner-logos">
     <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/atb.svg" alt="ATB"></div>
+      <div class="plogo-icon"><img src="assets/partners/atb.svg" alt="ATB" loading="lazy" decoding="async"></div>
       <div class="pname">ATB</div>
       <div class="psub">بنك شريك</div>
     </div>
     <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/otd.svg" alt="OTD"></div>
+      <div class="plogo-icon"><img src="assets/partners/otd.svg" alt="OTD" loading="lazy" decoding="async"></div>
       <div class="pname">OTD</div>
       <div class="psub">الديوان التونسي للتنمية الفلاحية</div>
     </div>
     <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/utap.svg" alt="UTAP"></div>
+      <div class="plogo-icon"><img src="assets/partners/utap.svg" alt="UTAP" loading="lazy" decoding="async"></div>
       <div class="pname">UTAP</div>
       <div class="psub">اتحاد الفلاحين</div>
     </div>
     <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/crda.svg" alt="CRDA"></div>
+      <div class="plogo-icon"><img src="assets/partners/crda.svg" alt="CRDA" loading="lazy" decoding="async"></div>
       <div class="pname">CRDA</div>
       <div class="psub">التنمية الفلاحية الجهوية</div>
     </div>
     <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/smsa.svg" alt="SMSA"></div>
+      <div class="plogo-icon"><img src="assets/partners/smsa.svg" alt="SMSA" loading="lazy" decoding="async"></div>
       <div class="pname">SMSA</div>
       <div class="psub">شركات خدمات فلاحية</div>
     </div>

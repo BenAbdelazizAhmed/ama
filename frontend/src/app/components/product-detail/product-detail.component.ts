@@ -1,41 +1,45 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subscription, firstValueFrom, timeout } from 'rxjs';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-declare const lucide: any;
+import { StateService } from '../../services/state.service';
 
 type PriceType = 'FIXED' | 'NEGOTIABLE' | 'PER_KG' | 'PER_TON' | 'PER_UNIT' | string;
-type SellerType = 'company' | 'individual';
-type ProductTab = 'description' | 'location' | 'reviews' | 'similar';
 
 interface ProductDetail {
   id: string;
-  name: string;
+  title: string;
   category: string;
   price: number;
   priceType: PriceType;
-  unit?: string;
-  quantity?: string;
-  origin?: string;
-  wilaya?: string;
-  description?: string;
-  imageUrl?: string;
-  inStock?: boolean;
-  featured?: boolean;
-  deliveryAvailable?: boolean;
-  certified?: boolean;
-  sellerType: SellerType;
-  companyName?: string;
-  companyTagline?: string;
-  companyVerified?: boolean;
-  sellerName?: string;
-  sellerVerified?: boolean;
-  sellerRating?: string;
-  phone?: string;
-  createdAt?: Date;
+  unit: string;
+  quantity: string;
+  origin: string;
+  wilaya: string;
+  description: string;
+  imageUrls: string[];
+  inStock: boolean;
+  featured: boolean;
+  deliveryAvailable: boolean;
+  certified: boolean;
+  sellerName: string;
+  sellerSubtitle: string;
+  sellerRating: number;
+  phone: string;
+  createdAt: Date;
+}
+
+interface DetailSpec {
+  label: string;
+  value: string;
+}
+
+interface Toast {
+  id: number;
+  message: string;
+  type: 'success' | 'info' | 'error';
 }
 
 @Component({
@@ -45,329 +49,370 @@ interface ProductDetail {
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
 })
-export class ProductDetailComponent implements OnInit, OnDestroy {
-  private readonly API = `${environment.apiBaseUrl}/api/products`;
-  private routeSub?: Subscription;
+export class ProductDetailComponent implements OnDestroy {
+  private readonly api = `${environment.apiBaseUrl}/api/products`;
+  private readonly sub: Subscription;
+  private readonly toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
+  private toastCounter = 0;
 
   product: ProductDetail | null = null;
-  similar: ProductDetail[] = [];
+  similarProducts: ProductDetail[] = [];
   isLoading = true;
+  errorMessage = '';
   loadError = '';
+  selectedImage = '';
+  currentPhoto = 0;
   isFav = false;
-  activeTab: ProductTab = 'description';
+  toasts: Toast[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private http: HttpClient,
-  ) {}
-
-  ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe(() => {
-      this.loadProduct();
+    private location: Location,
+    public state: StateService,
+  ) {
+    this.sub = this.route.paramMap.subscribe(params => {
+      this.loadProduct(params.get('id') || '');
     });
   }
 
   ngOnDestroy(): void {
-    this.routeSub?.unsubscribe();
+    this.sub.unsubscribe();
+    this.toastTimers.forEach(timer => clearTimeout(timer));
   }
 
-  async loadProduct(): Promise<void> {
-    const id = this.route.snapshot.paramMap.get('id') || '';
-    const fallbackProducts = this.mockProducts();
-    const fallbackProduct = fallbackProducts.find(item => item.id === id) || fallbackProducts[0];
+  get activeImage(): string {
+    return this.selectedImage || this.detailPhotos[this.currentPhoto] || this.fallbackImage;
+  }
 
+  get detailPhotos(): string[] {
+    return this.product?.imageUrls?.length ? this.product.imageUrls : [this.fallbackImage];
+  }
+
+  get detailToasts(): Toast[] {
+    return this.toasts;
+  }
+
+  get hasLoadError(): boolean {
+    return !!this.loadError;
+  }
+
+  get loadErrorText(): string {
+    return this.loadError || 'تعذر تحميل المنتج.';
+  }
+
+  get isLoggedIn(): boolean {
+    return this.state.isLoggedIn();
+  }
+
+  get fallbackImage(): string {
+    return '/assets/hero-clean.jpg';
+  }
+
+  get specs(): DetailSpec[] {
+    const p = this.product;
+    if (!p) return [];
+    return [
+      { label: 'الولاية', value: this.clean(p.wilaya) },
+      { label: 'نوع المنتج', value: this.clean(p.category) },
+      { label: 'الكمية', value: this.clean(p.quantity) },
+      { label: 'الوحدة', value: this.clean(p.unit) },
+      { label: 'الحالة', value: p.inStock ? 'متوفر' : 'غير متوفر' },
+      { label: 'السعر', value: `${this.fmt(p.price)} د.ت` },
+      { label: 'التوفر', value: this.stockLabel(p) },
+      { label: 'قابل للتفاوض', value: this.priceTypeLabel(p.priceType) },
+    ];
+  }
+
+  loadProduct(id: string): void {
     this.isLoading = true;
+    this.errorMessage = '';
     this.loadError = '';
-    this.product = fallbackProduct;
-    this.similar = this.getSimilar(fallbackProducts, fallbackProduct);
-    setTimeout(() => this.refreshIcons());
+    this.product = null;
+    this.selectedImage = '';
 
-    try {
-      const [backendProduct, backendList] = await Promise.all([
-        firstValueFrom(this.http.get<any>(`${this.API}/${encodeURIComponent(id)}`).pipe(timeout(2200))),
-        firstValueFrom(this.http.get<any[]>(this.API).pipe(timeout(2200))).catch(() => []),
-      ]);
-
-      this.product = this.mapProduct(backendProduct);
-      const products = (backendList || []).map(item => this.mapProduct(item));
-      this.similar = this.getSimilar(products.length ? products : fallbackProducts, this.product);
-    } catch {
-      this.loadError = 'تعذر الاتصال بالخادم، تم عرض نسخة مؤقتة من الإعلان.';
-      this.product = fallbackProduct;
-      this.similar = this.getSimilar(fallbackProducts, fallbackProduct);
-    } finally {
-      this.isLoading = false;
-      setTimeout(() => this.refreshIcons());
-    }
+    this.http.get<any>(`${this.api}/${encodeURIComponent(id)}`).pipe(timeout(2500)).subscribe({
+      next: data => {
+        const product = this.mapApiProduct(data, id);
+        this.setProduct(product);
+        this.loadSimilar(product);
+      },
+      error: () => {
+        const fallback = this.fallbackProducts().find(item => item.id === id);
+        if (!fallback) {
+          this.isLoading = false;
+          this.errorMessage = 'هذا المنتج غير موجود أو تعذر تحميله.';
+          this.loadError = this.errorMessage;
+          return;
+        }
+        this.setProduct(fallback);
+        this.similarProducts = this.fallbackProducts()
+          .filter(item => item.id !== fallback.id && item.category === fallback.category)
+          .slice(0, 4);
+      },
+    });
   }
 
   goBack(): void {
-    this.router.navigate(['/products']);
+    this.location.back();
   }
 
-  switchTab(tab: ProductTab): void {
-    this.activeTab = tab;
-    setTimeout(() => this.refreshIcons());
+  selectImage(image: string): void {
+    this.selectedImage = image;
+    const index = this.detailPhotos.indexOf(image);
+    this.currentPhoto = index >= 0 ? index : 0;
   }
 
-  toggleFav(): void {
-    this.isFav = !this.isFav;
-    setTimeout(() => this.refreshIcons());
+  setDetailPhoto(index: number): void {
+    const safeIndex = Math.max(0, Math.min(index, this.detailPhotos.length - 1));
+    this.currentPhoto = safeIndex;
+    this.selectedImage = this.detailPhotos[safeIndex] || this.fallbackImage;
   }
 
-  openWhatsapp(product: ProductDetail): void {
-    if (!product.phone) return;
-    const raw = product.phone.replace(/\D/g, '');
-    const phone = raw.startsWith('216') ? raw : `216${raw}`;
-    const msg = encodeURIComponent(`سلام، شفت "${product.name}" في AMANAFARM ونحب نسأل عليه.`);
-    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+  changeDetailPhoto(step: number): void {
+    const total = this.detailPhotos.length;
+    if (!total) return;
+    this.setDetailPhoto((this.currentPhoto + step + total) % total);
   }
 
-  share(product: ProductDetail): void {
-    const url = `${window.location.origin}/products/${encodeURIComponent(product.id)}`;
-    const text = `${product.name} - ${this.fmt(product.price)} دت`;
+  onImageError(): void {
+    this.selectedImage = this.fallbackImage;
+  }
 
-    if (navigator.share) {
-      navigator.share({ title: product.name, text, url }).catch(() => undefined);
+  contactSeller(): void {
+    if (!this.state.isLoggedIn()) {
+      this.requireLogin('contact-seller');
+      return;
+    }
+    this.openWhatsapp();
+  }
+
+  openWhatsapp(): void {
+    if (!this.product) return;
+    if (!this.state.isLoggedIn()) {
+      this.requireLogin('contact-seller');
       return;
     }
 
-    navigator.clipboard?.writeText(url);
-  }
-
-  handleImageError(product: ProductDetail): void {
-    product.imageUrl = undefined;
-    setTimeout(() => this.refreshIcons());
-  }
-
-  sellerName(product: ProductDetail): string {
-    return product.sellerType === 'company'
-      ? product.companyName || 'مورد موثوق'
-      : product.sellerName || 'بائع موثوق';
-  }
-
-  sellerSubtitle(product: ProductDetail): string {
-    if (product.sellerType === 'company') {
-      return product.companyTagline || 'شركة فلاحية موثوقة على AMANAFARM';
+    const phone = this.normalizePhone(this.product.phone);
+    if (!phone) {
+      this.showToast('رقم الهاتف غير متوفر لهذا المنتج.', 'error');
+      return;
     }
 
-    return product.wilaya ? `بائع مباشر من ${product.wilaya}` : 'بائع مباشر';
+    const message = encodeURIComponent(`مرحبا، شفت منتج "${this.product.title}" في AMANAFARM ونحب نسأل على التوفر والتوصيل.`);
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank', 'noopener,noreferrer');
   }
 
-  isVerified(product: ProductDetail): boolean {
-    return !!(product.companyVerified || product.sellerVerified || product.certified);
+  toggleFav(): void {
+    if (!this.state.isLoggedIn()) {
+      this.requireLogin('favorite');
+      return;
+    }
+    this.isFav = !this.isFav;
+    this.showToast(this.isFav ? 'تم حفظ المنتج في المفضلة.' : 'تم حذف المنتج من المفضلة.', 'success');
   }
 
-  postedLabel(product: ProductDetail): string {
-    if (!product.createdAt) return 'منذ وقت قريب';
-
-    const days = Math.max(0, Math.floor((Date.now() - product.createdAt.getTime()) / 86400000));
-    if (days === 0) return 'اليوم';
-    if (days === 1) return 'البارح';
-    if (days < 30) return `منذ ${days} أيام`;
-
-    const months = Math.floor(days / 30);
-    if (months < 12) return months === 1 ? 'منذ شهر' : `منذ ${months} أشهر`;
-
-    const years = Math.floor(months / 12);
-    return years === 1 ? 'منذ عام' : `منذ ${years} أعوام`;
+  shareProduct(): void {
+    const url = window.location.href;
+    if (navigator.share && this.product) {
+      navigator.share({ title: this.product.title, url }).catch(() => undefined);
+      return;
+    }
+    navigator.clipboard?.writeText(url);
+    this.showToast('تم نسخ رابط المنتج', 'success');
   }
 
-  fmt(price: number): string {
-    return new Intl.NumberFormat('ar-TN', { maximumFractionDigits: 2 }).format(price || 0);
+  openWa(): void {
+    this.openWhatsapp();
   }
 
-  formatPriceType(type?: PriceType): string {
+  fmt(value: number | string): string {
+    const n = Number(value || 0);
+    return Number.isFinite(n) ? n.toLocaleString('fr-TN') : '-';
+  }
+
+  priceTypeLabel(type: PriceType): string {
     const map: Record<string, string> = {
       FIXED: 'سعر ثابت',
       NEGOTIABLE: 'قابل للتفاوض',
       PER_KG: 'للكيلو',
       PER_TON: 'للطن',
-      PER_UNIT: 'للقطعة',
+      PER_UNIT: 'للوحدة',
     };
-
-    return type ? map[type] || String(type) : '';
+    return map[type] || 'سعر ثابت';
   }
 
-  categoryIcon(category?: string): string {
-    const map: Record<string, string> = {
-      علف: 'wheat',
-      بذور: 'sprout',
-      'دوا بيطري': 'syringe',
-      معدات: 'tractor',
-      لوازم: 'package',
-      سماد: 'leaf',
-      'برودويات طبيعية': 'badge-check',
-    };
+  postedLabel(date: Date): string {
+    const days = Math.max(0, Math.floor((Date.now() - date.getTime()) / 86400000));
+    if (days === 0) return 'اليوم';
+    if (days === 1) return 'منذ يوم';
+    return `منذ ${days} أيام`;
+  }
 
-    return map[category || ''] || 'package';
+  stockLabel(product: ProductDetail): string {
+    return product.inStock ? 'متوفر الآن' : 'غير متوفر';
+  }
+
+  similarImage(item: ProductDetail): string {
+    return item.imageUrls[0] || this.fallbackImage;
   }
 
   trackById(_index: number, item: ProductDetail): string {
     return item.id;
   }
 
-  private getSimilar(products: ProductDetail[], product: ProductDetail | null): ProductDetail[] {
-    if (!product) return [];
-    return products
-      .filter(item => item.id !== product.id && (item.category === product.category || item.sellerType === product.sellerType))
-      .slice(0, 4);
+  trackBySpec(_index: number, item: DetailSpec): string {
+    return item.label;
   }
 
-  private mapProduct(item: any): ProductDetail {
-    const sellerType: SellerType = item?.sellerType === 'company' ? 'company' : 'individual';
-    const id = item?.id != null ? String(item.id) : String(Date.now());
+  trackByImage(_index: number, image: string): string {
+    return image;
+  }
 
+  trackByPhoto(_index: number, image: string): string {
+    return image;
+  }
+
+  trackByToast(_index: number, toast: Toast): number {
+    return toast.id;
+  }
+
+  trackByText(_index: number, item: unknown): string {
+    return typeof item === 'string' ? item : JSON.stringify(item);
+  }
+
+  showToast(message: string, type: Toast['type'] = 'info'): void {
+    const id = ++this.toastCounter;
+    this.toasts = [...this.toasts, { id, message, type }];
+    const timer = setTimeout(() => {
+      this.toasts = this.toasts.filter(toast => toast.id !== id);
+      this.toastTimers.delete(id);
+    }, 3200);
+    this.toastTimers.set(id, timer);
+  }
+
+  private setProduct(product: ProductDetail): void {
+    this.product = product;
+    this.currentPhoto = 0;
+    this.selectedImage = product.imageUrls[0] || this.fallbackImage;
+    this.isLoading = false;
+  }
+
+  private loadSimilar(product: ProductDetail): void {
+    this.http.get<any[]>(this.api).pipe(timeout(1800)).subscribe({
+      next: list => {
+        const mapped = (list || []).map(item => this.mapApiProduct(item, String(item?.id || '')));
+        this.similarProducts = mapped
+          .filter(item => item.id !== product.id && item.category === product.category)
+          .slice(0, 4);
+        if (!this.similarProducts.length) {
+          this.similarProducts = this.fallbackProducts().filter(item => item.id !== product.id).slice(0, 4);
+        }
+      },
+      error: () => {
+        this.similarProducts = this.fallbackProducts().filter(item => item.id !== product.id).slice(0, 4);
+      },
+    });
+  }
+
+  private mapApiProduct(raw: any, id: string): ProductDetail {
     return {
+      id: String(raw?.id ?? id),
+      title: this.clean(raw?.title || raw?.name || 'منتج فلاحي'),
+      category: this.clean(raw?.category || 'منتجات فلاحية'),
+      price: Number(raw?.price || 0),
+      priceType: raw?.priceType || 'FIXED',
+      unit: this.clean(raw?.unit || 'وحدة'),
+      quantity: this.clean(raw?.quantity || raw?.stock || 'حسب الاتفاق'),
+      origin: this.clean(raw?.origin || 'تونس'),
+      wilaya: this.clean(raw?.wilaya || raw?.location || 'تونس'),
+      description: this.clean(raw?.description || 'لا يوجد وصف مفصل لهذا المنتج.'),
+      imageUrls: this.extractImages(raw),
+      inStock: Boolean(raw?.inStock ?? raw?.available ?? true),
+      featured: Boolean(raw?.featured),
+      deliveryAvailable: Boolean(raw?.deliveryAvailable ?? raw?.hasDelivery),
+      certified: Boolean(raw?.certified ?? raw?.verified),
+      sellerName: this.clean(raw?.companyName || raw?.sellerName || 'بائع موثوق'),
+      sellerSubtitle: this.clean(raw?.companyTagline || raw?.sellerType || 'مورد فلاحي على AMANAFARM'),
+      sellerRating: Number(raw?.sellerRating || 4.8),
+      phone: this.clean(raw?.phone || raw?.contactPhone || ''),
+      createdAt: raw?.createdAt ? new Date(raw.createdAt) : new Date(),
+    };
+  }
+
+  private extractImages(raw: any): string[] {
+    const rawImages = Array.isArray(raw?.images) ? raw.images : [];
+    const urls: string[] = rawImages
+      .map((img: any) => typeof img === 'string' ? img : (img?.imageUrl || img?.url || img?.src || ''))
+      .filter(Boolean);
+    if (raw?.mainImageUrl) urls.unshift(raw.mainImageUrl);
+    if (raw?.imageUrl) urls.unshift(raw.imageUrl);
+    if (raw?.image) urls.unshift(raw.image);
+    return [...new Set(urls.map((url: string) => this.normalizeImageUrl(url)).filter(Boolean))];
+  }
+
+  private normalizeImageUrl(url: string): string {
+    const clean = String(url || '').trim();
+    if (!clean) return '';
+    if (/^(https?:|data:|blob:|\/)/i.test(clean)) return clean;
+    if (clean.startsWith('assets/')) return `/${clean}`;
+    if (clean.startsWith('uploads/')) return `${environment.apiBaseUrl}/${clean}`;
+    return `/assets/${clean}`;
+  }
+
+  private normalizePhone(raw: string): string {
+    let phone = String(raw || '').replace(/\D/g, '');
+    if (!phone || phone === '0') return '';
+    if (phone.length === 8) phone = `216${phone}`;
+    return phone;
+  }
+
+  private clean(value: unknown): string {
+    const text = String(value ?? '').trim();
+    return text && text !== 'undefined' && text !== 'null' ? text : 'غير محدد';
+  }
+
+  private requireLogin(action: string): void {
+    this.showToast('سجّل الدخول للتواصل مع البائع', 'info');
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
+  }
+
+  private fallbackProducts(): ProductDetail[] {
+    const base = (id: string, title: string, category: string, price: number, image: string): ProductDetail => ({
       id,
-      name: item?.title || item?.name || 'برودوي فلاحي',
-      category: item?.category || 'برودويات',
-      price: Number(item?.price ?? 0),
-      priceType: item?.priceType || 'FIXED',
-      unit: item?.unit || undefined,
-      quantity: item?.quantity || undefined,
-      origin: item?.origin || undefined,
-      wilaya: item?.wilaya || item?.location || undefined,
-      description: item?.description || undefined,
-      imageUrl: item?.imageUrl || this.productImageFor(id, item?.title || item?.name, item?.category),
-      inStock: item?.inStock ?? true,
-      featured: !!item?.featured,
-      deliveryAvailable: !!item?.deliveryAvailable,
-      certified: !!item?.certified,
-      sellerType,
-      companyName: item?.companyName || undefined,
-      companyTagline: item?.companyTagline || undefined,
-      companyVerified: !!item?.companyVerified,
-      sellerName: item?.sellerName || undefined,
-      sellerVerified: !!item?.sellerVerified,
-      sellerRating: item?.sellerRating || '4.8',
-      phone: item?.contactPhone || item?.phone || undefined,
-      createdAt: item?.createdAt ? new Date(item.createdAt) : undefined,
-    };
-  }
+      title,
+      category,
+      price,
+      priceType: category === 'برودويات طبيعية' ? 'PER_KG' : 'FIXED',
+      unit: category === 'برودويات طبيعية' ? 'لتر' : 'وحدة',
+      quantity: id === '20' ? '300 لتر' : 'حسب الاتفاق',
+      origin: 'تونس',
+      wilaya: id === '20' ? 'المهدية' : 'صفاقس',
+      description: 'منتج فلاحي موثوق على AMANAFARM، متوفر للتواصل المباشر مع البائع والتحقق من الكمية والتوصيل قبل الاتفاق.',
+      imageUrls: [image],
+      inStock: true,
+      featured: id === '20',
+      deliveryAvailable: true,
+      certified: true,
+      sellerName: id === '20' ? 'Natural Farm' : 'مورد موثوق',
+      sellerSubtitle: 'منتجات فلاحية تونسية',
+      sellerRating: 4.8,
+      phone: '55123456',
+      createdAt: new Date(),
+    });
 
-  private mockProducts(): ProductDetail[] {
     return [
-      {
-        id: '20',
-        name: 'زيت زيتون بكر ممتاز',
-        category: 'برودويات طبيعية',
-        price: 22,
-        priceType: 'PER_KG',
-        unit: 'لتر',
-        quantity: '300 لتر',
-        origin: 'تونس',
-        wilaya: 'المهدية',
-        description:
-          'زيت زيتون بكر ممتاز من إنتاج تونسي، معروض بكميات مناسبة للعائلات، المطاعم، والمحلات. الجودة مراجعة والتسليم متاح حسب الولاية والكمية.',
-        imageUrl: this.productImageFor('20'),
-        inStock: true,
-        featured: true,
-        deliveryAvailable: true,
-        certified: true,
-        sellerType: 'company',
-        companyName: 'Natural Farm',
-        companyTagline: 'برودويات طبيعية تونسية',
-        companyVerified: true,
-        sellerRating: '4.8',
-        phone: '74222111',
-        createdAt: new Date('2024-11-15'),
-      },
-      {
-        id: '1',
-        name: 'علف مركب للأغنام 25كغ',
-        category: 'علف',
-        price: 45,
-        priceType: 'FIXED',
-        unit: 'كيس 25كغ',
-        quantity: '200 كيس',
-        origin: 'تونس',
-        wilaya: 'صفاقس',
-        description: 'علف متوازن مناسب للأغنام، متوفر بكميات محترمة ومع إمكانية التوصيل حسب الولاية.',
-        imageUrl: this.productImageFor('1'),
-        inStock: true,
-        featured: true,
-        deliveryAvailable: true,
-        certified: true,
-        sellerType: 'company',
-        companyName: 'SMSA صفاقس',
-        companyTagline: 'مورد علف ومستحضرات فلاحية',
-        companyVerified: true,
-        sellerRating: '4.9',
-        phone: '55123456',
-        createdAt: new Date('2024-11-01'),
-      },
-      {
-        id: '4',
-        name: 'بذور طماطم هجينة',
-        category: 'بذور',
-        price: 12,
-        priceType: 'PER_UNIT',
-        unit: 'علبة 50 بذرة',
-        quantity: '80 علبة',
-        origin: 'هولندا',
-        wilaya: 'نابل',
-        description: 'بذور طماطم هجينة مناسبة للموسم، إنتاجية جيدة وموجهة للفلاحين الباحثين عن جودة ثابتة.',
-        imageUrl: this.productImageFor('4'),
-        inStock: true,
-        deliveryAvailable: true,
-        certified: true,
-        sellerType: 'individual',
-        sellerName: 'محمد العجمي',
-        sellerVerified: true,
-        sellerRating: '4.7',
-        phone: '55123456',
-        createdAt: new Date('2024-11-10'),
-      },
-      {
-        id: '7',
-        name: 'عسل طبيعي جبلي',
-        category: 'برودويات طبيعية',
-        price: 35,
-        priceType: 'PER_KG',
-        unit: 'كغ',
-        origin: 'تونس',
-        wilaya: 'الكاف',
-        description: 'عسل جبلي طبيعي من مناطق الكاف، مناسب للاستهلاك العائلي أو البيع بالجملة حسب الكمية.',
-        imageUrl: this.productImageFor('7'),
-        inStock: true,
-        deliveryAvailable: true,
-        certified: true,
-        sellerType: 'individual',
-        sellerName: 'يوسف الغريبي',
-        sellerVerified: true,
-        sellerRating: '5.0',
-        phone: '55123456',
-        createdAt: new Date('2024-11-12'),
-      },
+      base('1', 'علف مركب للأغنام 25كغ', 'أعلاف', 45, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&q=80'),
+      base('4', 'بذور طماطم هجينة', 'بذور', 12, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
+      base('7', 'عسل طبيعي جبلي', 'برودويات طبيعية', 35, 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=900&q=80'),
+      base('20', 'زيت زيتون بكر ممتاز', 'برودويات طبيعية', 22, 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=900&q=80'),
+      base('21', 'تمر دقلة نور من قبلي', 'برودويات طبيعية', 12, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=900&q=80'),
+      base('22', 'طماطم موسمية من نابل', 'خضر', 2.8, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
+      base('23', 'بطاطا موسمية من جندوبة', 'خضر', 1.9, 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=900&q=80'),
+      base('24', 'فلفل حار تونسي', 'خضر', 4.5, 'https://images.unsplash.com/photo-1526346698789-22fd84314424?w=900&q=80'),
+      base('25', 'سماد عضوي تونسي', 'سماد', 25, 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80'),
+      base('26', 'مضخة ماء فلاحية', 'معدات', 420, 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80'),
     ];
-  }
-
-  private refreshIcons(): void {
-    try {
-      lucide?.createIcons?.();
-    } catch {
-      // Decorative icons should never block the page.
-    }
-  }
-
-  private productImageFor(id?: string, name = '', category = ''): string {
-    const img = (photoId: string) => `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=1000&q=82`;
-    const byId: Record<string, string> = {
-      '1': img('photo-1574323347407-f5e1ad6d020b'),
-      '4': img('photo-1592924357228-91a4daadcfea'),
-      '7': img('photo-1587049352846-4a222e784d38'),
-      '20': img('photo-1474979266404-7eaacbcd87c5'),
-    };
-
-    if (id && byId[id]) return byId[id];
-
-    const text = `${name} ${category}`.toLowerCase();
-    if (text.includes('زيت') || text.includes('olive')) return byId['20'];
-    if (text.includes('عسل')) return byId['7'];
-    if (text.includes('طماطم')) return byId['4'];
-    if (text.includes('علف') || text.includes('شعير')) return byId['1'];
-    return img('photo-1500382017468-9049fed747ef');
   }
 }

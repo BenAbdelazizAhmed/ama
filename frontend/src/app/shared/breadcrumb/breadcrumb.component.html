@@ -1,0 +1,7 @@
+<nav class="breadcrumb" dir="rtl" aria-label="مسار الصفحة">
+  <ng-container *ngFor="let item of items; let last = last">
+    <a *ngIf="item.route && !last" [routerLink]="item.route">{{ item.label }}</a>
+    <span *ngIf="!item.route || last" [class.is-current]="last">{{ item.label }}</span>
+    <b *ngIf="!last">›</b>
+  </ng-container>
+</nav>
