@@ -579,6 +579,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
     this.cdr.markForCheck();
+    setTimeout(() => this.presentAddModal());
   }
 
   openCompanyAddModal(): void {
@@ -593,6 +594,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
     this.cdr.markForCheck();
+    setTimeout(() => this.presentAddModal());
   }
 
   closeAddModal(): void {
@@ -709,6 +711,16 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   scrollToProducts(): void { document.getElementById('products-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+  private presentAddModal(): void {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    const overlay = document.querySelector<HTMLElement>('app-products .modal-overlay.modal-overlay--show, .modal-overlay.modal-overlay--show');
+    const card = overlay?.querySelector<HTMLElement>('.add-modal');
+    const body = overlay?.querySelector<HTMLElement>('.add-modal__body');
+    overlay?.scrollTo({ top: 0, behavior: 'auto' });
+    body?.scrollTo({ top: 0, behavior: 'auto' });
+    card?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+  }
 
   private requireLogin(action = ''): boolean {
     if (this.state.user()) return true;

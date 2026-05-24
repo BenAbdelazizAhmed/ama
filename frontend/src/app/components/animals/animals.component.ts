@@ -508,7 +508,10 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showAddModal = true;
     document.body.style.overflow = 'hidden';
     document.body.classList.add('animal-publish-open');
-    setTimeout(() => this.refreshIcons());
+    setTimeout(() => {
+      this.presentAddModal();
+      this.refreshIcons();
+    });
   }
 
   openSingleAddModal() { this.openAddModal('single'); }
@@ -532,6 +535,16 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   scrollToMarket() {
     this.marketSectionRef?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private presentAddModal(): void {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    const overlay = document.querySelector<HTMLElement>('app-animals .modal-overlay.show, .modal-overlay.show');
+    const card = overlay?.querySelector<HTMLElement>('.publish-flow-card, .modal-card');
+    const body = overlay?.querySelector<HTMLElement>('.modal-body');
+    overlay?.scrollTo({ top: 0, behavior: 'auto' });
+    body?.scrollTo({ top: 0, behavior: 'auto' });
+    card?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
   }
 
   closeAddModal() {

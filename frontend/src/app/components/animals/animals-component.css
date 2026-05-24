@@ -5976,19 +5976,27 @@
 /* Final publish-modal viewport guard: keep the form away from browser/app chrome. */
 .modal-overlay.show,
 .modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  display: flex !important;
   padding: clamp(18px, 3vh, 34px) clamp(12px, 3vw, 28px) !important;
   align-items: center !important;
   justify-content: center !important;
+  overflow: hidden !important;
 }
 
 .modal-overlay .modal-card,
 .modal-overlay .modal-card.publish-flow-card {
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
   transform: none !important;
   margin: auto !important;
+  z-index: 2147483001 !important;
+  width: min(860px, calc(100vw - 28px)) !important;
   max-height: calc(100dvh - clamp(36px, 6vh, 68px)) !important;
+  transform: translate(-50%, -50%) !important;
 }
 
 .modal-overlay .modal-card.publish-flow-card .modal-body {
