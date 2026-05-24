@@ -9,7 +9,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, firstValueFrom, timeout } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -276,16 +276,25 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<void>();
   private destroy$ = new Subject<void>();
   private pendingOpenAdd = false;
+  private lastPublishOpenToken = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
+    private route: ActivatedRoute,
     private router: Router,
     public state: StateService,
   ) {}
 
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(() => this.applyFilter());
+    this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const publish = params.get('publish');
+      const token = params.get('open') || publish || '';
+      if (publish !== 'product' || !token || token === this.lastPublishOpenToken) return;
+      this.lastPublishOpenToken = token;
+      setTimeout(() => this.openAddModal(), 80);
+    });
     this.loadProducts();
   }
 
@@ -298,7 +307,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   @HostListener('window:amanafarm-authenticated', ['$event'])
   onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
     const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
-    if (!this.pendingOpenAdd && action !== 'product-add') return;
+    if (!this.pendingOpenAdd && action !== 'product-add' && action !== 'product-add-company') return;
     this.pendingOpenAdd = false;
     sessionStorage.removeItem('amanafarm-pending-action');
     setTimeout(() => {
@@ -564,7 +573,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openAddModal(): void {
-    if (!this.requireLogin('product-add')) return;
     this.addForm = this.emptyAddForm();
     this.addErrors = {};
     this.addStep = 1;
@@ -574,7 +582,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openCompanyAddModal(): void {
-    if (!this.requireLogin('product-add-company')) return;
     this.addForm = { ...this.emptyAddForm(), sellerType: 'company' };
     if (this.activeCompany) {
       const company = this.getCompany(this.activeCompany);

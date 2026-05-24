@@ -7211,6 +7211,17 @@
   }
 }
 
+/* Final publish-modal viewport guard: avoid blending with the sticky app navigation. */
+:host > .modal-overlay.modal-overlay--show,
+.modal-overlay.modal-overlay--show {
+  padding: clamp(18px, 3vh, 34px) clamp(12px, 3vw, 28px) !important;
+}
+
+:host > .modal-overlay.modal-overlay--show .add-modal,
+.modal-overlay.modal-overlay--show .add-modal {
+  max-height: calc(100dvh - clamp(36px, 6vh, 68px)) !important;
+}
+
 /* Unified hero sizing with /animals and /services */
 :host {
   --products-shell: min(1320px, calc(100% - clamp(28px, 5vw, 72px))) !important;

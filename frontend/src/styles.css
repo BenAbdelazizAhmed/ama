@@ -866,6 +866,123 @@ body.logged-in .guest-only { display: none; }
 .rate-notice { background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px; padding: 9px 13px; font-size: 12px; font-weight: 700; color: #856404; margin-bottom: 12px; display: none; }
 .rate-notice.show { display: block; }
 
+/* Final auth modal responsive guard */
+.overlay.show {
+  align-items: center !important;
+  justify-content: center !important;
+  padding: clamp(14px, 3vh, 30px) clamp(12px, 3vw, 28px) !important;
+  overflow-y: auto !important;
+}
+
+.overlay.show .auth-modal {
+  width: min(1040px, calc(100vw - clamp(24px, 6vw, 56px))) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - clamp(28px, 6vh, 64px)) !important;
+  display: grid !important;
+  grid-template-columns: minmax(320px, .9fr) minmax(360px, 1fr) !important;
+  gap: 14px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+}
+
+.overlay.show .auth-brand {
+  min-height: 0 !important;
+  height: auto !important;
+  border-radius: 24px !important;
+}
+
+.overlay.show .auth-brand__content {
+  padding: clamp(24px, 3vw, 34px) !important;
+}
+
+.overlay.show .auth-brand h2 {
+  font-size: clamp(28px, 3.2vw, 38px) !important;
+}
+
+.overlay.show .auth-card {
+  margin: 10px !important;
+  max-height: calc(100dvh - clamp(48px, 8vh, 84px)) !important;
+  padding: clamp(22px, 3vw, 34px) !important;
+  border-radius: 22px !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+.overlay.show .close-auth {
+  top: 16px !important;
+  left: 16px !important;
+}
+
+.overlay.show .auth-tabs {
+  width: calc(100% - 52px) !important;
+  margin-bottom: 24px !important;
+}
+
+.overlay.show .auth-panel-head {
+  margin-bottom: 22px !important;
+}
+
+.overlay.show .auth-panel-head h2 {
+  font-size: clamp(1.65rem, 3.5vw, 2.2rem) !important;
+}
+
+.overlay.show .field-auth {
+  margin-bottom: 14px !important;
+}
+
+.overlay.show .field-auth input,
+.overlay.show .phone-prefix {
+  height: 52px !important;
+  min-height: 52px !important;
+}
+
+.overlay.show .submit-btn {
+  height: 52px !important;
+}
+
+@media (max-width: 900px) {
+  .overlay.show .auth-modal {
+    width: min(560px, calc(100vw - 24px)) !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .overlay.show .auth-brand {
+    display: none !important;
+  }
+
+  .overlay.show .auth-card {
+    margin: 0 !important;
+    max-height: calc(100dvh - 28px) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .overlay.show {
+    padding: 10px !important;
+    align-items: center !important;
+  }
+
+  .overlay.show .auth-modal {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100dvh - 20px) !important;
+    border-radius: 22px !important;
+  }
+
+  .overlay.show .auth-card {
+    padding: 22px 16px 26px !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+
+  .overlay.show .fields-row,
+  .overlay.show .reg-cats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .overlay.show .steps-indicator {
+    overflow-x: auto !important;
+  }
+}
+
 /* Legal modal */
 .legal-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 6000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .legal-modal.show { display: flex; }
@@ -5216,13 +5333,25 @@ body app-about * {
     height: 42px !important;
   }
 
-  .btn-login-header,
   .btn-post-header {
     width: 42px !important;
     height: 42px !important;
     min-width: 42px !important;
     padding: 0 !important;
     justify-content: center !important;
+  }
+
+  .btn-login-header {
+    width: auto !important;
+    max-width: 96px !important;
+    height: 42px !important;
+    min-width: 76px !important;
+    padding: 0 10px !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    text-align: center !important;
   }
 
   .floating-post-cta {

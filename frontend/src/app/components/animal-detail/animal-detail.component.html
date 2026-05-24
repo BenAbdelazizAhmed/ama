@@ -25,7 +25,7 @@
 
         <main class="market-shell">
           <section class="gallery-column">
-            <div class="gallery-frame">
+            <div class="gallery-frame" [class.gallery-frame--single]="detailPhotos.length <= 1">
               <div class="thumbs" *ngIf="detailPhotos.length > 1">
                 <button
                   class="thumb"

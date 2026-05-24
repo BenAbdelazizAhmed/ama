@@ -6,8 +6,9 @@
   OnInit,
   OnDestroy,
   NgZone,
+  HostListener,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -116,6 +117,8 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   toast: ToastMsg | null = null;
   private toastTimer: any;
   private filterTimer: any;
+  private pendingOpenAdd = false;
+  private lastPublishOpenToken = '';
 
   readonly CATEGORIES = [
     'الكل', 'أغنام', 'أبقار', 'ماعز', 'دواجن', 'خيول', 'جمال', 'أرانب',
@@ -198,6 +201,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
     private router: Router,
     private zone: NgZone,
     public state: StateService,
@@ -205,7 +209,23 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.loadFavs();
+    this.route.queryParamMap.subscribe(params => {
+      const publish = params.get('publish');
+      const token = params.get('open') || publish || '';
+      if (publish !== 'animal' || !token || token === this.lastPublishOpenToken) return;
+      this.lastPublishOpenToken = token;
+      setTimeout(() => this.openAddModal(), 80);
+    });
     this.loadAnimals();
+  }
+
+  @HostListener('window:amanafarm-authenticated', ['$event'])
+  onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
+    const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
+    if (!this.pendingOpenAdd && action !== 'animal-add') return;
+    this.pendingOpenAdd = false;
+    sessionStorage.removeItem('amanafarm-pending-action');
+    setTimeout(() => this.openAddModal(), 80);
   }
 
   ngAfterViewInit() {
@@ -473,7 +493,6 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openAddModal(mode: 'single' | 'bulk' = 'single') {
-    if (!this.requireLogin()) return;
     this.addListingMode = mode;
     this.addForm = this.freshForm();
     if (mode === 'bulk') {
@@ -685,9 +704,11 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
-  private requireLogin(): boolean {
+  private requireLogin(action = ''): boolean {
     if (this.state.user()) return true;
-    window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
+    this.pendingOpenAdd = action === 'animal-add';
+    if (action) sessionStorage.setItem('amanafarm-pending-action', action);
+    window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
     return false;
   }
 

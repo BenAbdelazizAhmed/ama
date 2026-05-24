@@ -3,13 +3,14 @@
   direction: rtl;
   --detail-card-pad: 18px;
   --detail-gap: 16px;
+  --detail-shell: min(1420px, calc(100% - clamp(24px, 4vw, 72px)));
 }
 
 * { box-sizing: border-box; }
 
 .detail-page {
   min-height: 100vh;
-  padding: 12px 0 42px;
+  padding: 16px 0 48px;
   background: linear-gradient(135deg, #eef6ea 0%, #f8fbf7 100%);
   color: #172017;
   font-family: 'Cairo', 'Segoe UI', Arial, sans-serif;
@@ -22,7 +23,7 @@ h1, h2, h3, p { margin: 0; }
 
 .detail-wrap,
 .detail-loading {
-  width: min(1380px, calc(100% - 44px));
+  width: var(--detail-shell);
   margin-inline: auto;
 }
 
@@ -51,11 +52,11 @@ h1, h2, h3, p { margin: 0; }
 
 .market-grid {
   display: grid;
-  grid-template-columns: 480px minmax(0, 1fr) 300px;
-  gap: 20px;
+  grid-template-columns: minmax(340px, 430px) minmax(0, 1fr) minmax(280px, 320px);
+  gap: 22px;
   align-items: start;
-  padding: 20px;
-  border-radius: 28px;
+  padding: clamp(16px, 2vw, 24px);
+  border-radius: 26px;
   background: #fff;
   box-shadow: 0 24px 64px rgba(34, 82, 38, .14);
   direction: ltr;
@@ -70,8 +71,12 @@ h1, h2, h3, p { margin: 0; }
 
 .product-gallery {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
+  grid-template-columns: 78px minmax(0, 1fr);
   gap: 14px;
+}
+
+.product-gallery--single {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .thumb-strip {
@@ -82,8 +87,8 @@ h1, h2, h3, p { margin: 0; }
 }
 
 .thumb {
-  width: 88px;
-  height: 88px;
+  width: 78px;
+  height: 78px;
   overflow: hidden;
   padding: 0;
   border: 2px solid transparent;
@@ -96,16 +101,22 @@ h1, h2, h3, p { margin: 0; }
 
 .media-frame {
   position: relative;
-  height: 405px;
+  min-height: 420px;
+  height: clamp(420px, 34vw, 560px);
   overflow: hidden;
-  border-radius: 18px;
-  background: #eaf4e3;
+  border: 1px solid #dfeadd;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255,255,255,.92), transparent 34%),
+    linear-gradient(135deg, #eef7ea, #dfeedd);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.65), 0 16px 38px rgba(32, 73, 36, .11);
 }
 
 .media-frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: clamp(8px, 1.6vw, 18px);
 }
 
 .media-badges {
@@ -132,7 +143,7 @@ h1, h2, h3, p { margin: 0; }
 
 .product-info {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(230px, .8fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(220px, .85fr);
   gap: var(--detail-gap);
 }
 
@@ -309,7 +320,7 @@ h1, h2, h3, p { margin: 0; }
 
 .seller-rail {
   position: sticky;
-  top: 88px;
+  top: 132px;
   display: grid;
   gap: var(--detail-gap);
 }
@@ -579,11 +590,21 @@ h1, h2, h3, p { margin: 0; }
 
 @media (max-width: 1180px) {
   .market-grid {
-    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
   }
 
   .product-gallery {
     grid-column: 1 / -1;
+    grid-template-columns: 86px minmax(0, 1fr);
+  }
+
+  .product-gallery--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .media-frame {
+    height: clamp(360px, 48vw, 520px);
+    min-height: 360px;
   }
 
   .info-grid,
@@ -599,8 +620,32 @@ h1, h2, h3, p { margin: 0; }
     grid-template-columns: 1fr;
   }
 
+  .market-grid {
+    gap: 16px;
+  }
+
   .seller-rail {
     position: static;
+  }
+
+  .product-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .thumb-strip {
+    display: flex;
+    order: 2;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .thumb {
+    flex: 0 0 76px;
+  }
+
+  .media-frame {
+    min-height: 330px;
+    height: clamp(330px, 62vw, 460px);
   }
 
   .summary-panel,
@@ -620,26 +665,19 @@ h1, h2, h3, p { margin: 0; }
     --detail-gap: 12px;
   }
 
-  .detail-page { padding-top: 6px; }
+  .detail-page {
+    padding-top: 8px;
+    padding-bottom: 90px;
+  }
 
   .detail-wrap,
   .detail-loading {
-    width: min(100% - 24px, 1380px);
+    width: calc(100% - 20px);
   }
 
   .market-grid {
     padding: 14px;
     border-radius: 22px;
-  }
-
-  .product-gallery {
-    grid-template-columns: 1fr;
-  }
-
-  .thumb-strip {
-    display: flex;
-    order: 2;
-    overflow-x: auto;
   }
 
   .thumb {
@@ -650,7 +688,13 @@ h1, h2, h3, p { margin: 0; }
 
   .media-frame,
   .skeleton-media {
-    height: 280px;
+    min-height: 280px;
+    height: 72vw;
+    max-height: 360px;
+  }
+
+  .media-frame img {
+    padding: 8px;
   }
 
   .price-panel strong { font-size: 34px; }

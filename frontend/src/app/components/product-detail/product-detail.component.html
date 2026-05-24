@@ -26,7 +26,7 @@
         </nav>
 
         <main class="market-grid">
-          <section class="product-gallery">
+          <section class="product-gallery" [class.product-gallery--single]="detailPhotos.length <= 1">
             <div class="thumb-strip" *ngIf="detailPhotos.length > 1">
               <button
                 class="thumb"

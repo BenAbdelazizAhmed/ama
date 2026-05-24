@@ -30,6 +30,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   navHidden = false;
   routeTransition = false;
   canPublishPrimary = false;
+  showPublishChooser = false;
   publishLabel = 'نشر إعلان';
   regCategory = 'تربية الحيوانات';
   loginAttempts = { count: 0, blockedUntil: 0 };
@@ -123,6 +124,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
+      this.closePublishChooser();
       this.closeModal('authOverlay');
       this.closeDropdown();
     }
@@ -179,21 +181,41 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   goPublish(): void {
-    if (!this.user) {
-      this.openAuthModal('login');
-      return;
-    }
-
-    const role = String(this.user.role || '').toLowerCase();
+    const role = String(this.user?.role || '').toLowerCase();
     if (role.includes('service')) {
       void this.router.navigate(['/services']);
       return;
     }
-    if (role.includes('seller')) {
-      void this.router.navigate(['/products']);
+
+    const canPublishAnimal = this.state.canPublish('animal');
+    const canPublishProduct = this.state.canPublish('product');
+    if (!this.user || (canPublishAnimal && canPublishProduct)) {
+      this.showPublishChooser = true;
+      setTimeout(() => this.refreshIcons());
       return;
     }
-    void this.router.navigate(['/animals']);
+    if (canPublishProduct) {
+      this.openPublishTarget('product');
+      return;
+    }
+    if (canPublishAnimal) {
+      this.openPublishTarget('animal');
+      return;
+    }
+    this.showPublishChooser = true;
+    setTimeout(() => this.refreshIcons());
+  }
+
+  closePublishChooser(): void {
+    this.showPublishChooser = false;
+  }
+
+  openPublishTarget(kind: 'animal' | 'product'): void {
+    this.showPublishChooser = false;
+    const route = kind === 'product' ? '/products' : '/animals';
+    void this.router.navigate([route], {
+      queryParams: { publish: kind, open: Date.now() },
+    });
   }
 
   toggleTheme(): void {
