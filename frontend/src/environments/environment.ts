@@ -1,6 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8081',
-  googleClientId: '',
-  facebookAppId: '',
+  apiBaseUrl: 'https://amanafarm.tn/api'
 };

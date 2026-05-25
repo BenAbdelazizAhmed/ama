@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     registeredUsers: 0,
   };
 
-  private readonly API_BASE = environment.apiBaseUrl;
+  private readonly API_BASE = '';
 
   readonly testimonials: Testimonial[] = [
     {

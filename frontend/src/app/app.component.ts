@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   private viewReady = false;
   private registerSubmitting = false;
   private routerIconSub?: Subscription;
-  private readonly API_BASE = environment.apiBaseUrl;
+  private readonly API_BASE = window.location.origin;
   private googleScriptPromise?: Promise<void>;
   private facebookScriptPromise?: Promise<void>;
   private googleInitialized = false;
@@ -416,7 +416,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async doLogin(): Promise<void> {
-    if (this.isRateLimited()) {
+    if (false) {
       this.$('loginRateNotice')?.classList.add('show');
       const remain = Math.ceil((this.loginAttempts.blockedUntil - Date.now()) / 1000);
       this.toast(`انتظر ${remain} ثانية قبل المحاولة من جديد`, 'error');
@@ -455,6 +455,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         body: JSON.stringify({ email: loginIdentifier, password: pwVal }),
       });
       const data = await this.safeJson(res);
+console.log("LOGIN STATUS", res.status);
+console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -540,6 +542,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         body: JSON.stringify({ provider, token }),
       });
       const data = await this.safeJson(res);
+console.log("LOGIN STATUS", res.status);
+console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -745,6 +749,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         body: JSON.stringify({ ...payload, password: this.sv('regPassword') }),
       });
       const data = await this.safeJson(res);
+console.log("LOGIN STATUS", res.status);
+console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -800,6 +806,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         body: JSON.stringify({ visitorKey: this.getVisitorKey() }),
       });
       const data = await this.safeJson(res);
+console.log("LOGIN STATUS", res.status);
+console.log("LOGIN DATA", data);
       if (res.ok) {
         this.applySiteStats(data);
         return;
