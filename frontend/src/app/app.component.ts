@@ -83,6 +83,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       this.bindRegisterCategoryButtons();
       this.bindPublishHeaderButton();
       this.bindAppShellControls();
+      this.bindPasswordToggles();
       this.updatePublishCtaState();
       this.syncPublishHeaderDom();
       this.renderAuthBrandStats();
@@ -334,6 +335,22 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.$('regPassword')?.addEventListener('input', event => this.checkPwStrengthInput(event));
     document.querySelectorAll<HTMLElement>('.social-coming').forEach(button => {
       button.addEventListener('click', () => this.showComingSoon(button.dataset['social'] || 'Social'), { passive: true });
+    });
+  }
+
+  private bindPasswordToggles(): void {
+    document.querySelectorAll<HTMLButtonElement>('.password-toggle[data-target]').forEach(button => {
+      if (button.dataset['bound'] === 'true') return;
+      button.dataset['bound'] = 'true';
+      button.addEventListener('click', () => {
+        const targetId = button.dataset['target'] || '';
+        const input = document.getElementById(targetId) as HTMLInputElement | null;
+        if (!input) return;
+        const shouldShow = input.type === 'password';
+        input.type = shouldShow ? 'text' : 'password';
+        button.textContent = shouldShow ? 'إخفاء' : 'إظهار';
+        button.setAttribute('aria-label', shouldShow ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+      });
     });
   }
 

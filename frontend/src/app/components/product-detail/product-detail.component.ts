@@ -1,10 +1,12 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
+
+declare const lucide: any;
 
 type PriceType = 'FIXED' | 'NEGOTIABLE' | 'PER_KG' | 'PER_TON' | 'PER_UNIT' | string;
 
@@ -49,7 +51,7 @@ interface Toast {
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
 })
-export class ProductDetailComponent implements OnDestroy {
+export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   private readonly api = `${environment.apiBaseUrl}/api/products`;
   private readonly sub: Subscription;
   private readonly toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -79,6 +81,10 @@ export class ProductDetailComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.toastTimers.forEach(timer => clearTimeout(timer));
+  }
+
+  ngAfterViewInit(): void {
+    this.refreshIcons();
   }
 
   get activeImage(): string {
@@ -297,6 +303,13 @@ export class ProductDetailComponent implements OnDestroy {
     this.currentPhoto = 0;
     this.selectedImage = product.imageUrls[0] || this.fallbackImage;
     this.isLoading = false;
+    this.refreshIcons();
+  }
+
+  private refreshIcons(): void {
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
   }
 
   private loadSimilar(product: ProductDetail): void {

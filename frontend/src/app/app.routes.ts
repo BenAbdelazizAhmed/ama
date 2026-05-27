@@ -30,6 +30,10 @@ export const appRoutes: Routes = [
     loadComponent: () => import("./components/products/products.component").then(m => m.ProductsComponent),
   },
   {
+    path: "help",
+    loadComponent: () => import("./components/help/help.component").then(m => m.HelpComponent),
+  },
+  {
     path: "about",
     loadComponent: () => import("./components/about/about.component").then(m => m.AboutComponent),
   },

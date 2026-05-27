@@ -5560,3 +5560,567 @@ body app-services > .services-hero.services-hero.services-hero {
     margin-right: calc(50% - 50vw + 9px) !important;
   }
 }
+
+/* AMANAFARM production responsive polish */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(46, 125, 50, .24);
+  outline-offset: 2px;
+}
+
+body :where(app-home, app-animals, app-products, app-services, app-wholesale, app-about, app-fellah, app-animal-detail, app-product-detail) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body :where(app-home, app-animals, app-products, app-services, app-wholesale, app-about, app-fellah, app-animal-detail, app-product-detail) :where(img, video, canvas, svg) {
+  max-width: 100%;
+}
+
+.mobile-bottom-nav button.active,
+.mobile-bottom-nav a.active {
+  color: var(--green);
+}
+
+#mobPublish {
+  color: #0f7a3c;
+  font-weight: 900;
+}
+
+#mobPublish i {
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(15,122,60,.26);
+}
+
+@media (max-width: 1100px) {
+  .header {
+    gap: 10px !important;
+  }
+
+  .search-wrap {
+    min-height: 46px;
+  }
+
+  .search-btn,
+  .btn-login-header,
+  .btn-post-header {
+    min-height: 44px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .ann-bar {
+    display: none;
+  }
+
+  .header {
+    position: sticky !important;
+    top: 0 !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    padding: 9px 10px !important;
+    border-bottom: 1px solid rgba(221,232,225,.9);
+    box-shadow: 0 8px 22px rgba(15, 61, 42, .07);
+  }
+
+  .logo {
+    gap: 8px !important;
+  }
+
+  .logo-texts .name {
+    letter-spacing: 0 !important;
+  }
+
+  .search-wrap {
+    height: 46px !important;
+    border-radius: 14px !important;
+  }
+
+  .search-wrap input {
+    font-size: 13px !important;
+    padding-inline: 12px !important;
+  }
+
+  .search-btn {
+    width: 64px !important;
+    border-radius: 14px 0 0 14px !important;
+  }
+
+  .mobile-bottom-nav {
+    height: calc(68px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-bottom-nav a,
+  .mobile-bottom-nav button {
+    min-height: 58px !important;
+    font-size: 10px !important;
+  }
+
+  footer {
+    padding-bottom: 88px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .logo-texts .name {
+    font-size: 14px !important;
+  }
+
+  .btn-login-header {
+    min-width: 66px !important;
+    max-width: 76px !important;
+    padding-inline: 7px !important;
+  }
+
+  .search-btn {
+    width: 56px !important;
+    font-size: 11px !important;
+  }
+
+  .mobile-bottom-nav span {
+    font-size: 9px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================
+   AMANAFARM Design System foundation
+   One visual language for marketplace pages.
+   ============================================================ */
+:root {
+  --af-bg: #f4f8f5;
+  --af-surface: #ffffff;
+  --af-surface-soft: #f8fbf8;
+  --af-primary: #10723a;
+  --af-primary-dark: #07351f;
+  --af-primary-soft: #e9f7ee;
+  --af-gold: #d9a82d;
+  --af-gold-soft: #fff7df;
+  --af-ink: #13231a;
+  --af-ink-strong: #07351f;
+  --af-muted: #5d6f63;
+  --af-line: #dce9df;
+  --af-line-strong: #c7dccf;
+  --af-danger: #c62828;
+  --af-whatsapp: #22c55e;
+  --af-shell: min(1240px, calc(100% - clamp(20px, 5vw, 72px)));
+  --af-gap-xs: 8px;
+  --af-gap: 14px;
+  --af-gap-lg: 18px;
+  --af-gap-xl: 26px;
+  --af-radius-sm: 10px;
+  --af-radius: 16px;
+  --af-radius-lg: 20px;
+  --af-radius-xl: 24px;
+  --af-shadow-xs: 0 4px 16px rgba(10, 55, 28, .05);
+  --af-shadow-sm: 0 10px 30px rgba(10, 55, 28, .07);
+  --af-shadow-md: 0 18px 48px rgba(10, 55, 28, .10);
+  --af-shadow-lg: 0 24px 60px rgba(10, 55, 28, .14);
+  --af-ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+.af-shell {
+  width: var(--af-shell);
+  margin-inline: auto;
+}
+
+.af-card {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--af-line);
+  border-radius: var(--af-radius);
+  background: var(--af-surface);
+  box-shadow: var(--af-shadow-xs);
+  transition: transform 160ms var(--af-ease), box-shadow 160ms var(--af-ease), border-color 160ms var(--af-ease);
+}
+
+.af-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--af-line-strong);
+  box-shadow: var(--af-shadow-sm);
+}
+
+.af-kicker {
+  width: fit-content;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid rgba(16, 114, 58, .14);
+  border-radius: 999px;
+  color: var(--af-primary);
+  background: var(--af-primary-soft);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.af-section-head {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin-bottom: 18px;
+}
+
+.af-section-head--split {
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+}
+
+.af-section-head h2 {
+  margin: 0;
+  color: var(--af-ink-strong);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.18;
+  font-weight: 950;
+}
+
+.af-section-head p {
+  margin: 0;
+  color: var(--af-muted);
+  line-height: 1.75;
+  font-weight: 700;
+}
+
+.af-btn {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 950;
+  cursor: pointer;
+  transition: transform 160ms var(--af-ease), box-shadow 160ms var(--af-ease), background 160ms var(--af-ease), border-color 160ms var(--af-ease);
+}
+
+.af-btn:hover {
+  transform: translateY(-2px);
+}
+
+.af-btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--af-primary-dark), var(--af-primary));
+  box-shadow: 0 12px 26px rgba(16, 114, 58, .22);
+}
+
+.af-btn--soft {
+  color: var(--af-primary-dark);
+  background: #fff;
+  border-color: rgba(255,255,255,.42);
+}
+
+.af-btn--outline {
+  color: var(--af-primary);
+  background: #fff;
+  border-color: var(--af-line-strong);
+}
+
+.af-badge {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--af-primary);
+  background: var(--af-primary-soft);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+body :where(.summary-panel, .price-panel, .info-panel, .description-panel, .seller-card, .safety-card, .title-block, .price-card, .specs-card, .description-card, .buybox, .safe-box, .swidget, .toolbar, .company-hub, .box) {
+  border-color: var(--af-line) !important;
+  border-radius: var(--af-radius) !important;
+  box-shadow: var(--af-shadow-xs) !important;
+}
+
+body :where(.media-badges span, .quick-tags span, .photo-badges span, .tags span, .meta-row span, .meta-chip, .eyebrow, .listing-type) {
+  border-radius: 999px !important;
+}
+
+body :where(.btn.primary, .btn-primary, .btn-whatsapp, .whatsapp, .submit-btn, .state-btn--green) {
+  min-height: 46px;
+}
+
+body :where(app-product-detail, app-animal-detail) :where(.market-grid, .market-shell) {
+  gap: var(--af-gap-lg) !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --af-shell: calc(100% - 18px);
+    --af-radius-xl: 18px;
+    --af-radius-lg: 16px;
+  }
+
+  .af-section-head--split {
+    grid-template-columns: 1fr;
+  }
+
+  .af-btn {
+    min-height: 48px;
+  }
+
+  body :where(app-product-detail, app-animal-detail) :where(.market-grid, .market-shell) {
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+}
+
+/* Auth mobile UX refinement: improves existing login/register modal only. */
+.overlay.show .auth-modal {
+  background: #fff !important;
+}
+
+.overlay.show .auth-card {
+  scrollbar-width: thin;
+}
+
+.overlay.show .auth-panel-head h2 {
+  color: var(--green-dark) !important;
+  line-height: 1.2 !important;
+}
+
+.overlay.show .auth-panel-head p {
+  max-width: 42ch;
+  color: var(--muted) !important;
+  line-height: 1.65 !important;
+}
+
+.overlay.show .field-auth {
+  margin-bottom: 13px !important;
+}
+
+.overlay.show .field-auth label {
+  margin-bottom: 7px !important;
+  color: var(--text-2) !important;
+  font-size: 12.5px !important;
+  font-weight: 950 !important;
+}
+
+.overlay.show .field-wrap--password {
+  position: relative;
+}
+
+.overlay.show .field-wrap--password input {
+  padding-left: 78px !important;
+}
+
+.password-toggle {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  z-index: 2;
+  min-width: 58px;
+  height: 36px;
+  transform: translateY(-50%);
+  border: 1px solid rgba(15, 122, 60, .16);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.overlay.show .err-msg {
+  margin-top: 6px !important;
+  color: #b42318 !important;
+  font-size: 11.5px !important;
+  line-height: 1.45 !important;
+  font-weight: 850 !important;
+}
+
+.overlay.show .field-auth input.input-err {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, .10) !important;
+}
+
+.overlay.show .submit-btn,
+.overlay.show .back-btn {
+  min-height: 52px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+}
+
+.overlay.show .steps-indicator {
+  margin-bottom: 16px !important;
+}
+
+.overlay.show .step-nav {
+  margin-top: 16px !important;
+}
+
+@media (max-width: 900px) {
+  .overlay.show .auth-modal {
+    width: min(480px, calc(100vw - 18px)) !important;
+    max-height: calc(100dvh - 18px) !important;
+    border-radius: 22px !important;
+  }
+
+  .overlay.show .auth-card {
+    padding: 20px 16px 22px !important;
+    max-height: calc(100dvh - 18px) !important;
+  }
+
+  .overlay.show .auth-tabs {
+    width: calc(100% - 48px) !important;
+    margin: 0 0 16px !important;
+    padding: 4px !important;
+  }
+
+  .overlay.show .auth-tab {
+    min-height: 42px !important;
+    padding: 9px 10px !important;
+  }
+
+  .overlay.show .auth-panel-head {
+    margin-bottom: 16px !important;
+  }
+
+  .overlay.show .auth-panel-head h2 {
+    font-size: 22px !important;
+  }
+
+  .overlay.show .auth-panel-head p {
+    font-size: 12.5px !important;
+  }
+
+  .overlay.show .field-auth input,
+  .overlay.show .phone-prefix {
+    height: 50px !important;
+    min-height: 50px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+  }
+
+  .overlay.show .field-wrap .field-icon {
+    right: 13px !important;
+  }
+
+  .overlay.show .field-wrap input {
+    padding-right: 42px !important;
+  }
+
+  .overlay.show .field-auth > input {
+    padding-right: 12px !important;
+  }
+
+  .overlay.show .fields-row {
+    gap: 10px !important;
+  }
+
+  .overlay.show .form-extras {
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay.show {
+    padding: 8px !important;
+  }
+
+  .overlay.show .auth-modal {
+    width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    border-radius: 20px !important;
+  }
+
+  .overlay.show .close-auth {
+    top: 12px !important;
+    left: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .overlay.show .auth-card {
+    padding: 18px 13px 20px !important;
+  }
+
+  .overlay.show .field-auth {
+    margin-bottom: 11px !important;
+  }
+
+  .overlay.show .steps-indicator {
+    padding: 10px !important;
+    border-radius: 14px !important;
+  }
+
+  .overlay.show .step-dot {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .overlay.show .step-line {
+    min-width: 18px !important;
+  }
+
+  .overlay.show .reg-cats {
+    gap: 8px !important;
+  }
+
+  .overlay.show .reg-cat {
+    min-height: 72px !important;
+    padding: 10px !important;
+  }
+
+  .password-toggle {
+    left: 7px;
+    min-width: 52px;
+    height: 34px;
+    font-size: 10.5px;
+  }
+
+  .overlay.show .field-wrap--password input {
+    padding-left: 68px !important;
+  }
+}

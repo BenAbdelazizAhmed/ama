@@ -1,0 +1,22 @@
+<main class="help-page" dir="rtl">
+  <section class="help-hero af-shell">
+    <span class="af-kicker"><i data-lucide="circle-help" width="16" aria-hidden="true"></i> Aide & FAQ</span>
+    <h1>إجابات قصيرة تساعدك تستعمل AMANAFARM بثقة</h1>
+    <p>صفحة مساعدة مركزة: نشر إعلان، تواصل، ثقة، Boost، ونصائح أمان.</p>
+  </section>
+
+  <section class="faq-list af-shell">
+    <article class="af-card faq-card" *ngFor="let item of faqs">
+      <h2>{{ item.q }}</h2>
+      <p>{{ item.a }}</p>
+    </article>
+  </section>
+
+  <section class="help-cta af-shell">
+    <div>
+      <h2>ما لقيتش إجابتك؟</h2>
+      <p>تواصل معنا مباشرة وسنساعدك في أقرب وقت.</p>
+    </div>
+    <a class="af-btn af-btn--primary" href="https://wa.me/21653159799" target="_blank" rel="noopener">WhatsApp</a>
+  </section>
+</main>

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StateService } from '../../services/state.service';
 
+declare const lucide: any;
+
 @Component({
   selector: 'app-about',
   standalone: true,
@@ -42,6 +44,9 @@ export class AboutComponent implements AfterViewInit {
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.about-fade-up').forEach(el => observer.observe(el));
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
   }
 
   get totalListings() { return this.totalAnimals + this.totalProducts + this.totalWholesale; }

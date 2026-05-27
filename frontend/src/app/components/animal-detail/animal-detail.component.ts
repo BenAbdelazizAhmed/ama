@@ -1,10 +1,12 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
+
+declare const lucide: any;
 
 type PriceType = 'FIXED' | 'NEGOTIABLE' | 'PER_HEAD' | 'PER_KG' | string;
 
@@ -54,7 +56,7 @@ interface Toast {
   templateUrl: './animal-detail.component.html',
   styleUrls: ['./animal-detail.component.css'],
 })
-export class AnimalDetailComponent implements OnDestroy {
+export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
   private readonly api = `${environment.apiBaseUrl}/api/animals`;
   private readonly sub: Subscription;
   private readonly toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -83,6 +85,10 @@ export class AnimalDetailComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.toastTimers.forEach(timer => clearTimeout(timer));
+  }
+
+  ngAfterViewInit(): void {
+    this.refreshIcons();
   }
 
   get activeImage(): string {
@@ -119,6 +125,21 @@ export class AnimalDetailComponent implements OnDestroy {
 
   get isLoggedIn(): boolean {
     return this.state.isLoggedIn();
+  }
+
+  get premiumSpecs(): DetailSpec[] {
+    const a = this.animal;
+    if (!a) return [];
+    return [
+      { label: 'الولاية', value: this.clean(a.location) },
+      { label: 'المنطقة', value: this.clean(a.zone) },
+      { label: 'الصنف', value: this.clean(a.category) },
+      { label: 'السلالة', value: this.clean(a.breed) },
+      { label: 'الجنس', value: this.clean(a.gender) },
+      { label: 'العمر', value: this.clean(a.age) },
+      { label: 'الوزن', value: this.clean(a.weight) },
+      { label: 'الصحة', value: this.clean(a.healthStatus) },
+    ];
   }
 
   loadAnimal(id: number): void {
@@ -305,6 +326,13 @@ export class AnimalDetailComponent implements OnDestroy {
     this.currentPhoto = 0;
     this.selectedImage = animal.imageUrls[0] || this.fallbackImage;
     this.isLoading = false;
+    this.refreshIcons();
+  }
+
+  private refreshIcons(): void {
+    setTimeout(() => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
   }
 
   private loadSimilar(animal: AnimalDetail): void {

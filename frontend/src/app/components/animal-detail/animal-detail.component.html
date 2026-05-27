@@ -1,185 +1,212 @@
-<div class="market-detail-page" dir="rtl">
-  <section class="detail-loading" *ngIf="isLoading">
-    <div class="skeleton skeleton-gallery"></div>
-    <div class="skeleton skeleton-info"></div>
-    <div class="skeleton skeleton-buybox"></div>
+<div class="ad-page" dir="rtl">
+  <section class="ad-loading" *ngIf="isLoading" aria-label="تحميل الإعلان">
+    <div class="ad-skeleton ad-skeleton--media"></div>
+    <div class="ad-skeleton ad-skeleton--body"></div>
+    <div class="ad-skeleton ad-skeleton--side"></div>
   </section>
 
-  <section class="detail-error" *ngIf="!isLoading && errorMessage">
-    <div class="error-mark">404</div>
+  <section class="ad-error" *ngIf="!isLoading && errorMessage">
+    <div class="ad-error__code">404</div>
     <h1>الإعلان غير موجود</h1>
     <p>{{ errorMessage }}</p>
     <a routerLink="/animals">الرجوع للحيوانات</a>
   </section>
 
-  <ng-container *ngIf="!isLoading && !errorMessage">
-    <ng-container *ngIf="animal as a">
-      <div class="detail-canvas">
-        <nav class="breadcrumb" aria-label="مسار الصفحة">
-          <a routerLink="/">الرئيسية</a>
-          <span>›</span>
-          <a routerLink="/animals">الحيوانات</a>
-          <span>›</span>
-          <strong>{{ a.title }}</strong>
-        </nav>
+  <ng-container *ngIf="!isLoading && !errorMessage && animal as a">
+    <div class="ad-shell">
+      <nav class="ad-breadcrumb ad-reveal" aria-label="مسار الصفحة">
+        <a routerLink="/">الرئيسية</a>
+        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
+        <a routerLink="/animals">الحيوانات</a>
+        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
+        <strong>{{ a.title }}</strong>
+      </nav>
 
-        <main class="market-shell">
-          <section class="gallery-column">
-            <div class="gallery-frame" [class.gallery-frame--single]="detailPhotos.length <= 1">
-              <div class="thumbs" *ngIf="detailPhotos.length > 1">
-                <button
-                  class="thumb"
-                  type="button"
-                  *ngFor="let img of detailPhotos; trackBy: trackByImage"
-                  [class.active]="activeImage === img"
-                  (click)="selectImage(img)"
-                  aria-label="اختيار صورة"
-                >
-                  <img [src]="img" alt="" loading="lazy" decoding="async">
-                </button>
+      <main class="ad-layout">
+        <section class="ad-gallery ad-reveal" aria-label="صور الحيوان">
+          <div class="ad-media">
+            <img [src]="activeImage" [alt]="a.title" (error)="onImageError()" loading="eager" decoding="async">
+            <div class="ad-media__shade"></div>
+            <div class="ad-photo-badges">
+              <span *ngIf="a.trustedSeller"><i data-lucide="shield-check" width="14" aria-hidden="true"></i> بائع موثوق</span>
+              <span class="ad-photo-badges__health" *ngIf="a.vetCertificate || a.healthStatus"><i data-lucide="stethoscope" width="14" aria-hidden="true"></i> صحة مذكورة</span>
+              <span class="ad-photo-badges__featured" *ngIf="a.featured"><i data-lucide="sparkles" width="14" aria-hidden="true"></i> مميز</span>
+            </div>
+          </div>
+
+          <div class="ad-thumbs" *ngIf="detailPhotos.length > 1" aria-label="معرض صور الحيوان">
+            <button
+              class="ad-thumb"
+              type="button"
+              *ngFor="let img of detailPhotos; trackBy: trackByImage"
+              [class.is-active]="activeImage === img"
+              (click)="selectImage(img)"
+              aria-label="اختيار صورة الحيوان"
+            >
+              <img [src]="img" alt="" loading="lazy" decoding="async">
+            </button>
+          </div>
+        </section>
+
+        <section class="ad-main ad-reveal">
+          <div class="ad-category-row">
+            <span>{{ a.category }} · {{ a.breed }}</span>
+            <b [class.is-sold]="isSoldStatus(a.status)">{{ statusLabel(a.status) }}</b>
+          </div>
+
+          <h1>{{ a.title }}</h1>
+
+          <div class="ad-price" aria-label="سعر الحيوان">
+            <strong>{{ fmt(a.price) }}</strong>
+            <span>د.ت</span>
+            <em>{{ priceTypeLabel(a.priceType) }}</em>
+          </div>
+
+          <div class="ad-location">
+            <i data-lucide="map-pin" width="17" aria-hidden="true"></i>
+            {{ a.location }}، {{ a.zone }}
+          </div>
+
+          <div class="ad-vitals" aria-label="معلومات الحيوان الأساسية">
+            <div><span>العمر</span><strong>{{ a.age }}</strong></div>
+            <div><span>السلالة</span><strong>{{ a.breed }}</strong></div>
+            <div><span>الصحة</span><strong>{{ a.healthStatus }}</strong></div>
+          </div>
+
+          <div class="ad-trust-tags">
+            <span><i data-lucide="clock" width="14" aria-hidden="true"></i>{{ postedLabel(a.createdAt) }}</span>
+            <span *ngIf="a.vetCertificate"><i data-lucide="file-check-2" width="14" aria-hidden="true"></i>شهادة بيطرية</span>
+            <span *ngIf="a.deliveryAvailable"><i data-lucide="truck" width="14" aria-hidden="true"></i>نقل حسب الاتفاق</span>
+          </div>
+        </section>
+
+        <aside class="ad-sidebar ad-reveal" aria-label="معلومات البائع">
+          <article class="ad-seller-card">
+            <div class="ad-seller-card__badge">
+              <i data-lucide="badge-check" width="15" aria-hidden="true"></i>
+              Badge confiance
+            </div>
+
+            <div class="ad-seller-card__head">
+              <div class="ad-avatar">
+                {{ a.sellerName.slice(0, 1) }}
+                <span><i data-lucide="check" width="13" aria-hidden="true"></i></span>
               </div>
-
-              <div class="main-photo">
-                <img [src]="activeImage" [alt]="a.title" (error)="onImageError()" loading="eager" decoding="async">
-                <div class="photo-badges">
-                  <span *ngIf="a.featured">مميز</span>
-                  <span>{{ statusLabel(a.status) }}</span>
-                </div>
+              <div>
+                <h2>{{ a.sellerName }}</h2>
+                <p>عضو منذ {{ a.sellerSince }} · {{ a.responseTime }}</p>
               </div>
             </div>
-          </section>
 
-          <section class="info-column">
-            <article class="title-block">
-              <div class="listing-type">{{ a.category }} · {{ a.breed }}</div>
-              <h1>{{ a.title }}</h1>
+            <div class="ad-seller-score">
+              <div><strong>{{ a.sellerRating }} ★</strong><span>تقييم</span></div>
+              <div><strong>{{ a.trustedSeller ? 'موثوق' : 'عادي' }}</strong><span>الحساب</span></div>
+            </div>
 
-              <div class="rating-row">
-                <span class="stars">★★★★★</span>
-                <strong>{{ a.sellerRating }}</strong>
-                <span class="meta-chip">{{ a.location }}، {{ a.zone }}</span>
-                <span class="meta-chip">{{ postedLabel(a.createdAt) }}</span>
-              </div>
-            </article>
+            <p class="ad-login-gate" *ngIf="!isLoggedIn">
+              <i data-lucide="lock-keyhole" width="16" aria-hidden="true"></i>
+              سجّل الدخول للتواصل مع البائع مباشرة
+            </p>
 
-            <article class="price-card">
-              <span class="price-label">السعر</span>
-              <div class="price-line">
-                <strong>{{ fmt(a.price) }} د.ت</strong>
-                <span>{{ priceTypeLabel(a.priceType) }}</span>
-              </div>
-              <em [class.sold]="isSoldStatus(a.status)">{{ statusLabel(a.status) }}</em>
-            </article>
-
-            <article class="specs-card">
-              <div class="card-heading">
-                <h2>المواصفات</h2>
-                <span>كل التفاصيل المهمة قبل التواصل</span>
-              </div>
-
-              <div class="specs-grid">
-                <div class="spec-cell" *ngFor="let spec of specs; trackBy: trackBySpec">
-                  <span>{{ spec.label }}</span>
-                  <strong>{{ spec.value }}</strong>
-                </div>
-              </div>
-            </article>
-
-            <article class="description-card">
-              <div class="card-heading">
-                <h2>الوصف</h2>
-                <span>معلومات البائع حول الحيوان</span>
-              </div>
-
-              <p>{{ a.description }}</p>
-
-              <div class="tags">
-                <span *ngIf="a.vetCertificate">شهادة بيطرية</span>
-                <span>قابل للمعاينة</span>
-                <span *ngIf="a.deliveryAvailable">نقل حسب الاتفاق</span>
-              </div>
-            </article>
-          </section>
-
-          <aside class="buybox-column">
-            <article class="buybox">
-              <div class="seller-head">
-                <div class="avatar">{{ a.sellerName.slice(0, 1) }}</div>
-                <div>
-                  <h2>{{ a.sellerName }}</h2>
-                  <p>عضو منذ {{ a.sellerSince }}</p>
-                </div>
-              </div>
-
-              <div class="seller-score">
-                <div>
-                  <strong>{{ a.sellerRating }} ★</strong>
-                  <span>تقييم</span>
-                </div>
-                <div>
-                  <strong>{{ a.trustedSeller ? 'موثوق' : 'عادي' }}</strong>
-                  <span>الحساب</span>
-                </div>
-              </div>
-
-              <p class="response-time">{{ a.responseTime }}</p>
-              <p class="login-note" *ngIf="!isLoggedIn">سجّل الدخول للتواصل مع البائع</p>
-
-              <button class="btn btn-primary" type="button" (click)="contactSeller()">تواصل مع البائع</button>
-              <button class="btn btn-whatsapp" type="button" (click)="openWhatsapp()">واتساب</button>
-              <button class="btn btn-outline" type="button" (click)="toggleFav()">
-                {{ isFav ? 'محفوظ' : 'حفظ في المفضلة' }}
+            <div class="ad-actions">
+              <button class="ad-action ad-action--primary" type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">
+                <i data-lucide="message-circle" width="18" aria-hidden="true"></i>
+                تواصل مع البائع
               </button>
-            </article>
+              <button class="ad-action ad-action--wa" type="button" (click)="openWhatsapp()" aria-label="WhatsApp مباشر">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg>
+                WhatsApp مباشر
+              </button>
+              <button class="ad-action ad-action--inspect" type="button" (click)="requestInspection()" aria-label="طلب معاينة">
+                <i data-lucide="eye" width="18" aria-hidden="true"></i>
+                طلب معاينة
+              </button>
+              <button class="ad-action ad-action--save" [class.is-saved]="isFav" type="button" (click)="toggleFav()" aria-label="حفظ في المفضلة">
+                <i data-lucide="heart" width="18" aria-hidden="true"></i>
+                {{ isFav ? 'محفوظ' : 'حفظ' }}
+              </button>
+            </div>
+          </article>
 
-            <article class="safe-box">
-              <h3>نصائح أمان</h3>
-              <ul>
-                <li>عاين الحيوان قبل الدفع.</li>
-                <li>اطلب فيديو حديث للحيوان.</li>
-                <li>تأكد من الصحة والتطعيم.</li>
-              </ul>
-            </article>
-          </aside>
-        </main>
-      </div>
+          <article class="ad-safety-card">
+            <h2><i data-lucide="shield-alert" width="18" aria-hidden="true"></i> نصائح قبل الشراء</h2>
+            <ul>
+              <li><span>👁</span> عاين الحيوان أو اطلب فيديو حديث قبل الدفع.</li>
+              <li><span>🩺</span> اسأل على الصحة، التلقيح، والشهادة إن وجدت.</li>
+              <li><span>⚖</span> ثبت العمر، الوزن، والسلالة مع البائع.</li>
+              <li><span>📍</span> اتفق على مكان آمن للمعاينة أو الاستلام.</li>
+            </ul>
+          </article>
+        </aside>
+      </main>
 
-      <section class="similar-section" *ngIf="similarAnimals.length">
-        <div class="section-head">
-          <h2>إعلانات مشابهة</h2>
+      <section class="ad-spec-grid ad-reveal" aria-label="مواصفات الحيوان">
+        <article class="ad-spec-card" *ngFor="let spec of premiumSpecs; trackBy: trackBySpec">
+          <i data-lucide="paw-print" width="18" aria-hidden="true"></i>
+          <span>{{ spec.label }}</span>
+          <strong>{{ spec.value }}</strong>
+        </article>
+      </section>
+
+      <section class="ad-info-row">
+        <article class="ad-health-card ad-reveal">
+          <div class="ad-section-title"><h2>الصحة والتطعيم</h2></div>
+          <div class="ad-health-list">
+            <div><span>الحالة الصحية</span><strong>{{ a.healthStatus }}</strong></div>
+            <div><span>شهادة بيطرية</span><strong>{{ a.vetCertificate ? 'متوفرة' : 'حسب تصريح البائع' }}</strong></div>
+            <div><span>النقل</span><strong>{{ a.deliveryAvailable ? 'متاح حسب الاتفاق' : 'غير محدد' }}</strong></div>
+          </div>
+        </article>
+
+        <article class="ad-description ad-reveal">
+          <div class="ad-section-title"><h2>الوصف</h2></div>
+          <p>{{ a.description }}</p>
+          <div class="ad-description__tags">
+            <span *ngIf="a.vetCertificate">شهادة بيطرية</span>
+            <span>قابل للمعاينة</span>
+            <span *ngIf="a.deliveryAvailable">نقل حسب الاتفاق</span>
+            <span *ngIf="a.trustedSeller">بائع موثوق</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="ad-similar ad-reveal" *ngIf="similarAnimals.length">
+        <div class="ad-section-head">
+          <h2>حيوانات مشابهة</h2>
           <a routerLink="/animals">عرض الكل</a>
         </div>
 
-        <div class="similar-grid">
-          <a class="similar-card" *ngFor="let item of similarAnimals; trackBy: trackById" [routerLink]="['/animals', item.id]">
-            <div class="similar-image">
+        <div class="ad-similar__rail">
+          <a class="ad-similar-card" *ngFor="let item of similarAnimals; trackBy: trackById" [routerLink]="['/animals', item.id]">
+            <div class="ad-similar-card__image">
               <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async">
+              <span>{{ statusLabel(item.status) }}</span>
             </div>
-            <div class="similar-body">
-              <span>{{ item.category }} · {{ item.location }}</span>
+            <div class="ad-similar-card__body">
+              <small>{{ item.category }} · {{ item.location }}</small>
               <strong>{{ item.title }}</strong>
               <em>{{ fmt(item.price) }} د.ت</em>
             </div>
           </a>
         </div>
       </section>
+    </div>
 
-      <div class="mobile-cta">
-        <div>
-          <strong>{{ fmt(a.price) }} د.ت</strong>
-          <span>{{ priceTypeLabel(a.priceType) }}</span>
-        </div>
-        <button type="button" (click)="contactSeller()">تواصل</button>
+    <div class="ad-mobile-cta">
+      <div>
+        <strong>{{ fmt(a.price) }} د.ت</strong>
+        <span>{{ priceTypeLabel(a.priceType) }}</span>
       </div>
-    </ng-container>
+      <button type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">تواصل</button>
+    </div>
   </ng-container>
 
-  <div class="toast-container" aria-live="polite">
+  <div class="ad-toast-wrap" aria-live="polite">
     <div
-      class="toast"
-      *ngFor="let toast of toasts; trackBy: trackByToast"
-      [class.success]="toast.type === 'success'"
-      [class.error]="toast.type === 'error'"
+      class="ad-toast"
+      *ngFor="let toast of detailToasts; trackBy: trackByToast"
+      [class.is-success]="toast.type === 'success'"
+      [class.is-error]="toast.type === 'error'"
     >
       {{ toast.message }}
     </div>
