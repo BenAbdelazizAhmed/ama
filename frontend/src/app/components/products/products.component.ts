@@ -93,8 +93,9 @@ export interface AddForm {
   wilaya: string;
   origin: string;
   description: string;
-  imagePreview: string;
-  imageFile?: File;
+  imagePreviews: string[];
+  imageFiles: File[];
+  priceNegotiable: boolean;
   inStock: boolean;
   deliveryAvailable: boolean;
   certified: boolean;
@@ -259,13 +260,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
   showAddModal = false;
   addSubmitting = false;
   addStep = 1;
-  readonly addStepLabels = ['البائع', 'الصورة', 'الأساسيات', 'السعر والكمية', 'التواصل'];
+  readonly addStepLabels = ['الفئة والعنوان', 'السعر والمكان', 'الوصف', 'الصور', 'التواصل'];
   readonly addStepHints = [
-    'اختار هل الإعلان باسم شخص أو شركة.',
-    'حط صورة واضحة للبرودوي باش تزيد الثقة.',
-    'اكتب اسم البرودوي، الفئة، الولاية، والمنشأ.',
-    'كمّل السعر، نوع السعر، الوحدة، الكمية، والوصف.',
-    'حط معلومات التواصل وخيارات الإعلان قبل النشر.',
+    'اختار الفئة واكتب عنوان واضح يفهمه الشاري بسرعة.',
+    'حط السعر والولاية. تنجم تخلي السعر قابل للنقاش.',
+    'زيد تفاصيل قصيرة على الحالة، الكمية، والمنشأ.',
+    'أضف حتى 5 صور واضحة. الصورة الأولى تظهر في السوق.',
+    'كمّل بيانات التواصل وانشر الإعلان.',
   ];
   addErrors: Record<string, boolean> = {};
   addForm: AddForm = this.emptyAddForm();
@@ -477,6 +478,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
     return Math.round((this.addStep / this.addStepLabels.length) * 100);
   }
 
+  get primaryImagePreview(): string {
+    return this.addForm.imagePreviews[0] || '';
+  }
+
   getCategoryCount(cat: string): number { return cat === 'الكل' ? this.products.length : this.products.filter(p => p.category === cat).length; }
   getCompany(id: string): Company | undefined { return this.companies.find(c => c.id === id); }
 
@@ -617,24 +622,44 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  onProdFileSelect(event: Event): void {
+  async onProdFileSelect(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { this.showToast('error', 'التصويرة أكبر من 2MB'); return; }
-    const reader = new FileReader();
-    reader.onload = e => {
-      this.addForm.imagePreview = e.target?.result as string;
-      this.addForm.imageFile = file;
-      this.cdr.markForCheck();
-    };
-    reader.readAsDataURL(file);
+    const files = Array.from(input.files || []);
+    input.value = '';
+    if (!files.length) return;
+    await this.addProductImages(files);
   }
 
-  removeProductImg(event: Event): void {
-    event.stopPropagation();
-    this.addForm.imagePreview = '';
-    this.addForm.imageFile = undefined;
+  async addProductImages(files: File[]): Promise<void> {
+    const remaining = 5 - this.addForm.imagePreviews.length;
+    if (remaining <= 0) {
+      this.showToast('warn', 'تنجم تضيف حتى 5 صور فقط');
+      return;
+    }
+
+    const images = files.filter(file => file.type.startsWith('image/')).slice(0, remaining);
+    if (images.length < files.length) this.showToast('warn', 'تم تجاهل ملفات غير صور أو صور زائدة');
+
+    try {
+      for (const file of images) {
+        const optimized = await this.optimizeImage(file);
+        this.addForm.imageFiles.push(optimized.file);
+        this.addForm.imagePreviews.push(optimized.preview);
+      }
+      if (images.length) this.addErrors['images'] = false;
+    } catch {
+      this.showToast('error', 'ما تنجمناش نعالجوا التصاور');
+    }
+
+    this.cdr.markForCheck();
+    this.refreshIcons();
+  }
+
+  removeProductImg(index: number, event?: Event): void {
+    event?.stopPropagation();
+    this.addForm.imagePreviews.splice(index, 1);
+    this.addForm.imageFiles.splice(index, 1);
+    this.cdr.markForCheck();
   }
 
   setAddStep(step: number): void {
@@ -658,21 +683,25 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.addErrors = {};
     let valid = true;
 
-    if (this.addStep === 1 && this.addForm.sellerType === 'company' && !this.addForm.companyName?.trim()) {
-      this.addErrors['companyName'] = true;
-      valid = false;
-    }
-
-    if (this.addStep === 3) {
+    if (this.addStep === 1) {
       if (!this.addForm.name?.trim()) { this.addErrors['name'] = true; valid = false; }
+      if (!this.addForm.category?.trim()) { this.addErrors['category'] = true; valid = false; }
     }
 
-    if (this.addStep === 4) {
-      if (!this.addForm.price || this.addForm.price <= 0) { this.addErrors['price'] = true; valid = false; }
+    if (this.addStep === 2) {
+      if (!this.addForm.priceNegotiable && (!this.addForm.price || this.addForm.price <= 0)) {
+        this.addErrors['price'] = true;
+        valid = false;
+      }
+      if (!this.addForm.wilaya?.trim()) { this.addErrors['wilaya'] = true; valid = false; }
     }
 
     if (this.addStep === 5) {
       if (!this.addForm.phone?.trim()) { this.addErrors['phone'] = true; valid = false; }
+      if (this.addForm.sellerType === 'company' && !this.addForm.companyName?.trim()) {
+        this.addErrors['companyName'] = true;
+        valid = false;
+      }
       if (this.addForm.sellerType === 'individual' && !this.addForm.sellerName?.trim()) {
         this.addErrors['sellerName'] = true;
         valid = false;
@@ -691,7 +720,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.addErrors = {};
     let valid = true;
     if (!this.addForm.name?.trim()) { this.addErrors['name'] = true; valid = false; }
-    if (!this.addForm.price || this.addForm.price <= 0) { this.addErrors['price'] = true; valid = false; }
+    if (!this.addForm.category?.trim()) { this.addErrors['category'] = true; valid = false; }
+    if (!this.addForm.priceNegotiable && (!this.addForm.price || this.addForm.price <= 0)) { this.addErrors['price'] = true; valid = false; }
+    if (!this.addForm.wilaya?.trim()) { this.addErrors['wilaya'] = true; valid = false; }
     if (!this.addForm.phone?.trim()) { this.addErrors['phone'] = true; valid = false; }
     if (this.addForm.sellerType === 'company' && !this.addForm.companyName?.trim()) { this.addErrors['companyName'] = true; valid = false; }
     if (this.addForm.sellerType === 'individual' && !this.addForm.sellerName?.trim()) { this.addErrors['sellerName'] = true; valid = false; }
@@ -754,7 +785,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     return {
       sellerType: 'individual', companyName: '', companyTagline: '',
       name: '', category: PROD_CATEGORIES[1], price: null, priceType: 'FIXED',
-      unit: '', quantity: '', wilaya: '', origin: '', description: '', imagePreview: '', imageFile: undefined,
+      unit: '', quantity: '', wilaya: '', origin: '', description: '', imagePreviews: [], imageFiles: [], priceNegotiable: false,
       inStock: true, deliveryAvailable: false, certified: false, featured: false,
       sellerName: '', phone: '', email: '',
     };
@@ -818,18 +849,19 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   private toBackendPayload(): ProductPayload {
     const isCompany = this.addForm.sellerType === 'company';
+    const negotiable = this.addForm.priceNegotiable;
     return {
       title: this.addForm.name.trim(),
       category: this.addForm.category,
       description: this.addForm.description.trim(),
-      price: Number(this.addForm.price ?? 0),
-      priceType: this.addForm.priceType,
+      price: negotiable ? 0 : Number(this.addForm.price ?? 0),
+      priceType: negotiable ? 'NEGOTIABLE' : this.addForm.priceType,
       unit: this.addForm.unit.trim(),
       quantity: this.addForm.quantity.trim(),
       origin: this.addForm.origin.trim(),
       location: this.addForm.wilaya,
       wilaya: this.addForm.wilaya,
-      imageUrl: this.addForm.imagePreview,
+      imageUrl: this.primaryImagePreview,
       contactPhone: this.addForm.phone.replace(/\D/g, ''),
       inStock: this.addForm.inStock,
       featured: this.addForm.featured,
@@ -850,6 +882,41 @@ export class ProductsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }, 0);
+  }
+
+  private optimizeImage(file: File): Promise<{ file: File; preview: string }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject();
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject();
+        img.onload = () => {
+          const maxSide = 1400;
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const width = Math.max(1, Math.round(img.width * scale));
+          const height = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) { reject(); return; }
+          ctx.drawImage(img, 0, 0, width, height);
+          const preview = canvas.toDataURL('image/jpeg', 0.78);
+          canvas.toBlob(blob => {
+            if (!blob) { reject(); return; }
+            const optimizedFile = new File(
+              [blob],
+              file.name.replace(/\.[^.]+$/, '') + '.jpg',
+              { type: 'image/jpeg', lastModified: Date.now() },
+            );
+            resolve({ file: optimizedFile, preview });
+          }, 'image/jpeg', 0.78);
+        };
+        img.src = String(reader.result || '');
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   private normalizeImageUrl(url?: string): string | undefined {

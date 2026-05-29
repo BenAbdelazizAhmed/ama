@@ -34,6 +34,7 @@ interface ProductDetail {
 }
 
 interface DetailSpec {
+  icon: string;
   label: string;
   value: string;
 }
@@ -56,15 +57,17 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   private readonly sub: Subscription;
   private readonly toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
   private toastCounter = 0;
+  private touchStartX = 0;
+  private touchStartY = 0;
 
   product: ProductDetail | null = null;
   similarProducts: ProductDetail[] = [];
   isLoading = true;
-  errorMessage = '';
   loadError = '';
   selectedImage = '';
   currentPhoto = 0;
   isFav = false;
+  zoomOpen = false;
   toasts: Toast[] = [];
 
   constructor(
@@ -81,6 +84,7 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.toastTimers.forEach(timer => clearTimeout(timer));
+    document.body.style.overflow = '';
   }
 
   ngAfterViewInit(): void {
@@ -99,14 +103,6 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
     return this.toasts;
   }
 
-  get hasLoadError(): boolean {
-    return !!this.loadError;
-  }
-
-  get loadErrorText(): string {
-    return this.loadError || 'تعذر تحميل المنتج.';
-  }
-
   get isLoggedIn(): boolean {
     return this.state.isLoggedIn();
   }
@@ -118,24 +114,23 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   get specs(): DetailSpec[] {
     const p = this.product;
     if (!p) return [];
+
     return [
-      { label: 'الولاية', value: this.clean(p.wilaya) },
-      { label: 'نوع المنتج', value: this.clean(p.category) },
-      { label: 'الكمية', value: this.clean(p.quantity) },
-      { label: 'الوحدة', value: this.clean(p.unit) },
-      { label: 'الحالة', value: p.inStock ? 'متوفر' : 'غير متوفر' },
-      { label: 'السعر', value: `${this.fmt(p.price)} د.ت` },
-      { label: 'التوفر', value: this.stockLabel(p) },
-      { label: 'قابل للتفاوض', value: this.priceTypeLabel(p.priceType) },
+      { icon: 'map-pin', label: 'الولاية', value: this.clean(p.wilaya) },
+      { icon: 'boxes', label: 'الفئة', value: this.clean(p.category) },
+      { icon: 'package-check', label: 'الكمية', value: this.clean(p.quantity) },
+      { icon: 'scale', label: 'الوحدة', value: this.clean(p.unit) },
+      { icon: 'sprout', label: 'المنشأ', value: this.clean(p.origin) },
+      { icon: 'badge-check', label: 'الحالة', value: this.stockLabel(p) },
     ];
   }
 
   loadProduct(id: string): void {
     this.isLoading = true;
-    this.errorMessage = '';
     this.loadError = '';
     this.product = null;
     this.selectedImage = '';
+    this.currentPhoto = 0;
 
     this.http.get<any>(`${this.api}/${encodeURIComponent(id)}`).pipe(timeout(2500)).subscribe({
       next: data => {
@@ -147,10 +142,10 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
         const fallback = this.fallbackProducts().find(item => item.id === id);
         if (!fallback) {
           this.isLoading = false;
-          this.errorMessage = 'هذا المنتج غير موجود أو تعذر تحميله.';
-          this.loadError = this.errorMessage;
+          this.loadError = 'هذا المنتج غير موجود أو تعذر تحميله.';
           return;
         }
+
         this.setProduct(fallback);
         this.similarProducts = this.fallbackProducts()
           .filter(item => item.id !== fallback.id && item.category === fallback.category)
@@ -181,6 +176,41 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
     this.setDetailPhoto((this.currentPhoto + step + total) % total);
   }
 
+  prevImage(): void {
+    this.changeDetailPhoto(-1);
+  }
+
+  nextImage(): void {
+    this.changeDetailPhoto(1);
+  }
+
+  onGalleryTouchStart(event: TouchEvent): void {
+    const touch = event.changedTouches[0];
+    this.touchStartX = touch.clientX;
+    this.touchStartY = touch.clientY;
+  }
+
+  onGalleryTouchEnd(event: TouchEvent): void {
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - this.touchStartX;
+    const dy = touch.clientY - this.touchStartY;
+    if (Math.abs(dx) < 42 || Math.abs(dx) < Math.abs(dy)) return;
+
+    if (dx > 0) this.nextImage();
+    else this.prevImage();
+  }
+
+  openZoom(): void {
+    this.zoomOpen = true;
+    document.body.style.overflow = 'hidden';
+    this.refreshIcons();
+  }
+
+  closeZoom(): void {
+    this.zoomOpen = false;
+    document.body.style.overflow = '';
+  }
+
   onImageError(): void {
     this.selectedImage = this.fallbackImage;
   }
@@ -206,8 +236,20 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const message = encodeURIComponent(`مرحبا، شفت منتج "${this.product.title}" في AMANAFARM ونحب نسأل على التوفر والتوصيل.`);
+    const message = encodeURIComponent(
+      `مرحبا، شفت منتج "${this.product.title}" في AMANAFARM ونحب نسأل على التوفر والتوصيل.`
+    );
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank', 'noopener,noreferrer');
+  }
+
+  callSeller(): void {
+    if (!this.product) return;
+    const phone = this.normalizePhone(this.product.phone);
+    if (!phone) {
+      this.showToast('رقم الهاتف غير متوفر لهذا المنتج.', 'error');
+      return;
+    }
+    window.location.href = `tel:+${phone}`;
   }
 
   toggleFav(): void {
@@ -216,7 +258,10 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
       return;
     }
     this.isFav = !this.isFav;
-    this.showToast(this.isFav ? 'تم حفظ المنتج في المفضلة.' : 'تم حذف المنتج من المفضلة.', 'success');
+    this.showToast(
+      this.isFav ? 'تم حفظ المنتج في المفضلة.' : 'تم حذف المنتج من المفضلة.',
+      'success'
+    );
   }
 
   shareProduct(): void {
@@ -250,10 +295,11 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   }
 
   postedLabel(date: Date): string {
-    const days = Math.max(0, Math.floor((Date.now() - date.getTime()) / 86400000));
+    const days = Math.max(0, Math.floor((Date.now() - date.getTime()) / 86_400_000));
     if (days === 0) return 'اليوم';
     if (days === 1) return 'منذ يوم';
-    return `منذ ${days} أيام`;
+    if (days < 11) return `منذ ${days} أيام`;
+    return `منذ ${days} يوما`;
   }
 
   stockLabel(product: ProductDetail): string {
@@ -276,16 +322,8 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
     return image;
   }
 
-  trackByPhoto(_index: number, image: string): string {
-    return image;
-  }
-
   trackByToast(_index: number, toast: Toast): number {
     return toast.id;
-  }
-
-  trackByText(_index: number, item: unknown): string {
-    return typeof item === 'string' ? item : JSON.stringify(item);
   }
 
   showToast(message: string, type: Toast['type'] = 'info'): void {
@@ -340,38 +378,58 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
       quantity: this.clean(raw?.quantity || raw?.stock || 'حسب الاتفاق'),
       origin: this.clean(raw?.origin || 'تونس'),
       wilaya: this.clean(raw?.wilaya || raw?.location || 'تونس'),
-      description: this.clean(raw?.description || 'لا يوجد وصف مفصل لهذا المنتج.'),
+      description: this.clean(raw?.description || 'لا يوجد وصف مفصل لهذا المنتج. تواصل مع البائع للتثبت من الكمية والجودة وطريقة التسليم.'),
       imageUrls: this.extractImages(raw),
       inStock: Boolean(raw?.inStock ?? raw?.available ?? true),
       featured: Boolean(raw?.featured),
       deliveryAvailable: Boolean(raw?.deliveryAvailable ?? raw?.hasDelivery),
-      certified: Boolean(raw?.certified ?? raw?.verified),
+      certified: Boolean(raw?.certified ?? raw?.verified ?? raw?.companyVerified ?? raw?.sellerVerified),
       sellerName: this.clean(raw?.companyName || raw?.sellerName || 'بائع موثوق'),
-      sellerSubtitle: this.clean(raw?.companyTagline || raw?.sellerType || 'مورد فلاحي على AMANAFARM'),
+      sellerSubtitle: this.clean(raw?.companyTagline || this.sellerTypeLabel(raw?.sellerType)),
       sellerRating: Number(raw?.sellerRating || 4.8),
       phone: this.clean(raw?.phone || raw?.contactPhone || ''),
       createdAt: raw?.createdAt ? new Date(raw.createdAt) : new Date(),
     };
   }
 
+  private sellerTypeLabel(type: unknown): string {
+    return String(type || '').toLowerCase() === 'company'
+      ? 'مورد فلاحي على AMANAFARM'
+      : 'بائع مباشر على AMANAFARM';
+  }
+
   private extractImages(raw: any): string[] {
-    const rawImages = Array.isArray(raw?.images) ? raw.images : [];
-    const urls: string[] = rawImages
-      .map((img: any) => typeof img === 'string' ? img : (img?.imageUrl || img?.url || img?.src || ''))
-      .filter(Boolean);
-    if (raw?.mainImageUrl) urls.unshift(raw.mainImageUrl);
-    if (raw?.imageUrl) urls.unshift(raw.imageUrl);
-    if (raw?.image) urls.unshift(raw.image);
-    return [...new Set(urls.map((url: string) => this.normalizeImageUrl(url)).filter(Boolean))];
+    const urls: string[] = [];
+    const add = (value: unknown): void => {
+      if (!value) return;
+      if (Array.isArray(value)) {
+        value.forEach(item => add(item));
+        return;
+      }
+      if (typeof value === 'object') {
+        const obj = value as Record<string, unknown>;
+        add(obj['imageUrl'] || obj['url'] || obj['src'] || obj['path']);
+        return;
+      }
+      urls.push(String(value));
+    };
+
+    add(raw?.images);
+    add(raw?.imageUrls);
+    add(raw?.mainImageUrl);
+    add(raw?.imageUrl);
+    add(raw?.image);
+
+    return [...new Set(urls.map(url => this.normalizeImageUrl(url)).filter(Boolean))];
   }
 
   private normalizeImageUrl(url: string): string {
-    const clean = String(url || '').trim();
-    if (!clean) return '';
-    if (/^(https?:|data:|blob:|\/)/i.test(clean)) return clean;
-    if (clean.startsWith('assets/')) return `/${clean}`;
-    if (clean.startsWith('uploads/')) return `${environment.apiBaseUrl}/${clean}`;
-    return `/assets/${clean}`;
+    const value = String(url || '').trim();
+    if (!value) return '';
+    if (/^(https?:|data:|blob:|\/)/i.test(value)) return value;
+    if (value.startsWith('assets/')) return `/${value}`;
+    if (value.startsWith('uploads/')) return `${environment.apiBaseUrl}/${value}`;
+    return `/assets/${value.replace(/^\/+/, '')}`;
   }
 
   private normalizePhone(raw: string): string {
@@ -392,40 +450,63 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   }
 
   private fallbackProducts(): ProductDetail[] {
-    const base = (id: string, title: string, category: string, price: number, image: string): ProductDetail => ({
+    const base = (
+      id: string,
+      title: string,
+      category: string,
+      price: number,
+      images: string[],
+      extra: Partial<ProductDetail> = {},
+    ): ProductDetail => ({
       id,
       title,
       category,
       price,
-      priceType: category === 'برودويات طبيعية' ? 'PER_KG' : 'FIXED',
-      unit: category === 'برودويات طبيعية' ? 'لتر' : 'وحدة',
-      quantity: id === '20' ? '300 لتر' : 'حسب الاتفاق',
-      origin: 'تونس',
-      wilaya: id === '20' ? 'المهدية' : 'صفاقس',
-      description: 'منتج فلاحي موثوق على AMANAFARM، متوفر للتواصل المباشر مع البائع والتحقق من الكمية والتوصيل قبل الاتفاق.',
-      imageUrls: [image],
-      inStock: true,
-      featured: id === '20',
-      deliveryAvailable: true,
-      certified: true,
-      sellerName: id === '20' ? 'Natural Farm' : 'مورد موثوق',
-      sellerSubtitle: 'منتجات فلاحية تونسية',
-      sellerRating: 4.8,
-      phone: '55123456',
-      createdAt: new Date(),
+      priceType: extra.priceType || (category === 'برودويات طبيعية' ? 'PER_KG' : 'FIXED'),
+      unit: extra.unit || (category === 'برودويات طبيعية' ? 'لتر' : 'وحدة'),
+      quantity: extra.quantity || 'حسب الاتفاق',
+      origin: extra.origin || 'تونس',
+      wilaya: extra.wilaya || 'صفاقس',
+      description: extra.description || 'منتج فلاحي موثوق على AMANAFARM، متوفر للتواصل المباشر مع البائع والتحقق من الكمية والتوصيل قبل الاتفاق.',
+      imageUrls: images.map(image => this.normalizeImageUrl(image)),
+      inStock: extra.inStock ?? true,
+      featured: extra.featured ?? false,
+      deliveryAvailable: extra.deliveryAvailable ?? true,
+      certified: extra.certified ?? true,
+      sellerName: extra.sellerName || 'مورد موثوق',
+      sellerSubtitle: extra.sellerSubtitle || 'منتجات فلاحية تونسية',
+      sellerRating: extra.sellerRating || 4.8,
+      phone: extra.phone || '55123456',
+      createdAt: extra.createdAt || new Date(),
     });
 
     return [
-      base('1', 'علف مركب للأغنام 25كغ', 'أعلاف', 36, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=900&q=80'),
-      base('4', 'بذور طماطم هجينة', 'بذور', 18, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
-      base('7', 'عسل طبيعي جبلي', 'برودويات طبيعية', 42, 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=900&q=80'),
-      base('20', 'زيت زيتون بكر ممتاز', 'برودويات طبيعية', 24, 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=900&q=80'),
-      base('21', 'تمر دقلة نور من قبلي', 'برودويات طبيعية', 14, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=900&q=80'),
-      base('22', 'طماطم موسمية من نابل', 'خضر', 2.8, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=900&q=80'),
-      base('23', 'بطاطا موسمية من جندوبة', 'خضر', 2.2, 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=900&q=80'),
-      base('24', 'فلفل حار تونسي', 'خضر', 5.5, 'https://images.unsplash.com/photo-1526346698789-22fd84314424?w=900&q=80'),
-      base('25', 'سماد عضوي تونسي', 'سماد', 95, 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900&q=80'),
-      base('26', 'مضخة ماء فلاحية', 'معدات', 690, 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80'),
+      base('1', 'علف مركب للأغنام 25كغ', 'علف', 36, [
+        'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1100&q=85',
+        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1100&q=85',
+      ]),
+      base('4', 'بذور طماطم هجينة', 'بذور', 18, [
+        'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=1100&q=85',
+      ], { wilaya: 'نابل' }),
+      base('7', 'عسل طبيعي جبلي', 'برودويات طبيعية', 42, [
+        'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=1100&q=85',
+      ], { priceType: 'PER_KG', unit: 'كغ', wilaya: 'سليانة' }),
+      base('20', 'زيت زيتون بكر ممتاز', 'برودويات طبيعية', 24, [
+        'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=1100&q=85',
+        'https://images.unsplash.com/photo-1515516969-d4008cc6241a?w=1100&q=85',
+      ], { featured: true, quantity: '300 لتر', sellerName: 'Natural Farm', wilaya: 'المهدية' }),
+      base('21', 'تمر دقلة نور من قبلي', 'برودويات طبيعية', 14, [
+        'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=1100&q=85',
+      ], { wilaya: 'قبلي' }),
+      base('22', 'طماطم موسمية من نابل', 'خضر', 2.8, [
+        'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=1100&q=85',
+      ], { priceType: 'PER_KG', unit: 'كغ', wilaya: 'نابل' }),
+      base('23', 'بطاطا موسمية من جندوبة', 'خضر', 2.2, [
+        'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=1100&q=85',
+      ], { priceType: 'PER_KG', unit: 'كغ', wilaya: 'جندوبة' }),
+      base('26', 'مضخة ماء فلاحية', 'معدات', 690, [
+        'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1100&q=85',
+      ], { wilaya: 'قابس' }),
     ];
   }
 }

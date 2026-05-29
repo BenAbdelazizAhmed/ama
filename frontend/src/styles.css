@@ -6124,3 +6124,102 @@ body :where(app-product-detail, app-animal-detail) :where(.market-grid, .market-
     padding-left: 68px !important;
   }
 }
+
+/* Conversion/mobile polish for AMANAFARM */
+.btn-login-header {
+  gap: 7px;
+  color: var(--green-dark);
+  border-color: rgba(15, 122, 60, .22);
+}
+
+.btn-login-header span {
+  white-space: nowrap;
+}
+
+#mobPublish {
+  color: #fff !important;
+  background: linear-gradient(135deg, #0f7a3c, #0b5f32) !important;
+  box-shadow: 0 10px 24px rgba(15, 122, 60, .24);
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-bottom: calc(138px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .header {
+    background: rgba(255, 255, 255, .97) !important;
+    box-shadow: 0 8px 24px rgba(15, 61, 42, .08) !important;
+    padding-bottom: 10px !important;
+  }
+
+  .logo-texts .name {
+    font-size: 16px !important;
+  }
+
+  .logo-texts .tagline {
+    display: block !important;
+    max-width: 150px;
+    overflow: hidden;
+    color: #0f7a3c !important;
+    font-size: 9.5px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-wrap {
+    min-height: 48px !important;
+    border: 1px solid rgba(15, 122, 60, .18) !important;
+    background: #f7faf8 !important;
+  }
+
+  .search-wrap input::placeholder {
+    color: #486252 !important;
+    font-weight: 850;
+  }
+
+  .search-btn {
+    min-width: 72px;
+    font-weight: 950 !important;
+  }
+
+  .btn-login-header {
+    min-width: auto !important;
+    max-width: none !important;
+    padding: 0 12px !important;
+    background: #eef8f1 !important;
+    color: #0f7a3c !important;
+  }
+
+  .btn-login-header span {
+    display: inline !important;
+    font-size: 11px;
+  }
+
+  .mobile-bottom-nav {
+    height: calc(66px + env(safe-area-inset-bottom)) !important;
+    padding: 5px 8px env(safe-area-inset-bottom) !important;
+  }
+
+  .mobile-bottom-nav a,
+  .mobile-bottom-nav button {
+    border-radius: 14px;
+    font-size: 10.5px !important;
+  }
+
+  #mobPublish {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .btn-login-header span {
+    display: none !important;
+  }
+
+  .btn-login-header {
+    min-width: 42px !important;
+    width: 42px !important;
+    padding: 0 !important;
+  }
+}

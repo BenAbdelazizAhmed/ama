@@ -275,6 +275,30 @@ h1, h2, h3, p { margin: 0; }
   font-weight: 900;
 }
 
+.ad-conversion-nudge {
+  display: grid;
+  gap: 5px;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid rgba(37, 211, 102, .26);
+  border-radius: 13px;
+  background:
+    linear-gradient(135deg, rgba(37, 211, 102, .14), rgba(45, 122, 58, .08));
+}
+
+.ad-conversion-nudge strong {
+  color: var(--ad-dark);
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.ad-conversion-nudge span {
+  color: #425445;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-weight: 850;
+}
+
 .ad-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 .ad-action {
   min-height: 48px;
@@ -292,6 +316,11 @@ h1, h2, h3, p { margin: 0; }
 .ad-action--wa svg { width: 19px; height: 19px; }
 .ad-action--inspect { color: var(--ad-dark); background: var(--ad-soft); }
 .ad-action--save { color: var(--ad-green); border: 1px solid rgba(45,122,58,.28); background: #fff; }
+.ad-action--publish {
+  grid-column: 1 / -1;
+  color: #17301f;
+  background: linear-gradient(135deg, #f7d86d, #d99a19);
+}
 .ad-action--save.is-saved { color: #fff; background: var(--ad-green); }
 .ad-action--save.is-saved i { fill: currentColor; animation: adHeart .24s ease; }
 
@@ -362,7 +391,12 @@ h1, h2, h3, p { margin: 0; }
 }
 .ad-mobile-cta strong { display: block; color: var(--ad-green); font-size: 18px; line-height: 1.1; }
 .ad-mobile-cta span { color: var(--ad-muted); font-size: 12px; font-weight: 800; }
-.ad-mobile-cta button { min-width: 118px; min-height: 44px; border-radius: 12px; color: #fff; background: var(--ad-green); font-weight: 950; }
+.ad-mobile-cta button { min-width: 108px; min-height: 44px; border-radius: 12px; color: #fff; background: var(--ad-green); font-weight: 950; }
+.ad-mobile-cta__post {
+  min-width: 96px !important;
+  color: #17301f !important;
+  background: linear-gradient(135deg, #f7d86d, #d99a19) !important;
+}
 
 .ad-loading { display: grid; gap: 12px; padding-top: 18px; }
 .ad-skeleton { border-radius: var(--ad-radius); background: linear-gradient(90deg, #e7eee5 25%, #f8fbf7 50%, #e7eee5 75%); background-size: 200% 100%; animation: adShimmer 1.4s infinite; }
@@ -414,6 +448,17 @@ h1, h2, h3, p { margin: 0; }
   .ad-actions { grid-template-columns: 1fr; }
   .ad-action--primary,
   .ad-action--wa { grid-column: auto; }
+  .ad-mobile-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding: 9px;
+  }
+
+  .ad-mobile-cta button {
+    min-width: 86px;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 374px) {

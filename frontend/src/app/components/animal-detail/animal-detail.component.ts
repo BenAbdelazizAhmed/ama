@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
@@ -73,6 +73,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private http: HttpClient,
     private location: Location,
     public state: StateService,
@@ -270,6 +271,18 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
 
     navigator.clipboard?.writeText(url);
     this.showToast('تم نسخ رابط الإعلان', 'success');
+  }
+
+  publishSimilar(): void {
+    if (!this.state.isLoggedIn()) {
+      sessionStorage.setItem('amanafarm-pending-action', 'animal-add');
+      this.requireLogin('animal-add');
+      return;
+    }
+
+    void this.router.navigate(['/animals'], {
+      queryParams: { publish: 'animal', open: Date.now() },
+    });
   }
 
   showToast(message: string, type: Toast['type'] = 'info'): void {
