@@ -11,38 +11,43 @@
 <header class="header" [class.scrolled]="isScrolled" role="banner">
   <a routerLink="/" class="logo" aria-label="AMANAFARM الرئيسية">
     <div class="logo-mark">
-  <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="52" height="52">
-</div>
-    <div class="logo-texts"><div class="name">AMANAFARM</div><div class="tagline">منصة فلاحة موثوقة في تونس</div></div>
+      <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="44" height="44">
+    </div>
+    <div class="logo-texts">
+      <div class="name">AMANAFARM</div>
+      <div class="tagline">منصة فلاحة موثوقة في تونس</div>
+    </div>
   </a>
   <div class="search-wrap" role="search">
     <input id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" />
-    <button class="search-btn" id="searchBtn" type="button" aria-label="تنفيذ البحث"><i data-lucide="search" width="14" aria-hidden="true"></i> بحث</button>
+    <button class="search-btn" id="searchBtn" type="button" aria-label="تنفيذ البحث">
+      <i data-lucide="search" width="14" aria-hidden="true"></i> بحث
+    </button>
   </div>
   <div class="header-actions">
     <button class="btn-post-header" id="publishHeaderBtn" type="button" hidden>
       <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
       <span id="publishHeaderLabel">نشر إعلان</span>
     </button>
-    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">تسجيل الدخول</button>
+    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">دخول</button>
     <div class="user-menu-wrap auth-only">
-    <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false">
-      <span class="user-greeting-chip__avatar" id="userInitial">م</span>
-      <span class="user-greeting-chip__body">
-        <small>أهلاً</small>
-        <strong id="userName">مستخدم</strong>
-      </span>
-    </button>
-    <div class="user-dropdown" #userDropdown id="userDropdown" role="menu">
-      <div class="ud-header">
-        <div class="ud-avt" id="udAvt">م</div>
-        <div>
-          <div class="ud-name" id="udName">مستخدم</div>
-          <div class="ud-email" id="udEmail"></div>
+      <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false">
+        <span class="user-greeting-chip__avatar" id="userInitial">م</span>
+        <span class="user-greeting-chip__body">
+          <small>أهلاً</small>
+          <strong id="userName">مستخدم</strong>
+        </span>
+      </button>
+      <div class="user-dropdown" #userDropdown id="userDropdown" role="menu">
+        <div class="ud-header">
+          <div class="ud-avt" id="udAvt">م</div>
+          <div>
+            <div class="ud-name" id="udName">مستخدم</div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
         </div>
+        <button class="ud-item danger" id="logoutBtn" type="button" role="menuitem">تسجيل الخروج</button>
       </div>
-      <button class="ud-item danger" id="logoutBtn" type="button" role="menuitem">تسجيل الخروج</button>
-    </div>
     </div>
   </div>
 </header>

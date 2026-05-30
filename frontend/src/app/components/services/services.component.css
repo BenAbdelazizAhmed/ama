@@ -3573,3 +3573,80 @@ input[type=range] { width: 100%; accent-color: var(--green); }
     white-space: normal !important;
   }
 }
+
+/* ═══ REFONTE V4 — Services page targeted improvements ═══ */
+
+/* Cards grid: better mobile */
+@media (max-width: 640px) {
+  :host .cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  :host .service-card,
+  :host .clean-job-card {
+    border-radius: 16px !important;
+  }
+
+  :host .job-card {
+    border-radius: 16px !important;
+  }
+
+  :host .profile-card {
+    border-radius: 16px !important;
+  }
+}
+
+/* Service card: improve the card body */
+:host .service-card__body {
+  padding: 24px 14px 14px !important;
+}
+
+/* Action buttons: better size on mobile */
+@media (max-width: 640px) {
+  :host .btn-add-smart {
+    height: 42px !important;
+    padding: 0 18px !important;
+    font-size: 13px !important;
+  }
+
+  :host .action-bar-inner {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+}
+
+/* Hero: compact on mobile */
+@media (max-width: 640px) {
+  :host .mode-toggle-wrap {
+    gap: 2px !important;
+    padding: 4px !important;
+  }
+
+  :host .mode-btn {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+
+  :host .mode-hint {
+    display: none !important;
+  }
+
+  :host .search-engine {
+    border-radius: 16px !important;
+  }
+}
+
+/* Trust strip in form: cleaner */
+:host .form-trust-strip {
+  border-radius: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+/* Layout main-wrap: padding */
+@media (max-width: 480px) {
+  :host .main-wrap {
+    padding: 14px !important;
+    padding-bottom: 80px !important;
+  }
+}

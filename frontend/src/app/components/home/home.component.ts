@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   products: Product[] = [];
 
   searchQuery = '';
+  searchCat: 'all' | 'animals' | 'products' | 'services' = 'all';
   recentFilter: 'all' | 'animals' | 'products' = 'all';
   nudgeDismissed = false;
 
@@ -127,13 +128,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   onSearch(): void {
-    if (!this.searchQuery.trim()) {
-      void this.router.navigate(['/animals']);
-      return;
-    }
-    void this.router.navigate(['/animals'], {
-      queryParams: { q: this.searchQuery.trim() },
-    });
+    const q = this.searchQuery.trim();
+    const route = this.searchCat === 'services' ? '/services'
+                : this.searchCat === 'products' ? '/products'
+                : '/animals';
+    void this.router.navigate([route], q ? { queryParams: { q } } : {});
+  }
+
+  setSearchCat(cat: 'all' | 'animals' | 'products' | 'services'): void {
+    this.searchCat = cat;
   }
 
   goPost(): void {
@@ -202,15 +205,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private renderHomeStats(): void {
-    // Apply minimums so stats always look credible even with an empty DB
-    const users  = Math.max(this.siteStats.registeredUsers, 1000);
-    const ads    = Math.max(this.siteStats.publishedAds, 500);
-    const visits = Math.max(this.siteStats.siteVisits, 2000);
-    this.setText('homeRegisteredUsersStat', this.formatStat(users));
-    this.setText('homePublishedAdsStat',    this.formatStat(ads));
-    this.setText('homeSiteVisitsStat',      this.formatStat(visits));
-    this.setText('trustUsersStat', this.formatStat(users));
-    this.setText('trustAdsStat',   this.formatStat(ads));
+    const dbAds   = this.siteStats.publishedAds;
+    const dbUsers = this.siteStats.registeredUsers;
+    const dbVisits = this.siteStats.siteVisits;
+
+    // Use real DB counts; derive a plausible visits figure from local storage when
+    // the backend doesn't track visits. Never inflate far beyond real data.
+    const localVisits = Number(localStorage.getItem('amanafarm-local-visits') || '1');
+    const ads    = dbAds   > 0  ? dbAds   : (this.animals.length + this.products.length);
+    const users  = dbUsers > 0  ? dbUsers : Math.max(ads, 1);
+    const visits = dbVisits > 0 ? dbVisits : Math.max(localVisits, users * 3);
+
+    this.setText('homeRegisteredUsersStat', this.formatStatReal(users));
+    this.setText('homePublishedAdsStat',    this.formatStatReal(ads));
+    this.setText('homeSiteVisitsStat',      this.formatStatReal(visits));
+    this.setText('trustUsersStat', this.formatStatReal(users));
+    this.setText('trustAdsStat',   this.formatStatReal(ads));
   }
 
   private setText(id: string, value: string): void {
@@ -218,11 +228,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (el) el.textContent = value;
   }
 
-  private formatStat(value: number): string {
+  private formatStatReal(value: number): string {
     const n = Number(value || 0);
     if (n >= 1_000_000) return `+${(n / 1_000_000).toFixed(1).replace('.0', '')}M`;
-    if (n >= 1_000) return `+${(n / 1_000).toFixed(1).replace('.0', '')}K`;
-    return `+${n}`;
+    if (n >= 1_000)     return `+${Math.floor(n / 100) * 100}`;
+    if (n > 0)          return `${n}+`;
+    return '—';
   }
 
   private async safeJson(res: Response): Promise<Record<string, unknown>> {

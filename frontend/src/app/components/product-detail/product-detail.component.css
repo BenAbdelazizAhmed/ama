@@ -747,3 +747,236 @@ img { display: block; max-width: 100%; }
   .pd-owner-bar__actions { width: 100%; }
   .pd-owner-btn { flex: 1; justify-content: center; }
 }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DETAIL PAGES V4 â€” Premium marketplace level
+   Applies to both animal-detail and product-detail
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* â”€â”€ Image gallery: premium â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-main-img,
+:host .pd-main-img {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,.1) !important;
+}
+
+:host .det-main-img img,
+:host .pd-main-img img {
+  object-fit: contain !important;
+  padding: 12px !important;
+  background: linear-gradient(145deg, #F4F8F4 0%, #EAF2EA 100%) !important;
+  transition: transform .4s cubic-bezier(.4,0,.2,1) !important;
+}
+
+:host .det-main-img:hover img,
+:host .pd-main-img:hover img {
+  transform: scale(1.04) !important;
+}
+
+/* Gallery thumbnail strip: premium */
+:host .det-thumbs,
+:host .pd-thumbs {
+  padding: 12px 14px !important;
+  gap: 10px !important;
+}
+
+:host .det-thumb,
+:host .pd-thumb {
+  border-radius: 12px !important;
+  border-width: 2px !important;
+  transition: border-color .15s, transform .15s !important;
+}
+
+:host .det-thumb:hover,
+:host .pd-thumb:hover {
+  transform: translateY(-2px) !important;
+}
+
+:host .det-thumb--active,
+:host .pd-thumb--active {
+  border-color: #0B6E3A !important;
+  box-shadow: 0 2px 8px rgba(11,110,58,.25) !important;
+}
+
+/* â”€â”€ Info panel: better typography â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-info,
+:host .pd-info {
+  border-radius: 20px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.04) !important;
+  border: 1.5px solid #E5E7EB !important;
+}
+
+:host .det-title,
+:host .pd-title {
+  letter-spacing: -.025em !important;
+  line-height: 1.2 !important;
+}
+
+:host .det-price,
+:host .pd-price {
+  color: #0B6E3A !important;
+  font-weight: 900 !important;
+  letter-radius: -.03em !important;
+}
+
+/* Specs grid: premium */
+:host .det-specs,
+:host .pd-specs {
+  background: #F8FAF8 !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+}
+
+:host .det-spec,
+:host .pd-spec {
+  background: #fff !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #E5E7EB !important;
+  transition: border-color .15s, box-shadow .15s !important;
+}
+
+:host .det-spec:hover,
+:host .pd-spec:hover {
+  border-color: rgba(11,110,58,.25) !important;
+  box-shadow: 0 2px 8px rgba(11,110,58,.08) !important;
+}
+
+/* Action buttons: premium */
+:host .det-btn-wa,
+:host .pd-btn-wa {
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 16px rgba(37,211,102,.3) !important;
+  transition: all .18s !important;
+}
+
+:host .det-btn-wa:hover,
+:host .pd-btn-wa:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 24px rgba(37,211,102,.42) !important;
+}
+
+:host .det-btn-contact,
+:host .pd-btn-contact {
+  border-radius: 14px !important;
+  background: #0B6E3A !important;
+  font-weight: 700 !important;
+  transition: all .18s !important;
+}
+
+:host .det-btn-contact:hover,
+:host .pd-btn-contact:hover {
+  background: #063D20 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Safety note */
+:host .det-safety-note,
+:host .pd-safety-note {
+  border-radius: 12px !important;
+}
+
+/* â”€â”€ Seller card: premium â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-seller,
+:host .pd-seller {
+  border-radius: 20px !important;
+  border: 1.5px solid #E5E7EB !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07) !important;
+}
+
+:host .det-seller__avatar,
+:host .pd-seller__avatar {
+  border-radius: 18px !important;
+  box-shadow: 0 4px 14px rgba(11,110,58,.22) !important;
+}
+
+/* â”€â”€ Similar/nearby: premium â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-nearby,
+:host .pd-nearby,
+:host .det-similar,
+:host .pd-similar {
+  border-radius: 20px !important;
+  border: 1.5px solid #E5E7EB !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07) !important;
+}
+
+:host .det-similar-card,
+:host .pd-similar-card {
+  border-radius: 16px !important;
+  border-width: 1.5px !important;
+  transition: box-shadow .2s, transform .2s !important;
+}
+
+:host .det-similar-card:hover,
+:host .pd-similar-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,.12) !important;
+}
+
+/* â”€â”€ Mobile CTA: premium â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-mobile-cta,
+:host .pd-mobile-cta {
+  border-top: 1px solid #E5E7EB !important;
+  box-shadow: 0 -6px 28px rgba(0,0,0,.09) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+:host .det-mobile-cta__wa,
+:host .pd-mobile-cta__wa {
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(37,211,102,.3) !important;
+}
+
+/* â”€â”€ Breadcrumb: clean â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-breadcrumb,
+:host .pd-breadcrumb {
+  font-size: 12.5px !important;
+  color: #9CA3AF !important;
+}
+
+/* â”€â”€ Trust badge: more visible â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-trust-badge,
+:host .pd-trust-badge {
+  border-radius: 16px !important;
+  border: 1.5px solid #C8E6C9 !important;
+  box-shadow: 0 2px 8px rgba(11,110,58,.08) !important;
+}
+
+/* â”€â”€ Buying guide: better â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-guide,
+:host .pd-guide {
+  border-radius: 16px !important;
+  border: 1.5px solid #E5E7EB !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05) !important;
+}
+
+/* â”€â”€ Owner bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-owner-bar,
+:host .pd-owner-bar {
+  border-radius: 16px !important;
+  border-width: 1.5px !important;
+}
+
+/* â”€â”€ Delete confirm modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+:host .det-confirm,
+:host .pd-confirm {
+  border-radius: 24px !important;
+}
+
+/* Page shell spacing */
+:host .det-shell,
+:host .pd-shell {
+  padding-inline: clamp(14px, 3vw, 32px) !important;
+}
+
+/* Grid: 3-col on large screens */
+@media (min-width: 1200px) {
+  :host .det-grid,
+  :host .pd-grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(260px, 320px) !important;
+    gap: 24px !important;
+  }
+}
+

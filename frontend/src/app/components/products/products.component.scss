@@ -8608,3 +8608,82 @@
     white-space: normal !important;
   }
 }
+
+/* ═══ REFONTE V4 — Products page targeted improvements ═══ */
+
+:host .products-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)) !important;
+}
+
+@media (max-width: 640px) {
+  :host .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  :host .pcard {
+    border-radius: 14px !important;
+  }
+
+  :host .pcard__info {
+    padding: 10px !important;
+  }
+
+  :host .pcard__name {
+    font-size: 13px !important;
+  }
+
+  :host .pcard__price {
+    font-size: 17px !important;
+  }
+
+  :host .pcard__actions {
+    flex-direction: column !important;
+    gap: 5px !important;
+  }
+
+  :host .pcard__btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 36px !important;
+  }
+}
+
+/* Icon placeholder: better styling */
+:host .pcard__icon-wrap {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #f0faf2 0%, #e8f5e9 100%) !important;
+  color: var(--leaf-700, #1a7a4a) !important;
+}
+
+:host .pcard__icon-wrap i,
+:host .pcard__icon-wrap svg {
+  width: 48px !important;
+  height: 48px !important;
+  opacity: .6 !important;
+}
+
+/* Products card V4 premium overrides */
+:host .pcard { border: 1.5px solid #EBEBEB !important; border-radius: 20px !important; overflow: hidden !important; background: #fff !important; box-shadow: 0 2px 8px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.03) !important; transition: transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s, border-color .22s !important; }
+:host .pcard:hover { transform: translateY(-5px) !important; box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.05) !important; border-color: #D8D8D8 !important; }
+:host .pcard__media { aspect-ratio: 3 / 2 !important; background: linear-gradient(135deg, #F0FAF4 0%, #E8F5E9 100%) !important; }
+:host .pcard__price { font-size: 22px !important; font-weight: 900 !important; color: #0B6E3A !important; letter-spacing: -.02em !important; }
+:host .pcard__name { font-size: 14px !important; font-weight: 700 !important; color: #111827 !important; }
+:host .pcard__btn--eye { height: 36px !important; border-radius: 10px !important; background: #F0FAF4 !important; color: #0B6E3A !important; border: 1.5px solid rgba(11,110,58,.18) !important; font-weight: 700 !important; font-size: 12px !important; }
+:host .pcard__btn--eye:hover { background: #0B6E3A !important; color: #fff !important; border-color: transparent !important; }
+:host .pcard__btn--wa { height: 36px !important; border-radius: 10px !important; background: #25D366 !important; color: #fff !important; font-weight: 700 !important; font-size: 12px !important; border: none !important; box-shadow: 0 2px 8px rgba(37,211,102,.28) !important; }
+:host .pcard__btn--wa:hover { background: #1aad55 !important; }
+:host .products-grid { grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)) !important; gap: 20px !important; }
+@media (max-width: 640px) {
+  :host .products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  :host .pcard { border-radius: 16px !important; }
+  :host .pcard__price { font-size: 17px !important; }
+  :host .pcard__name { font-size: 12.5px !important; }
+  :host .pcard__actions { flex-direction: column !important; gap: 4px !important; }
+  :host .pcard__btn { width: 100% !important; justify-content: center !important; height: 34px !important; font-size: 11.5px !important; }
+}
+

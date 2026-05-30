@@ -1,400 +1,527 @@
-<!-- ═══════════════════════════════════════════════
-     HERO — Airbnb-style: search-first, clean, full
-     ═══════════════════════════════════════════════ -->
-<section class="h-hero" aria-label="الصفحة الرئيسية">
-  <div class="h-hero__bg" aria-hidden="true"></div>
-  <div class="h-hero__overlay" aria-hidden="true"></div>
+<!-- ═══════════════════════════════════════════════════════
+     HERO — Two-column premium, cinematic
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-hero" aria-label="الصفحة الرئيسية">
+  <!-- Background layers -->
+  <div class="hv4-hero__bg" aria-hidden="true"></div>
+  <div class="hv4-hero__overlay" aria-hidden="true"></div>
+  <div class="hv4-hero__noise" aria-hidden="true"></div>
+  <div class="hv4-hero__glow" aria-hidden="true"></div>
 
-  <div class="h-hero__body">
-    <p class="h-hero__eyebrow">
-      <i data-lucide="shield-check" width="13" aria-hidden="true"></i>
-      سوق فلاحي موثوق · 24 ولاية تونسية
-    </p>
+  <div class="hv4-hero__inner">
 
-    <h1 class="h-hero__title">
-      بيع وشري بثقة<br>
-      <span class="h-hero__title-em">كل ما يخص الفلاحة</span>
-    </h1>
+    <!-- ── LEFT COLUMN: main content ── -->
+    <div class="hv4-hero__left">
 
-    <!-- Airbnb-style search bar -->
-    <form class="h-search" role="search" (submit)="$event.preventDefault(); onSearch()">
-      <div class="h-search__field">
-        <label class="h-search__label">ابحث في السوق</label>
-        <input
-          type="search"
-          class="h-search__input"
-          [(ngModel)]="searchQuery"
-          (keyup.enter)="onSearch()"
-          placeholder="خروف، بقرة، علف، بيطري..."
-          aria-label="بحث في المنصة"
-          autocomplete="off"
-          name="search"
-        />
+      <!-- Eyebrow badge -->
+      <div class="hv4-eyebrow">
+        <span class="hv4-live-dot" aria-hidden="true"></span>
+        <i data-lucide="shield-check" width="13" aria-hidden="true"></i>
+        سوق فلاحي موثوق · 24 ولاية تونسية
       </div>
-      <button class="h-search__btn" type="submit" aria-label="بحث">
-        <i data-lucide="search" width="18" aria-hidden="true"></i>
-        <span>بحث</span>
-      </button>
-    </form>
 
-    <!-- Quick category pills — Airbnb explore nearby style -->
-    <div class="h-hero__pills" aria-label="أقسام سريعة">
-      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'أغنام'}">🐑 أغنام</a>
-      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'أبقار'}">🐄 أبقار</a>
-      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'دواجن'}">🐓 دواجن</a>
-      <a class="h-pill" routerLink="/products" [queryParams]="{category:'أعلاف'}">🌾 أعلاف</a>
-      <a class="h-pill" routerLink="/services">🩺 خدمات</a>
+      <!-- Title: impact first, gradient second line -->
+      <h1 class="hv4-hero__title">
+        بيع وشري<br>
+        <span class="hv4-hero__em">بثقة وأمان</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hv4-hero__sub">
+        سوق رقمي للفلاحين والمربين — إعلانات موثوقة، تواصل مباشر، بدون وسيط ولا عمولة.
+      </p>
+
+      <!-- Search: category tabs + input -->
+      <div class="hv4-hero__search-wrap">
+        <div class="hv4-stabs" role="tablist" aria-label="نوع البحث">
+          <button
+            class="hv4-stab"
+            [class.hv4-stab--active]="searchCat==='all'"
+            (click)="setSearchCat('all')"
+            type="button"
+            role="tab"
+          >الكل</button>
+          <button
+            class="hv4-stab"
+            [class.hv4-stab--active]="searchCat==='animals'"
+            (click)="setSearchCat('animals')"
+            type="button"
+            role="tab"
+          >🐑 حيوانات</button>
+          <button
+            class="hv4-stab"
+            [class.hv4-stab--active]="searchCat==='products'"
+            (click)="setSearchCat('products')"
+            type="button"
+            role="tab"
+          >🌾 منتجات</button>
+          <button
+            class="hv4-stab"
+            [class.hv4-stab--active]="searchCat==='services'"
+            (click)="setSearchCat('services')"
+            type="button"
+            role="tab"
+          >🩺 خدمات</button>
+        </div>
+
+        <form class="hv4-search" role="search" (submit)="$event.preventDefault(); onSearch()">
+          <i class="hv4-search__icon" data-lucide="search" width="18" aria-hidden="true"></i>
+          <input
+            type="search"
+            class="hv4-search__input"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+            [placeholder]="searchCat==='animals' ? 'ابحث: خروف، بقرة، دجاج...' :
+                           searchCat==='products' ? 'ابحث: علف، بذور، معدات...' :
+                           searchCat==='services' ? 'ابحث: بيطري، نقل، عامل...' :
+                           'ابحث عن حيوان، منتج، خدمة...'"
+            aria-label="بحث في المنصة"
+            autocomplete="off"
+            name="search"
+          />
+          <button class="hv4-search__btn" type="submit">
+            <i data-lucide="search" width="16" aria-hidden="true"></i>
+            <span>بحث</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Two CTA buttons -->
+      <div class="hv4-hero__ctas">
+        <button class="hv4-cta hv4-cta--primary" type="button" (click)="goPost()">
+          <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
+          انشر إعلانك مجاناً
+        </button>
+        <button class="hv4-cta hv4-cta--ghost" type="button" (click)="browseAds()">
+          <i data-lucide="layers" width="18" aria-hidden="true"></i>
+          تصفح السوق
+        </button>
+      </div>
+
+      <!-- Value props row -->
+      <div class="hv4-props" aria-label="مزايا المنصة">
+        <span class="hv4-prop">
+          <span class="hv4-prop__check" aria-hidden="true">✓</span>مجاني
+        </span>
+        <span class="hv4-prop__dot" aria-hidden="true"></span>
+        <span class="hv4-prop">
+          <span class="hv4-prop__check" aria-hidden="true">✓</span>بدون عمولة
+        </span>
+        <span class="hv4-prop__dot" aria-hidden="true"></span>
+        <span class="hv4-prop">
+          <span class="hv4-prop__check" aria-hidden="true">✓</span>تواصل مباشر
+        </span>
+        <span class="hv4-prop__dot" aria-hidden="true"></span>
+        <span class="hv4-prop">
+          <span class="hv4-prop__check" aria-hidden="true">✓</span>24 ولاية
+        </span>
+      </div>
+
     </div>
 
-    <!-- Trust stats — real backend numbers -->
-    <div class="h-hero__trust" role="list">
-      <div class="h-trust" role="listitem">
-        <strong id="homeRegisteredUsersStat">+1K</strong>
-        <span>مستخدم</span>
-      </div>
-      <div class="h-trust__sep" aria-hidden="true">·</div>
-      <div class="h-trust" role="listitem">
-        <strong id="homePublishedAdsStat">+500</strong>
-        <span>إعلان</span>
-      </div>
-      <div class="h-trust__sep" aria-hidden="true">·</div>
-      <div class="h-trust" role="listitem">
-        <strong id="homeSiteVisitsStat">+1K</strong>
-        <span>زيارة</span>
-      </div>
-      <div class="h-trust__sep" aria-hidden="true">·</div>
-      <div class="h-trust" role="listitem">
-        <strong>24</strong>
-        <span>ولاية</span>
-      </div>
-      <div class="h-trust__sep" aria-hidden="true">·</div>
-      <div class="h-trust" role="listitem">
-        <strong>⭐ 4.8</strong>
-        <span>تقييم</span>
+    <!-- ── RIGHT COLUMN: glassmorphism stats card ── -->
+    <div class="hv4-hero__right" aria-hidden="true">
+      <div class="hv4-glass-card">
+
+        <!-- Live indicator -->
+        <div class="hv4-glass-card__live">
+          <span class="hv4-live-dot hv4-live-dot--lg"></span>
+          <span>سوق حي الآن</span>
+        </div>
+
+        <!-- Stats 2×2 grid -->
+        <div class="hv4-glass-card__stats">
+          <div class="hv4-gstat">
+            <strong class="hv4-gstat__num" id="homeRegisteredUsersStat">...</strong>
+            <span class="hv4-gstat__lbl">مستخدم</span>
+          </div>
+          <div class="hv4-gstat">
+            <strong class="hv4-gstat__num" id="homePublishedAdsStat">...</strong>
+            <span class="hv4-gstat__lbl">إعلان</span>
+          </div>
+          <div class="hv4-gstat">
+            <strong class="hv4-gstat__num">24</strong>
+            <span class="hv4-gstat__lbl">ولاية</span>
+          </div>
+          <div class="hv4-gstat">
+            <strong class="hv4-gstat__num">⭐ 4.8</strong>
+            <span class="hv4-gstat__lbl">تقييم</span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="hv4-glass-card__divider"></div>
+
+        <!-- Trust list -->
+        <div class="hv4-glass-card__trust">
+          <div class="hv4-gtrust">
+            <i data-lucide="check-circle" width="15" aria-hidden="true"></i>
+            <span>بدون عمولة أو مصاريف خفية</span>
+          </div>
+          <div class="hv4-gtrust">
+            <i data-lucide="check-circle" width="15" aria-hidden="true"></i>
+            <span>تواصل مباشر عبر واتساب</span>
+          </div>
+          <div class="hv4-gtrust">
+            <i data-lucide="check-circle" width="15" aria-hidden="true"></i>
+            <span>إعلانات موثوقة من بائعين حقيقيين</span>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <button class="hv4-glass-card__cta" type="button" (click)="goPost()">
+          <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
+          انشر الآن — مجاناً
+        </button>
+
       </div>
     </div>
+
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════
      ACTIVATION NUDGE — logged-in users without a listing
-     ═══════════════════════════════════════════════ -->
-<div class="activation-nudge" *ngIf="state.user() && !nudgeDismissed" role="alert" aria-live="polite">
-  <div class="activation-nudge__inner">
-    <div class="activation-nudge__progress" aria-hidden="true">
-      <span class="an-step an-step--done">✅ حساب</span>
-      <span class="an-arrow">←</span>
-      <span class="an-step an-step--next">📣 أول إعلان</span>
-    </div>
-    <div class="activation-nudge__text">
+     ═══════════════════════════════════════════════════════ -->
+<div class="hv4-nudge" *ngIf="state.user() && !nudgeDismissed" role="alert" aria-live="polite">
+  <div class="hv4-nudge__inner">
+    <span class="hv4-nudge__icon">📣</span>
+    <div class="hv4-nudge__text">
       <strong>انشر أول إعلانك الآن</strong>
-      <span>مجاني · يظهر فوراً في كل تونس · تواصل مباشر على واتساب</span>
+      <span>مجاني · يظهر فوراً · تواصل مباشر</span>
     </div>
-    <button class="activation-nudge__cta" (click)="goPost()" type="button">
-      أضف إعلان
+    <button class="hv4-nudge__cta" (click)="goPost()" type="button">أضف إعلان</button>
+    <button class="hv4-nudge__close" (click)="dismissNudge()" type="button" aria-label="إغلاق">
+      <i data-lucide="x" width="14" aria-hidden="true"></i>
     </button>
-    <button class="activation-nudge__close" (click)="dismissNudge()" type="button" aria-label="إغلاق الإشعار">×</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     CATEGORIES — Jumia / Airbnb explore style
-     ═══════════════════════════════════════════════ -->
-<section class="h-section h-section--white home-reveal" aria-labelledby="cats-h">
-  <div class="h-section__head">
-    <h2 class="h-section__title" id="cats-h">تصفح حسب القسم</h2>
-    <a routerLink="/animals" class="h-section__link">عرض الكل</a>
-  </div>
+<!-- ═══════════════════════════════════════════════════════
+     CATEGORIES — Modern grid
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="cats-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head">
+      <div>
+        <h2 class="hv4-title" id="cats-h">تصفح حسب القسم</h2>
+        <p class="hv4-sub">اختر ما تبحث عنه — حيوانات، منتجات، أو خدمات فلاحية</p>
+      </div>
+      <a routerLink="/animals" class="hv4-link">عرض الكل</a>
+    </div>
 
-  <div class="h-cats">
-    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أغنام'}" aria-label="أغنام وخرفان">
-      <div class="h-cat__img" style="background:#FFF8F0">🐑</div>
-      <span class="h-cat__name">أغنام</span>
-      <span class="h-cat__sub">خرفان · نعاج</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أبقار'}" aria-label="أبقار وعجول">
-      <div class="h-cat__img" style="background:#F0F8FF">🐄</div>
-      <span class="h-cat__name">أبقار</span>
-      <span class="h-cat__sub">حلوب · تسمين</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'دواجن'}" aria-label="دواجن وطيور">
-      <div class="h-cat__img" style="background:#FFFBF0">🐓</div>
-      <span class="h-cat__name">دواجن</span>
-      <span class="h-cat__sub">دجاج · ديوك</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'ماعز'}" aria-label="ماعز وجديان">
-      <div class="h-cat__img" style="background:#F5F5F0">🐐</div>
-      <span class="h-cat__name">ماعز</span>
-      <span class="h-cat__sub">جديان · حلوب</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'أعلاف'}" aria-label="أعلاف ومواد">
-      <div class="h-cat__img" style="background:#F0F8F0">🌾</div>
-      <span class="h-cat__name">أعلاف</span>
-      <span class="h-cat__sub">شعير · فول</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'بذور'}" aria-label="بذور ونباتات">
-      <div class="h-cat__img" style="background:#F0FFF4">🌱</div>
-      <span class="h-cat__name">بذور</span>
-      <span class="h-cat__sub">خضر · حبوب</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'معدات'}" aria-label="معدات فلاحية">
-      <div class="h-cat__img" style="background:#F5F5F5">⚙️</div>
-      <span class="h-cat__name">معدات</span>
-      <span class="h-cat__sub">أدوات · آلات</span>
-    </a>
-    <a class="h-cat home-reveal" routerLink="/services" aria-label="خدمات فلاحية">
-      <div class="h-cat__img" style="background:#F0F4FF">🩺</div>
-      <span class="h-cat__name">خدمات</span>
-      <span class="h-cat__sub">بيطري · نقل</span>
-    </a>
+    <div class="hv4-cats">
+      <a class="hv4-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أغنام'}" aria-label="أغنام وخرفان">
+        <div class="hv4-cat__icon" style="--cat-bg:#FFF4E6;--cat-fg:#C05621">🐑</div>
+        <span class="hv4-cat__name">أغنام</span>
+        <span class="hv4-cat__sub">خرفان · نعاج</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أبقار'}" aria-label="أبقار وعجول">
+        <div class="hv4-cat__icon" style="--cat-bg:#EBF8FF;--cat-fg:#2B6CB0">🐄</div>
+        <span class="hv4-cat__name">أبقار</span>
+        <span class="hv4-cat__sub">حلوب · تسمين</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/animals" [queryParams]="{category:'دواجن'}" aria-label="دواجن وطيور">
+        <div class="hv4-cat__icon" style="--cat-bg:#FEFCE8;--cat-fg:#B45309">🐓</div>
+        <span class="hv4-cat__name">دواجن</span>
+        <span class="hv4-cat__sub">دجاج · ديوك</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/animals" [queryParams]="{category:'ماعز'}" aria-label="ماعز وجديان">
+        <div class="hv4-cat__icon" style="--cat-bg:#F0FFF4;--cat-fg:#276749">🐐</div>
+        <span class="hv4-cat__name">ماعز</span>
+        <span class="hv4-cat__sub">جديان · حلوب</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/products" [queryParams]="{category:'أعلاف'}" aria-label="أعلاف ومواد">
+        <div class="hv4-cat__icon" style="--cat-bg:#F0FFF4;--cat-fg:#22543D">🌾</div>
+        <span class="hv4-cat__name">أعلاف</span>
+        <span class="hv4-cat__sub">شعير · فول</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/products" [queryParams]="{category:'بذور'}" aria-label="بذور">
+        <div class="hv4-cat__icon" style="--cat-bg:#F0FFF4;--cat-fg:#2F855A">🌱</div>
+        <span class="hv4-cat__name">بذور</span>
+        <span class="hv4-cat__sub">خضر · حبوب</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/products" [queryParams]="{category:'معدات'}" aria-label="معدات فلاحية">
+        <div class="hv4-cat__icon" style="--cat-bg:#F7FAFC;--cat-fg:#4A5568">⚙️</div>
+        <span class="hv4-cat__name">معدات</span>
+        <span class="hv4-cat__sub">أدوات · آلات</span>
+      </a>
+      <a class="hv4-cat home-reveal" routerLink="/services" aria-label="خدمات فلاحية">
+        <div class="hv4-cat__icon" style="--cat-bg:#EBF4FF;--cat-fg:#2B6CB0">🩺</div>
+        <span class="hv4-cat__name">خدمات</span>
+        <span class="hv4-cat__sub">بيطري · نقل</span>
+      </a>
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     RECENT LISTINGS — Jumia/Amazon product grid
-     ═══════════════════════════════════════════════ -->
-<section class="h-section h-section--grey home-reveal" aria-labelledby="recent-h" *ngIf="recentListings.length > 0">
-  <div class="h-section__head">
-    <h2 class="h-section__title" id="recent-h">إعلانات حديثة</h2>
-    <div class="h-filter-tabs">
-      <button class="h-tab" [class.h-tab--active]="recentFilter==='all'" (click)="recentFilter='all'" type="button">الكل</button>
-      <button class="h-tab" [class.h-tab--active]="recentFilter==='animals'" (click)="recentFilter='animals'" type="button">حيوانات</button>
-      <button class="h-tab" [class.h-tab--active]="recentFilter==='products'" (click)="recentFilter='products'" type="button">منتجات</button>
-    </div>
-  </div>
-
-  <div class="h-listings">
-    <article
-      class="h-card home-reveal"
-      *ngFor="let item of filteredRecentListings"
-      [attr.aria-label]="item.title"
-    >
-      <!-- Photo -->
-      <a class="h-card__photo-link" [routerLink]="item.type === 'animal' ? '/animals/' + item.id : '/products/' + item.id">
-        <div class="h-card__photo">
-          <img
-            *ngIf="item.imageUrl"
-            [src]="item.imageUrl"
-            [alt]="item.title"
-            loading="lazy"
-            decoding="async"
-          />
-          <div *ngIf="!item.imageUrl" class="h-card__photo-emoji">
-            {{ item.type === 'animal' ? '🐄' : '🌾' }}
-          </div>
-          <span class="h-card__badge">جديد</span>
-        </div>
-      </a>
-
-      <!-- Info -->
-      <div class="h-card__body">
-        <div class="h-card__loc">
-          <i data-lucide="map-pin" width="11" aria-hidden="true"></i>
-          {{ item.wilaya || 'تونس' }}
-        </div>
-        <h3 class="h-card__name">{{ item.title }}</h3>
-        <div class="h-card__price">
-          {{ state.fmtPrice(item.price ?? 0) }} <span>دت</span>
-        </div>
+<!-- ═══════════════════════════════════════════════════════
+     RECENT LISTINGS — Premium marketplace grid
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--grey home-reveal" aria-labelledby="recent-h" *ngIf="recentListings.length > 0">
+  <div class="hv4-wrap">
+    <div class="hv4-head">
+      <div>
+        <h2 class="hv4-title" id="recent-h">إعلانات حديثة</h2>
+        <p class="hv4-sub">آخر الإعلانات المنشورة من كل تونس</p>
       </div>
+      <div class="hv4-tabs">
+        <button class="hv4-tab" [class.hv4-tab--active]="recentFilter==='all'" (click)="recentFilter='all'" type="button">الكل</button>
+        <button class="hv4-tab" [class.hv4-tab--active]="recentFilter==='animals'" (click)="recentFilter='animals'" type="button">حيوانات</button>
+        <button class="hv4-tab" [class.hv4-tab--active]="recentFilter==='products'" (click)="recentFilter='products'" type="button">منتجات</button>
+      </div>
+    </div>
 
-      <!-- WhatsApp CTA — always visible -->
-      <a
-        class="h-card__wa"
-        [href]="'https://wa.me/216' + item.phone"
-        target="_blank"
-        rel="noopener"
-        (click)="$event.stopPropagation()"
-        aria-label="تواصل عبر واتساب"
+    <div class="hv4-grid">
+      <article
+        class="hv4-card home-reveal"
+        *ngFor="let item of filteredRecentListings"
+        [attr.aria-label]="item.title"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
-          <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
-        </svg>
-        واتساب
-      </a>
-    </article>
-  </div>
+        <a class="hv4-card__photo-wrap" [routerLink]="item.type === 'animal' ? '/animals/' + item.id : '/products/' + item.id">
+          <div class="hv4-card__photo">
+            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.title" loading="lazy" decoding="async" />
+            <div *ngIf="!item.imageUrl" class="hv4-card__no-photo">
+              <span>{{ item.type === 'animal' ? '🐑' : '🌾' }}</span>
+            </div>
+            <span class="hv4-card__type">{{ item.type === 'animal' ? 'حيوان' : 'منتج' }}</span>
+          </div>
+        </a>
 
-  <div class="h-see-all">
-    <button class="h-btn-outline" (click)="browseAds()" type="button">
-      عرض كل الإعلانات
-      <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
-    </button>
-  </div>
-</section>
+        <div class="hv4-card__body">
+          <div class="hv4-card__loc">
+            <i data-lucide="map-pin" width="11" aria-hidden="true"></i>
+            {{ item.wilaya || 'تونس' }}
+          </div>
+          <h3 class="hv4-card__title">{{ item.title }}</h3>
+          <div class="hv4-card__bottom">
+            <div class="hv4-card__price">
+              {{ state.fmtPrice(item.price ?? 0) }}
+              <span class="hv4-card__currency">دت</span>
+            </div>
+            <a
+              class="hv4-card__wa"
+              [href]="'https://wa.me/216' + item.phone"
+              target="_blank"
+              rel="noopener"
+              (click)="$event.stopPropagation()"
+              aria-label="تواصل عبر واتساب"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
+              </svg>
+              واتساب
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
 
-<!-- ═══════════════════════════════════════════════
-     HOW IT WORKS — clean 3 steps
-     ═══════════════════════════════════════════════ -->
-<section class="h-section h-section--white home-reveal" aria-labelledby="how-h">
-  <div class="h-section__head h-section__head--center">
-    <h2 class="h-section__title" id="how-h">كيف تبيع في أقل من دقيقتين؟</h2>
-    <p class="h-section__sub">بسيط، سريع، وبدون أي مصاريف مخفية.</p>
-  </div>
-
-  <div class="h-steps">
-    <div class="h-step home-reveal">
-      <div class="h-step__num">01</div>
-      <div class="h-step__icon">
-        <i data-lucide="user-plus" width="28" aria-hidden="true"></i>
-      </div>
-      <h3 class="h-step__title">سجّل حساب مجاني</h3>
-      <p class="h-step__desc">الاسم + الهاتف + الولاية — لا بطاقة بنكية، لا التزامات.</p>
-    </div>
-    <div class="h-steps__arrow" aria-hidden="true">
-      <i data-lucide="arrow-left" width="20"></i>
-    </div>
-    <div class="h-step home-reveal">
-      <div class="h-step__num">02</div>
-      <div class="h-step__icon">
-        <i data-lucide="camera" width="28" aria-hidden="true"></i>
-      </div>
-      <h3 class="h-step__title">انشر إعلانك</h3>
-      <p class="h-step__desc">صورة + سعر + وصف قصير. الإعلان يظهر فوراً في كل تونس.</p>
-    </div>
-    <div class="h-steps__arrow" aria-hidden="true">
-      <i data-lucide="arrow-left" width="20"></i>
-    </div>
-    <div class="h-step home-reveal">
-      <div class="h-step__num">03</div>
-      <div class="h-step__icon">
-        <i data-lucide="message-circle" width="28" aria-hidden="true"></i>
-      </div>
-      <h3 class="h-step__title">تواصل مباشرة</h3>
-      <p class="h-step__desc">المشترون يتصلون بك على واتساب مباشرة — لا وسيط، لا عمولة.</p>
-    </div>
-  </div>
-
-  <div class="h-steps__cta">
-    <button class="h-btn-primary" (click)="goPost()" type="button">
-      <i data-lucide="plus-circle" width="17" aria-hidden="true"></i>
-      انشر إعلانك الآن — مجاناً
-    </button>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════
-     TRUST METRICS — Amazon social proof
-     ═══════════════════════════════════════════════ -->
-<section class="h-metrics home-reveal" aria-labelledby="metrics-h">
-  <div class="h-metrics__inner">
-    <div class="h-metric home-reveal">
-      <strong class="h-metric__num" id="trustUsersStat">+1,000</strong>
-      <span class="h-metric__lbl">مستخدم فلاحي نشط</span>
-    </div>
-    <div class="h-metrics__div" aria-hidden="true"></div>
-    <div class="h-metric home-reveal">
-      <strong class="h-metric__num" id="trustAdsStat">+500</strong>
-      <span class="h-metric__lbl">إعلان تم نشره</span>
-    </div>
-    <div class="h-metrics__div" aria-hidden="true"></div>
-    <div class="h-metric home-reveal">
-      <strong class="h-metric__num">24</strong>
-      <span class="h-metric__lbl">ولاية مشمولة</span>
-    </div>
-    <div class="h-metrics__div" aria-hidden="true"></div>
-    <div class="h-metric home-reveal">
-      <strong class="h-metric__num">⭐ 4.8</strong>
-      <span class="h-metric__lbl">تقييم المستخدمين</span>
+    <div class="hv4-see-all">
+      <button class="hv4-btn hv4-btn--outline" (click)="browseAds()" type="button">
+        عرض كل الإعلانات
+        <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     TESTIMONIALS — Airbnb review style
-     ═══════════════════════════════════════════════ -->
-<section class="h-section h-section--grey home-reveal" aria-labelledby="testi-h">
-  <div class="h-section__head h-section__head--center">
-    <h2 class="h-section__title" id="testi-h">ما قالوه عن AMANAFARM</h2>
-    <p class="h-section__sub">تجارب حقيقية من فلاحين وتجار في كل تونس.</p>
-  </div>
+<!-- ═══════════════════════════════════════════════════════
+     HOW IT WORKS — 3 steps visual
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="how-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head hv4-head--center">
+      <h2 class="hv4-title" id="how-h">كيف تبيع في دقيقتين؟</h2>
+      <p class="hv4-sub">بسيط، سريع، وبدون أي مصاريف مخفية.</p>
+    </div>
 
-  <div class="h-reviews">
-    <div class="h-review home-reveal" *ngFor="let t of testimonials">
-      <div class="h-review__stars" [attr.aria-label]="'تقييم 5 نجوم'">{{ t.stars }}</div>
-      <p class="h-review__text">"{{ t.text }}"</p>
-      <div class="h-review__author">
-        <img class="h-review__avt" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async" />
-        <div>
-          <div class="h-review__name">{{ t.name }}</div>
-          <div class="h-review__meta">{{ t.loc }} · <span class="h-review__badge">{{ t.result }}</span></div>
+    <div class="hv4-steps">
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">01</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="user-plus" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">سجّل حساب مجاني</h3>
+        <p class="hv4-step__desc">الاسم + الهاتف + الولاية — لا بطاقة بنكية، لا التزامات.</p>
+      </div>
+
+      <div class="hv4-step__connector" aria-hidden="true">
+        <i data-lucide="arrow-left" width="18"></i>
+      </div>
+
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">02</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="camera" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">انشر إعلانك</h3>
+        <p class="hv4-step__desc">صورة + سعر + وصف. الإعلان يظهر فوراً في كل تونس.</p>
+      </div>
+
+      <div class="hv4-step__connector" aria-hidden="true">
+        <i data-lucide="arrow-left" width="18"></i>
+      </div>
+
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">03</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="message-circle" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">تواصل مباشرة</h3>
+        <p class="hv4-step__desc">المشترون يتصلون على واتساب مباشرة — لا وسيط، لا عمولة.</p>
+      </div>
+    </div>
+
+    <div class="hv4-steps__cta">
+      <button class="hv4-btn hv4-btn--primary" (click)="goPost()" type="button">
+        <i data-lucide="plus-circle" width="17" aria-hidden="true"></i>
+        انشر إعلانك الآن — مجاناً
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     METRICS — Trust band
+     ═══════════════════════════════════════════════════════ -->
+<div class="hv4-metrics home-reveal" aria-label="إحصائيات المنصة">
+  <div class="hv4-metrics__inner">
+    <div class="hv4-metric home-reveal">
+      <strong class="hv4-metric__num" id="trustUsersStat">...</strong>
+      <span class="hv4-metric__lbl">مستخدم فلاحي نشط</span>
+    </div>
+    <div class="hv4-metrics__div" aria-hidden="true"></div>
+    <div class="hv4-metric home-reveal">
+      <strong class="hv4-metric__num" id="trustAdsStat">...</strong>
+      <span class="hv4-metric__lbl">إعلان تم نشره</span>
+    </div>
+    <div class="hv4-metrics__div" aria-hidden="true"></div>
+    <div class="hv4-metric home-reveal">
+      <strong class="hv4-metric__num">24</strong>
+      <span class="hv4-metric__lbl">ولاية مشمولة</span>
+    </div>
+    <div class="hv4-metrics__div" aria-hidden="true"></div>
+    <div class="hv4-metric home-reveal">
+      <strong class="hv4-metric__num">⭐ 4.8</strong>
+      <span class="hv4-metric__lbl">تقييم المستخدمين</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TESTIMONIALS — Premium review cards
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--grey home-reveal" aria-labelledby="testi-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head hv4-head--center">
+      <h2 class="hv4-title" id="testi-h">ما قالوه عن AMANAFARM</h2>
+      <p class="hv4-sub">تجارب حقيقية من فلاحين وتجار في كل تونس.</p>
+    </div>
+
+    <div class="hv4-reviews">
+      <div class="hv4-review home-reveal" *ngFor="let t of testimonials">
+        <div class="hv4-review__stars" [attr.aria-label]="'تقييم 5 نجوم'">★★★★★</div>
+        <p class="hv4-review__text">"{{ t.text }}"</p>
+        <div class="hv4-review__author">
+          <img class="hv4-review__avt" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async" />
+          <div>
+            <div class="hv4-review__name">{{ t.name }}</div>
+            <div class="hv4-review__meta">
+              <i data-lucide="map-pin" width="10" aria-hidden="true"></i>
+              {{ t.loc }}
+              <span class="hv4-review__badge">{{ t.result }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     PRICING — clean cards
-     ═══════════════════════════════════════════════ -->
-<section class="h-section h-section--white home-reveal" aria-labelledby="pricing-h">
-  <div class="h-section__head h-section__head--center">
-    <h2 class="h-section__title" id="pricing-h">مجاني دائماً · مدفوع إذا أردت البيع أسرع</h2>
-    <p class="h-section__sub">AMANAFARM مفتوح للجميع. الخدمات الإضافية اختيارية 100%.</p>
-  </div>
-  <div class="pricing-grid pricing-grid--pro">
-    <article class="pricing-card home-reveal">
-      <div class="pricing-top">
-        <span class="pricing-badge">للبداية</span>
-        <h3>إعلان عادي</h3>
-        <p>أفضل طريقة باش تبدأ من غير التزام.</p>
-      </div>
-      <div class="pricing-price"><strong>مجاني</strong><span>دائماً</span></div>
-      <ul class="pricing-features">
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في السوق</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>تواصل مباشر واتساب</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صور وسعر واضح</span></li>
-      </ul>
-      <a class="pricing-cta" routerLink="/animals">انشر مجاناً <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
-    </article>
-    <article class="pricing-card pricing-card--featured home-reveal">
-      <div class="pricing-top">
-        <span class="pricing-badge">الأكثر اختياراً</span>
-        <h3>Boost مميّز</h3>
-        <p>اطلع قبل المنافسين وشد الانتباه أسرع.</p>
-      </div>
-      <div class="pricing-price"><strong>10 دت</strong><span>7 أيام</span></div>
-      <ul class="pricing-features">
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور أعلى في النتائج</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة مميّز ذهبية</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في الصفحة الرئيسية</span></li>
-      </ul>
-      <a class="pricing-cta" routerLink="/animals">جرّب Boost <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
-    </article>
-    <article class="pricing-card home-reveal">
-      <div class="pricing-top">
-        <span class="pricing-badge">للمحترفين</span>
-        <h3>حساب Pro</h3>
-        <p>للبياطرة والنقل والعلف والمربين الجديين.</p>
-      </div>
-      <div class="pricing-price"><strong>39 دت</strong><span>شهرياً</span></div>
-      <ul class="pricing-features">
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صفحة مهنية خاصة</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة موثوق</span></li>
-        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>إحصائيات المشاهدات</span></li>
-      </ul>
-      <a class="pricing-cta" routerLink="/services">اكتشف Pro <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
-    </article>
+<!-- ═══════════════════════════════════════════════════════
+     PRICING — Clean 3-tier cards
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="pricing-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head hv4-head--center">
+      <h2 class="hv4-title" id="pricing-h">مجاني دائماً · مدفوع إذا أردت البيع أسرع</h2>
+      <p class="hv4-sub">AMANAFARM مفتوح للجميع. الخدمات الإضافية اختيارية 100%.</p>
+    </div>
+
+    <div class="hv4-pricing">
+      <article class="hv4-plan home-reveal">
+        <div class="hv4-plan__kicker">للبداية</div>
+        <h3 class="hv4-plan__name">إعلان عادي</h3>
+        <p class="hv4-plan__desc">أفضل طريقة باش تبدأ من غير التزام.</p>
+        <div class="hv4-plan__price">
+          <strong>مجاني</strong>
+          <span>دائماً</span>
+        </div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في السوق</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>تواصل مباشر واتساب</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صور وسعر واضح</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/animals">ابدأ مجاناً</a>
+      </article>
+
+      <article class="hv4-plan hv4-plan--featured home-reveal">
+        <div class="hv4-plan__kicker">الأكثر اختياراً</div>
+        <h3 class="hv4-plan__name">Boost مميّز</h3>
+        <p class="hv4-plan__desc">اطلع قبل المنافسين وشد الانتباه أسرع.</p>
+        <div class="hv4-plan__price">
+          <strong>10 دت</strong>
+          <span>7 أيام</span>
+        </div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور أعلى في النتائج</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة مميّز ذهبية</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في الصفحة الرئيسية</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/animals">جرّب Boost</a>
+      </article>
+
+      <article class="hv4-plan home-reveal">
+        <div class="hv4-plan__kicker">للمحترفين</div>
+        <h3 class="hv4-plan__name">حساب Pro</h3>
+        <p class="hv4-plan__desc">للبياطرة والنقل والعلف والمربين الجديين.</p>
+        <div class="hv4-plan__price">
+          <strong>39 دت</strong>
+          <span>شهرياً</span>
+        </div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صفحة مهنية خاصة</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة موثوق</span></li>
+          <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>إحصائيات المشاهدات</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/services">اكتشف Pro</a>
+      </article>
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     CTA BAND — final action
-     ═══════════════════════════════════════════════ -->
-<div class="h-cta-band home-reveal">
-  <div class="h-cta-band__text">
-    <h2>جاهز تبيع أو تشتري؟</h2>
-    <p>انضم لأكثر من ألف مستخدم. أول إعلان مجاناً وبدون أي التزام.</p>
-  </div>
-  <div class="h-cta-band__actions">
-    <button class="h-cta-band__btn-white" (click)="goPost()" type="button">
-      <i data-lucide="plus" width="15" aria-hidden="true"></i>
-      أعلن مجاناً
-    </button>
-    <button class="h-cta-band__btn-ghost" (click)="browseAds()" type="button">
-      <i data-lucide="search" width="15" aria-hidden="true"></i>
-      تصفح الإعلانات
-    </button>
+<!-- ═══════════════════════════════════════════════════════
+     FINAL CTA — Conversion band
+     ═══════════════════════════════════════════════════════ -->
+<div class="hv4-cta-band home-reveal">
+  <div class="hv4-wrap">
+    <div class="hv4-cta-band__inner">
+      <div class="hv4-cta-band__text">
+        <h2>جاهز تبيع أو تشتري؟</h2>
+        <p>انضم للمجتمع الفلاحي في تونس. أول إعلان مجاناً وبدون أي التزام.</p>
+      </div>
+      <div class="hv4-cta-band__btns">
+        <button class="hv4-cta-band__btn-white" (click)="goPost()" type="button">
+          <i data-lucide="plus" width="16" aria-hidden="true"></i>
+          أعلن مجاناً
+        </button>
+        <button class="hv4-cta-band__btn-ghost" (click)="browseAds()" type="button">
+          <i data-lucide="search" width="16" aria-hidden="true"></i>
+          تصفح الإعلانات
+        </button>
+      </div>
+    </div>
   </div>
 </div>
