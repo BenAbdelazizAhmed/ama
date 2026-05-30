@@ -926,6 +926,21 @@
   transform: translateY(-1px);
 }
 
+.hv4-empty-listings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--hv4-white);
+  border-radius: var(--hv4-r-xl);
+  border: 2px dashed var(--hv4-border-d);
+}
+.hv4-empty-icon { font-size: 48px; }
+.hv4-empty-listings h3 { font-size: 17px; font-weight: 700; color: var(--hv4-ink); margin: 0; }
+.hv4-empty-listings p  { font-size: 14px; color: var(--hv4-muted); margin: 0; }
+
 .hv4-see-all {
   display: flex;
   justify-content: center;
