@@ -1,5 +1,5 @@
 <!-- ═══════════════════════════════════════════════════════
-     HERO — Two-column premium cinematic
+     HERO — Two-column cinematic (garde ce design)
      ═══════════════════════════════════════════════════════ -->
 <section class="hv4-hero" aria-label="الصفحة الرئيسية">
   <div class="hv4-hero__bg" aria-hidden="true"></div>
@@ -57,14 +57,14 @@
         </button>
       </div>
 
-      <div class="hv4-props" aria-label="مزايا المنصة">
-        <span class="hv4-prop"><span class="hv4-prop__check" aria-hidden="true">✓</span>مجاني</span>
-        <span class="hv4-prop__dot" aria-hidden="true"></span>
-        <span class="hv4-prop"><span class="hv4-prop__check" aria-hidden="true">✓</span>بدون عمولة</span>
-        <span class="hv4-prop__dot" aria-hidden="true"></span>
-        <span class="hv4-prop"><span class="hv4-prop__check" aria-hidden="true">✓</span>تواصل مباشر</span>
-        <span class="hv4-prop__dot" aria-hidden="true"></span>
-        <span class="hv4-prop"><span class="hv4-prop__check" aria-hidden="true">✓</span>24 ولاية</span>
+      <div class="hv4-props">
+        <span class="hv4-prop"><span class="hv4-prop__check">✓</span>مجاني</span>
+        <span class="hv4-prop__dot"></span>
+        <span class="hv4-prop"><span class="hv4-prop__check">✓</span>بدون عمولة</span>
+        <span class="hv4-prop__dot"></span>
+        <span class="hv4-prop"><span class="hv4-prop__check">✓</span>تواصل مباشر</span>
+        <span class="hv4-prop__dot"></span>
+        <span class="hv4-prop"><span class="hv4-prop__check">✓</span>24 ولاية</span>
       </div>
     </div>
 
@@ -94,12 +94,12 @@
         </div>
         <div class="hv4-glass-card__divider"></div>
         <div class="hv4-glass-card__trust">
-          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15" aria-hidden="true"></i><span>بدون عمولة أو مصاريف خفية</span></div>
-          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15" aria-hidden="true"></i><span>تواصل مباشر عبر واتساب</span></div>
-          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15" aria-hidden="true"></i><span>إعلانات موثوقة من بائعين حقيقيين</span></div>
+          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15"></i><span>بدون عمولة أو مصاريف خفية</span></div>
+          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15"></i><span>تواصل مباشر عبر واتساب</span></div>
+          <div class="hv4-gtrust"><i data-lucide="check-circle" width="15"></i><span>إعلانات موثوقة من بائعين حقيقيين</span></div>
         </div>
         <button class="hv4-glass-card__cta" type="button" (click)="goPost()">
-          <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
+          <i data-lucide="plus-circle" width="15"></i>
           انشر الآن — مجاناً
         </button>
       </div>
@@ -117,7 +117,7 @@
     </div>
     <button class="hv4-nudge__cta" (click)="goPost()" type="button">أضف إعلان</button>
     <button class="hv4-nudge__close" (click)="dismissNudge()" type="button" aria-label="إغلاق">
-      <i data-lucide="x" width="14" aria-hidden="true"></i>
+      <i data-lucide="x" width="14"></i>
     </button>
   </div>
 </div>
@@ -125,7 +125,7 @@
 <!-- ═══════════════════════════════════════════════════════
      CATEGORIES
      ═══════════════════════════════════════════════════════ -->
-<section class="hv4-section hv4-section--white" aria-labelledby="cats-h">
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="cats-h">
   <div class="hv4-wrap">
     <div class="hv4-head">
       <div>
@@ -181,9 +181,9 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════
-     RECENT LISTINGS — always present, skeleton when empty
+     RECENT LISTINGS — real backend data, always present
      ═══════════════════════════════════════════════════════ -->
-<section class="hv4-section hv4-section--grey" aria-labelledby="recent-h">
+<section class="hv4-section hv4-section--grey home-reveal" aria-labelledby="recent-h">
   <div class="hv4-wrap">
     <div class="hv4-head">
       <div>
@@ -197,13 +197,19 @@
       </div>
     </div>
 
-    <!-- Data loaded -->
+    <!-- listings grid -->
     <div class="hv4-grid" *ngIf="filteredRecentListings.length > 0">
       <article class="hv4-card home-reveal" *ngFor="let item of filteredRecentListings" [attr.aria-label]="item.title">
         <a class="hv4-card__photo-wrap" [routerLink]="item.type === 'animal' ? '/animals/' + item.id : '/products/' + item.id">
           <div class="hv4-card__photo">
-            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.title" loading="lazy" decoding="async" />
-            <div *ngIf="!item.imageUrl" class="hv4-card__no-photo">
+            <img
+              *ngIf="normalizeImgUrl(item.imageUrl)"
+              [src]="normalizeImgUrl(item.imageUrl)"
+              [alt]="item.title"
+              loading="lazy"
+              decoding="async"
+            />
+            <div *ngIf="!normalizeImgUrl(item.imageUrl)" class="hv4-card__no-photo">
               <span>{{ item.type === 'animal' ? '🐑' : '🌾' }}</span>
             </div>
             <span class="hv4-card__type">{{ item.type === 'animal' ? 'حيوان' : 'منتج' }}</span>
@@ -235,14 +241,14 @@
       </article>
     </div>
 
-    <!-- Empty state (no listings yet) -->
+    <!-- empty state -->
     <div class="hv4-empty-listings" *ngIf="filteredRecentListings.length === 0">
       <div class="hv4-empty-icon">🌿</div>
-      <h3>لا توجد إعلانات حتى الآن</h3>
-      <p>كن أول من ينشر إعلاناً في هذا القسم</p>
+      <h3>لا توجد إعلانات بعد</h3>
+      <p>كن أول من ينشر إعلاناً</p>
       <button class="hv4-btn hv4-btn--primary" (click)="goPost()" type="button">
-        <i data-lucide="plus-circle" width="16" aria-hidden="true"></i>
-        انشر إعلانك مجاناً
+        <i data-lucide="plus-circle" width="16"></i>
+        انشر مجاناً
       </button>
     </div>
 
@@ -256,9 +262,61 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════
-     METRICS BAND — Trust indicators
+     HOW IT WORKS — 3 steps
      ═══════════════════════════════════════════════════════ -->
-<div class="hv4-metrics home-reveal" aria-label="إحصائيات المنصة">
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="how-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head hv4-head--center">
+      <h2 class="hv4-title" id="how-h">كيف تبيع في دقيقتين؟</h2>
+      <p class="hv4-sub">بسيط، سريع، وبدون أي مصاريف مخفية.</p>
+    </div>
+
+    <div class="hv4-steps">
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">01</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="user-plus" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">سجّل حساب مجاني</h3>
+        <p class="hv4-step__desc">الاسم + الهاتف + الولاية — لا بطاقة بنكية، لا التزامات.</p>
+      </div>
+      <div class="hv4-step__connector" aria-hidden="true">
+        <i data-lucide="arrow-left" width="18"></i>
+      </div>
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">02</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="camera" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">انشر إعلانك</h3>
+        <p class="hv4-step__desc">صورة + سعر + وصف. الإعلان يظهر فوراً في كل تونس.</p>
+      </div>
+      <div class="hv4-step__connector" aria-hidden="true">
+        <i data-lucide="arrow-left" width="18"></i>
+      </div>
+      <div class="hv4-step home-reveal">
+        <div class="hv4-step__num">03</div>
+        <div class="hv4-step__icon-wrap">
+          <i data-lucide="message-circle" width="26" aria-hidden="true"></i>
+        </div>
+        <h3 class="hv4-step__title">تواصل مباشرة</h3>
+        <p class="hv4-step__desc">المشترون يتصلون على واتساب مباشرة — لا وسيط، لا عمولة.</p>
+      </div>
+    </div>
+
+    <div class="hv4-steps__cta">
+      <button class="hv4-btn hv4-btn--primary" (click)="goPost()" type="button">
+        <i data-lucide="plus-circle" width="17" aria-hidden="true"></i>
+        انشر إعلانك الآن — مجاناً
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     METRICS BAND
+     ═══════════════════════════════════════════════════════ -->
+<div class="hv4-metrics home-reveal">
   <div class="hv4-metrics__inner">
     <div class="hv4-metric home-reveal">
       <strong class="hv4-metric__num" id="trustUsersStat">...</strong>
@@ -285,7 +343,7 @@
 <!-- ═══════════════════════════════════════════════════════
      TESTIMONIALS
      ═══════════════════════════════════════════════════════ -->
-<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="testi-h">
+<section class="hv4-section hv4-section--grey home-reveal" aria-labelledby="testi-h">
   <div class="hv4-wrap">
     <div class="hv4-head hv4-head--center">
       <h2 class="hv4-title" id="testi-h">ما قالوه عن AMANAFARM</h2>
@@ -293,7 +351,7 @@
     </div>
     <div class="hv4-reviews">
       <div class="hv4-review home-reveal" *ngFor="let t of testimonials">
-        <div class="hv4-review__stars" [attr.aria-label]="'تقييم 5 نجوم'">★★★★★</div>
+        <div class="hv4-review__stars">★★★★★</div>
         <p class="hv4-review__text">"{{ t.text }}"</p>
         <div class="hv4-review__author">
           <img class="hv4-review__avt" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async" />
@@ -312,6 +370,58 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════
+     PRICING
+     ═══════════════════════════════════════════════════════ -->
+<section class="hv4-section hv4-section--white home-reveal" aria-labelledby="pricing-h">
+  <div class="hv4-wrap">
+    <div class="hv4-head hv4-head--center">
+      <h2 class="hv4-title" id="pricing-h">مجاني دائماً · مدفوع إذا أردت البيع أسرع</h2>
+      <p class="hv4-sub">AMANAFARM مفتوح للجميع. الخدمات الإضافية اختيارية 100%.</p>
+    </div>
+    <div class="hv4-pricing">
+      <article class="hv4-plan home-reveal">
+        <div class="hv4-plan__kicker">للبداية</div>
+        <h3 class="hv4-plan__name">إعلان عادي</h3>
+        <p class="hv4-plan__desc">أفضل طريقة باش تبدأ من غير التزام.</p>
+        <div class="hv4-plan__price"><strong>مجاني</strong><span>دائماً</span></div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14"></i><span>ظهور في السوق</span></li>
+          <li><i data-lucide="check" width="14"></i><span>تواصل مباشر واتساب</span></li>
+          <li><i data-lucide="check" width="14"></i><span>صور وسعر واضح</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/animals">ابدأ مجاناً</a>
+      </article>
+
+      <article class="hv4-plan hv4-plan--featured home-reveal">
+        <div class="hv4-plan__kicker">الأكثر اختياراً</div>
+        <h3 class="hv4-plan__name">Boost مميّز</h3>
+        <p class="hv4-plan__desc">اطلع قبل المنافسين وشد الانتباه أسرع.</p>
+        <div class="hv4-plan__price"><strong>10 دت</strong><span>7 أيام</span></div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14"></i><span>ظهور أعلى في النتائج</span></li>
+          <li><i data-lucide="check" width="14"></i><span>شارة مميّز ذهبية</span></li>
+          <li><i data-lucide="check" width="14"></i><span>ظهور في الصفحة الرئيسية</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/animals">جرّب Boost</a>
+      </article>
+
+      <article class="hv4-plan home-reveal">
+        <div class="hv4-plan__kicker">للمحترفين</div>
+        <h3 class="hv4-plan__name">حساب Pro</h3>
+        <p class="hv4-plan__desc">للبياطرة والنقل والعلف والمربين الجديين.</p>
+        <div class="hv4-plan__price"><strong>39 دت</strong><span>شهرياً</span></div>
+        <ul class="hv4-plan__features">
+          <li><i data-lucide="check" width="14"></i><span>صفحة مهنية خاصة</span></li>
+          <li><i data-lucide="check" width="14"></i><span>شارة موثوق</span></li>
+          <li><i data-lucide="check" width="14"></i><span>إحصائيات المشاهدات</span></li>
+        </ul>
+        <a class="hv4-plan__cta" routerLink="/services">اكتشف Pro</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
      FINAL CTA BAND
      ═══════════════════════════════════════════════════════ -->
 <div class="hv4-cta-band home-reveal">
@@ -323,11 +433,11 @@
       </div>
       <div class="hv4-cta-band__btns">
         <button class="hv4-cta-band__btn-white" (click)="goPost()" type="button">
-          <i data-lucide="plus" width="16" aria-hidden="true"></i>
+          <i data-lucide="plus" width="16"></i>
           أعلن مجاناً
         </button>
         <button class="hv4-cta-band__btn-ghost" (click)="browseAds()" type="button">
-          <i data-lucide="search" width="16" aria-hidden="true"></i>
+          <i data-lucide="search" width="16"></i>
           تصفح الإعلانات
         </button>
       </div>

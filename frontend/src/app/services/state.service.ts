@@ -351,7 +351,7 @@ export class StateService {
       sellerName: a.trustedSeller ? 'بائع موثق' : 'مستخدم',
       sellerRating: 4.8, featured: a.featured || false,
       verified: a.trustedSeller || false, phone: a.phone || '',
-      description: a.description || '', imageUrl: a.images?.[0] || '',
+      description: a.description || '', imageUrl: this.resolveUrl(a.images?.[0] || ''),
     };
   }
 
@@ -540,7 +540,13 @@ export class StateService {
     try {
       const res = await fetch(`${this.apiBase}/api/products`);
       if (!res.ok) return;
-      this.products.set(await res.json());
+      const data: Product[] = await res.json();
+      const mapped = data.map(p => ({
+        ...p,
+        imageUrl: this.resolveUrl(p.imageUrl),
+        contactPhone: p.contactPhone || '',
+      }));
+      this.products.set(mapped);
     } catch {}
   }
 
@@ -672,5 +678,14 @@ export class StateService {
 
   getCatEmoji(cat: string): string {
     return { 'أغنام': '🐑', 'أبقار': '🐄', 'دواجن': '🐔', 'ماعز': '🐐', 'منتجات': '🌾', 'خدمات': '🚚' }[cat] || '🐑';
+  }
+
+  resolveUrl(url: string | undefined): string {
+    const u = (url ?? '').trim();
+    if (!u) return '';
+    if (/^(https?:|data:|blob:|\/)/i.test(u)) return u;
+    if (u.startsWith('uploads/')) return `${this.apiBase}/${u}`;
+    if (u.startsWith('assets/'))  return `/${u}`;
+    return u;
   }
 }

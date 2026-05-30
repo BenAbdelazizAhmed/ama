@@ -7,6 +7,7 @@ import {
   AnimalAd,
   Product,
 } from '../../services/state.service';
+import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
 
@@ -149,6 +150,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   browseAds(): void {
     void this.router.navigate(['/animals']);
+  }
+
+  normalizeImgUrl(url: string | undefined): string {
+    if (!url) return '';
+    const u = url.trim();
+    if (/^(https?:|data:|blob:|\/)/i.test(u)) return u;
+    if (u.startsWith('uploads/')) return `${environment.apiBaseUrl}/${u}`;
+    if (u.startsWith('assets/'))  return `/${u}`;
+    return u;
   }
 
   dismissNudge(): void {
