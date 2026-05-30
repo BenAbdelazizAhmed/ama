@@ -8347,3 +8347,61 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+
+/* ═══ PRODUCTS — World-class V2 polish ═══ */
+
+:host .pcard__btn--wa,
+:host .cta-btn--wa {
+  background: #25D366 !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(37,211,102,.28) !important;
+}
+
+:host .pcard__btn--wa:hover,:host .cta-btn--wa:hover {
+  background: #1da851 !important;
+  transform: translateY(-1px) !important;
+}
+
+:host .pcard__btn {
+  min-height: 40px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+:host .pcard:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 18px 44px rgba(27,94,32,.13) !important;
+  border-color: rgba(27,94,32,.28) !important;
+}
+
+:host .pcard__media {
+  height: 210px !important;
+  background: linear-gradient(135deg, #EEF5F0, #FFF9F0) !important;
+}
+
+:host .pcard {
+  border: 1.5px solid #E5E7EB !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px rgba(27,94,32,.06) !important;
+}
+
+:host .pcard__price {
+  color: #1B5E20 !important;
+  font-size: 20px !important;
+  font-weight: 950 !important;
+}
+
+:host .submit-btn {
+  background: linear-gradient(135deg, #1B5E20, #2E7D32) !important;
+  min-height: 52px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+}
+
+@media (max-width:560px) {
+  :host .pcard__media { height: 170px !important; }
+  :host .pcard__name { font-size: 14px !important; }
+  :host .pcard__btn { min-height: 42px !important; }
+}

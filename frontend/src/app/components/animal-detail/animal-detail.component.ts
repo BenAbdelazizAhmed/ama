@@ -393,15 +393,17 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
   }
 
   private extractImages(raw: any): string[] {
-    const rawImages = Array.isArray(raw?.images) ? raw.images : [];
+    const rawImages = [
+      ...(Array.isArray(raw?.images) ? raw.images : []),
+      ...(Array.isArray(raw?.imageUrls) ? raw.imageUrls : []),
+      raw?.mainImageUrl,
+      raw?.imageUrl,
+    ];
     const urls: string[] = rawImages
       .map((img: any) =>
         typeof img === 'string' ? img : (img?.imageUrl || img?.url || img?.src || '')
       )
       .filter(Boolean);
-
-    if (raw?.mainImageUrl) urls.unshift(raw.mainImageUrl);
-    if (raw?.imageUrl) urls.unshift(raw.imageUrl);
 
     return [...new Set(
       urls.map((url: string) => this.normalizeImageUrl(url)).filter(Boolean)

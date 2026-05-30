@@ -1,17 +1,12 @@
 import { AfterViewInit, Component, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import {
   StateService,
   AnimalAd,
-  Worker,
   Product,
-  WholesaleItem,
-  ProfessionalProfile,
-  ServiceRequest,
-  JobOffer,
 } from '../../services/state.service';
-import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
 
@@ -30,29 +25,33 @@ interface Testimonial {
   result: string;
 }
 
+interface RecentItem {
+  id: number;
+  title: string;
+  price?: number;
+  wilaya?: string;
+  phone?: string;
+  imageUrl?: string;
+  type: 'animal' | 'product';
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   animals: AnimalAd[] = [];
-  workers: Worker[] = [];
   products: Product[] = [];
-  wholesale: WholesaleItem[] = [];
-  profiles: ProfessionalProfile[] = [];
-  requests: ServiceRequest[] = [];
-  jobs: JobOffer[] = [];
+
+  searchQuery = '';
+  recentFilter: 'all' | 'animals' | 'products' = 'all';
+
   currentTestimonial = 0;
 
-  private siteStats: SiteStats = {
-    publishedAds: 0,
-    siteVisits: 0,
-    registeredUsers: 0,
-  };
-
+  private siteStats: SiteStats = { publishedAds: 0, siteVisits: 0, registeredUsers: 0 };
   private readonly API_BASE = '';
 
   readonly testimonials: Testimonial[] = [
@@ -84,12 +83,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   constructor(public state: StateService, private router: Router) {
     effect(() => { this.animals = state.animals(); });
-    effect(() => { this.workers = state.workers(); });
     effect(() => { this.products = state.products(); });
-    effect(() => { this.wholesale = state.wholesale(); });
-    effect(() => { this.profiles = state.profiles(); });
-    effect(() => { this.requests = state.requests(); });
-    effect(() => { this.jobs = state.jobs(); });
   }
 
   ngOnInit(): void {
@@ -102,11 +96,44 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.renderHomeStats();
   }
 
-  get totalAnimals(): number { return this.animals.length; }
-  get totalWorkers(): number { return this.workers.length; }
-  get totalProfiles(): number { return this.profiles.length; }
-  get totalProducts(): number { return this.products.length; }
-  get totalListings(): number { return this.animals.length + this.products.length + this.wholesale.length; }
+  get recentListings(): RecentItem[] {
+    const animalItems: RecentItem[] = this.animals.slice(0, 8).map(a => ({
+      id: a.id,
+      title: a.name,
+      price: a.price,
+      wilaya: a.location,
+      phone: a.phone,
+      imageUrl: a.imageUrl,
+      type: 'animal' as const,
+    }));
+    const productItems: RecentItem[] = this.products.slice(0, 8).map(p => ({
+      id: p.id,
+      title: p.title,
+      price: p.price,
+      wilaya: p.wilaya ?? p.location,
+      phone: p.contactPhone,
+      imageUrl: p.imageUrl,
+      type: 'product' as const,
+    }));
+    return [...animalItems, ...productItems].slice(0, 8);
+  }
+
+  get filteredRecentListings(): RecentItem[] {
+    const all = this.recentListings;
+    if (this.recentFilter === 'animals') return all.filter(i => i.type === 'animal').slice(0, 8);
+    if (this.recentFilter === 'products') return all.filter(i => i.type === 'product').slice(0, 8);
+    return all.slice(0, 8);
+  }
+
+  onSearch(): void {
+    if (!this.searchQuery.trim()) {
+      void this.router.navigate(['/animals']);
+      return;
+    }
+    void this.router.navigate(['/animals'], {
+      queryParams: { q: this.searchQuery.trim() },
+    });
+  }
 
   goPost(): void {
     if (!this.state.user()) {
@@ -120,58 +147,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     void this.router.navigate(['/animals']);
   }
 
-  publishProduct(): void {
-    this.openPublishRoute('/products', 'product');
-  }
-
-  registerSupplier(): void {
-    this.openPublishRoute('/products', 'product-company');
-  }
-
-  publishAnimal(): void {
-    this.openPublishRoute('/animals', 'animal');
-  }
-
-  publishBulkAnimal(): void {
-    this.openPublishRoute('/animals', 'animal-bulk');
-  }
-
-  browseProducts(): void {
-    void this.router.navigate(['/products']);
-  }
-
-  browseAnimals(): void {
-    void this.router.navigate(['/animals']);
-  }
-
-  private openPublishRoute(route: '/animals' | '/products', publish: string): void {
-    void this.router.navigate([route], {
-      queryParams: { publish, open: Date.now() },
-    });
-  }
-
-  prevTesti(): void {
-    this.currentTestimonial = this.currentTestimonial === 0 ? this.testimonials.length - 1 : this.currentTestimonial - 1;
-    setTimeout(() => this.refreshIcons(), 0);
-  }
-
-  nextTesti(): void {
-    this.currentTestimonial = this.currentTestimonial === this.testimonials.length - 1 ? 0 : this.currentTestimonial + 1;
-    setTimeout(() => this.refreshIcons(), 0);
-  }
-
   private refreshIcons(): void {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   private initRevealMotion(): void {
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>(
-      'app-home .market-entry, app-home .monetization-section, app-home .testimonials-section, app-home .services-section, app-home .partners-section, app-home .cta-section, app-home .market-entry-card, app-home .pricing-card, app-home .testi-card, app-home .service-card, app-home .plogo',
-    ));
-
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('app-home .home-reveal'));
     nodes.forEach((el, index) => {
-      el.classList.add('home-reveal');
-      el.style.setProperty('--reveal-delay', `${Math.min(index % 6, 5) * 55}ms`);
+      el.style.setProperty('--reveal-delay', `${Math.min(index % 8, 7) * 50}ms`);
     });
 
     if (!('IntersectionObserver' in window)) {
@@ -185,7 +168,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       }
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
     nodes.forEach(el => observer.observe(el));
   }
@@ -202,7 +185,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       };
     } catch {
       this.siteStats = {
-        publishedAds: this.totalListings,
+        publishedAds: this.animals.length + this.products.length,
         siteVisits: 0,
         registeredUsers: this.state.user() ? 1 : 0,
       };
@@ -215,6 +198,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.setText('homeRegisteredUsersStat', this.formatStat(this.siteStats.registeredUsers));
     this.setText('homePublishedAdsStat', this.formatStat(this.siteStats.publishedAds));
     this.setText('homeSiteVisitsStat', this.formatStat(this.siteStats.siteVisits));
+    this.setText('trustUsersStat', this.formatStat(Math.max(this.siteStats.registeredUsers, 1000)));
+    this.setText('trustAdsStat', this.formatStat(Math.max(this.siteStats.publishedAds, 500)));
   }
 
   private setText(id: string, value: string): void {
@@ -224,17 +209,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private formatStat(value: number): string {
     const n = Number(value || 0);
-    if (n >= 1000000) return `+${(n / 1000000).toFixed(1).replace('.0', '')}M`;
-    if (n >= 1000) return `+${(n / 1000).toFixed(1).replace('.0', '')}K`;
-    return String(n);
+    if (n >= 1_000_000) return `+${(n / 1_000_000).toFixed(1).replace('.0', '')}M`;
+    if (n >= 1_000) return `+${(n / 1_000).toFixed(1).replace('.0', '')}K`;
+    return `+${n}`;
   }
 
   private async safeJson(res: Response): Promise<Record<string, unknown>> {
-    try {
-      return await res.json() as Record<string, unknown>;
-    } catch {
-      return {};
-    }
+    try { return await res.json() as Record<string, unknown>; }
+    catch { return {}; }
   }
 
   private toStatNumber(value: unknown): number {

@@ -1,188 +1,443 @@
-<div class="ad-page" dir="rtl">
-  <section class="ad-loading" *ngIf="isLoading" aria-label="تحميل الإعلان">
-    <div class="ad-skeleton ad-skeleton--media"></div>
-    <div class="ad-skeleton ad-skeleton--body"></div>
-    <div class="ad-skeleton ad-skeleton--side"></div>
-  </section>
+<div class="det-page" dir="rtl">
 
-  <section class="ad-error" *ngIf="!isLoading && errorMessage">
-    <div class="ad-error__code">404</div>
+  <!-- ══════════════════════════════════════════
+       LOADING — skeleton screens
+       ══════════════════════════════════════════ -->
+  <div class="det-loading" *ngIf="isLoading" aria-label="جاري التحميل">
+    <div class="det-shell">
+      <div class="sk-breadcrumb sk"></div>
+      <div class="det-grid">
+        <div class="sk-gallery sk"></div>
+        <div class="sk-body">
+          <div class="sk sk-title"></div>
+          <div class="sk sk-meta"></div>
+          <div class="sk sk-price"></div>
+          <div class="sk sk-specs"></div>
+          <div class="sk sk-btn"></div>
+        </div>
+        <div class="sk-sidebar">
+          <div class="sk sk-card"></div>
+          <div class="sk sk-card sk-card--sm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ERROR STATE
+       ══════════════════════════════════════════ -->
+  <div class="det-error" *ngIf="!isLoading && errorMessage" role="alert">
+    <div class="det-error__icon">🐄</div>
     <h1>الإعلان غير موجود</h1>
     <p>{{ errorMessage }}</p>
-    <a routerLink="/animals">الرجوع للحيوانات</a>
-  </section>
+    <a routerLink="/animals" class="det-error__link">
+      <i data-lucide="arrow-right" width="15" aria-hidden="true"></i>
+      العودة لسوق الحيوانات
+    </a>
+  </div>
 
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════════ -->
   <ng-container *ngIf="!isLoading && !errorMessage && animal as a">
-    <div class="ad-shell">
-      <nav class="ad-breadcrumb ad-reveal" aria-label="مسار الصفحة">
+    <div class="det-shell">
+
+      <!-- Breadcrumb -->
+      <nav class="det-breadcrumb det-reveal" aria-label="مسار الصفحة">
         <a routerLink="/">الرئيسية</a>
-        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
+        <i data-lucide="chevron-left" width="13" aria-hidden="true"></i>
         <a routerLink="/animals">الحيوانات</a>
-        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
-        <strong>{{ a.title }}</strong>
+        <i data-lucide="chevron-left" width="13" aria-hidden="true"></i>
+        <span>{{ a.title }}</span>
       </nav>
 
-      <main class="ad-layout">
-        <section class="ad-gallery ad-reveal" aria-label="صور الحيوان">
-          <div class="ad-media">
-            <img [src]="activeImage" [alt]="a.title" (error)="onImageError()" loading="eager" decoding="async">
-            <div class="ad-media__shade"></div>
-            <div class="ad-photo-badges">
-              <span *ngIf="a.trustedSeller"><i data-lucide="shield-check" width="14" aria-hidden="true"></i> بائع موثوق</span>
-              <span class="ad-photo-badges__health" *ngIf="a.vetCertificate || a.healthStatus"><i data-lucide="stethoscope" width="14" aria-hidden="true"></i> صحة مذكورة</span>
-              <span class="ad-photo-badges__featured" *ngIf="a.featured"><i data-lucide="sparkles" width="14" aria-hidden="true"></i> مميز</span>
+      <!-- Page grid: gallery + info + sidebar -->
+      <div class="det-grid">
+
+        <!-- ════════ GALLERY ════════ -->
+        <section class="det-gallery det-reveal" aria-label="صور الإعلان">
+          <!-- Main image -->
+          <div class="det-main-img">
+            <img
+              [src]="activeImage"
+              [alt]="a.title"
+              (error)="onImageError()"
+              loading="eager"
+              decoding="async"
+            />
+
+            <!-- Status badges -->
+            <div class="det-img-badges">
+              <span class="det-badge det-badge--orange" *ngIf="a.featured">
+                <i data-lucide="star" width="11" aria-hidden="true"></i>
+                مميّز
+              </span>
+              <span class="det-badge det-badge--green" *ngIf="!isSoldStatus(a.status)">
+                <i data-lucide="circle-check" width="11" aria-hidden="true"></i>
+                متوفر
+              </span>
+              <span class="det-badge det-badge--red" *ngIf="isSoldStatus(a.status)">
+                مباع
+              </span>
+              <span class="det-badge det-badge--blue" *ngIf="a.vetCertificate">
+                <i data-lucide="stethoscope" width="11" aria-hidden="true"></i>
+                شهادة بيطرية
+              </span>
             </div>
+
+            <!-- Nav arrows -->
+            <div class="det-img-nav" *ngIf="detailPhotos.length > 1">
+              <button class="det-nav-btn" type="button" (click)="changeDetailPhoto(-1)" aria-label="الصورة السابقة">
+                <i data-lucide="chevron-right" width="18" aria-hidden="true"></i>
+              </button>
+              <button class="det-nav-btn" type="button" (click)="changeDetailPhoto(1)" aria-label="الصورة التالية">
+                <i data-lucide="chevron-left" width="18" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <!-- Counter -->
+            <div class="det-img-counter" aria-live="polite">
+              {{ currentPhoto + 1 }}/{{ detailPhotos.length }}
+            </div>
+
+            <!-- Favorite -->
+            <button
+              class="det-img-fav"
+              [class.det-img-fav--active]="isFav"
+              type="button"
+              (click)="toggleFav()"
+              [attr.aria-label]="isFav ? 'إزالة من المفضلة' : 'حفظ في المفضلة'"
+            >
+              <i data-lucide="heart" width="18" aria-hidden="true"></i>
+            </button>
           </div>
 
-          <div class="ad-thumbs" *ngIf="detailPhotos.length > 1" aria-label="معرض صور الحيوان">
+          <!-- Thumbnails strip -->
+          <div class="det-thumbs" *ngIf="detailPhotos.length > 1" role="list" aria-label="معرض الصور">
             <button
-              class="ad-thumb"
+              class="det-thumb"
+              [class.det-thumb--active]="currentPhoto === i"
+              *ngFor="let ph of detailPhotos; let i = index; trackBy: trackByPhoto"
+              (click)="setDetailPhoto(i)"
               type="button"
-              *ngFor="let img of detailPhotos; trackBy: trackByImage"
-              [class.is-active]="activeImage === img"
-              (click)="selectImage(img)"
-              aria-label="اختيار صورة الحيوان"
+              role="listitem"
+              [attr.aria-label]="'صورة ' + (i + 1)"
             >
-              <img [src]="img" alt="" loading="lazy" decoding="async">
+              <img [src]="ph" alt="" loading="lazy" decoding="async" />
             </button>
           </div>
         </section>
 
-        <section class="ad-main ad-reveal">
-          <div class="ad-category-row">
-            <span>{{ a.category }} · {{ a.breed }}</span>
-            <b [class.is-sold]="isSoldStatus(a.status)">{{ statusLabel(a.status) }}</b>
+        <!-- ════════ INFO PANEL ════════ -->
+        <section class="det-info det-reveal">
+
+          <!-- Category + status chips -->
+          <div class="det-chips">
+            <span class="det-chip det-chip--cat">{{ a.category }}</span>
+            <span class="det-chip det-chip--ok" *ngIf="!isSoldStatus(a.status)">متوفر الآن</span>
+            <span class="det-chip det-chip--sold" *ngIf="isSoldStatus(a.status)">مباع</span>
           </div>
 
-          <h1>{{ a.title }}</h1>
+          <!-- Title -->
+          <h1 class="det-title">{{ a.title }}</h1>
 
-          <div class="ad-price" aria-label="سعر الحيوان">
-            <strong>{{ fmt(a.price) }}</strong>
-            <span>د.ت</span>
-            <em>{{ priceTypeLabel(a.priceType) }}</em>
+          <!-- Location + date -->
+          <div class="det-meta">
+            <span class="det-meta__item">
+              <i data-lucide="map-pin" width="13" aria-hidden="true"></i>
+              {{ a.location }}
+            </span>
+            <span class="det-meta__item">
+              <i data-lucide="clock" width="13" aria-hidden="true"></i>
+              {{ postedLabel(a.createdAt) }}
+            </span>
+            <span class="det-meta__item det-meta__item--trust" *ngIf="a.trustedSeller">
+              <i data-lucide="shield-check" width="13" aria-hidden="true"></i>
+              بائع موثوق
+            </span>
           </div>
 
-          <div class="ad-location">
-            <i data-lucide="map-pin" width="17" aria-hidden="true"></i>
-            {{ a.location }}، {{ a.zone }}
+          <!-- Price block -->
+          <div class="det-price-block" aria-label="السعر">
+            <span class="det-price">
+              {{ fmt(a.price) }}
+              <small>د.ت</small>
+            </span>
+            <span class="det-price-type">
+              <i data-lucide="handshake" width="13" aria-hidden="true"></i>
+              {{ priceTypeLabel(a.priceType) }}
+            </span>
           </div>
 
-          <div class="ad-vitals" aria-label="معلومات الحيوان الأساسية">
-            <div><span>العمر</span><strong>{{ a.age }}</strong></div>
-            <div><span>السلالة</span><strong>{{ a.breed }}</strong></div>
-            <div><span>الصحة</span><strong>{{ a.healthStatus }}</strong></div>
+          <!-- Specs grid — Jumia-style -->
+          <div class="det-specs" aria-label="مواصفات الحيوان">
+            <div class="det-spec" *ngIf="a.weight">
+              <span class="det-spec__icon">⚖️</span>
+              <small class="det-spec__label">الوزن</small>
+              <strong class="det-spec__val">{{ a.weight }}</strong>
+            </div>
+            <div class="det-spec" *ngIf="a.age">
+              <span class="det-spec__icon">🗓️</span>
+              <small class="det-spec__label">العمر</small>
+              <strong class="det-spec__val">{{ a.age }}</strong>
+            </div>
+            <div class="det-spec">
+              <span class="det-spec__icon">🐑</span>
+              <small class="det-spec__label">النوع</small>
+              <strong class="det-spec__val">{{ a.category }}</strong>
+            </div>
+            <div class="det-spec" *ngIf="a.healthStatus">
+              <span class="det-spec__icon">🏥</span>
+              <small class="det-spec__label">الصحة</small>
+              <strong class="det-spec__val">{{ a.healthStatus }}</strong>
+            </div>
+            <div class="det-spec" *ngIf="a.gender">
+              <span class="det-spec__icon">⚥</span>
+              <small class="det-spec__label">الجنس</small>
+              <strong class="det-spec__val">{{ a.gender }}</strong>
+            </div>
           </div>
 
-          <div class="ad-trust-tags">
-            <span><i data-lucide="clock" width="14" aria-hidden="true"></i>{{ postedLabel(a.createdAt) }}</span>
-            <span *ngIf="a.vetCertificate"><i data-lucide="file-check-2" width="14" aria-hidden="true"></i>شهادة بيطرية</span>
-            <span *ngIf="a.deliveryAvailable"><i data-lucide="truck" width="14" aria-hidden="true"></i>نقل حسب الاتفاق</span>
+          <!-- Trust guarantees -->
+          <div class="det-assurances">
+            <div class="det-assurance">
+              <i data-lucide="stethoscope" width="15" aria-hidden="true"></i>
+              <span>متابعة بيطرية</span>
+            </div>
+            <div class="det-assurance" *ngIf="a.deliveryAvailable">
+              <i data-lucide="truck" width="15" aria-hidden="true"></i>
+              <span>نقل متاح</span>
+            </div>
+            <div class="det-assurance" *ngIf="a.vetCertificate">
+              <i data-lucide="file-check" width="15" aria-hidden="true"></i>
+              <span>شهادة بيطرية</span>
+            </div>
+            <div class="det-assurance">
+              <i data-lucide="wheat" width="15" aria-hidden="true"></i>
+              <span>تغذية طبيعية</span>
+            </div>
           </div>
+
+          <!-- Action buttons — desktop/tablet -->
+          <div class="det-actions det-actions--desktop">
+            <button class="det-btn-wa" type="button" (click)="openWhatsapp()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
+              </svg>
+              تواصل عبر واتساب
+            </button>
+            <button class="det-btn-contact" type="button" (click)="contactSeller()">
+              <i data-lucide="message-circle" width="16" aria-hidden="true"></i>
+              راسل البائع
+            </button>
+            <button
+              class="det-btn-save"
+              [class.det-btn-save--active]="isFav"
+              type="button"
+              (click)="toggleFav()"
+            >
+              <i data-lucide="heart" width="16" aria-hidden="true"></i>
+              {{ isFav ? 'محفوظ' : 'حفظ' }}
+            </button>
+            <button class="det-btn-share" type="button" (click)="shareAnimal()" aria-label="مشاركة">
+              <i data-lucide="share-2" width="16" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <!-- Description -->
+          <div class="det-desc">
+            <h2 class="det-section-title">الوصف</h2>
+            <p>{{ a.description || 'لا يوجد وصف إضافي لهذا الإعلان.' }}</p>
+            <div class="det-desc-tags">
+              <span>🌿 أكل طبيعي</span>
+              <span>✅ نشط وسليم</span>
+              <span *ngIf="a.deliveryAvailable">🚚 جاهز للنقل</span>
+              <span *ngIf="a.vetCertificate">💉 تطعيم مكتمل</span>
+            </div>
+          </div>
+
+          <!-- Facts table -->
+          <div class="det-facts" *ngIf="specs?.length">
+            <h2 class="det-section-title">معلومات تفصيلية</h2>
+            <div class="det-facts-grid">
+              <div class="det-fact" *ngFor="let s of specs; trackBy: trackBySpec">
+                <span class="det-fact__label">{{ s.label }}</span>
+                <strong class="det-fact__val">{{ s.value }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Safety note -->
+          <div class="det-safety-note" role="note">
+            <i data-lucide="info" width="15" aria-hidden="true"></i>
+            <span>اطلب معاينة أو فيديو مباشر قبل أي اتفاق. لا تدفع عربون قبل التأكد من الحيوان.</span>
+          </div>
+
         </section>
 
-        <aside class="ad-sidebar ad-reveal" aria-label="معلومات البائع">
-          <article class="ad-seller-card">
-            <div class="ad-seller-card__badge">
-              <i data-lucide="badge-check" width="15" aria-hidden="true"></i>
-              Badge confiance
+        <!-- ════════ SIDEBAR ════════ -->
+        <aside class="det-sidebar det-reveal" aria-label="معلومات البائع">
+
+          <!-- Seller card -->
+          <div class="det-seller">
+            <div class="det-seller__head">
+              <div class="det-seller__avatar">
+                {{ (a.sellerName || 'ب').charAt(0) }}
+                <span class="det-seller__verified" aria-label="موثوق">
+                  <i data-lucide="check" width="10" aria-hidden="true"></i>
+                </span>
+              </div>
+              <div class="det-seller__info">
+                <strong>{{ a.sellerName || 'بائع موثوق' }}</strong>
+                <small>عضو منذ {{ a.sellerSince || '2024' }}</small>
+                <div class="det-seller__stars">
+                  <span>★★★★★</span>
+                  <span class="det-seller__rating-num">{{ a.sellerRating || 4.8 }}</span>
+                </div>
+              </div>
             </div>
 
-            <div class="ad-seller-card__head">
-              <div class="ad-avatar">
-                {{ a.sellerName.slice(0, 1) }}
-                <span><i data-lucide="check" width="13" aria-hidden="true"></i></span>
-              </div>
+            <div class="det-seller__stats">
               <div>
-                <h2>{{ a.sellerName }}</h2>
-                <p>عضو منذ {{ a.sellerSince }} · {{ a.responseTime }}</p>
+                <strong>128</strong>
+                <small>إعلان</small>
+              </div>
+              <div class="det-seller__div"></div>
+              <div>
+                <strong>98%</strong>
+                <small>معدل الرد</small>
+              </div>
+              <div class="det-seller__div"></div>
+              <div>
+                <strong>2سا</strong>
+                <small>متوسط الرد</small>
               </div>
             </div>
 
-            <div class="ad-seller-score">
-              <div><strong>{{ a.sellerRating }} ★</strong><span>تقييم</span></div>
-              <div><strong>{{ a.trustedSeller ? 'موثوق' : 'عادي' }}</strong><span>الحساب</span></div>
-            </div>
-
-            <p class="ad-login-gate" *ngIf="!isLoggedIn">
-              <i data-lucide="lock-keyhole" width="16" aria-hidden="true"></i>
-              سجّل الدخول للتواصل مع البائع مباشرة
-            </p>
-
-            <div class="ad-actions">
-              <button class="ad-action ad-action--primary" type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">
-                <i data-lucide="message-circle" width="18" aria-hidden="true"></i>
-                تواصل مع البائع
+            <!-- CTA buttons in sidebar -->
+            <div class="det-seller__actions">
+              <button class="det-btn-wa det-btn-wa--full" type="button" (click)="openWhatsapp()">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
+                </svg>
+                واتساب
               </button>
-              <button class="ad-action ad-action--wa" type="button" (click)="openWhatsapp()" aria-label="WhatsApp مباشر">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg>
-                WhatsApp مباشر
-              </button>
-              <button class="ad-action ad-action--inspect" type="button" (click)="requestInspection()" aria-label="طلب معاينة">
-                <i data-lucide="eye" width="18" aria-hidden="true"></i>
-                طلب معاينة
-              </button>
-              <button class="ad-action ad-action--save" [class.is-saved]="isFav" type="button" (click)="toggleFav()" aria-label="حفظ في المفضلة">
-                <i data-lucide="heart" width="18" aria-hidden="true"></i>
-                {{ isFav ? 'محفوظ' : 'حفظ' }}
+              <button class="det-btn-call" type="button" (click)="showToast('جارٍ الاتصال...', 'info')">
+                <i data-lucide="phone" width="15" aria-hidden="true"></i>
+                اتصال
               </button>
             </div>
-          </article>
 
-          <article class="ad-safety-card">
-            <h2><i data-lucide="shield-alert" width="18" aria-hidden="true"></i> نصائح قبل الشراء</h2>
-            <ul>
-              <li><span>👁</span> عاين الحيوان أو اطلب فيديو حديث قبل الدفع.</li>
-              <li><span>🩺</span> اسأل على الصحة، التلقيح، والشهادة إن وجدت.</li>
-              <li><span>⚖</span> ثبت العمر، الوزن، والسلالة مع البائع.</li>
-              <li><span>📍</span> اتفق على مكان آمن للمعاينة أو الاستلام.</li>
+            <button class="det-btn-inspect" type="button" (click)="requestInspection()">
+              <i data-lucide="calendar-check" width="14" aria-hidden="true"></i>
+              طلب معاينة قبل الشراء
+            </button>
+          </div>
+
+          <!-- Nearby listings -->
+          <div class="det-nearby">
+            <div class="det-nearby__head">
+              <strong>إعلانات مشابهة</strong>
+              <a routerLink="/animals">عرض الكل</a>
+            </div>
+
+            <ng-container *ngIf="similarAnimals.length; else noSimilarTpl">
+              <a
+                class="det-mini"
+                *ngFor="let item of similarAnimals.slice(0, 3); trackBy: trackById"
+                [routerLink]="['/animals', item.id]"
+              >
+                <div class="det-mini__img">
+                  <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" />
+                </div>
+                <div class="det-mini__body">
+                  <strong>{{ item.title }}</strong>
+                  <small>
+                    <i data-lucide="map-pin" width="10" aria-hidden="true"></i>
+                    {{ item.location }}
+                  </small>
+                  <span class="det-mini__price">{{ fmt(item.price) }} <em>د.ت</em></span>
+                </div>
+              </a>
+            </ng-container>
+
+            <ng-template #noSimilarTpl>
+              <a class="det-mini" routerLink="/animals/1">
+                <div class="det-mini__img">
+                  <img src="https://images.unsplash.com/photo-1484557985045-edf25e08da73?w=120&q=70" alt="خروف" loading="lazy" />
+                </div>
+                <div class="det-mini__body">
+                  <strong>خروف برقي سليانة</strong>
+                  <small><i data-lucide="map-pin" width="10" aria-hidden="true"></i> سليانة</small>
+                  <span class="det-mini__price">1,250 <em>د.ت</em></span>
+                </div>
+              </a>
+              <a class="det-mini" routerLink="/animals/2">
+                <div class="det-mini__img">
+                  <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=120&q=70" alt="خروف" loading="lazy" />
+                </div>
+                <div class="det-mini__body">
+                  <strong>خروف القيروان</strong>
+                  <small><i data-lucide="map-pin" width="10" aria-hidden="true"></i> القيروان</small>
+                  <span class="det-mini__price">1,380 <em>د.ت</em></span>
+                </div>
+              </a>
+            </ng-template>
+          </div>
+
+          <!-- Buying guide -->
+          <div class="det-guide">
+            <strong class="det-guide__title">
+              <i data-lucide="clipboard-check" width="15" aria-hidden="true"></i>
+              قبل ما تشري
+            </strong>
+            <ul class="det-guide__list">
+              <li>
+                <i data-lucide="camera" width="13" aria-hidden="true"></i>
+                اطلب فيديو قصير للحيوان وهو يتحرك
+              </li>
+              <li>
+                <i data-lucide="stethoscope" width="13" aria-hidden="true"></i>
+                تأكد من الحالة الصحية والتطعيم
+              </li>
+              <li>
+                <i data-lucide="map-pin" width="13" aria-hidden="true"></i>
+                حدّد موعد معاينة في الضيعة
+              </li>
             </ul>
-          </article>
+          </div>
+
+          <!-- Trust badge -->
+          <div class="det-trust-badge">
+            <i data-lucide="shield-check" width="22" aria-hidden="true"></i>
+            <div>
+              <strong>تسوق بثقة</strong>
+              <span>تحقق من الصور، عاين الحيوان، ولا تدفع عربون قبل التأكد.</span>
+            </div>
+          </div>
+
         </aside>
-      </main>
+      </div>
 
-      <section class="ad-spec-grid ad-reveal" aria-label="مواصفات الحيوان">
-        <article class="ad-spec-card" *ngFor="let spec of premiumSpecs; trackBy: trackBySpec">
-          <i data-lucide="paw-print" width="18" aria-hidden="true"></i>
-          <span>{{ spec.label }}</span>
-          <strong>{{ spec.value }}</strong>
-        </article>
-      </section>
-
-      <section class="ad-info-row">
-        <article class="ad-health-card ad-reveal">
-          <div class="ad-section-title"><h2>الصحة والتطعيم</h2></div>
-          <div class="ad-health-list">
-            <div><span>الحالة الصحية</span><strong>{{ a.healthStatus }}</strong></div>
-            <div><span>شهادة بيطرية</span><strong>{{ a.vetCertificate ? 'متوفرة' : 'حسب تصريح البائع' }}</strong></div>
-            <div><span>النقل</span><strong>{{ a.deliveryAvailable ? 'متاح حسب الاتفاق' : 'غير محدد' }}</strong></div>
-          </div>
-        </article>
-
-        <article class="ad-description ad-reveal">
-          <div class="ad-section-title"><h2>الوصف</h2></div>
-          <p>{{ a.description }}</p>
-          <div class="ad-description__tags">
-            <span *ngIf="a.vetCertificate">شهادة بيطرية</span>
-            <span>قابل للمعاينة</span>
-            <span *ngIf="a.deliveryAvailable">نقل حسب الاتفاق</span>
-            <span *ngIf="a.trustedSeller">بائع موثوق</span>
-          </div>
-        </article>
-      </section>
-
-      <section class="ad-similar ad-reveal" *ngIf="similarAnimals.length">
-        <div class="ad-section-head">
+      <!-- Similar animals rail -->
+      <section class="det-similar det-reveal" *ngIf="similarAnimals.length > 0" aria-label="حيوانات مشابهة">
+        <div class="det-similar__head">
           <h2>حيوانات مشابهة</h2>
           <a routerLink="/animals">عرض الكل</a>
         </div>
-
-        <div class="ad-similar__rail">
-          <a class="ad-similar-card" *ngFor="let item of similarAnimals; trackBy: trackById" [routerLink]="['/animals', item.id]">
-            <div class="ad-similar-card__image">
-              <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async">
-              <span>{{ statusLabel(item.status) }}</span>
+        <div class="det-similar__rail">
+          <a
+            class="det-similar-card"
+            *ngFor="let item of similarAnimals; trackBy: trackById"
+            [routerLink]="['/animals', item.id]"
+          >
+            <div class="det-similar-card__img">
+              <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async" />
+              <span class="det-similar-card__status">{{ statusLabel(item.status) }}</span>
             </div>
-            <div class="ad-similar-card__body">
+            <div class="det-similar-card__body">
               <small>{{ item.category }} · {{ item.location }}</small>
               <strong>{{ item.title }}</strong>
               <em>{{ fmt(item.price) }} د.ت</em>
@@ -190,25 +445,43 @@
           </a>
         </div>
       </section>
+
+    </div><!-- /det-shell -->
+
+    <!-- ══ MOBILE STICKY CTA ══ (always visible on mobile) -->
+    <div class="det-mobile-cta" aria-label="الإجراءات السريعة">
+      <div class="det-mobile-cta__price">
+        <strong>{{ fmt(a.price) }} <span>د.ت</span></strong>
+        <small>{{ priceTypeLabel(a.priceType) }}</small>
+      </div>
+      <div class="det-mobile-cta__btns">
+        <button class="det-mobile-cta__call" type="button" (click)="showToast('جارٍ الاتصال...', 'info')" aria-label="اتصال">
+          <i data-lucide="phone" width="18" aria-hidden="true"></i>
+        </button>
+        <button class="det-mobile-cta__wa" type="button" (click)="openWhatsapp()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
+          </svg>
+          واتساب
+        </button>
+      </div>
     </div>
 
-    <div class="ad-mobile-cta">
-      <div>
-        <strong>{{ fmt(a.price) }} د.ت</strong>
-        <span>{{ priceTypeLabel(a.priceType) }}</span>
-      </div>
-      <button type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">تواصل</button>
-    </div>
   </ng-container>
 
-  <div class="ad-toast-wrap" aria-live="polite">
+  <!-- ══ TOASTS ══ -->
+  <div class="det-toasts" aria-live="polite" aria-atomic="false">
     <div
-      class="ad-toast"
-      *ngFor="let toast of detailToasts; trackBy: trackByToast"
-      [class.is-success]="toast.type === 'success'"
-      [class.is-error]="toast.type === 'error'"
+      class="det-toast"
+      *ngFor="let t of detailToasts; trackBy: trackByToast"
+      [class.det-toast--success]="t.type === 'success'"
+      [class.det-toast--error]="t.type === 'error'"
+      [class.det-toast--info]="t.type === 'info'"
     >
-      {{ toast.message }}
+      <span aria-hidden="true">{{ t.type === 'success' ? '✅' : t.type === 'error' ? '❌' : 'ℹ️' }}</span>
+      {{ t.message }}
     </div>
   </div>
+
 </div>

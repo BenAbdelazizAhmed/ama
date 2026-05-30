@@ -1,270 +1,374 @@
-﻿<section class="hero" aria-label="الصفحة الرئيسية">
-  <div class="hero-bg" aria-hidden="true"></div>
-    <div class="hero-content">
-    <div class="hero-text">
-      <div class="line1">كل ما تحتاجه في عالم</div>
-      <h1 class="line2">الفلاحة<br>و<em>الحيوانات</em></h1>
-      <div class="line3">بيع خروفك، اشري بقرتك، وتواصل مع المربين في كامل تونس —<br>بسهولة، بأمان، وبسعر عادل.</div>
-    </div>
-    <div class="hero-btns">
-      <button class="btn-hero-primary" (click)="goPost()"><i data-lucide="plus-circle" width="17" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
-      <button class="btn-hero-outline" (click)="browseAds()"><i data-lucide="search" width="17" aria-hidden="true"></i> تصفح الإعلانات</button>
-    </div>
-    <div class="hero-proof" role="list" aria-label="إحصائيات المنصة">
-      <div role="listitem"><div class="proof-num" id="homeRegisteredUsersStat">0</div><div class="proof-lbl">مستخدم مسجل</div></div>
-      <div role="listitem"><div class="proof-num" id="homePublishedAdsStat">0</div><div class="proof-lbl">إعلان منشور</div></div>
-      <div role="listitem"><div class="proof-num" id="homeSiteVisitsStat">0</div><div class="proof-lbl">زيارة للموقع</div></div>
-      <div role="listitem"><div class="proof-num">4.7 ★</div><div class="proof-lbl">تقييم المستخدمين</div></div>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="trust-box">
-      <div class="trust-head">
-        <div class="trust-icon"><i data-lucide="shield-check" width="24" stroke="var(--green)" aria-hidden="true"></i></div>
-        <div><h3>معاملات آمنة 100%</h3><p>نضمن لك الأمان في كل خطوة</p></div>
+<!-- ═══════════════════════════════════════════════
+     HERO — Airbnb-style: search-first, clean, full
+     ═══════════════════════════════════════════════ -->
+<section class="h-hero" aria-label="الصفحة الرئيسية">
+  <div class="h-hero__bg" aria-hidden="true"></div>
+  <div class="h-hero__overlay" aria-hidden="true"></div>
+
+  <div class="h-hero__body">
+    <p class="h-hero__eyebrow">
+      <i data-lucide="shield-check" width="13" aria-hidden="true"></i>
+      سوق فلاحي موثوق · 24 ولاية تونسية
+    </p>
+
+    <h1 class="h-hero__title">
+      بيع وشري بثقة<br>
+      <span class="h-hero__title-em">كل ما يخص الفلاحة</span>
+    </h1>
+
+    <!-- Airbnb-style search bar -->
+    <form class="h-search" role="search" (submit)="$event.preventDefault(); onSearch()">
+      <div class="h-search__field">
+        <label class="h-search__label">ابحث في السوق</label>
+        <input
+          type="search"
+          class="h-search__input"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="خروف، بقرة، علف، بيطري..."
+          aria-label="بحث في المنصة"
+          autocomplete="off"
+          name="search"
+        />
       </div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> بائعون موثوقون ومراجعون يدوياً</div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> تواصل مباشر عبر واتساب</div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> دعم فني متاح على البريد الإلكتروني</div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> إعلانات مراجعة قبل النشر</div>
-      <button class="trust-cta" (click)="goPost()">أضف إعلانك مجاناً — أقل من دقيقتين</button>
-      <div class="trust-note">✓ بدون بطاقة بنكية · بدون التزام</div>
+      <button class="h-search__btn" type="submit" aria-label="بحث">
+        <i data-lucide="search" width="18" aria-hidden="true"></i>
+        <span>بحث</span>
+      </button>
+    </form>
+
+    <!-- Quick category pills — Airbnb explore nearby style -->
+    <div class="h-hero__pills" aria-label="أقسام سريعة">
+      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'أغنام'}">🐑 أغنام</a>
+      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'أبقار'}">🐄 أبقار</a>
+      <a class="h-pill" routerLink="/animals" [queryParams]="{category:'دواجن'}">🐓 دواجن</a>
+      <a class="h-pill" routerLink="/products" [queryParams]="{category:'أعلاف'}">🌾 أعلاف</a>
+      <a class="h-pill" routerLink="/services">🩺 خدمات</a>
+    </div>
+
+    <!-- Trust stats — Amazon-style proof -->
+    <div class="h-hero__trust" role="list">
+      <div class="h-trust" role="listitem">
+        <strong id="homeRegisteredUsersStat">+1K</strong>
+        <span>مستخدم</span>
+      </div>
+      <div class="h-trust__sep" aria-hidden="true">·</div>
+      <div class="h-trust" role="listitem">
+        <strong id="homePublishedAdsStat">+500</strong>
+        <span>إعلان</span>
+      </div>
+      <div class="h-trust__sep" aria-hidden="true">·</div>
+      <div class="h-trust" role="listitem">
+        <strong>24</strong>
+        <span>ولاية</span>
+      </div>
+      <div class="h-trust__sep" aria-hidden="true">·</div>
+      <div class="h-trust" role="listitem">
+        <strong>⭐ 4.8</strong>
+        <span>تقييم</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="market-entry" aria-labelledby="market-entry-title">
-  <div class="market-entry__head">
-    <div class="section-label"><i data-lucide="layout-dashboard" width="12" aria-hidden="true"></i> السوق</div>
-    <h2 class="section-title" id="market-entry-title">اختار وين تحب تبدأ</h2>
-    <p class="section-sub">كل قسم يوصلك مباشرة للحاجة اللي تحبها.</p>
+<!-- ═══════════════════════════════════════════════
+     CATEGORIES — Jumia / Airbnb explore style
+     ═══════════════════════════════════════════════ -->
+<section class="h-section h-section--white home-reveal" aria-labelledby="cats-h">
+  <div class="h-section__head">
+    <h2 class="h-section__title" id="cats-h">تصفح حسب القسم</h2>
+    <a routerLink="/animals" class="h-section__link">عرض الكل</a>
   </div>
 
-  <div class="market-entry__grid">
-    <a class="market-entry-card" routerLink="/animals">
-      <span class="market-entry-card__icon"><i data-lucide="beef" width="22" aria-hidden="true"></i></span>
-      <div>
-        <h3>الحيوانات</h3>
-        <p>بيع وشراء بالكعبة ولا بالجملة.</p>
-      </div>
-      <strong>تصفح</strong>
+  <div class="h-cats">
+    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أغنام'}" aria-label="أغنام وخرفان">
+      <div class="h-cat__img" style="background:#FFF8F0">🐑</div>
+      <span class="h-cat__name">أغنام</span>
+      <span class="h-cat__sub">خرفان · نعاج</span>
     </a>
-
-    <a class="market-entry-card" routerLink="/products">
-      <span class="market-entry-card__icon"><i data-lucide="package" width="22" aria-hidden="true"></i></span>
-      <div>
-        <h3>البرودويات</h3>
-        <p>علف، بذور، دوا، ومعدات.</p>
-      </div>
-      <strong>شوف</strong>
+    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'أبقار'}" aria-label="أبقار وعجول">
+      <div class="h-cat__img" style="background:#F0F8FF">🐄</div>
+      <span class="h-cat__name">أبقار</span>
+      <span class="h-cat__sub">حلوب · تسمين</span>
     </a>
-
-    <a class="market-entry-card" routerLink="/services">
-      <span class="market-entry-card__icon"><i data-lucide="briefcase-business" width="22" aria-hidden="true"></i></span>
-      <div>
-        <h3>مهن فلاحية</h3>
-        <p>راعي، بيطري، نقل، وعمّال.</p>
-      </div>
-      <strong>لقى</strong>
+    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'دواجن'}" aria-label="دواجن وطيور">
+      <div class="h-cat__img" style="background:#FFFBF0">🐓</div>
+      <span class="h-cat__name">دواجن</span>
+      <span class="h-cat__sub">دجاج · ديوك</span>
     </a>
-
+    <a class="h-cat home-reveal" routerLink="/animals" [queryParams]="{category:'ماعز'}" aria-label="ماعز وجديان">
+      <div class="h-cat__img" style="background:#F5F5F0">🐐</div>
+      <span class="h-cat__name">ماعز</span>
+      <span class="h-cat__sub">جديان · حلوب</span>
+    </a>
+    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'أعلاف'}" aria-label="أعلاف ومواد">
+      <div class="h-cat__img" style="background:#F0F8F0">🌾</div>
+      <span class="h-cat__name">أعلاف</span>
+      <span class="h-cat__sub">شعير · فول</span>
+    </a>
+    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'بذور'}" aria-label="بذور ونباتات">
+      <div class="h-cat__img" style="background:#F0FFF4">🌱</div>
+      <span class="h-cat__name">بذور</span>
+      <span class="h-cat__sub">خضر · حبوب</span>
+    </a>
+    <a class="h-cat home-reveal" routerLink="/products" [queryParams]="{category:'معدات'}" aria-label="معدات فلاحية">
+      <div class="h-cat__img" style="background:#F5F5F5">⚙️</div>
+      <span class="h-cat__name">معدات</span>
+      <span class="h-cat__sub">أدوات · آلات</span>
+    </a>
+    <a class="h-cat home-reveal" routerLink="/services" aria-label="خدمات فلاحية">
+      <div class="h-cat__img" style="background:#F0F4FF">🩺</div>
+      <span class="h-cat__name">خدمات</span>
+      <span class="h-cat__sub">بيطري · نقل</span>
+    </a>
   </div>
-
 </section>
 
-<section class="monetization-section" aria-labelledby="monetization-title">
-  <div class="monetization-shell">
-    <div class="monetization-head monetization-head--pro">
-      <div class="monetization-copy">
-        <div class="section-label"><i data-lucide="landmark" width="12" aria-hidden="true"></i> نموذج ربحي واضح</div>
-        <h2 class="section-title" id="monetization-title">مجاني للدخول، مدفوع وقت تحب تبيع أسرع</h2>
-        <p class="section-sub">
-          AMANAFARM تخلي السوق مفتوح للجميع، وتربح من خدمات اختيارية تعطي قيمة حقيقية: ظهور أعلى، حسابات مهنية، وإشهار محلي مضبوط.
-        </p>
+<!-- ═══════════════════════════════════════════════
+     RECENT LISTINGS — Jumia/Amazon product grid
+     ═══════════════════════════════════════════════ -->
+<section class="h-section h-section--grey home-reveal" aria-labelledby="recent-h" *ngIf="recentListings.length > 0">
+  <div class="h-section__head">
+    <h2 class="h-section__title" id="recent-h">إعلانات حديثة</h2>
+    <div class="h-filter-tabs">
+      <button class="h-tab" [class.h-tab--active]="recentFilter==='all'" (click)="recentFilter='all'" type="button">الكل</button>
+      <button class="h-tab" [class.h-tab--active]="recentFilter==='animals'" (click)="recentFilter='animals'" type="button">حيوانات</button>
+      <button class="h-tab" [class.h-tab--active]="recentFilter==='products'" (click)="recentFilter='products'" type="button">منتجات</button>
+    </div>
+  </div>
+
+  <div class="h-listings">
+    <article
+      class="h-card home-reveal"
+      *ngFor="let item of filteredRecentListings"
+      [attr.aria-label]="item.title"
+    >
+      <!-- Photo -->
+      <a class="h-card__photo-link" [routerLink]="item.type === 'animal' ? '/animals/' + item.id : '/products/' + item.id">
+        <div class="h-card__photo">
+          <img
+            *ngIf="item.imageUrl"
+            [src]="item.imageUrl"
+            [alt]="item.title"
+            loading="lazy"
+            decoding="async"
+          />
+          <div *ngIf="!item.imageUrl" class="h-card__photo-emoji">
+            {{ item.type === 'animal' ? '🐄' : '🌾' }}
+          </div>
+          <span class="h-card__badge">جديد</span>
+        </div>
+      </a>
+
+      <!-- Info -->
+      <div class="h-card__body">
+        <div class="h-card__loc">
+          <i data-lucide="map-pin" width="11" aria-hidden="true"></i>
+          {{ item.wilaya || 'تونس' }}
+        </div>
+        <h3 class="h-card__name">{{ item.title }}</h3>
+        <div class="h-card__price">
+          {{ state.fmtPrice(item.price ?? 0) }} <span>دت</span>
+        </div>
       </div>
 
-    </div>
+      <!-- WhatsApp CTA — always visible -->
+      <a
+        class="h-card__wa"
+        [href]="'https://wa.me/216' + item.phone"
+        target="_blank"
+        rel="noopener"
+        (click)="$event.stopPropagation()"
+        aria-label="تواصل عبر واتساب"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/>
+        </svg>
+        واتساب
+      </a>
+    </article>
+  </div>
 
-    <div class="pricing-grid pricing-grid--pro" aria-label="عروض AMANAFARM">
-      <article class="pricing-card">
-        <div class="pricing-top">
-          <span class="pricing-badge">للبداية</span>
-          <h3>إعلان عادي</h3>
-          <p>أفضل طريقة باش تبدأ تبيع أو تشري من غير التزام.</p>
-        </div>
-
-        <div class="pricing-price">
-          <strong>مجاني</strong>
-          <span>دائماً</span>
-        </div>
-
-        <ul class="pricing-features">
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>ظهور في السوق</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>تواصل مباشر عبر واتساب</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>صور ووصف وسعر واضح</span></li>
-        </ul>
-
-        <a class="pricing-cta" routerLink="/animals" aria-label="انشر إعلان مجاني">
-          انشر إعلان مجاني
-          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
-        </a>
-      </article>
-
-      <article class="pricing-card pricing-card--featured">
-        <div class="pricing-top">
-          <span class="pricing-badge">الأكثر استعمالاً</span>
-          <h3>Boost مميّز</h3>
-          <p>للإعلانات اللي تحب تشد الانتباه بسرعة وتطلع قبل المنافسين.</p>
-        </div>
-
-        <div class="pricing-price">
-          <strong>10 دت</strong>
-          <span>7 أيام</span>
-        </div>
-
-        <ul class="pricing-features">
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>ظهور أعلى في النتائج</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>شارة مميّز ذهبية</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>فرصة ظهور في الصفحة الرئيسية</span></li>
-        </ul>
-
-        <a class="pricing-cta" routerLink="/animals" aria-label="جرّب Boost">
-          جرّب Boost
-          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
-        </a>
-      </article>
-
-      <article class="pricing-card">
-        <div class="pricing-top">
-          <span class="pricing-badge">بيع أسرع</span>
-          <h3>Boost شهر</h3>
-          <p>مناسب للحيوانات والمنتجات اللي تحتاج ظهور أطول.</p>
-        </div>
-
-        <div class="pricing-price">
-          <strong>25 دت</strong>
-          <span>شهر كامل</span>
-        </div>
-
-        <ul class="pricing-features">
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>أولوية في البحث</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>إبراز بصري أقوى</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>مدة كافية لجلب مشترين أكثر</span></li>
-        </ul>
-
-        <a class="pricing-cta" routerLink="/products" aria-label="اختار Boost شهر">
-          اختار Boost شهر
-          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
-        </a>
-      </article>
-
-      <article class="pricing-card">
-        <div class="pricing-top">
-          <span class="pricing-badge">للمحترفين</span>
-          <h3>حساب Pro</h3>
-          <p>واجهة جدية للبياطرة، النقل، العلف، والمربين المحترفين.</p>
-        </div>
-
-        <div class="pricing-price">
-          <strong>39 دت</strong>
-          <span>شهرياً</span>
-        </div>
-
-        <ul class="pricing-features">
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>صفحة مهنية خاصة</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>عدد إعلانات أكثر</span></li>
-          <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>شارة موثوق وإحصائيات مشاهدات</span></li>
-        </ul>
-
-        <a class="pricing-cta" routerLink="/services" aria-label="اكتشف حساب Pro">
-          اكتشف حساب Pro
-          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
-        </a>
-      </article>
-    </div>
-
+  <div class="h-see-all">
+    <button class="h-btn-outline" (click)="browseAds()" type="button">
+      عرض كل الإعلانات
+      <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+    </button>
   </div>
 </section>
 
-<section class="testimonials-section">
-  <div class="section-label"><i data-lucide="star" width="12" aria-hidden="true"></i> آراء حقيقية</div>
-  <h2 class="section-title">قالوا عن AMANAFARM</h2>
-  <div class="testi-grid">
-    <div class="testi-card" *ngFor="let t of testimonials">
-      <div class="testi-stars" aria-label="تقييم 5 نجوم">{{ t.stars }}</div>
-      <p class="testi-text">{{ t.text }}</p>
-      <div class="testi-author">
-        <img class="testi-avt-img" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async">
-        <div><div class="testi-name">{{ t.name }}</div><div class="testi-loc">{{ t.loc }}</div><span class="testi-result">{{ t.result }}</span></div>
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS — clean 3 steps
+     ═══════════════════════════════════════════════ -->
+<section class="h-section h-section--white home-reveal" aria-labelledby="how-h">
+  <div class="h-section__head h-section__head--center">
+    <h2 class="h-section__title" id="how-h">كيف تبيع في أقل من دقيقتين؟</h2>
+    <p class="h-section__sub">بسيط، سريع، وبدون أي مصاريف مخفية.</p>
+  </div>
+
+  <div class="h-steps">
+    <div class="h-step home-reveal">
+      <div class="h-step__num">01</div>
+      <div class="h-step__icon">
+        <i data-lucide="user-plus" width="28" aria-hidden="true"></i>
+      </div>
+      <h3 class="h-step__title">سجّل حساب مجاني</h3>
+      <p class="h-step__desc">الاسم + الهاتف + الولاية — لا بطاقة بنكية، لا التزامات.</p>
+    </div>
+    <div class="h-steps__arrow" aria-hidden="true">
+      <i data-lucide="arrow-left" width="20"></i>
+    </div>
+    <div class="h-step home-reveal">
+      <div class="h-step__num">02</div>
+      <div class="h-step__icon">
+        <i data-lucide="camera" width="28" aria-hidden="true"></i>
+      </div>
+      <h3 class="h-step__title">انشر إعلانك</h3>
+      <p class="h-step__desc">صورة + سعر + وصف قصير. الإعلان يظهر فوراً في كل تونس.</p>
+    </div>
+    <div class="h-steps__arrow" aria-hidden="true">
+      <i data-lucide="arrow-left" width="20"></i>
+    </div>
+    <div class="h-step home-reveal">
+      <div class="h-step__num">03</div>
+      <div class="h-step__icon">
+        <i data-lucide="message-circle" width="28" aria-hidden="true"></i>
+      </div>
+      <h3 class="h-step__title">تواصل مباشرة</h3>
+      <p class="h-step__desc">المشترون يتصلون بك على واتساب مباشرة — لا وسيط، لا عمولة.</p>
+    </div>
+  </div>
+
+  <div class="h-steps__cta">
+    <button class="h-btn-primary" (click)="goPost()" type="button">
+      <i data-lucide="plus-circle" width="17" aria-hidden="true"></i>
+      انشر إعلانك الآن — مجاناً
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TRUST METRICS — Amazon social proof
+     ═══════════════════════════════════════════════ -->
+<section class="h-metrics home-reveal" aria-labelledby="metrics-h">
+  <div class="h-metrics__inner">
+    <div class="h-metric home-reveal">
+      <strong class="h-metric__num" id="trustUsersStat">+1,000</strong>
+      <span class="h-metric__lbl">مستخدم فلاحي نشط</span>
+    </div>
+    <div class="h-metrics__div" aria-hidden="true"></div>
+    <div class="h-metric home-reveal">
+      <strong class="h-metric__num" id="trustAdsStat">+500</strong>
+      <span class="h-metric__lbl">إعلان تم نشره</span>
+    </div>
+    <div class="h-metrics__div" aria-hidden="true"></div>
+    <div class="h-metric home-reveal">
+      <strong class="h-metric__num">24</strong>
+      <span class="h-metric__lbl">ولاية مشمولة</span>
+    </div>
+    <div class="h-metrics__div" aria-hidden="true"></div>
+    <div class="h-metric home-reveal">
+      <strong class="h-metric__num">⭐ 4.8</strong>
+      <span class="h-metric__lbl">تقييم المستخدمين</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIALS — Airbnb review style
+     ═══════════════════════════════════════════════ -->
+<section class="h-section h-section--grey home-reveal" aria-labelledby="testi-h">
+  <div class="h-section__head h-section__head--center">
+    <h2 class="h-section__title" id="testi-h">ما قالوه عن AMANAFARM</h2>
+    <p class="h-section__sub">تجارب حقيقية من فلاحين وتجار في كل تونس.</p>
+  </div>
+
+  <div class="h-reviews">
+    <div class="h-review home-reveal" *ngFor="let t of testimonials">
+      <div class="h-review__stars" [attr.aria-label]="'تقييم 5 نجوم'">{{ t.stars }}</div>
+      <p class="h-review__text">"{{ t.text }}"</p>
+      <div class="h-review__author">
+        <img class="h-review__avt" [src]="t.image" [alt]="t.name" loading="lazy" decoding="async" />
+        <div>
+          <div class="h-review__name">{{ t.name }}</div>
+          <div class="h-review__meta">{{ t.loc }} · <span class="h-review__badge">{{ t.result }}</span></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="services-section" id="services-section">
-  <div class="section-label"><i data-lucide="grid" width="12" aria-hidden="true"></i> خدماتنا</div>
-  <h2 class="section-title">كل ما تحتاجه في مكان واحد</h2>
-  <p class="section-sub">من البيع والشراء إلى الطب البيطري والنقل — منصة تتطور باستمرار.</p>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/animal-transport.svg" alt="نقل الحيوانات" loading="lazy" decoding="async"></div>
-      <h4>نقل الحيوانات</h4><p>شاحنات متخصصة لنقل بهايمك بأمان.</p>
-      <span class="soon-badge">قريباً في 2026</span>
-    </div>
-    <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/vet-consult.svg" alt="استشارة بيطرية" loading="lazy" decoding="async"></div>
-      <h4>استشارة بيطرية</h4><p>تواصل مع بيطريين معتمدين في جهتك.</p>
-      <span class="soon-badge">قريباً في 2026</span>
-    </div>
-    <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/vet-pharmacy.svg" alt="الصيدلية البيطرية" loading="lazy" decoding="async"></div>
-      <h4>الصيدلية البيطرية</h4><p>أدوية ولقاحات ومكملات.</p>
-      <span class="soon-badge">قريباً في 2026</span>
-    </div>
-    <div class="service-card">
-      <div class="svc-card-icon"><img src="assets/services/farm-products.svg" alt="منتجات فلاحية" loading="lazy" decoding="async"></div>
-      <h4>منتجات فلاحية</h4><p>أعلاف، بذور، أسمدة.</p>
-      <span class="soon-badge">قريباً في 2026</span>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     PRICING — clean cards
+     ═══════════════════════════════════════════════ -->
+<section class="h-section h-section--white home-reveal" aria-labelledby="pricing-h">
+  <div class="h-section__head h-section__head--center">
+    <h2 class="h-section__title" id="pricing-h">مجاني دائماً · مدفوع إذا أردت البيع أسرع</h2>
+    <p class="h-section__sub">AMANAFARM مفتوح للجميع. الخدمات الإضافية اختيارية 100%.</p>
+  </div>
+  <div class="pricing-grid pricing-grid--pro">
+    <article class="pricing-card home-reveal">
+      <div class="pricing-top">
+        <span class="pricing-badge">للبداية</span>
+        <h3>إعلان عادي</h3>
+        <p>أفضل طريقة باش تبدأ من غير التزام.</p>
+      </div>
+      <div class="pricing-price"><strong>مجاني</strong><span>دائماً</span></div>
+      <ul class="pricing-features">
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في السوق</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>تواصل مباشر واتساب</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صور وسعر واضح</span></li>
+      </ul>
+      <a class="pricing-cta" routerLink="/animals">انشر مجاناً <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
+    </article>
+    <article class="pricing-card pricing-card--featured home-reveal">
+      <div class="pricing-top">
+        <span class="pricing-badge">الأكثر اختياراً</span>
+        <h3>Boost مميّز</h3>
+        <p>اطلع قبل المنافسين وشد الانتباه أسرع.</p>
+      </div>
+      <div class="pricing-price"><strong>10 دت</strong><span>7 أيام</span></div>
+      <ul class="pricing-features">
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور أعلى في النتائج</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة مميّز ذهبية</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>ظهور في الصفحة الرئيسية</span></li>
+      </ul>
+      <a class="pricing-cta" routerLink="/animals">جرّب Boost <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
+    </article>
+    <article class="pricing-card home-reveal">
+      <div class="pricing-top">
+        <span class="pricing-badge">للمحترفين</span>
+        <h3>حساب Pro</h3>
+        <p>للبياطرة والنقل والعلف والمربين الجديين.</p>
+      </div>
+      <div class="pricing-price"><strong>39 دت</strong><span>شهرياً</span></div>
+      <ul class="pricing-features">
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>صفحة مهنية خاصة</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>شارة موثوق</span></li>
+        <li><i data-lucide="check" width="14" aria-hidden="true"></i><span>إحصائيات المشاهدات</span></li>
+      </ul>
+      <a class="pricing-cta" routerLink="/services">اكتشف Pro <i data-lucide="arrow-left" width="13" aria-hidden="true"></i></a>
+    </article>
   </div>
 </section>
 
-<section class="partners-section">
-  <div class="section-label"><i data-lucide="handshake" width="12" aria-hidden="true"></i> شركاؤنا</div>
-  <h2 class="section-title">شركاؤنا الموثوقون</h2>
-  <div class="partner-logos">
-    <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/atb.svg" alt="ATB" loading="lazy" decoding="async"></div>
-      <div class="pname">ATB</div>
-      <div class="psub">بنك شريك</div>
-    </div>
-    <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/otd.svg" alt="OTD" loading="lazy" decoding="async"></div>
-      <div class="pname">OTD</div>
-      <div class="psub">الديوان التونسي للتنمية الفلاحية</div>
-    </div>
-    <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/utap.svg" alt="UTAP" loading="lazy" decoding="async"></div>
-      <div class="pname">UTAP</div>
-      <div class="psub">اتحاد الفلاحين</div>
-    </div>
-    <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/crda.svg" alt="CRDA" loading="lazy" decoding="async"></div>
-      <div class="pname">CRDA</div>
-      <div class="psub">التنمية الفلاحية الجهوية</div>
-    </div>
-    <div class="plogo">
-      <div class="plogo-icon"><img src="assets/partners/smsa.svg" alt="SMSA" loading="lazy" decoding="async"></div>
-      <div class="pname">SMSA</div>
-      <div class="psub">شركات خدمات فلاحية</div>
-    </div>
+<!-- ═══════════════════════════════════════════════
+     CTA BAND — final action
+     ═══════════════════════════════════════════════ -->
+<div class="h-cta-band home-reveal">
+  <div class="h-cta-band__text">
+    <h2>جاهز تبيع أو تشتري؟</h2>
+    <p>انضم لأكثر من ألف مستخدم. أول إعلان مجاناً وبدون أي التزام.</p>
   </div>
-</section>
-
-<div class="cta-section">
-  <div class="cta-text"><h2>جاهز تبيع أو تشتري؟</h2><p>انضم لأكثر من ألف مستخدم نشط. أول إعلان مجاناً وبدون أي التزام.</p></div>
-  <div class="cta-actions">
-    <button class="cta-btn-white" (click)="goPost()"><i data-lucide="plus" width="15" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
-    <button class="cta-btn-outline" (click)="browseAds()"><i data-lucide="search" width="15" aria-hidden="true"></i> تصفح الإعلانات</button>
+  <div class="h-cta-band__actions">
+    <button class="h-cta-band__btn-white" (click)="goPost()" type="button">
+      <i data-lucide="plus" width="15" aria-hidden="true"></i>
+      أعلن مجاناً
+    </button>
+    <button class="h-cta-band__btn-ghost" (click)="browseAds()" type="button">
+      <i data-lucide="search" width="15" aria-hidden="true"></i>
+      تصفح الإعلانات
+    </button>
   </div>
 </div>

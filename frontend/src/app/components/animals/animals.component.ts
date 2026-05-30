@@ -270,20 +270,35 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private normalise(a: AnimalResponse): AnimalResponse {
-    const rawImages: any[] = Array.isArray(a.images) ? a.images : [];
+    const rawImages: any[] = [
+      ...(Array.isArray(a.images) ? a.images : []),
+      ...(Array.isArray(a.imageUrls) ? a.imageUrls : []),
+      a.mainImageUrl,
+    ];
     const imageUrls: string[] = rawImages
       .map((img: any) => {
         if (typeof img === 'string') return img;
         if (img && typeof img === 'object') return img.imageUrl ?? img.url ?? img.src ?? '';
         return '';
       })
+      .map(url => this.normalizeImageUrl(url))
       .filter(Boolean);
 
-    const existingMain = a.mainImageUrl || a.imageUrls?.[0] || '';
-    const normalizedImages = imageUrls.length ? imageUrls : (existingMain ? [existingMain] : []);
+    const normalizedImages = [...new Set(imageUrls)];
     const mainImageUrl = normalizedImages[0] || this.realAnimalImage(a.category, a.title, a.id);
 
     return { ...a, images: normalizedImages, imageUrls: normalizedImages, mainImageUrl };
+  }
+
+  private normalizeImageUrl(url?: string): string {
+    const raw = String(url || '').trim();
+    if (!raw) return '';
+    if (raw.startsWith('data:') || raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    if (raw.startsWith('/uploads/') || raw.startsWith('uploads/')) {
+      const clean = raw.startsWith('/') ? raw : `/${raw}`;
+      return `${environment.apiBaseUrl}${clean}`;
+    }
+    return raw.replace(/^\/assets\//, 'assets/');
   }
 
   setAnimalImageFallback(ad: AnimalResponse): void {
@@ -664,7 +679,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.http.post<AnimalResponse>(this.API, body).subscribe({
       next: (created) => {
         this.zone.run(() => {
-          if (this.imgFiles.length > 0) this.uploadImages(created.id, this.imgFiles, () => this.onSubmitSuccess(created));
+          if (this.imgFiles.length > 0) this.uploadImages(created.id, this.imgFiles, urls => this.onSubmitSuccess({ ...created, images: urls, imageUrls: urls, mainImageUrl: urls[0] }));
           else this.onSubmitSuccess(created);
         });
       },
@@ -685,15 +700,15 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showToast('الإعلان تهبط بنجاح');
   }
 
-  private uploadImages(animalId: number, files: File[], onDone: () => void) {
+  private uploadImages(animalId: number, files: File[], onDone: (urls: string[]) => void) {
     const formData = new FormData();
     files.forEach(f => formData.append('files', f, f.name));
     this.http.post<{ imageUrls: string[] }>(`${this.API}/${animalId}/images`, formData).subscribe({
-      next: () => onDone(),
+      next: (result) => onDone((result.imageUrls || []).map(url => this.normalizeImageUrl(url)).filter(Boolean)),
       error: (err) => {
         console.error('Image upload error:', err);
         this.showToast('الإعلان تهبط، أما التصاور ما طلعوش الكل', 'warn');
-        onDone();
+        onDone([]);
       },
     });
   }
