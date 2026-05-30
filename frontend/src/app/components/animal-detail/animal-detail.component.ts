@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
@@ -36,6 +36,7 @@ interface AnimalDetail {
   vetCertificate: boolean;
   featured: boolean;
   createdAt: Date;
+  userId: number | null;
 }
 
 interface DetailSpec {
@@ -70,9 +71,13 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
   currentPhoto = 0;
   isFav = false;
   toasts: Toast[] = [];
+  showDeleteConfirm = false;
+  isDeleting = false;
+  isMarkingSold = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private http: HttpClient,
     private location: Location,
     public state: StateService,
@@ -125,6 +130,48 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
 
   get isLoggedIn(): boolean {
     return this.state.isLoggedIn();
+  }
+
+  get isOwner(): boolean {
+    if (!this.animal || !this.state.isLoggedIn()) return false;
+    const currentId = this.state.user()?.id;
+    const listingUserId = this.animal.userId;
+    if (!currentId || !listingUserId) return false;
+    return currentId === listingUserId;
+  }
+
+  async deleteAnimal(): Promise<void> {
+    if (!this.animal || this.isDeleting) return;
+    this.isDeleting = true;
+    const success = await this.state.deleteAnimal(this.animal.id);
+    this.isDeleting = false;
+    if (success) {
+      this.showDeleteConfirm = false;
+      this.showToast('تم حذف الإعلان بنجاح', 'success');
+      setTimeout(() => void this.router.navigate(['/animals']), 1200);
+    } else {
+      this.showToast('فشل حذف الإعلان. حاول مجدداً.', 'error');
+    }
+  }
+
+  async markAsSold(): Promise<void> {
+    if (!this.animal || this.isMarkingSold) return;
+    this.isMarkingSold = true;
+    const success = await this.state.updateAnimalStatus(this.animal.id, 'sold');
+    this.isMarkingSold = false;
+    if (success) {
+      this.animal = { ...this.animal, status: 'sold' };
+      this.showToast('تم تمييز الإعلان كـ "مباع"', 'success');
+    } else {
+      this.showToast('تعذّر تحديث الحالة. حاول مجدداً.', 'error');
+    }
+  }
+
+  editAnimal(): void {
+    if (!this.animal) return;
+    void this.router.navigate(['/animals'], {
+      queryParams: { edit: this.animal.id, open: Date.now() },
+    });
   }
 
   get premiumSpecs(): DetailSpec[] {
@@ -389,6 +436,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
       vetCertificate: Boolean(raw?.vetCertificate),
       featured: Boolean(raw?.featured),
       createdAt: raw?.createdAt ? new Date(raw.createdAt) : new Date(),
+      userId: Number(raw?.userId || raw?.user_id || 0) || null,
     };
   }
 
@@ -458,6 +506,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: true,
         vetCertificate: false,
         featured: true,
+        userId: null,
         createdAt: new Date(Date.now() - 3 * 86400000),
       },
       {
@@ -485,6 +534,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: false,
         vetCertificate: false,
         featured: false,
+        userId: null,
         createdAt: new Date(Date.now() - 7 * 86400000),
       },
       {
@@ -512,6 +562,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: true,
         vetCertificate: true,
         featured: false,
+        userId: null,
         createdAt: new Date(Date.now() - 2 * 86400000),
       },
       {
@@ -539,6 +590,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: false,
         vetCertificate: false,
         featured: false,
+        userId: null,
         createdAt: new Date(Date.now() - 10 * 86400000),
       },
       {
@@ -566,6 +618,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: true,
         vetCertificate: false,
         featured: true,
+        userId: null,
         createdAt: new Date(Date.now() - 5 * 86400000),
       },
       {
@@ -593,6 +646,7 @@ export class AnimalDetailComponent implements AfterViewInit, OnDestroy {
         deliveryAvailable: false,
         vetCertificate: true,
         featured: true,
+        userId: null,
         createdAt: new Date(Date.now() - 6 * 86400000),
       },
     ];

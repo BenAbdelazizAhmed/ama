@@ -311,6 +311,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
   @HostListener('window:amanafarm-authenticated', ['$event'])
   onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
     const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
+    if (action === 'product-submit' || action === 'product-submit-company') {
+      sessionStorage.removeItem('amanafarm-pending-action');
+      setTimeout(() => void this.submitAdd(), 120);
+      return;
+    }
     if (!this.pendingOpenAdd && action !== 'product-add' && action !== 'product-add-company') return;
     this.pendingOpenAdd = false;
     sessionStorage.removeItem('amanafarm-pending-action');
@@ -577,7 +582,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openAddModal(): void {
-    if (!this.ensureLoggedInForPublish('product-add')) return;
     this.addForm = this.emptyAddForm();
     this.addErrors = {};
     this.addStep = 1;
@@ -588,7 +592,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   openCompanyAddModal(): void {
-    if (!this.ensureLoggedInForPublish('product-add-company')) return;
     this.addForm = { ...this.emptyAddForm(), sellerType: 'company' };
     if (this.activeCompany) {
       const company = this.getCompany(this.activeCompany);
@@ -687,7 +690,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   async submitAdd(): Promise<void> {
-    if (!this.requireLogin()) return;
     this.addErrors = {};
     let valid = true;
     if (!this.addForm.name?.trim()) { this.addErrors['name'] = true; valid = false; }
@@ -697,6 +699,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     if (this.addForm.sellerType === 'individual' && !this.addForm.sellerName?.trim()) { this.addErrors['sellerName'] = true; valid = false; }
 
     if (!valid) { this.showToast('error', 'عبّي الخانات المطلوبة'); this.cdr.markForCheck(); return; }
+    if (!this.requireLogin(this.addForm.sellerType === 'company' ? 'product-submit-company' : 'product-submit')) return;
 
     this.addSubmitting = true;
     this.cdr.markForCheck();

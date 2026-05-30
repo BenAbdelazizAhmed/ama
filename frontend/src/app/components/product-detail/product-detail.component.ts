@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
@@ -31,6 +31,7 @@ interface ProductDetail {
   sellerRating: number;
   phone: string;
   createdAt: Date;
+  userId: number | null;
 }
 
 interface DetailSpec {
@@ -66,9 +67,13 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   currentPhoto = 0;
   isFav = false;
   toasts: Toast[] = [];
+  showDeleteConfirm = false;
+  isDeleting = false;
+  isMarkingSold = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private http: HttpClient,
     private location: Location,
     public state: StateService,
@@ -109,6 +114,48 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
 
   get isLoggedIn(): boolean {
     return this.state.isLoggedIn();
+  }
+
+  get isOwner(): boolean {
+    if (!this.product || !this.state.isLoggedIn()) return false;
+    const currentId = this.state.user()?.id;
+    const listingUserId = this.product.userId;
+    if (!currentId || !listingUserId) return false;
+    return currentId === listingUserId;
+  }
+
+  async deleteProduct(): Promise<void> {
+    if (!this.product || this.isDeleting) return;
+    this.isDeleting = true;
+    const success = await this.state.deleteProduct(Number(this.product.id));
+    this.isDeleting = false;
+    if (success) {
+      this.showDeleteConfirm = false;
+      this.showToast('تم حذف المنتج بنجاح', 'success');
+      setTimeout(() => void this.router.navigate(['/products']), 1200);
+    } else {
+      this.showToast('فشل حذف المنتج. حاول مجدداً.', 'error');
+    }
+  }
+
+  async markAsSold(): Promise<void> {
+    if (!this.product || this.isMarkingSold) return;
+    this.isMarkingSold = true;
+    const success = await this.state.updateProductStatus(Number(this.product.id), 'sold');
+    this.isMarkingSold = false;
+    if (success) {
+      this.product = { ...this.product, inStock: false };
+      this.showToast('تم تمييز المنتج كـ "نفد المخزون"', 'success');
+    } else {
+      this.showToast('تعذّر تحديث الحالة. حاول مجدداً.', 'error');
+    }
+  }
+
+  editProduct(): void {
+    if (!this.product) return;
+    void this.router.navigate(['/products'], {
+      queryParams: { edit: this.product.id, open: Date.now() },
+    });
   }
 
   get fallbackImage(): string {
@@ -351,6 +398,7 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
       sellerRating: Number(raw?.sellerRating || 4.8),
       phone: this.clean(raw?.phone || raw?.contactPhone || ''),
       createdAt: raw?.createdAt ? new Date(raw.createdAt) : new Date(),
+      userId: Number(raw?.userId || raw?.user_id || 0) || null,
     };
   }
 
@@ -413,6 +461,7 @@ export class ProductDetailComponent implements AfterViewInit, OnDestroy {
       sellerRating: 4.8,
       phone: '55123456',
       createdAt: new Date(),
+      userId: null,
     });
 
     return [

@@ -51,6 +51,49 @@
         <span>{{ a.title }}</span>
       </nav>
 
+      <!-- ════════ OWNER MANAGEMENT BANNER ════════ -->
+      <div class="det-owner-bar det-reveal" *ngIf="isOwner" role="region" aria-label="إدارة إعلانك">
+        <div class="det-owner-bar__info">
+          <i data-lucide="settings" width="16" aria-hidden="true"></i>
+          <span>هذا إعلانك — يمكنك إدارته</span>
+        </div>
+        <div class="det-owner-bar__actions">
+          <button class="det-owner-btn det-owner-btn--edit" type="button" (click)="editAnimal()">
+            <i data-lucide="pencil" width="14" aria-hidden="true"></i>
+            تعديل
+          </button>
+          <button
+            class="det-owner-btn det-owner-btn--sold"
+            type="button"
+            (click)="markAsSold()"
+            [disabled]="isMarkingSold || isSoldStatus(a.status)"
+          >
+            <i data-lucide="check-circle" width="14" aria-hidden="true"></i>
+            {{ isSoldStatus(a.status) ? 'مباع' : (isMarkingSold ? 'جاري...' : 'تمييز كمباع') }}
+          </button>
+          <button class="det-owner-btn det-owner-btn--delete" type="button" (click)="showDeleteConfirm = true">
+            <i data-lucide="trash-2" width="14" aria-hidden="true"></i>
+            حذف
+          </button>
+        </div>
+      </div>
+
+      <!-- Delete confirmation modal -->
+      <div class="det-confirm-overlay" *ngIf="showDeleteConfirm" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle" (click)="showDeleteConfirm = false">
+        <div class="det-confirm" (click)="$event.stopPropagation()">
+          <div class="det-confirm__icon" aria-hidden="true">🗑️</div>
+          <h2 id="confirmDeleteTitle">حذف الإعلان؟</h2>
+          <p>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الإعلان نهائياً.</p>
+          <div class="det-confirm__actions">
+            <button class="det-confirm__cancel" type="button" (click)="showDeleteConfirm = false">إلغاء</button>
+            <button class="det-confirm__delete" type="button" (click)="deleteAnimal()" [disabled]="isDeleting">
+              <span *ngIf="!isDeleting">حذف نهائي</span>
+              <span *ngIf="isDeleting">جاري الحذف...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Page grid: gallery + info + sidebar -->
       <div class="det-grid">
 

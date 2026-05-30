@@ -41,6 +41,49 @@
         <span>{{ p.title }}</span>
       </nav>
 
+      <!-- ════════ OWNER MANAGEMENT BANNER ════════ -->
+      <div class="pd-owner-bar pd-reveal" *ngIf="isOwner" role="region" aria-label="إدارة منتجك">
+        <div class="pd-owner-bar__info">
+          <i data-lucide="settings" width="16" aria-hidden="true"></i>
+          <span>هذا منتجك — يمكنك إدارته</span>
+        </div>
+        <div class="pd-owner-bar__actions">
+          <button class="pd-owner-btn pd-owner-btn--edit" type="button" (click)="editProduct()">
+            <i data-lucide="pencil" width="14" aria-hidden="true"></i>
+            تعديل
+          </button>
+          <button
+            class="pd-owner-btn pd-owner-btn--sold"
+            type="button"
+            (click)="markAsSold()"
+            [disabled]="isMarkingSold || !p.inStock"
+          >
+            <i data-lucide="check-circle" width="14" aria-hidden="true"></i>
+            {{ !p.inStock ? 'نفد المخزون' : (isMarkingSold ? 'جاري...' : 'تمييز كـ نفد') }}
+          </button>
+          <button class="pd-owner-btn pd-owner-btn--delete" type="button" (click)="showDeleteConfirm = true">
+            <i data-lucide="trash-2" width="14" aria-hidden="true"></i>
+            حذف
+          </button>
+        </div>
+      </div>
+
+      <!-- Delete confirmation modal -->
+      <div class="pd-confirm-overlay" *ngIf="showDeleteConfirm" role="dialog" aria-modal="true" (click)="showDeleteConfirm = false">
+        <div class="pd-confirm" (click)="$event.stopPropagation()">
+          <div class="pd-confirm__icon" aria-hidden="true">🗑️</div>
+          <h2>حذف المنتج؟</h2>
+          <p>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف المنتج نهائياً.</p>
+          <div class="pd-confirm__actions">
+            <button class="pd-confirm__cancel" type="button" (click)="showDeleteConfirm = false">إلغاء</button>
+            <button class="pd-confirm__delete" type="button" (click)="deleteProduct()" [disabled]="isDeleting">
+              <span *ngIf="!isDeleting">حذف نهائي</span>
+              <span *ngIf="isDeleting">جاري الحذف...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Grid: gallery | info | sidebar -->
       <div class="pd-grid">
 

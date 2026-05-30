@@ -1,37 +1,50 @@
-.skeleton-card {
-  min-height: 280px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: var(--shadow-card, 0 2px 12px rgba(0,0,0,.08));
+/* ══════════════════════════════════════════════════════
+   SKELETON CARD — matches listing-card proportions
+   ══════════════════════════════════════════════════════ */
+
+:host { display: block; height: 100%; }
+
+@keyframes af-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-.skeleton-card__media,
-.skeleton-card__body span {
-  background: linear-gradient(90deg, #edf2ea 0%, #f8fbf7 45%, #edf2ea 100%);
-  background-size: 220% 100%;
-  animation: af-shimmer 1.5s infinite;
+.skeleton-card {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #EFEFEF;
+  display: flex;
+  flex-direction: column;
 }
 
 .skeleton-card__media {
-  height: 190px;
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #F0F0F0 0%, #FAFAFA 45%, #F0F0F0 100%);
+  background-size: 200% 100%;
+  animation: af-shimmer 1.6s infinite ease-in-out;
 }
 
 .skeleton-card__body {
-  display: grid;
-  gap: 12px;
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  flex: 1;
 }
 
 .skeleton-card__body span {
-  height: 14px;
+  display: block;
   border-radius: 999px;
+  background: linear-gradient(90deg, #F0F0F0 0%, #FAFAFA 45%, #F0F0F0 100%);
+  background-size: 200% 100%;
+  animation: af-shimmer 1.6s infinite ease-in-out;
 }
 
-.skeleton-card__body span:nth-child(1) { width: 80%; }
-.skeleton-card__body span:nth-child(2) { width: 58%; }
-.skeleton-card__body span:nth-child(3) { width: 42%; }
-
-@keyframes af-shimmer {
-  to { background-position: -220% 0; }
-}
+.skeleton-card__body span:nth-child(1) { height: 13px; width: 78%; animation-delay: .05s; }
+.skeleton-card__body span:nth-child(2) { height: 13px; width: 52%; animation-delay: .10s; }
+.skeleton-card__body span:nth-child(3) { height: 11px; width: 40%; animation-delay: .15s; margin-top: 2px; }
+.skeleton-card__body span:nth-child(4) { height: 16px; width: 38%; animation-delay: .20s; margin-top: auto; }
+.skeleton-card__body span:nth-child(5) { height: 40px; width: 100%; border-radius: 10px; animation-delay: .25s; margin-top: 6px; }

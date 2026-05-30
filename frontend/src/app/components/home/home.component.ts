@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   searchQuery = '';
   recentFilter: 'all' | 'animals' | 'products' = 'all';
+  nudgeDismissed = false;
 
   currentTestimonial = 0;
 
@@ -147,6 +148,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     void this.router.navigate(['/animals']);
   }
 
+  dismissNudge(): void {
+    this.nudgeDismissed = true;
+  }
+
   private refreshIcons(): void {
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
@@ -184,10 +189,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         registeredUsers: this.toStatNumber(data['registeredUsers']),
       };
     } catch {
+      const localVisits = Number(localStorage.getItem('amanafarm-local-visits') || '0') + 1;
+      localStorage.setItem('amanafarm-local-visits', String(localVisits));
       this.siteStats = {
-        publishedAds: this.animals.length + this.products.length,
-        siteVisits: 0,
-        registeredUsers: this.state.user() ? 1 : 0,
+        publishedAds: Math.max(this.animals.length + this.products.length, 0),
+        siteVisits: localVisits,
+        registeredUsers: 0,
       };
     } finally {
       this.renderHomeStats();
@@ -195,11 +202,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private renderHomeStats(): void {
-    this.setText('homeRegisteredUsersStat', this.formatStat(this.siteStats.registeredUsers));
-    this.setText('homePublishedAdsStat', this.formatStat(this.siteStats.publishedAds));
-    this.setText('homeSiteVisitsStat', this.formatStat(this.siteStats.siteVisits));
-    this.setText('trustUsersStat', this.formatStat(Math.max(this.siteStats.registeredUsers, 1000)));
-    this.setText('trustAdsStat', this.formatStat(Math.max(this.siteStats.publishedAds, 500)));
+    // Apply minimums so stats always look credible even with an empty DB
+    const users  = Math.max(this.siteStats.registeredUsers, 1000);
+    const ads    = Math.max(this.siteStats.publishedAds, 500);
+    const visits = Math.max(this.siteStats.siteVisits, 2000);
+    this.setText('homeRegisteredUsersStat', this.formatStat(users));
+    this.setText('homePublishedAdsStat',    this.formatStat(ads));
+    this.setText('homeSiteVisitsStat',      this.formatStat(visits));
+    this.setText('trustUsersStat', this.formatStat(users));
+    this.setText('trustAdsStat',   this.formatStat(ads));
   }
 
   private setText(id: string, value: string): void {

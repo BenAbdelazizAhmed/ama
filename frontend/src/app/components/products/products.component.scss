@@ -4,7 +4,7 @@
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* â”€â”€ FONT IMPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Sora:wght@300;400;600;700;800&display=swap');
+/* Font loaded globally via index.html (Cairo, Readex Pro) */
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CSS CUSTOM PROPERTIES
@@ -79,7 +79,7 @@
   --dur-slow:  .36s;
 
   display: block;
-  font-family: 'Tajawal', 'Cairo', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   direction: rtl;
   background: var(--surface-2);
   color: var(--text-900);
@@ -355,7 +355,7 @@
   height: 48px;
   padding: 0 24px;
   border-radius: var(--r-pill);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 14px;
   font-weight: 800;
   border: none;
@@ -590,7 +590,7 @@
   .sort-select {
     border: none;
     background: none;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 12.5px;
     font-weight: 700;
     color: var(--text-500);
@@ -641,7 +641,7 @@
   color: #fff;
   border: none;
   border-radius: var(--r-pill);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 12.5px;
   font-weight: 800;
   cursor: pointer;
@@ -693,7 +693,7 @@
   border-radius: var(--r-pill);
   border: none;
   background: transparent;
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 12.5px;
   font-weight: 700;
   color: var(--text-400);
@@ -753,7 +753,7 @@
     border-radius: var(--r-pill);
     border: none;
     background: transparent;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 11.5px;
     font-weight: 700;
     color: var(--muted);
@@ -870,7 +870,7 @@
     padding: 0 12px;
     border: 1.5px solid var(--border);
     border-radius: var(--r-4);
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 13px;
     background: var(--surface-2);
     color: var(--text-700);
@@ -916,7 +916,7 @@
     background: transparent;
     border: none;
     outline: none;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 12.5px;
     color: var(--text-900);
     direction: rtl;
@@ -955,7 +955,7 @@
     padding: 0 10px;
     border: 1.5px solid var(--border);
     border-radius: var(--r-4);
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 12.5px;
     background: var(--surface-3);
     color: var(--text-900);
@@ -1121,7 +1121,7 @@
   border: 1.5px dashed var(--border-2);
   border-radius: var(--r-4);
   background: transparent;
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 12.5px;
   font-weight: 800;
   color: var(--muted);
@@ -1321,7 +1321,7 @@
     border: 1px solid rgba(255,255,255,.18);
     color: rgba(255,255,255,.88);
     border-radius: var(--r-pill);
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
@@ -1360,7 +1360,7 @@
     border: 1.5px solid var(--border);
     border-radius: var(--r-pill);
     background: var(--surface);
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 12.5px;
     font-weight: 700;
     color: var(--text-500);
@@ -1472,7 +1472,7 @@
   background: none;
   border: 1.5px dashed var(--border-2);
   border-radius: var(--r-pill);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 11.5px;
   font-weight: 800;
   color: var(--muted);
@@ -1556,7 +1556,7 @@
   height: 40px;
   padding: 0 22px;
   border-radius: var(--r-pill);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
@@ -1878,7 +1878,7 @@
     border-radius: var(--r-pill);
     border: none;
     cursor: pointer;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
     font-size: 11.5px;
     font-weight: 800;
     transition: all var(--dur-base) var(--ease-smooth);
@@ -1924,7 +1924,7 @@
   border: 1.5px solid var(--border);
   background: var(--surface);
   color: var(--text-500);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
@@ -2253,7 +2253,7 @@
   gap: 8px;
   height: 48px;
   border-radius: var(--r-pill);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 14px;
   font-weight: 800;
   border: none;
@@ -2454,7 +2454,7 @@
     background: var(--surface-2);
     cursor: pointer;
     transition: all var(--dur-base) var(--ease-smooth);
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
 
     &:hover { border-color: var(--leaf-600); background: var(--leaf-50); }
 
@@ -2510,7 +2510,7 @@
   padding: 0 13px;
   border: 1.5px solid var(--border);
   border-radius: var(--r-4);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 13px;
   background: var(--surface-2);
   color: var(--text-900);
@@ -2709,7 +2709,7 @@
   border: none;
   background: linear-gradient(135deg, var(--leaf-800), var(--leaf-600));
   color: #fff;
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 14px;
   font-weight: 900;
   cursor: pointer;
@@ -2749,7 +2749,7 @@
   border: 1.5px solid var(--border);
   background: var(--surface);
   color: var(--muted);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
@@ -2780,7 +2780,7 @@
   gap: 10px;
   padding: 12px 16px 12px 12px;
   border-radius: var(--r-8);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', 'Readex Pro', sans-serif;
   font-size: 13px;
   font-weight: 700;
   box-shadow: var(--shadow-lg);
@@ -7066,6 +7066,92 @@
   }
 }
 
+/* ════════════════════════════════════════════════════════
+   MOBILE PUBLISH WIZARD — compact & focused (< 540px)
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 540px) {
+  /* Publish intro: hide long hint text, tighten layout */
+  .publish-intro {
+    padding: 10px 12px !important;
+    margin-bottom: 8px !important;
+    gap: 10px !important;
+    grid-template-columns: minmax(0,1fr) auto !important;
+  }
+  .publish-intro p { display: none !important; }
+  .publish-intro h4 { font-size: 14px !important; line-height: 1.4 !important; }
+  .publish-kicker { font-size: 9.5px !important; margin-bottom: 4px !important; }
+
+  /* Compact completion score badge */
+  .publish-score {
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 14px !important;
+  }
+  .publish-score strong { font-size: 18px !important; }
+
+  /* Step indicator — 5 steps on small screen */
+  :host .publish-steps {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    padding: 5px !important;
+  }
+  :host .publish-steps::before { display: none !important; }
+  :host .publish-steps button {
+    min-height: 40px !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    padding: 5px 2px !important;
+    border-radius: 10px !important;
+    font-size: 9px !important;
+  }
+  :host .publish-steps button .step-index {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 10px !important;
+  }
+  /* Only show label text for the ACTIVE step */
+  :host .publish-steps button:not(.active) strong { display: none !important; }
+  :host .publish-steps button.active strong {
+    font-size: 8.5px !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    max-width: 48px !important;
+  }
+
+  /* Seller type toggle: stack vertically on very small screens */
+  .type-toggle { grid-template-columns: 1fr !important; }
+
+  /* Step panels: tighter padding */
+  :host > .modal-overlay.modal-overlay--show .add-step-panel,
+  .modal-overlay.modal-overlay--show .add-step-panel {
+    padding: 12px !important;
+    border-radius: 14px !important;
+  }
+  /* Modal body: less gap between elements */
+  :host > .modal-overlay.modal-overlay--show .add-modal__body.add-modal__body--wizard,
+  .modal-overlay.modal-overlay--show .add-modal__body.add-modal__body--wizard {
+    gap: 8px !important;
+    padding: 12px 12px 12px !important;
+  }
+  /* Footer: tighter */
+  .add-modal__footer { padding: 10px 12px !important; gap: 8px !important; }
+  .add-modal__header { padding: 12px 14px !important; }
+  .add-modal__header-text h3 { font-size: 13.5px !important; }
+  .add-modal__header-text p  { font-size: 10.5px !important; }
+}
+
+/* Very small phones: hide even active step label → just numbers */
+@media (max-width: 390px) {
+  :host .publish-steps button.active strong { display: none !important; }
+  :host .publish-steps button {
+    min-height: 36px !important;
+    border-radius: 8px !important;
+  }
+}
+
 /* Keep product add form centered instead of bottom sheet */
 .modal-overlay.modal-overlay--show {
   display: flex;
@@ -8404,4 +8490,121 @@
   :host .pcard__media { height: 170px !important; }
   :host .pcard__name { font-size: 14px !important; }
   :host .pcard__btn { min-height: 42px !important; }
+}
+
+/* Mobile form visibility rescue */
+@media (max-width: 700px) {
+  :host .modal-overlay,
+  :host .modal-overlay.modal-overlay--show,
+  :host .drawer-overlay {
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  :host .add-modal,
+  :host .drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    max-height: calc(100dvh - 8px) !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border-radius: 20px 20px 0 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  :host .add-modal__header,
+  :host .add-modal__footer {
+    flex: 0 0 auto !important;
+  }
+
+  :host .add-modal__body,
+  :host .add-modal__body--wizard,
+  :host .drawer-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 14px !important;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+  }
+
+  :host .add-modal__steps,
+  :host .add-steps,
+  :host .wizard-steps {
+    display: flex !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    gap: 6px !important;
+    scrollbar-width: none !important;
+  }
+
+  :host .add-modal__steps::-webkit-scrollbar,
+  :host .add-steps::-webkit-scrollbar,
+  :host .wizard-steps::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  :host .add-step,
+  :host .add-step-btn {
+    flex: 0 0 auto !important;
+    min-width: 76px !important;
+    white-space: nowrap !important;
+  }
+
+  :host .add-step-panel,
+  :host .fields-row,
+  :host .fields-row-2,
+  :host .fields-row-3,
+  :host .form-row,
+  :host .form-grid,
+  :host .add-modal__grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  :host .field,
+  :host .form-field,
+  :host .field input,
+  :host .field select,
+  :host .field textarea,
+  :host .form-field input,
+  :host .form-field select,
+  :host .form-field textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  :host input,
+  :host select,
+  :host textarea {
+    min-height: 48px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+  }
+
+  :host .add-modal__footer {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom)) !important;
+    background: #fff !important;
+  }
+
+  :host .add-modal__footer button,
+  :host .add-modal__footer .submit-btn,
+  :host .add-modal__footer .cancel-btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    white-space: normal !important;
+  }
 }

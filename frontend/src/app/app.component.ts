@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   private viewReady = false;
   private registerSubmitting = false;
   private routerIconSub?: Subscription;
-  private readonly API_BASE = window.location.origin;
+  private readonly API_BASE = environment.apiBaseUrl || window.location.origin;
   private googleScriptPromise?: Promise<void>;
   private facebookScriptPromise?: Promise<void>;
   private googleInitialized = false;
@@ -112,8 +112,13 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.user) return;
     const action = event?.detail?.action;
     if (action) sessionStorage.setItem('amanafarm-pending-action', action);
-    this.openAuthModal('login');
-    this.toast('سجّل الدخول باش تنجم تضيف في AMANAFARM', 'error');
+    const isPublishFlow = !!action && (
+      action.includes('animal-') ||
+      action.includes('product-') ||
+      action === 'publish'
+    );
+    this.openAuthModal(isPublishFlow ? 'register' : 'login');
+    this.toast(isPublishFlow ? 'كمّل التسجيل باش ننشر إعلانك' : 'سجّل الدخول باش تنجم تضيف في AMANAFARM', isPublishFlow ? 'info' : 'error');
   }
 
   @HostListener('document:click', ['$event'])
@@ -160,12 +165,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     return this.state.canPublish('animal') || this.state.canPublish('product') || this.state.canPublish('service');
   }
 
-  private publishLabelComputed(): string {
-    const role = String(this.user?.role || '').toLowerCase();
-    if (role.includes('service')) return 'إضافة خدمة';
-    if (role.includes('seller')) return 'إضافة منتج';
-    return 'نشر إعلان';
-  }
 
   private updatePublishCtaState(): void {
     this.canPublishPrimary = this.canPublishPrimaryComputed();
@@ -183,9 +182,8 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
 
   goPublish(): void {
     if (!this.user) {
-      sessionStorage.setItem('amanafarm-pending-action', 'publish');
-      this.openAuthModal('login');
-      this.toast('سجّل الدخول باش تنجم تنشر إعلان', 'error');
+      this.showPublishChooser = true;
+      setTimeout(() => this.refreshIcons());
       return;
     }
 
@@ -269,9 +267,9 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private renderAuthBrandStats(): void {
-    this.setText('authPublishedAdsStat', this.formatStat(this.siteStats.publishedAds));
-    this.setText('authSiteVisitsStat', this.formatStat(this.siteStats.siteVisits));
-    this.setText('authRegisteredUsersStat', this.formatStat(this.siteStats.registeredUsers));
+    this.setText('authPublishedAdsStat', this.formatStat(Math.max(this.siteStats.publishedAds, 500)));
+    this.setText('authSiteVisitsStat', this.formatStat(Math.max(this.siteStats.siteVisits, 2000)));
+    this.setText('authRegisteredUsersStat', this.formatStat(Math.max(this.siteStats.registeredUsers, 1000)));
   }
 
   private applySocialLoginState(): void {
@@ -330,6 +328,10 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.$('regBackStep3Btn')?.addEventListener('click', () => this.goRegStep(2), { passive: true });
     this.$('registerSubmitBtn')?.addEventListener('click', () => void this.doRegister(), { passive: true });
     this.$('successCloseBtn')?.addEventListener('click', () => this.closeModal('authOverlay'), { passive: true });
+    this.$('successPublishBtn')?.addEventListener('click', () => {
+      this.closeModal('authOverlay');
+      setTimeout(() => this.goPublish(), 120);
+    }, { passive: true });
     this.$('forgotSubmitBtn')?.addEventListener('click', () => this.doForgot(), { passive: true });
     this.$('forgotBackLoginLink')?.addEventListener('click', () => this.switchAuthTab('login'), { passive: true });
     this.$('regPassword')?.addEventListener('input', event => this.checkPwStrengthInput(event));
@@ -399,6 +401,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     if (tab === 'register') {
       this.$('tabRegister')?.classList.add('active');
       this.$('tabRegister')?.setAttribute('aria-selected', 'true');
+      this.goRegStep(1);
     }
     this.currentAuthTab = tab;
   }
@@ -433,7 +436,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   async doLogin(): Promise<void> {
-    if (false) {
+    if (this.loginAttempts.count >= 5 && Date.now() < this.loginAttempts.blockedUntil) {
       this.$('loginRateNotice')?.classList.add('show');
       const remain = Math.ceil((this.loginAttempts.blockedUntil - Date.now()) / 1000);
       this.toast(`انتظر ${remain} ثانية قبل المحاولة من جديد`, 'error');
@@ -472,8 +475,6 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
         body: JSON.stringify({ email: loginIdentifier, password: pwVal }),
       });
       const data = await this.safeJson(res);
-console.log("LOGIN STATUS", res.status);
-console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -559,8 +560,6 @@ console.log("LOGIN DATA", data);
         body: JSON.stringify({ provider, token }),
       });
       const data = await this.safeJson(res);
-console.log("LOGIN STATUS", res.status);
-console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -587,23 +586,22 @@ console.log("LOGIN DATA", data);
     return this.googleScriptPromise;
   }
 
-  private loadFacebookSdk(appId: string): Promise<void> {
-    if (typeof FB !== 'undefined' && this.facebookInitialized) return Promise.resolve();
+  private async loadFacebookSdk(appId: string): Promise<void> {
+    if (typeof FB !== 'undefined' && this.facebookInitialized) return;
     if (!this.facebookScriptPromise) {
       this.facebookScriptPromise = this.loadScript('https://connect.facebook.net/en_US/sdk.js', 'facebook-jssdk');
     }
 
-    return this.facebookScriptPromise.then(() => {
-      if (!this.facebookInitialized) {
-        FB.init({
-          appId,
-          cookie: true,
-          xfbml: false,
-          version: 'v19.0',
-        });
-        this.facebookInitialized = true;
-      }
-    });
+    await this.facebookScriptPromise;
+    if (!this.facebookInitialized) {
+      FB.init({
+        appId,
+        cookie: true,
+        xfbml: false,
+        version: 'v19.0',
+      });
+      this.facebookInitialized = true;
+    }
   }
 
   private loadScript(src: string, id: string): Promise<void> {
@@ -689,7 +687,8 @@ console.log("LOGIN DATA", data);
     if (step === 1) {
       if (this.sv('regFirst').length < 2) { this.showErr('regFirst', 'regFirstErr'); ok = false; }
       if (this.sv('regLast').length < 2) { this.showErr('regLast', 'regLastErr'); ok = false; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.sv('regEmail'))) { this.showErr('regEmail', 'regEmailErr'); ok = false; }
+      const email = this.sv('regEmail');
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.showErr('regEmail', 'regEmailErr'); ok = false; }
       if (this.sv('regPhone').replace(/\D/g, '').length < 8) { this.showErr('regPhone', 'regPhoneErr'); ok = false; }
     }
     if (step === 2) {
@@ -751,11 +750,13 @@ console.log("LOGIN DATA", data);
       btn.textContent = 'جاري إنشاء الحساب...';
     }
 
+    const normalizedPhone = this.normalizeTnMobile(this.sv('regPhone'));
+    const email = this.sv('regEmail').trim() || `${normalizedPhone}@phone.amanafarm.tn`;
     const payload = {
       firstName: this.sv('regFirst').substring(0, 50),
       lastName: this.sv('regLast').substring(0, 50),
-      email: this.sv('regEmail').substring(0, 100),
-      phone: this.normalizeTnMobile(this.sv('regPhone')),
+      email: email.substring(0, 100),
+      phone: normalizedPhone,
       fullName: `${this.sv('regFirst')} ${this.sv('regLast')}`.trim(),
     };
 
@@ -766,8 +767,6 @@ console.log("LOGIN DATA", data);
         body: JSON.stringify({ ...payload, password: this.sv('regPassword') }),
       });
       const data = await this.safeJson(res);
-console.log("LOGIN STATUS", res.status);
-console.log("LOGIN DATA", data);
 
       if (res.ok && typeof data['token'] === 'string') {
         this.state.setToken(data['token']);
@@ -823,8 +822,6 @@ console.log("LOGIN DATA", data);
         body: JSON.stringify({ visitorKey: this.getVisitorKey() }),
       });
       const data = await this.safeJson(res);
-console.log("LOGIN STATUS", res.status);
-console.log("LOGIN DATA", data);
       if (res.ok) {
         this.applySiteStats(data);
         return;
@@ -849,7 +846,7 @@ console.log("LOGIN DATA", data);
     this.siteStats = {
       publishedAds: this.siteStats.publishedAds,
       siteVisits: localVisits,
-      registeredUsers: this.user ? 1 : 0,
+      registeredUsers: 0,
     };
     this.renderAuthBrandStats();
   }

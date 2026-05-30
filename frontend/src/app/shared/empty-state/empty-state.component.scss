@@ -1,37 +1,62 @@
+/* ══════════════════════════════════════════════════════
+   EMPTY STATE — Clean, approachable, action-oriented
+   ══════════════════════════════════════════════════════ */
+
+:host { display: block; width: 100%; }
+
 .empty-state {
   width: 100%;
-  padding: 48px 24px;
-  border: 1px dashed var(--color-border, #e0e0e0);
-  border-radius: 12px;
+  padding: clamp(48px, 7vw, 80px) 24px;
+  border-radius: 20px;
   background: #fff;
+  border: 1.5px dashed #E8E8E8;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .empty-state__icon {
-  font-size: 64px;
+  font-size: 52px;
   line-height: 1;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
+  filter: grayscale(.15) drop-shadow(0 4px 8px rgba(0,0,0,.08));
 }
 
 h3 {
-  margin: 0 0 8px;
-  color: var(--color-primary-dark, #1b5e20);
+  margin: 0;
   font-size: 20px;
+  font-weight: 800;
+  color: #1B1B1B;
+  letter-spacing: -.01em;
 }
 
 p {
-  max-width: 460px;
-  margin: 0 auto 18px;
-  color: var(--color-text-secondary, #5a5a5a);
+  max-width: 380px;
+  margin: 0;
+  font-size: 14px;
+  color: #717171;
+  line-height: 1.75;
 }
 
 button {
-  min-height: 42px;
-  padding: 0 18px;
-  border: 2px solid var(--color-primary, #2e7d32);
-  border-radius: 8px;
+  min-height: 48px;
+  padding: 0 28px;
+  border: 1.5px solid #1B5E20;
+  border-radius: 12px;
   background: transparent;
-  color: var(--color-primary, #2e7d32);
-  font-weight: 800;
+  color: #1B5E20;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+  margin-top: 6px;
+}
+
+button:hover {
+  background: #1B5E20;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(27,94,32,.22);
 }

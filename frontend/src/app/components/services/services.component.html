@@ -170,6 +170,11 @@
           <div class="service-card__media">
             <img [src]="w.coverUrl || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80'" [alt]="w.title" loading="lazy">
             <span class="availability" [class.off]="!w.available">{{ w.available ? 'متاح' : 'غير متاح' }}</span>
+            <!-- Avatar circle overlapping cover -->
+            <div class="service-card__avatar" [attr.aria-label]="w.name">
+              <img *ngIf="w.avatarUrl" [src]="w.avatarUrl" [alt]="w.name" loading="lazy" />
+              <span *ngIf="!w.avatarUrl" class="service-card__avatar-fallback" aria-hidden="true">{{ (w.name || 'ع').charAt(0) }}</span>
+            </div>
           </div>
           <div class="service-card__body">
             <div class="service-card__top">

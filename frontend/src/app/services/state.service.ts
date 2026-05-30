@@ -381,6 +381,35 @@ export class StateService {
     } catch {}
   }
 
+  async deleteAnimal(id: number): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.apiBase}/api/animals/${id}`, {
+        method: 'DELETE',
+        headers: this.getHeaders(),
+      });
+      if (res.ok || res.status === 204 || res.status === 200) {
+        this.animals.update(list => {
+          const next = list.filter(a => a.id !== id);
+          LS.set(StateService.LS_ANIMALS, next);
+          return next;
+        });
+        return true;
+      }
+      return false;
+    } catch { return false; }
+  }
+
+  async updateAnimalStatus(id: number, status: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.apiBase}/api/animals/${id}`, {
+        method: 'PATCH',
+        headers: this.getHeaders(),
+        body: JSON.stringify({ status }),
+      });
+      return res.ok || res.status === 204 || res.status === 200;
+    } catch { return false; }
+  }
+
   /* ══ WORKERS ══ */
   private async fetchWorkers() {
     try {
@@ -524,11 +553,29 @@ export class StateService {
     } catch {}
   }
 
-  async deleteProduct(id: number) {
+  async deleteProduct(id: number): Promise<boolean> {
     try {
-      await fetch(`${this.apiBase}/api/products/${id}`, { method: 'DELETE' });
-      this.products.update(list => list.filter(x => x.id !== id));
-    } catch {}
+      const res = await fetch(`${this.apiBase}/api/products/${id}`, {
+        method: 'DELETE',
+        headers: this.getHeaders(),
+      });
+      if (res.ok || res.status === 204 || res.status === 200) {
+        this.products.update(list => list.filter(x => x.id !== id));
+        return true;
+      }
+      return false;
+    } catch { return false; }
+  }
+
+  async updateProductStatus(id: number, status: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.apiBase}/api/products/${id}`, {
+        method: 'PATCH',
+        headers: this.getHeaders(),
+        body: JSON.stringify({ status }),
+      });
+      return res.ok || res.status === 204 || res.status === 200;
+    } catch { return false; }
   }
 
   /* ══ WHOLESALE ══ */

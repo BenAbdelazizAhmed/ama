@@ -223,6 +223,11 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:amanafarm-authenticated', ['$event'])
   onAuthenticated(event?: CustomEvent<{ action?: string }>): void {
     const action = event?.detail?.action || sessionStorage.getItem('amanafarm-pending-action');
+    if (action === 'animal-submit' || action === 'animal-submit-bulk') {
+      sessionStorage.removeItem('amanafarm-pending-action');
+      setTimeout(() => this.submitAdd(), 120);
+      return;
+    }
     if (!this.pendingOpenAdd && action !== 'animal-add' && action !== 'animal-add-bulk') return;
     this.pendingOpenAdd = false;
     sessionStorage.removeItem('amanafarm-pending-action');
@@ -509,7 +514,6 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openAddModal(mode: 'single' | 'bulk' = 'single') {
-    if (!this.ensureLoggedInForPublish(mode)) return;
     this.addListingMode = mode;
     this.addForm = this.freshForm();
     if (mode === 'bulk') {
@@ -661,8 +665,8 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   submitAdd() {
-    if (!this.requireLogin()) return;
     if (!this.validateAdd()) { this.showToast('عبّي الخانات المطلوبة', 'warn'); return; }
+    if (!this.requireLogin(this.addListingMode === 'bulk' ? 'animal-submit-bulk' : 'animal-submit')) return;
     this.addSubmitting = true;
 
     const body: AnimalRequest = {
@@ -705,8 +709,7 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
     files.forEach(f => formData.append('files', f, f.name));
     this.http.post<{ imageUrls: string[] }>(`${this.API}/${animalId}/images`, formData).subscribe({
       next: (result) => onDone((result.imageUrls || []).map(url => this.normalizeImageUrl(url)).filter(Boolean)),
-      error: (err) => {
-        console.error('Image upload error:', err);
+      error: () => {
         this.showToast('الإعلان تهبط، أما التصاور ما طلعوش الكل', 'warn');
         onDone([]);
       },

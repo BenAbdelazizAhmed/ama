@@ -1,82 +1,111 @@
-<section class="services-hero market-hero-clone mode-hire" dir="rtl">
-  <div class="services-hero__inner">
-    <div class="services-hero__content">
-      <div class="services-hero__badge">
-        <span class="live-dot"></span>
-        <span>{{ totalAds }} إعلان متاح</span>
-      </div>
+<!-- ═══ HERO — marketplace premium ═══ -->
+<section class="g-hero" dir="rtl" aria-label="سوق الحيوانات">
+  <div class="g-hero__bg"></div>
+  <div class="g-hero__overlay"></div>
+  <div class="g-hero__body">
 
-      <h1>سوق الحيوانات في تونس</h1>
-      <p>إعلانات موثوقة، أسعار واضحة، وتواصل مباشر في كامل تونس.</p>
+    <p class="g-hero__eyebrow">
+      <i data-lucide="shield-check" width="13" aria-hidden="true"></i>
+      <span class="live-dot-sm"></span>
+      {{ totalAds }} إعلان متاح الآن · 24 ولاية
+    </p>
 
-      <div class="mode-switch" role="group" aria-label="إجراءات سوق الحيوانات">
-        <button type="button" class="active" (click)="openAddModal()">انشر إعلان حيوان</button>
-        <button type="button" (click)="openAddModal('bulk')">بيع قطيع</button>
-        <button type="button" (click)="scrollToMarket()">شوف السوق</button>
-      </div>
+    <h1 class="g-hero__title">
+      سوق الحيوانات في تونس<br>
+      <em>بيع · اشري · تواصل مباشرة</em>
+    </h1>
 
-      <div class="services-stats" aria-label="إحصائيات السوق">
-        <div>
-          <strong>{{ totalAds }}</strong>
-          <span>إعلان</span>
-        </div>
-        <div>
-          <strong>24</strong>
-          <span>ولاية</span>
-        </div>
-        <div>
-          <strong>{{ fmt(avgPrice) }}</strong>
-          <span>متوسط السعر</span>
-        </div>
-        <div>
-          <strong>{{ verifiedCount }}</strong>
-          <span>بائع موثوق</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    <p class="g-hero__sub">
+      إعلانات موثوقة، أسعار واضحة، وزر واتساب مباشر مع كل بائع في كامل تونس.
+    </p>
 
-<div class="filter-bar" dir="rtl">
-  <div class="filter-bar-inner">
-    <div class="market-search">
-      <i data-lucide="search" width="15" height="15"></i>
+    <!-- Search bar integrated in hero -->
+    <div class="g-hero-search" role="search">
       <input
-        type="text"
-        placeholder="لوّج: خروف، بقرة، دجاج..."
+        type="search"
         [(ngModel)]="searchQuery"
-        (ngModelChange)="debouncedFilter()"
+        (keyup.enter)="applyFilter()"
+        placeholder="ابحث: خروف، بقرة، دجاج، ماعز..."
+        aria-label="بحث في سوق الحيوانات"
+        autocomplete="off"
       />
-      <button *ngIf="searchQuery" type="button" (click)="clearSearch()" aria-label="مسح البحث">×</button>
-    </div>
-
-    <div class="sale-tabs" aria-label="نوع البيع">
-      <button type="button" [class.active]="saleAllActive" (click)="filterSaleAll()">الكل</button>
-      <button type="button" [class.active]="saleSingleActive" (click)="filterSaleSingle()">بالكعبة</button>
-      <button type="button" [class.active]="saleBulkActive" (click)="filterSaleBulk()">بالجملة</button>
-    </div>
-
-    <div class="category-rail" aria-label="الفئات">
-      <button
-        *ngFor="let cat of CATEGORIES"
-        class="filter-btn"
-        [class.active]="activeCategory === cat"
-        (click)="filterByCategory(cat)"
-      >
-        {{ cat }}
+      <button class="g-hero-search__btn" (click)="applyFilter()" type="button">
+        <i data-lucide="search" width="16" aria-hidden="true"></i>
+        بحث
       </button>
     </div>
 
+    <!-- Action CTAs -->
+    <div class="g-hero-actions">
+      <button class="g-btn g-btn--primary g-btn--pill" type="button" (click)="openAddModal()">
+        <i data-lucide="plus-circle" width="16" aria-hidden="true"></i>
+        انشر إعلانك مجاناً
+      </button>
+      <button class="g-btn g-btn--pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" type="button" (click)="scrollToMarket()">
+        <i data-lucide="grid" width="16" aria-hidden="true"></i>
+        تصفح السوق
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="g-hero-stats">
+      <div class="g-hero-stat">
+        <strong>{{ totalAds }}</strong>
+        <span>إعلان نشط</span>
+      </div>
+      <div class="g-hero-stat">
+        <strong>24</strong>
+        <span>ولاية</span>
+      </div>
+      <div class="g-hero-stat">
+        <strong>{{ fmt(avgPrice) }} دت</strong>
+        <span>متوسط السعر</span>
+      </div>
+      <div class="g-hero-stat">
+        <strong>{{ verifiedCount }}</strong>
+        <span>بائع موثوق</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ STICKY FILTER BAR ═══ -->
+<div class="g-filter-bar" dir="rtl" role="toolbar" aria-label="فلترة الإعلانات">
+  <div class="g-filter-bar__inner">
+
+    <!-- Type de vente -->
+    <div class="animals-sale-tabs">
+      <button type="button" class="g-filter-chip" [class.g-filter-chip--active]="saleAllActive" (click)="filterSaleAll()">الكل</button>
+      <button type="button" class="g-filter-chip" [class.g-filter-chip--active]="saleSingleActive" (click)="filterSaleSingle()">بالكعبة</button>
+      <button type="button" class="g-filter-chip" [class.g-filter-chip--active]="saleBulkActive" (click)="filterSaleBulk()">بالجملة</button>
+    </div>
+
+    <div class="g-filter-bar__sep"></div>
+
+    <!-- Catégories -->
+    <button
+      *ngFor="let cat of CATEGORIES"
+      type="button"
+      class="g-filter-chip"
+      [class.g-filter-chip--active]="activeCategory === cat"
+      (click)="filterByCategory(cat)"
+    >{{ cat }}</button>
+
+    <div class="g-filter-bar__spacer"></div>
+
+    <!-- Sort -->
     <select
-      class="sort-select"
+      class="animals-sort"
       [(ngModel)]="sortValue"
       (ngModelChange)="applyFilter()"
       aria-label="ترتيب النتائج"
     >
-      <option value="newest">الأحدث</option>
-      <option value="cheap">الأرخص</option>
-      <option value="expensive">الأغلى</option>
+      <option value="newest">الأحدث أولاً</option>
+      <option value="cheap">الأرخص أولاً</option>
+      <option value="expensive">الأغلى أولاً</option>
     </select>
+
   </div>
 </div>
 

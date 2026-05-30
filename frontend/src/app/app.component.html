@@ -8,7 +8,7 @@
   <span class="ann-badge">انشر إعلانك بثقة</span>
 </div>
 
-<header class="header" role="banner">
+<header class="header" [class.scrolled]="isScrolled" role="banner">
   <a routerLink="/" class="logo" aria-label="AMANAFARM الرئيسية">
     <div class="logo-mark">
   <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="52" height="52">
@@ -245,8 +245,8 @@
 
       <div class="tab-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
         <div class="auth-panel-head">
-          <h2>ابدأ رحلتك معنا</h2>
-          <p>أنشئ حسابك في خطوات قصيرة وانشر أول إعلانك بسهولة.</p>
+          <h2>كمّل التسجيل في 30 ثانية</h2>
+          <p>باش نحفظوا إعلانك ونخليوا المشترين يتصلوا بيك على طول.</p>
         </div>
         <div class="steps-indicator" aria-label="مراحل التسجيل">
           <div class="step-item-r active" id="si1"><div class="step-dot" aria-current="step">1</div><div>معلوماتك</div></div><div class="step-line" id="sl1"></div>
@@ -255,7 +255,7 @@
         </div>
         <div class="reg-step active" id="regStep1">
           <div class="fields-row"><div class="field-auth"><label for="regFirst">الاسم الأول</label><input type="text" id="regFirst" placeholder="محمد" autocomplete="given-name" /><div class="err-msg" id="regFirstErr">الاسم مطلوب</div></div><div class="field-auth"><label for="regLast">اسم العائلة</label><input type="text" id="regLast" placeholder="البراهمي" autocomplete="family-name" /><div class="err-msg" id="regLastErr">اسم العائلة مطلوب</div></div></div>
-          <div class="field-auth"><label for="regEmail">البريد الإلكتروني</label><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email" /><div class="err-msg" id="regEmailErr">بريد غير صحيح</div></div>
+          <div class="field-auth"><label for="regEmail">البريد الإلكتروني (اختياري)</label><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email" /><div class="err-msg" id="regEmailErr">بريد غير صحيح</div></div>
           <div class="field-auth"><label for="regPhone">رقم الهاتف</label><div class="phone-wrap"><div class="phone-prefix">🇹🇳 +216</div><input type="tel" id="regPhone" placeholder="XX XXX XXX" autocomplete="tel" /></div><div class="err-msg" id="regPhoneErr">رقم غير صحيح</div></div>
           <div class="step-nav"><button class="submit-btn" id="regNextStep1Btn" type="button">التالي ←</button></div>
         </div>
@@ -274,7 +274,46 @@
           <div class="step-nav"><button class="back-btn" id="regBackStep3Btn" type="button">← رجوع</button><button class="submit-btn" id="registerSubmitBtn" type="button">إنشاء الحساب</button></div>
         </div>
       </div>
-      <div class="tab-panel" id="panelSuccess"><div style="text-align:center;padding:14px"><div class="auth-state-icon"><i data-lucide="badge-check" width="34" aria-hidden="true"></i></div><h2 id="successTitle" style="margin:11px 0 7px;font-size:19px">مرحباً بك!</h2><p id="successSub" style="color:var(--muted);font-size:13px">تم تسجيل دخولك بنجاح.</p><br /><button class="submit-btn" id="successCloseBtn" type="button">ابدأ الاستخدام ←</button></div></div>
+      <div class="tab-panel" id="panelSuccess">
+        <div class="onboard-success">
+          <!-- Celebration icon -->
+          <div class="onboard-success__icon" aria-hidden="true">🎉</div>
+
+          <!-- Personalized greeting (filled by JS) -->
+          <h2 class="onboard-success__title" id="successTitle">مرحباً بك!</h2>
+          <p class="onboard-success__sub" id="successSub">تم إنشاء حسابك بنجاح.</p>
+
+          <!-- Onboarding progress bar -->
+          <div class="onboard-progress" role="list" aria-label="مراحل البدء">
+            <div class="onboard-step onboard-step--done" role="listitem">
+              <span class="onboard-step__icon">✅</span>
+              <span>حساب مُنشأ</span>
+            </div>
+            <div class="onboard-step__line" aria-hidden="true"></div>
+            <div class="onboard-step onboard-step--current" role="listitem">
+              <span class="onboard-step__icon">📣</span>
+              <span>أول إعلان</span>
+            </div>
+            <div class="onboard-step__line" aria-hidden="true"></div>
+            <div class="onboard-step" role="listitem">
+              <span class="onboard-step__icon">💰</span>
+              <span>أول بيع</span>
+            </div>
+          </div>
+
+          <!-- Primary CTA: post first listing -->
+          <button class="onboard-cta-btn" id="successPublishBtn" type="button">
+            <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
+            انشر أول إعلان — مجاناً وفي دقيقة
+          </button>
+
+          <!-- Social proof -->
+          <p class="onboard-social-proof">+500 إعلان نُشر هذا الشهر · إعلانات الأعضاء الجدد تظهر أولاً لـ 7 أيام</p>
+
+          <!-- Secondary: just browse -->
+          <button class="onboard-skip-btn" id="successCloseBtn" type="button">تصفح الإعلانات أولاً ←</button>
+        </div>
+      </div>
       <div class="tab-panel" id="panelForgot">
         <div style="text-align:center;margin-bottom:16px"><div class="auth-state-icon auth-state-icon--small"><i data-lucide="key-round" width="26" aria-hidden="true"></i></div><h3 style="margin-top:7px">استعادة كلمة المرور</h3><p style="font-size:12px;color:var(--muted);margin-top:3px">سنرسل لك رابط الاستعادة</p></div>
         <div class="field-auth"><label for="forgotInput">البريد الإلكتروني أو الهاتف</label><input type="text" id="forgotInput" placeholder="exemple@email.com" autocomplete="email" /></div>

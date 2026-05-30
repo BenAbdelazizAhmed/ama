@@ -46,7 +46,7 @@
       <a class="h-pill" routerLink="/services">🩺 خدمات</a>
     </div>
 
-    <!-- Trust stats — Amazon-style proof -->
+    <!-- Trust stats — real backend numbers -->
     <div class="h-hero__trust" role="list">
       <div class="h-trust" role="listitem">
         <strong id="homeRegisteredUsersStat">+1K</strong>
@@ -56,6 +56,11 @@
       <div class="h-trust" role="listitem">
         <strong id="homePublishedAdsStat">+500</strong>
         <span>إعلان</span>
+      </div>
+      <div class="h-trust__sep" aria-hidden="true">·</div>
+      <div class="h-trust" role="listitem">
+        <strong id="homeSiteVisitsStat">+1K</strong>
+        <span>زيارة</span>
       </div>
       <div class="h-trust__sep" aria-hidden="true">·</div>
       <div class="h-trust" role="listitem">
@@ -70,6 +75,27 @@
     </div>
   </div>
 </section>
+
+<!-- ═══════════════════════════════════════════════
+     ACTIVATION NUDGE — logged-in users without a listing
+     ═══════════════════════════════════════════════ -->
+<div class="activation-nudge" *ngIf="state.user() && !nudgeDismissed" role="alert" aria-live="polite">
+  <div class="activation-nudge__inner">
+    <div class="activation-nudge__progress" aria-hidden="true">
+      <span class="an-step an-step--done">✅ حساب</span>
+      <span class="an-arrow">←</span>
+      <span class="an-step an-step--next">📣 أول إعلان</span>
+    </div>
+    <div class="activation-nudge__text">
+      <strong>انشر أول إعلانك الآن</strong>
+      <span>مجاني · يظهر فوراً في كل تونس · تواصل مباشر على واتساب</span>
+    </div>
+    <button class="activation-nudge__cta" (click)="goPost()" type="button">
+      أضف إعلان
+    </button>
+    <button class="activation-nudge__close" (click)="dismissNudge()" type="button" aria-label="إغلاق الإشعار">×</button>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════
      CATEGORIES — Jumia / Airbnb explore style

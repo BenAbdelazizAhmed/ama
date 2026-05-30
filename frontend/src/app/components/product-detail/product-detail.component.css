@@ -126,18 +126,20 @@ img { display: block; max-width: 100%; }
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #F0F0F0;
+  background: linear-gradient(145deg, #F7F9F7 0%, #EFF3EF 100%);
   user-select: none;
 }
 
 .pd-main-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
   transition: transform .35s ease;
+  padding: 8px;
 }
-.pd-main-img:hover img { transform: scale(1.03); }
+.pd-main-img:hover img { transform: scale(1.06); }
 
 .pd-img-badges {
   position: absolute;
@@ -688,3 +690,60 @@ img { display: block; max-width: 100%; }
 .pd-mobile-cta__price strong { display: block; font-size: 22px; font-weight: 800; color: var(--pd-green); line-height: 1; }
 .pd-mobile-cta__price strong span { font-size: 14px; font-weight: 600; }
 .pd-mobile-cta__price small { font-size: 11.5px; color: var(--pd-muted); display: block; margin-top: 2px; }
+
+/* ══ OWNER BAR ═══════════════════════════════════════ */
+.pd-owner-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; padding: 12px 16px; margin-bottom: 16px;
+  border-radius: 14px; background: linear-gradient(135deg, #E8F5E9, #F1F8F1);
+  border: 1.5px solid #C8E6C9;
+}
+.pd-owner-bar__info { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--pd-green); }
+.pd-owner-bar__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.pd-owner-btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px;
+  border-radius: 99px; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: background .14s ease, box-shadow .14s ease; border: 1.5px solid transparent; font-family: inherit;
+}
+.pd-owner-btn--edit { background: #fff; border-color: #C8E6C9; color: var(--pd-green); }
+.pd-owner-btn--edit:hover { background: var(--pd-green); color: #fff; }
+.pd-owner-btn--sold { background: #fff; border-color: #BBDEFB; color: #1565C0; }
+.pd-owner-btn--sold:hover:not(:disabled) { background: #1565C0; color: #fff; }
+.pd-owner-btn--sold:disabled { opacity: .6; cursor: not-allowed; }
+.pd-owner-btn--delete { background: #fff; border-color: #FFCDD2; color: #C62828; }
+.pd-owner-btn--delete:hover { background: #C62828; color: #fff; }
+
+/* ══ CONFIRM MODAL ═══════════════════════════════════ */
+.pd-confirm-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,.46); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.pd-confirm {
+  width: min(420px, 100%); background: #fff; border-radius: 20px;
+  padding: 32px 28px; text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,.22);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.pd-confirm__icon { font-size: 44px; line-height: 1; }
+.pd-confirm h2 { font-size: 20px; font-weight: 800; color: #1A1A1A; margin: 0; }
+.pd-confirm p { font-size: 14px; color: #717171; line-height: 1.7; margin: 0; max-width: 320px; }
+.pd-confirm__actions { display: flex; gap: 10px; margin-top: 6px; width: 100%; }
+.pd-confirm__cancel {
+  flex: 1; height: 48px; border-radius: 12px; background: #F5F5F5;
+  color: #222; font-size: 14px; font-weight: 700; border: 1.5px solid #E0E0E0;
+  cursor: pointer; font-family: inherit;
+}
+.pd-confirm__cancel:hover { background: #EEEEEE; }
+.pd-confirm__delete {
+  flex: 1; height: 48px; border-radius: 12px; background: #C62828;
+  color: #fff; font-size: 14px; font-weight: 700; border: none;
+  cursor: pointer; font-family: inherit; transition: background .14s ease;
+}
+.pd-confirm__delete:hover:not(:disabled) { background: #B71C1C; box-shadow: 0 6px 18px rgba(198,40,40,.3); }
+.pd-confirm__delete:disabled { opacity: .65; cursor: not-allowed; }
+
+@media (max-width: 540px) {
+  .pd-owner-bar { flex-direction: column; align-items: flex-start; }
+  .pd-owner-bar__actions { width: 100%; }
+  .pd-owner-btn { flex: 1; justify-content: center; }
+}
