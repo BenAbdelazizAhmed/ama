@@ -103,11 +103,6 @@
               <div><strong>{{ a.trustedSeller ? 'موثوق' : 'عادي' }}</strong><span>الحساب</span></div>
             </div>
 
-            <div class="ad-conversion-nudge">
-              <strong>{{ isLoggedIn ? 'جاهز تتواصل مع البائع؟' : 'سجّل باش تشوف الفرص قبل غيرك' }}</strong>
-              <span>{{ isLoggedIn ? 'اسأل على الصحة، المعاينة، والنقل قبل ما تقرر.' : 'الحساب يخليك تتواصل، تحفظ الإعلانات، وتنشر إعلانك مجاني.' }}</span>
-            </div>
-
             <p class="ad-login-gate" *ngIf="!isLoggedIn">
               <i data-lucide="lock-keyhole" width="16" aria-hidden="true"></i>
               سجّل الدخول للتواصل مع البائع مباشرة
@@ -129,10 +124,6 @@
               <button class="ad-action ad-action--save" [class.is-saved]="isFav" type="button" (click)="toggleFav()" aria-label="حفظ في المفضلة">
                 <i data-lucide="heart" width="18" aria-hidden="true"></i>
                 {{ isFav ? 'محفوظ' : 'حفظ' }}
-              </button>
-              <button class="ad-action ad-action--publish" type="button" (click)="publishSimilar()" aria-label="نشر إعلان مشابه">
-                <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
-                عندك حيوان للبيع؟
               </button>
             </div>
           </article>
@@ -207,7 +198,6 @@
         <span>{{ priceTypeLabel(a.priceType) }}</span>
       </div>
       <button type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">تواصل</button>
-      <button class="ad-mobile-cta__post" type="button" (click)="publishSimilar()" aria-label="نشر إعلان">نشر مجاني</button>
     </div>
   </ng-container>
 

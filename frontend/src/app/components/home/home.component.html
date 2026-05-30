@@ -1,108 +1,43 @@
-<section class="hero conversion-hero" aria-label="الصفحة الرئيسية">
+﻿<section class="hero" aria-label="الصفحة الرئيسية">
   <div class="hero-bg" aria-hidden="true"></div>
-
-  <div class="hero-content">
-    <div class="visitor-guide">
-      <i data-lucide="map" width="16" aria-hidden="true"></i>
-      جديد في AMANAFARM؟ اختار: تبيع ولا تشري
-    </div>
-
+    <div class="hero-content">
     <div class="hero-text">
-      <div class="line1">سوق فلاحي تونسي على الهاتف</div>
-      <h1 class="line2">بيع واشري حيوانات ومنتجات فلاحية بثقة</h1>
-      <div class="line3">صوّر إعلانك، حط السعر والولاية، وخلي الشراية يكلموك على واتساب. التسجيل بسيط والنشر مجاني.</div>
+      <div class="line1">كل ما تحتاجه في عالم</div>
+      <h1 class="line2">الفلاحة<br>و<em>الحيوانات</em></h1>
+      <div class="line3">بيع خروفك، اشري بقرتك، وتواصل مع المربين في كامل تونس —<br>بسهولة، بأمان، وبسعر عادل.</div>
     </div>
-
-    <div class="hero-btns hero-btns--conversion">
-      <button class="btn-hero-primary" type="button" (click)="goPost()">
-        <i data-lucide="plus-circle" width="18" stroke="var(--green)" aria-hidden="true"></i>
-        Publier gratuitement
-      </button>
-      <button class="btn-hero-outline" type="button" (click)="goPost()">
-        <i data-lucide="user-plus" width="18" aria-hidden="true"></i>
-        Créer un compte
-      </button>
-      <a class="btn-hero-whatsapp" href="https://wa.me/21653159799?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%86%D8%AD%D8%A8%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A8%D8%A7%D8%B4%20%D9%86%D8%B3%D8%AA%D8%B9%D9%85%D9%84%20AMANAFARM" target="_blank" rel="noopener">
-        <i data-lucide="message-circle" width="18" aria-hidden="true"></i>
-        Besoin d'aide ? WhatsApp
-      </a>
+    <div class="hero-btns">
+      <button class="btn-hero-primary" (click)="goPost()"><i data-lucide="plus-circle" width="17" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
+      <button class="btn-hero-outline" (click)="browseAds()"><i data-lucide="search" width="17" aria-hidden="true"></i> تصفح الإعلانات</button>
     </div>
-
-    <div class="quick-paths" aria-label="مسار سريع">
-      <button class="quick-path quick-path--sell" type="button" (click)="goPost()">
-        <span><i data-lucide="badge-dollar-sign" width="20" aria-hidden="true"></i></span>
-        <strong>نحب نبيع</strong>
-        <small>ننشر إعلان مجاني</small>
-      </button>
-      <button class="quick-path" type="button" (click)="browseAds()">
-        <span><i data-lucide="shopping-bag" width="20" aria-hidden="true"></i></span>
-        <strong>نحب نشري</strong>
-        <small>نشوف الإعلانات</small>
-      </button>
-      <button class="quick-path" type="button" (click)="publishAnimal()">
-        <span><i data-lucide="beef" width="20" aria-hidden="true"></i></span>
-        <strong>ننشر حيوان</strong>
-        <small>خروف، بقرة، دجاج...</small>
-      </button>
-      <button class="quick-path" type="button" (click)="browseProducts()">
-        <span><i data-lucide="search" width="20" aria-hidden="true"></i></span>
-        <strong>نلوج على منتج</strong>
-        <small>علف، بذور، معدات</small>
-      </button>
-    </div>
-
     <div class="hero-proof" role="list" aria-label="إحصائيات المنصة">
       <div role="listitem"><div class="proof-num" id="homeRegisteredUsersStat">0</div><div class="proof-lbl">مستخدم مسجل</div></div>
       <div role="listitem"><div class="proof-num" id="homePublishedAdsStat">0</div><div class="proof-lbl">إعلان منشور</div></div>
-      <div role="listitem"><div class="proof-num">24</div><div class="proof-lbl">ولاية تونسية</div></div>
-      <div role="listitem"><div class="proof-num">مجاني</div><div class="proof-lbl">أول إعلان</div></div>
+      <div role="listitem"><div class="proof-num" id="homeSiteVisitsStat">0</div><div class="proof-lbl">زيارة للموقع</div></div>
+      <div role="listitem"><div class="proof-num">4.7 ★</div><div class="proof-lbl">تقييم المستخدمين</div></div>
     </div>
   </div>
-
   <div class="hero-right">
     <div class="trust-box">
       <div class="trust-head">
         <div class="trust-icon"><i data-lucide="shield-check" width="24" stroke="var(--green)" aria-hidden="true"></i></div>
-        <div><h3>منصة تونسية موثوقة</h3><p>مصممة للفلاحين والمربين في كامل البلاد</p></div>
+        <div><h3>معاملات آمنة 100%</h3><p>نضمن لك الأمان في كل خطوة</p></div>
       </div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> نشر مجاني وبدون بطاقة بنكية</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> بائعون موثوقون ومراجعون يدوياً</div>
       <div class="trust-item"><div class="check" aria-hidden="true">✓</div> تواصل مباشر عبر واتساب</div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> إعلانات أوضح وأسهل للمراجعة</div>
-      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> مجتمع فلاحي تونسي يكبر كل يوم</div>
-      <button class="trust-cta" type="button" (click)="goPost()">أضف إعلانك الآن</button>
-      <div class="trust-note">نعاونك خطوة بخطوة إذا أول مرة تستعمل منصة</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> دعم فني متاح على البريد الإلكتروني</div>
+      <div class="trust-item"><div class="check" aria-hidden="true">✓</div> إعلانات مراجعة قبل النشر</div>
+      <button class="trust-cta" (click)="goPost()">أضف إعلانك مجاناً — أقل من دقيقتين</button>
+      <div class="trust-note">✓ بدون بطاقة بنكية · بدون التزام</div>
     </div>
   </div>
 </section>
 
 <section class="market-entry" aria-labelledby="market-entry-title">
   <div class="market-entry__head">
-    <div class="section-label"><i data-lucide="layout-dashboard" width="12" aria-hidden="true"></i> اختار طريقك</div>
-    <h2 class="section-title" id="market-entry-title">شنوة تحب تعمل اليوم؟</h2>
-    <p class="section-sub">أربعة اختيارات كبار وواضحين، خاصة للهاتف.</p>
-  </div>
-
-  <div class="intent-grid">
-    <button class="intent-card intent-card--primary" type="button" (click)="goPost()">
-      <i data-lucide="plus-circle" width="26" aria-hidden="true"></i>
-      <strong>Je veux publier une annonce</strong>
-      <span>نشر مجاني للحيوانات أو المنتجات</span>
-    </button>
-    <button class="intent-card" type="button" (click)="browseAds()">
-      <i data-lucide="search" width="26" aria-hidden="true"></i>
-      <strong>Je cherche un animal / produit</strong>
-      <span>شوف الأسعار واتصل بالبائع</span>
-    </button>
-    <button class="intent-card" type="button" (click)="publishAnimal()">
-      <i data-lucide="badge-dollar-sign" width="26" aria-hidden="true"></i>
-      <strong>Je veux vendre</strong>
-      <span>صوّر، فسّر، واستقبل شراية</span>
-    </button>
-    <button class="intent-card" type="button" (click)="browseProducts()">
-      <i data-lucide="shopping-cart" width="26" aria-hidden="true"></i>
-      <strong>Je veux acheter</strong>
-      <span>حيوانات، علف، بذور، معدات</span>
-    </button>
+    <div class="section-label"><i data-lucide="layout-dashboard" width="12" aria-hidden="true"></i> السوق</div>
+    <h2 class="section-title" id="market-entry-title">اختار وين تحب تبدأ</h2>
+    <p class="section-sub">كل قسم يوصلك مباشرة للحاجة اللي تحبها.</p>
   </div>
 
   <div class="market-entry__grid">
@@ -110,15 +45,15 @@
       <span class="market-entry-card__icon"><i data-lucide="beef" width="22" aria-hidden="true"></i></span>
       <div>
         <h3>الحيوانات</h3>
-        <p>خرفان، أبقار، ماعز، دواجن.</p>
+        <p>بيع وشراء بالكعبة ولا بالجملة.</p>
       </div>
-      <strong>Voir les annonces</strong>
+      <strong>تصفح</strong>
     </a>
 
     <a class="market-entry-card" routerLink="/products">
       <span class="market-entry-card__icon"><i data-lucide="package" width="22" aria-hidden="true"></i></span>
       <div>
-        <h3>المنتجات</h3>
+        <h3>البرودويات</h3>
         <p>علف، بذور، دوا، ومعدات.</p>
       </div>
       <strong>شوف</strong>
@@ -127,44 +62,27 @@
     <a class="market-entry-card" routerLink="/services">
       <span class="market-entry-card__icon"><i data-lucide="briefcase-business" width="22" aria-hidden="true"></i></span>
       <div>
-        <h3>خدمات فلاحية</h3>
-        <p>نقل، بيطري، عمال، مهن.</p>
+        <h3>مهن فلاحية</h3>
+        <p>راعي، بيطري، نقل، وعمّال.</p>
       </div>
       <strong>لقى</strong>
     </a>
-  </div>
-</section>
 
-<section class="home-process" aria-labelledby="home-process-title">
-  <div class="home-process__head">
-    <div class="section-label"><i data-lucide="list-checks" width="12" aria-hidden="true"></i> كيفاش تخدم؟</div>
-    <h2 class="section-title" id="home-process-title">3 خطوات بسيطة</h2>
   </div>
 
-  <div class="home-process__grid">
-    <article class="process-card">
-      <span class="process-card__num">1</span>
-      <div><h3>Crée ton compte</h3><p>اسم، هاتف، وولاية. ساهلة وواضحة.</p></div>
-    </article>
-    <article class="process-card">
-      <span class="process-card__num">2</span>
-      <div><h3>Publie ton annonce</h3><p>صورة، سعر، وصف قصير.</p></div>
-    </article>
-    <article class="process-card">
-      <span class="process-card__num">3</span>
-      <div><h3>Reçois des acheteurs</h3><p>الناس تكلمك مباشرة على واتساب.</p></div>
-    </article>
-  </div>
 </section>
 
 <section class="monetization-section" aria-labelledby="monetization-title">
   <div class="monetization-shell">
     <div class="monetization-head monetization-head--pro">
       <div class="monetization-copy">
-        <div class="section-label"><i data-lucide="landmark" width="12" aria-hidden="true"></i> نموذج واضح</div>
-        <h2 class="section-title" id="monetization-title">ابدأ مجاناً، وزيد الظهور وقت تحب تبيع أسرع</h2>
-        <p class="section-sub">AMANAFARM تخلي السوق مفتوح للجميع، والخدمات المدفوعة اختيارية فقط للناس اللي تحب Boost.</p>
+        <div class="section-label"><i data-lucide="landmark" width="12" aria-hidden="true"></i> نموذج ربحي واضح</div>
+        <h2 class="section-title" id="monetization-title">مجاني للدخول، مدفوع وقت تحب تبيع أسرع</h2>
+        <p class="section-sub">
+          AMANAFARM تخلي السوق مفتوح للجميع، وتربح من خدمات اختيارية تعطي قيمة حقيقية: ظهور أعلى، حسابات مهنية، وإشهار محلي مضبوط.
+        </p>
       </div>
+
     </div>
 
     <div class="pricing-grid pricing-grid--pro" aria-label="عروض AMANAFARM">
@@ -174,13 +92,22 @@
           <h3>إعلان عادي</h3>
           <p>أفضل طريقة باش تبدأ تبيع أو تشري من غير التزام.</p>
         </div>
-        <div class="pricing-price"><strong>مجاني</strong><span>دائماً</span></div>
+
+        <div class="pricing-price">
+          <strong>مجاني</strong>
+          <span>دائماً</span>
+        </div>
+
         <ul class="pricing-features">
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>ظهور في السوق</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>تواصل مباشر عبر واتساب</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>صور ووصف وسعر واضح</span></li>
         </ul>
-        <button class="pricing-cta" type="button" (click)="goPost()">Publier gratuitement <i data-lucide="arrow-left" width="15" aria-hidden="true"></i></button>
+
+        <a class="pricing-cta" routerLink="/animals" aria-label="انشر إعلان مجاني">
+          انشر إعلان مجاني
+          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+        </a>
       </article>
 
       <article class="pricing-card pricing-card--featured">
@@ -189,13 +116,22 @@
           <h3>Boost مميّز</h3>
           <p>للإعلانات اللي تحب تشد الانتباه بسرعة وتطلع قبل المنافسين.</p>
         </div>
-        <div class="pricing-price"><strong>10 دت</strong><span>7 أيام</span></div>
+
+        <div class="pricing-price">
+          <strong>10 دت</strong>
+          <span>7 أيام</span>
+        </div>
+
         <ul class="pricing-features">
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>ظهور أعلى في النتائج</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>شارة مميّز ذهبية</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>فرصة ظهور في الصفحة الرئيسية</span></li>
         </ul>
-        <a class="pricing-cta" routerLink="/animals">Voir les annonces <i data-lucide="arrow-left" width="15" aria-hidden="true"></i></a>
+
+        <a class="pricing-cta" routerLink="/animals" aria-label="جرّب Boost">
+          جرّب Boost
+          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+        </a>
       </article>
 
       <article class="pricing-card">
@@ -204,13 +140,22 @@
           <h3>Boost شهر</h3>
           <p>مناسب للحيوانات والمنتجات اللي تحتاج ظهور أطول.</p>
         </div>
-        <div class="pricing-price"><strong>25 دت</strong><span>شهر كامل</span></div>
+
+        <div class="pricing-price">
+          <strong>25 دت</strong>
+          <span>شهر كامل</span>
+        </div>
+
         <ul class="pricing-features">
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>أولوية في البحث</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>إبراز بصري أقوى</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>مدة كافية لجلب مشترين أكثر</span></li>
         </ul>
-        <a class="pricing-cta" routerLink="/products">اختار Boost شهر <i data-lucide="arrow-left" width="15" aria-hidden="true"></i></a>
+
+        <a class="pricing-cta" routerLink="/products" aria-label="اختار Boost شهر">
+          اختار Boost شهر
+          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+        </a>
       </article>
 
       <article class="pricing-card">
@@ -219,21 +164,31 @@
           <h3>حساب Pro</h3>
           <p>واجهة جدية للبياطرة، النقل، العلف، والمربين المحترفين.</p>
         </div>
-        <div class="pricing-price"><strong>39 دت</strong><span>شهرياً</span></div>
+
+        <div class="pricing-price">
+          <strong>39 دت</strong>
+          <span>شهرياً</span>
+        </div>
+
         <ul class="pricing-features">
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>صفحة مهنية خاصة</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>عدد إعلانات أكثر</span></li>
           <li><i data-lucide="check" width="15" aria-hidden="true"></i><span>شارة موثوق وإحصائيات مشاهدات</span></li>
         </ul>
-        <a class="pricing-cta" routerLink="/services">اكتشف حساب Pro <i data-lucide="arrow-left" width="15" aria-hidden="true"></i></a>
+
+        <a class="pricing-cta" routerLink="/services" aria-label="اكتشف حساب Pro">
+          اكتشف حساب Pro
+          <i data-lucide="arrow-left" width="15" aria-hidden="true"></i>
+        </a>
       </article>
     </div>
+
   </div>
 </section>
 
 <section class="testimonials-section">
   <div class="section-label"><i data-lucide="star" width="12" aria-hidden="true"></i> آراء حقيقية</div>
-  <h2 class="section-title">فلاحة جربوا AMANAFARM</h2>
+  <h2 class="section-title">قالوا عن AMANAFARM</h2>
   <div class="testi-grid">
     <div class="testi-card" *ngFor="let t of testimonials">
       <div class="testi-stars" aria-label="تقييم 5 نجوم">{{ t.stars }}</div>
@@ -246,10 +201,70 @@
   </div>
 </section>
 
+<section class="services-section" id="services-section">
+  <div class="section-label"><i data-lucide="grid" width="12" aria-hidden="true"></i> خدماتنا</div>
+  <h2 class="section-title">كل ما تحتاجه في مكان واحد</h2>
+  <p class="section-sub">من البيع والشراء إلى الطب البيطري والنقل — منصة تتطور باستمرار.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="svc-card-icon"><img src="assets/services/animal-transport.svg" alt="نقل الحيوانات" loading="lazy" decoding="async"></div>
+      <h4>نقل الحيوانات</h4><p>شاحنات متخصصة لنقل بهايمك بأمان.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card">
+      <div class="svc-card-icon"><img src="assets/services/vet-consult.svg" alt="استشارة بيطرية" loading="lazy" decoding="async"></div>
+      <h4>استشارة بيطرية</h4><p>تواصل مع بيطريين معتمدين في جهتك.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card">
+      <div class="svc-card-icon"><img src="assets/services/vet-pharmacy.svg" alt="الصيدلية البيطرية" loading="lazy" decoding="async"></div>
+      <h4>الصيدلية البيطرية</h4><p>أدوية ولقاحات ومكملات.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+    <div class="service-card">
+      <div class="svc-card-icon"><img src="assets/services/farm-products.svg" alt="منتجات فلاحية" loading="lazy" decoding="async"></div>
+      <h4>منتجات فلاحية</h4><p>أعلاف، بذور، أسمدة.</p>
+      <span class="soon-badge">قريباً في 2026</span>
+    </div>
+  </div>
+</section>
+
+<section class="partners-section">
+  <div class="section-label"><i data-lucide="handshake" width="12" aria-hidden="true"></i> شركاؤنا</div>
+  <h2 class="section-title">شركاؤنا الموثوقون</h2>
+  <div class="partner-logos">
+    <div class="plogo">
+      <div class="plogo-icon"><img src="assets/partners/atb.svg" alt="ATB" loading="lazy" decoding="async"></div>
+      <div class="pname">ATB</div>
+      <div class="psub">بنك شريك</div>
+    </div>
+    <div class="plogo">
+      <div class="plogo-icon"><img src="assets/partners/otd.svg" alt="OTD" loading="lazy" decoding="async"></div>
+      <div class="pname">OTD</div>
+      <div class="psub">الديوان التونسي للتنمية الفلاحية</div>
+    </div>
+    <div class="plogo">
+      <div class="plogo-icon"><img src="assets/partners/utap.svg" alt="UTAP" loading="lazy" decoding="async"></div>
+      <div class="pname">UTAP</div>
+      <div class="psub">اتحاد الفلاحين</div>
+    </div>
+    <div class="plogo">
+      <div class="plogo-icon"><img src="assets/partners/crda.svg" alt="CRDA" loading="lazy" decoding="async"></div>
+      <div class="pname">CRDA</div>
+      <div class="psub">التنمية الفلاحية الجهوية</div>
+    </div>
+    <div class="plogo">
+      <div class="plogo-icon"><img src="assets/partners/smsa.svg" alt="SMSA" loading="lazy" decoding="async"></div>
+      <div class="pname">SMSA</div>
+      <div class="psub">شركات خدمات فلاحية</div>
+    </div>
+  </div>
+</section>
+
 <div class="cta-section">
-  <div class="cta-text"><h2>جاهز تبدأ؟</h2><p>أول إعلان مجاني. وإذا ما تعرفش كيفاش، الدعم على واتساب يعاونك.</p></div>
+  <div class="cta-text"><h2>جاهز تبيع أو تشتري؟</h2><p>انضم لأكثر من ألف مستخدم نشط. أول إعلان مجاناً وبدون أي التزام.</p></div>
   <div class="cta-actions">
-    <button class="cta-btn-white" type="button" (click)="goPost()"><i data-lucide="plus" width="15" stroke="var(--green)" aria-hidden="true"></i> Publier gratuitement</button>
-    <button class="cta-btn-outline" type="button" (click)="browseAds()"><i data-lucide="search" width="15" aria-hidden="true"></i> Voir les annonces</button>
+    <button class="cta-btn-white" (click)="goPost()"><i data-lucide="plus" width="15" stroke="var(--green)" aria-hidden="true"></i> أعلن مجاناً الآن</button>
+    <button class="cta-btn-outline" (click)="browseAds()"><i data-lucide="search" width="15" aria-hidden="true"></i> تصفح الإعلانات</button>
   </div>
 </div>

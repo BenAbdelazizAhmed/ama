@@ -112,7 +112,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.user) return;
     const action = event?.detail?.action;
     if (action) sessionStorage.setItem('amanafarm-pending-action', action);
-    this.openAuthModal(action === 'register-intent' || action === 'publish' ? 'register' : 'login');
+    this.openAuthModal('login');
     this.toast('سجّل الدخول باش تنجم تضيف في AMANAFARM', 'error');
   }
 
@@ -184,7 +184,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
   goPublish(): void {
     if (!this.user) {
       sessionStorage.setItem('amanafarm-pending-action', 'publish');
-      this.openAuthModal('register');
+      this.openAuthModal('login');
       this.toast('سجّل الدخول باش تنجم تنشر إعلان', 'error');
       return;
     }
@@ -312,7 +312,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
       if ((event as KeyboardEvent).key === 'Enter') this.applyFilter();
     });
     this.$('searchBtn')?.addEventListener('click', () => this.applyFilter(), { passive: true });
-    this.$('btnLoginHeader')?.addEventListener('click', () => this.openAuthModal('register'), { passive: true });
+    this.$('btnLoginHeader')?.addEventListener('click', () => this.openAuthModal('login'), { passive: true });
     this.$('userAction')?.addEventListener('click', event => this.toggleDropdown(event));
     this.$('logoutBtn')?.addEventListener('click', () => this.doLogout(), { passive: true });
     this.$('mobProfile')?.addEventListener('click', event => {

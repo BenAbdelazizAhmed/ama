@@ -11,6 +11,7 @@ import {
   ServiceRequest,
   JobOffer,
 } from '../../services/state.service';
+import { environment } from '../../../environments/environment';
 
 declare const lucide: any;
 
@@ -53,12 +54,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   };
 
   private readonly API_BASE = '';
-  private readonly supportPhone = '21653159799';
 
   readonly testimonials: Testimonial[] = [
     {
       stars: '★★★★★',
-      text: 'نشرت إعلاني في دقائق. الصور واضحة والتواصل جا سريع على واتساب.',
+      text: 'نشرت إعلاني في دقائق، الصور كانت واضحة والتواصل جا سريع على واتساب. التجربة حسستني أن المنصة جدية.',
       image: '/assets/ft.png',
       name: 'محمد الشريف',
       loc: 'سوسة',
@@ -66,15 +66,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     {
       stars: '★★★★★',
-      text: 'لقيت بقرة حلوب بسعر منطقي ومن ولاية قريبة. الاتصال المباشر سهّل الشراء.',
+      text: 'لقيت بقرة حلوب بسعر منطقي ومن ولاية قريبة. الفلاتر والاتصال المباشر خلاو عملية الشراء أوضح وأسهل.',
       image: '/assets/foucha.png',
       name: 'فاطمة بن سالم',
       loc: 'صفاقس',
-      result: 'اشترت بقرة حلوب',
+      result: 'اشترت بقرة هولشتاين',
     },
     {
       stars: '★★★★★',
-      text: 'الواجهة منظمة وتعطي ثقة. لقيت أعلاف وخدمات قريبة مني.',
+      text: 'الواجهة منظمة وتعطي ثقة. لقيت أعلاف وخدمات قريبة مني، والأهم أن تفاصيل البائع كانت واضحة.',
       image: '/assets/frm.png',
       name: 'الحاج رضا',
       loc: 'قابس',
@@ -110,29 +110,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   goPost(): void {
     if (!this.state.user()) {
-      window.dispatchEvent(new CustomEvent('amanafarm-login-required', {
-        detail: { action: 'publish' },
-      }));
+      window.dispatchEvent(new CustomEvent('amanafarm-login-required'));
       return;
     }
-    void this.router.navigate(['/animals'], {
-      queryParams: { publish: 'animal', open: Date.now() },
-    });
+    void this.router.navigate(['/animals']);
   }
 
   browseAds(): void {
     void this.router.navigate(['/animals']);
-  }
-
-  createAccount(): void {
-    window.dispatchEvent(new CustomEvent('amanafarm-login-required', {
-      detail: { action: 'register-intent' },
-    }));
-  }
-
-  needHelpWhatsApp(): void {
-    const msg = encodeURIComponent('سلام، نحب مساعدة باش نستعمل AMANAFARM وننشر/نلقى إعلان.');
-    window.open(`https://wa.me/${this.supportPhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
   }
 
   publishProduct(): void {
@@ -160,13 +145,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private openPublishRoute(route: '/animals' | '/products', publish: string): void {
-    if (!this.state.user()) {
-      const action = publish === 'animal-bulk' ? 'animal-add-bulk' : publish === 'animal' ? 'animal-add' : 'publish';
-      sessionStorage.setItem('amanafarm-pending-action', action);
-      window.dispatchEvent(new CustomEvent('amanafarm-login-required', { detail: { action } }));
-      return;
-    }
-
     void this.router.navigate([route], {
       queryParams: { publish, open: Date.now() },
     });
@@ -188,7 +166,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private initRevealMotion(): void {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(
-      'app-home .market-entry, app-home .home-process, app-home .monetization-section, app-home .testimonials-section, app-home .cta-section, app-home .quick-path, app-home .intent-card, app-home .market-entry-card, app-home .pricing-card, app-home .testi-card',
+      'app-home .market-entry, app-home .monetization-section, app-home .testimonials-section, app-home .services-section, app-home .partners-section, app-home .cta-section, app-home .market-entry-card, app-home .pricing-card, app-home .testi-card, app-home .service-card, app-home .plogo',
     ));
 
     nodes.forEach((el, index) => {

@@ -1,225 +1,194 @@
 <div class="pd-page" dir="rtl">
+  <!-- Loading state -->
   <section class="pd-loading" *ngIf="isLoading" aria-label="تحميل المنتج">
-    <div class="pd-loading__media"></div>
-    <div class="pd-loading__line"></div>
-    <div class="pd-loading__line pd-loading__line--short"></div>
-    <div class="pd-loading__card"></div>
+    <div class="pd-skeleton pd-skeleton--media"></div>
+    <div class="pd-skeleton pd-skeleton--body"></div>
+    <div class="pd-skeleton pd-skeleton--side"></div>
   </section>
 
+  <!-- Error state -->
   <section class="pd-error" *ngIf="!isLoading && loadError">
-    <div class="pd-error__icon"><i data-lucide="package-x" width="34" height="34"></i></div>
+    <div class="pd-error__code">404</div>
     <h1>المنتج غير موجود</h1>
     <p>{{ loadError }}</p>
     <a routerLink="/products">الرجوع للمنتجات</a>
   </section>
 
   <ng-container *ngIf="!isLoading && !loadError && product as p">
-    <header class="pd-topbar">
-      <button class="pd-icon-btn" type="button" (click)="goBack()" aria-label="رجوع">
-        <i data-lucide="arrow-right" width="20" height="20"></i>
-      </button>
-      <div class="pd-topbar__title">
-        <span>{{ p.category }}</span>
+    <div class="pd-shell">
+      <!-- Breadcrumb -->
+      <nav class="pd-breadcrumb pd-reveal" aria-label="مسار الصفحة">
+        <a routerLink="/">الرئيسية</a>
+        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
+        <a routerLink="/products">المنتجات</a>
+        <i data-lucide="chevron-left" width="14" aria-hidden="true"></i>
         <strong>{{ p.title }}</strong>
-      </div>
-      <div class="pd-topbar__actions">
-        <button class="pd-icon-btn" type="button" (click)="shareProduct()" aria-label="مشاركة">
-          <i data-lucide="share-2" width="19" height="19"></i>
-        </button>
-        <button class="pd-icon-btn" [class.is-active]="isFav" type="button" (click)="toggleFav()" aria-label="المفضلة">
-          <i data-lucide="heart" width="19" height="19"></i>
-        </button>
-      </div>
-    </header>
+      </nav>
 
-    <main class="pd-shell">
-      <section class="pd-hero">
-        <article class="pd-gallery" aria-label="صور المنتج">
-          <div
-            class="pd-gallery__stage"
-            (touchstart)="onGalleryTouchStart($event)"
-            (touchend)="onGalleryTouchEnd($event)"
-          >
-            <img [src]="activeImage" [alt]="p.title" loading="eager" decoding="async" (error)="onImageError()" />
-
-            <div class="pd-gallery__badges">
-              <span *ngIf="p.certified"><i data-lucide="shield-check" width="14" height="14"></i> إعلان موثق</span>
-              <span *ngIf="p.featured" class="pd-badge-gold"><i data-lucide="star" width="14" height="14"></i> مميز</span>
+      <!-- Hero: gallery + main information + seller sidebar -->
+      <main class="pd-layout">
+        <!-- Gallery column -->
+        <section class="pd-gallery pd-reveal" aria-label="صور المنتج">
+          <div class="pd-media">
+            <img [src]="activeImage" [alt]="p.title" (error)="onImageError()" loading="eager" decoding="async">
+            <div class="pd-media__shade"></div>
+            <div class="pd-floating-badges">
+              <span *ngIf="p.certified">
+                <i data-lucide="badge-check" width="14" aria-hidden="true"></i>
+                منتج موثوق
+              </span>
+              <span class="pd-floating-badges__teal" *ngIf="p.deliveryAvailable">
+                <i data-lucide="truck" width="14" aria-hidden="true"></i>
+                توصيل متاح
+              </span>
             </div>
-
-            <button class="pd-zoom-btn" type="button" (click)="openZoom()" aria-label="تكبير الصورة">
-              <i data-lucide="maximize-2" width="18" height="18"></i>
-            </button>
-
-            <button class="pd-gallery__nav pd-gallery__nav--prev" type="button" (click)="prevImage()" *ngIf="detailPhotos.length > 1" aria-label="الصورة السابقة">
-              <i data-lucide="chevron-right" width="22" height="22"></i>
-            </button>
-            <button class="pd-gallery__nav pd-gallery__nav--next" type="button" (click)="nextImage()" *ngIf="detailPhotos.length > 1" aria-label="الصورة التالية">
-              <i data-lucide="chevron-left" width="22" height="22"></i>
-            </button>
-
-            <div class="pd-gallery__count" *ngIf="detailPhotos.length > 1">{{ currentPhoto + 1 }} / {{ detailPhotos.length }}</div>
           </div>
 
-          <div class="pd-thumbs" aria-label="معرض الصور">
+          <div class="pd-thumbs" *ngIf="detailPhotos.length > 1" aria-label="معرض الصور">
             <button
               class="pd-thumb"
               type="button"
               *ngFor="let img of detailPhotos; trackBy: trackByImage"
               [class.is-active]="activeImage === img"
               (click)="selectImage(img)"
-              aria-label="اختيار صورة"
+              aria-label="اختيار صورة المنتج"
             >
-              <img [src]="img" alt="" loading="lazy" decoding="async" />
+              <img [src]="img" alt="" loading="lazy" decoding="async">
             </button>
           </div>
-        </article>
+        </section>
 
-        <aside class="pd-buybox" aria-label="معلومات الشراء">
-          <div class="pd-kicker">
-            <span>{{ p.category }}</span>
-            <span>{{ postedLabel(p.createdAt) }}</span>
+        <!-- Main product info -->
+        <section class="pd-main pd-reveal">
+          <div class="pd-tagline">
+            <span>{{ p.category }} · {{ p.wilaya }}</span>
           </div>
 
           <h1>{{ p.title }}</h1>
 
-          <div class="pd-location">
-            <i data-lucide="map-pin" width="16" height="16"></i>
-            <span>{{ p.wilaya }}</span>
-            <span class="pd-dot"></span>
-            <span>{{ p.origin }}</span>
-          </div>
-
-          <div class="pd-price-card">
-            <div>
-              <span>السعر</span>
-              <strong>{{ fmt(p.price) }} <small>دت</small></strong>
-            </div>
+          <div class="pd-price" aria-label="سعر المنتج">
+            <strong>{{ fmt(p.price) }}</strong>
+            <span>د.ت</span>
             <em>{{ priceTypeLabel(p.priceType) }}</em>
           </div>
 
-          <div class="pd-status-row">
-            <span class="pd-status" [class.pd-status--out]="!p.inStock">
-              <i data-lucide="circle-check" width="15" height="15"></i>
-              {{ stockLabel(p) }}
-            </span>
-            <span class="pd-status pd-status--soft" *ngIf="p.deliveryAvailable">
-              <i data-lucide="truck" width="15" height="15"></i>
-              توصيل حسب الاتفاق
-            </span>
+          <div class="pd-availability">
+            <span class="pd-pulse" aria-hidden="true"></span>
+            {{ stockLabel(p) }}
           </div>
 
-          <div class="pd-seller-card">
-            <div class="pd-seller-card__main">
-              <div class="pd-avatar">{{ p.sellerName.slice(0, 1) }}</div>
+          <div class="pd-trust-tags" aria-label="معلومات سريعة">
+            <span><i data-lucide="map-pin" width="14" aria-hidden="true"></i>{{ p.wilaya }}</span>
+            <span><i data-lucide="clock" width="14" aria-hidden="true"></i>{{ postedLabel(p.createdAt) }}</span>
+            <span><i data-lucide="package-check" width="14" aria-hidden="true"></i>{{ stockLabel(p) }}</span>
+          </div>
+        </section>
+
+        <!-- Seller sidebar -->
+        <aside class="pd-sidebar pd-reveal" aria-label="معلومات البائع">
+          <article class="pd-seller-card">
+            <div class="pd-seller-card__head">
+              <div class="pd-avatar">
+                {{ p.sellerName.slice(0, 1) }}
+                <span aria-label="بائع موثوق"><i data-lucide="check" width="13" aria-hidden="true"></i></span>
+              </div>
               <div>
-                <strong>{{ p.sellerName }}</strong>
-                <span>{{ p.sellerSubtitle }}</span>
+                <h2>{{ p.sellerName }}</h2>
+                <p>{{ p.sellerSubtitle }}</p>
               </div>
             </div>
-            <div class="pd-seller-card__meta">
-              <span><i data-lucide="star" width="14" height="14"></i>{{ p.sellerRating }}</span>
-              <span *ngIf="p.certified"><i data-lucide="badge-check" width="14" height="14"></i> موثق</span>
+
+            <div class="pd-seller-card__signals">
+              <span>{{ p.sellerRating }} ★</span>
+              <span *ngIf="p.deliveryAvailable">Livraison disponible</span>
             </div>
-          </div>
 
-          <div class="pd-actions">
-            <button class="pd-action pd-action--whatsapp" type="button" (click)="contactSeller()">
-              <i data-lucide="message-circle" width="19" height="19"></i>
-              تواصل واتساب
-            </button>
-            <button class="pd-action pd-action--call" type="button" (click)="callSeller()">
-              <i data-lucide="phone" width="18" height="18"></i>
-              اتصال
-            </button>
-          </div>
+            <p class="pd-login-gate" *ngIf="!isLoggedIn">
+              <i data-lucide="lock-keyhole" width="16" aria-hidden="true"></i>
+              سجّل الدخول للتواصل مع البائع مباشرة
+            </p>
 
-          <p class="pd-login-note" *ngIf="!isLoggedIn">
-            <i data-lucide="lock-keyhole" width="15" height="15"></i>
-            سجّل الدخول للتواصل مع البائع مباشرة
-          </p>
+            <div class="pd-actions" aria-label="إجراءات المنتج">
+              <button class="pd-action pd-action--primary" type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">
+                <i data-lucide="message-circle" width="18" aria-hidden="true"></i>
+                تواصل مع البائع
+              </button>
+              <button class="pd-action pd-action--wa" type="button" (click)="openWhatsapp()" aria-label="WhatsApp مباشر">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg>
+                WhatsApp مباشر
+              </button>
+              <button class="pd-action pd-action--save" [class.is-saved]="isFav" type="button" (click)="toggleFav()" aria-label="حفظ في المفضلة">
+                <i data-lucide="heart" width="18" aria-hidden="true"></i>
+                {{ isFav ? 'محفوظ في المفضلة' : 'حفظ في المفضلة' }}
+              </button>
+            </div>
+          </article>
+
+          <!-- Safety tips -->
+          <article class="pd-safety-card">
+            <h2><i data-lucide="shield-alert" width="18" aria-hidden="true"></i> نصائح أمان</h2>
+            <ul>
+              <li><span>👁</span> عاين المنتج أو اطلب صور حديثة قبل الدفع.</li>
+              <li><span>📦</span> ثبت الكمية والتوصيل والسعر النهائي بوضوح.</li>
+              <li><span>💸</span> لا ترسل المال قبل التأكد من البائع.</li>
+              <li><span>📍</span> قابل البائع في مكان آمن عند الاستلام.</li>
+            </ul>
+          </article>
         </aside>
-      </section>
+      </main>
 
-      <section class="pd-specs" aria-label="تفاصيل المنتج">
-        <article class="pd-spec" *ngFor="let spec of specs; trackBy: trackBySpec">
-          <i [attr.data-lucide]="spec.icon" width="19" height="19"></i>
+      <!-- Metadata grid -->
+      <section class="pd-meta-grid pd-reveal" aria-label="معلومات المنتج">
+        <article class="pd-meta-card" *ngFor="let spec of specs; trackBy: trackBySpec">
+          <i data-lucide="circle-check" width="18" aria-hidden="true"></i>
           <span>{{ spec.label }}</span>
           <strong>{{ spec.value }}</strong>
         </article>
       </section>
 
-      <section class="pd-content">
-        <article class="pd-section pd-description">
-          <div class="pd-section__head">
-            <span>الوصف</span>
-            <h2>معلومات المنتج</h2>
-          </div>
-          <p>{{ p.description }}</p>
-          <div class="pd-chips">
-            <span *ngIf="p.certified">جودة موثوقة</span>
-            <span>{{ p.category }}</span>
-            <span *ngIf="p.deliveryAvailable">توصيل حسب الاتفاق</span>
-          </div>
-        </article>
-
-        <article class="pd-section pd-safety">
-          <div class="pd-section__head">
-            <span>الأمان</span>
-            <h2>قبل ما تشري</h2>
-          </div>
-          <div class="pd-safety__list">
-            <div><i data-lucide="camera" width="18" height="18"></i><span>اطلب صور حديثة إذا المنتج موش واضح.</span></div>
-            <div><i data-lucide="scale" width="18" height="18"></i><span>ثبت الكمية والوحدة والسعر النهائي.</span></div>
-            <div><i data-lucide="shield-check" width="18" height="18"></i><span>ما تخلصش قبل ما تتثبت من البائع والمنتج.</span></div>
-          </div>
-        </article>
+      <!-- Description -->
+      <section class="pd-description pd-reveal">
+        <div class="pd-section-title">
+          <h2>الوصف</h2>
+        </div>
+        <p>{{ p.description }}</p>
+        <div class="pd-description__tags">
+          <span *ngIf="p.certified">جودة موثوقة</span>
+          <span>إنتاج تونسي</span>
+          <span *ngIf="p.deliveryAvailable">توصيل حسب الاتفاق</span>
+        </div>
       </section>
 
-      <section class="pd-similar" *ngIf="similarProducts.length">
-        <div class="pd-section__head pd-section__head--row">
-          <div>
-            <span>اقتراحات</span>
-            <h2>منتجات مشابهة</h2>
-          </div>
+      <!-- Similar products -->
+      <section class="pd-similar pd-reveal" *ngIf="similarProducts.length">
+        <div class="pd-section-head">
+          <h2>منتجات مشابهة</h2>
           <a routerLink="/products">عرض الكل</a>
         </div>
 
         <div class="pd-similar__rail">
           <a class="pd-similar-card" *ngFor="let item of similarProducts; trackBy: trackById" [routerLink]="['/products', item.id]">
-            <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async" />
-            <div>
+            <div class="pd-similar-card__image">
+              <img [src]="similarImage(item)" [alt]="item.title" loading="lazy" decoding="async">
+              <span>{{ item.inStock ? 'متوفر' : 'منتهي' }}</span>
+            </div>
+            <div class="pd-similar-card__body">
               <small>{{ item.category }} · {{ item.wilaya }}</small>
               <strong>{{ item.title }}</strong>
-              <span>{{ fmt(item.price) }} دت</span>
+              <em>{{ fmt(item.price) }} د.ت</em>
             </div>
           </a>
         </div>
       </section>
-    </main>
-
-    <div class="pd-mobile-cta">
-      <div>
-        <strong>{{ fmt(p.price) }} دت</strong>
-        <span>{{ stockLabel(p) }}</span>
-      </div>
-      <button type="button" (click)="contactSeller()">
-        <i data-lucide="message-circle" width="18" height="18"></i>
-        تواصل
-      </button>
     </div>
 
-    <div class="pd-zoom" *ngIf="zoomOpen" (click)="closeZoom()" role="dialog" aria-modal="true" aria-label="تكبير صورة المنتج">
-      <button class="pd-zoom__close" type="button" (click)="closeZoom()" aria-label="إغلاق">
-        <i data-lucide="x" width="22" height="22"></i>
-      </button>
-      <button class="pd-zoom__nav pd-zoom__nav--prev" type="button" (click)="prevImage(); $event.stopPropagation()" *ngIf="detailPhotos.length > 1" aria-label="الصورة السابقة">
-        <i data-lucide="chevron-right" width="28" height="28"></i>
-      </button>
-      <img [src]="activeImage" [alt]="p.title" (click)="$event.stopPropagation()" />
-      <button class="pd-zoom__nav pd-zoom__nav--next" type="button" (click)="nextImage(); $event.stopPropagation()" *ngIf="detailPhotos.length > 1" aria-label="الصورة التالية">
-        <i data-lucide="chevron-left" width="28" height="28"></i>
-      </button>
+    <!-- Mobile sticky CTA -->
+    <div class="pd-mobile-cta">
+      <div>
+        <strong>{{ fmt(p.price) }} د.ت</strong>
+        <span>{{ stockLabel(p) }}</span>
+      </div>
+      <button type="button" (click)="contactSeller()" aria-label="تواصل مع البائع">تواصل</button>
     </div>
 
     <div class="pd-toast-wrap" aria-live="polite">

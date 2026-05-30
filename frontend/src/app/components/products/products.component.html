@@ -539,118 +539,7 @@
 
       <ng-container *ngIf="addStep === 1">
         <div class="form-block add-step-panel">
-          <div class="form-block__label"><span class="form-block__num">1</span>الفئة والعنوان</div>
-          <div class="fgrid fgrid--2">
-            <div class="ffield" [class.ffield--error]="addErrors['category']">
-              <label class="flabel">الفئة <span class="freq">*</span></label>
-              <select class="fselect" [(ngModel)]="addForm.category">
-                <option *ngFor="let c of PROD_CATEGORIES.slice(1)">{{ c }}</option>
-              </select>
-              <span class="ferror" *ngIf="addErrors['category']">اختار الفئة</span>
-            </div>
-            <div class="ffield" [class.ffield--error]="addErrors['name']">
-              <label class="flabel">عنوان الإعلان <span class="freq">*</span></label>
-              <input class="finput" [(ngModel)]="addForm.name" placeholder="مثال: علف مركب للأغنام" />
-              <span class="ferror" *ngIf="addErrors['name']">اكتب عنوان واضح</span>
-            </div>
-          </div>
-          <div class="publish-trust-note publish-trust-note--soft">
-            <i data-lucide="lightbulb" width="15" height="15"></i>
-            <span>العنوان القصير والواضح يخلي إعلانك يتفهم من أول نظرة.</span>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="addStep === 2">
-        <div class="form-block add-step-panel">
-          <div class="form-block__label"><span class="form-block__num">2</span>السعر والمكان</div>
-          <label class="option-toggle option-toggle--wide" [class.option-toggle--on]="addForm.priceNegotiable">
-            <input type="checkbox" [(ngModel)]="addForm.priceNegotiable" hidden />
-            <span class="option-toggle__label">السعر قابل للنقاش</span>
-            <span class="option-toggle__pill">{{ addForm.priceNegotiable ? 'نعم' : 'لا' }}</span>
-          </label>
-          <div class="fgrid fgrid--2">
-            <div class="ffield" [class.ffield--error]="addErrors['price']">
-              <label class="flabel">السعر (دت) <span class="freq" *ngIf="!addForm.priceNegotiable">*</span></label>
-              <div class="finput-with-unit">
-                <input type="number" min="0" class="finput" [(ngModel)]="addForm.price" [disabled]="addForm.priceNegotiable" placeholder="0" />
-                <span class="finput-unit">دت</span>
-              </div>
-              <span class="ferror" *ngIf="addErrors['price']">اكتب سعر صحيح أو فعل قابل للنقاش</span>
-            </div>
-            <div class="ffield">
-              <label class="flabel">نوع السعر</label>
-              <select class="fselect" [(ngModel)]="addForm.priceType" [disabled]="addForm.priceNegotiable">
-                <option value="FIXED">سوم ثابت</option>
-                <option value="NEGOTIABLE">قابل للنقاش</option>
-                <option value="PER_KG">للكيلو</option>
-                <option value="PER_TON">للطن</option>
-                <option value="PER_UNIT">للقطعة</option>
-              </select>
-            </div>
-          </div>
-          <div class="fgrid fgrid--2">
-            <div class="ffield" [class.ffield--error]="addErrors['wilaya']">
-              <label class="flabel">الولاية <span class="freq">*</span></label>
-              <select class="fselect" [(ngModel)]="addForm.wilaya">
-                <option value="">اختار الولاية</option>
-                <option *ngFor="let w of WILAYAS">{{ w }}</option>
-              </select>
-              <span class="ferror" *ngIf="addErrors['wilaya']">اختار الولاية</span>
-            </div>
-            <div class="ffield">
-              <label class="flabel">المنشأ</label>
-              <input class="finput" [(ngModel)]="addForm.origin" placeholder="تونس / أوروبا" />
-            </div>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="addStep === 3">
-        <div class="form-block add-step-panel">
-          <div class="form-block__label"><span class="form-block__num">3</span>الوصف</div>
-          <div class="fgrid fgrid--2">
-            <div class="ffield"><label class="flabel">الوحدة</label><input class="finput" [(ngModel)]="addForm.unit" placeholder="كيس 25كغ" /></div>
-            <div class="ffield"><label class="flabel">الكمية</label><input class="finput" [(ngModel)]="addForm.quantity" placeholder="50 وحدة" /></div>
-          </div>
-          <div class="ffield">
-            <label class="flabel">وصف الإعلان</label>
-            <textarea class="ftextarea" [(ngModel)]="addForm.description" rows="5" placeholder="اكتب تفاصيل بسيطة: الحالة، الكمية، طريقة التسليم، وأي معلومة تعاون الشاري..."></textarea>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="addStep === 4">
-        <div class="form-block add-step-panel">
-          <div class="form-block__label"><span class="form-block__num">4</span>الصور</div>
-          <div class="img-drop" [class.img-drop--filled]="addForm.imagePreviews.length" (click)="prodFileInput.click()" (keydown.enter)="prodFileInput.click()" tabindex="0" role="button" aria-label="رفع صور">
-            <input #prodFileInput type="file" accept="image/*" multiple style="display:none" (change)="onProdFileSelect($event)" />
-            <ng-container *ngIf="addForm.imagePreviews.length === 0">
-              <div class="img-drop__icon"><i data-lucide="image-plus" width="30" height="30"></i></div>
-              <div class="img-drop__text">أضف صور الإعلان</div>
-              <div class="img-drop__hint">حتى 5 صور. يتم ضغط الصور تلقائياً قبل النشر</div>
-            </ng-container>
-            <div *ngIf="addForm.imagePreviews.length > 0" class="product-image-grid" (click)="$event.stopPropagation()">
-              <div class="product-image-thumb" *ngFor="let img of addForm.imagePreviews; let i = index">
-                <img [src]="img" alt="معاينة صورة الإعلان" />
-                <span *ngIf="i === 0" class="main-img-label">الرئيسية</span>
-                <button class="img-drop__remove" type="button" (click)="removeProductImg(i, $event)" aria-label="حذف الصورة">×</button>
-              </div>
-              <button *ngIf="addForm.imagePreviews.length < 5" class="product-image-add" type="button" (click)="prodFileInput.click()">
-                <i data-lucide="plus" width="20" height="20"></i>
-              </button>
-            </div>
-          </div>
-          <div class="publish-trust-note publish-trust-note--soft" [class.publish-trust-note--warn]="addForm.imagePreviews.length === 0">
-            <i data-lucide="image" width="15" height="15"></i>
-            <span>{{ addForm.imagePreviews.length ? 'الصورة الأولى باش تظهر في بطاقة الإعلان.' : 'الصورة موش إجبارية، أما ننصحو بصورة واحدة على الأقل.' }}</span>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="addStep === 5">
-        <div class="form-block add-step-panel">
-          <div class="form-block__label"><span class="form-block__num">5</span>نوع البائع</div>
+          <div class="form-block__label"><span class="form-block__num">1</span>نوع البائع</div>
           <div class="type-toggle">
             <button class="type-toggle__option" type="button" [class.type-toggle__option--active]="addForm.sellerType === 'individual'" (click)="addForm.sellerType = 'individual'"><span class="type-toggle__name">بائع فردي</span><span class="type-toggle__desc">فلاح / شخص</span></button>
             <button class="type-toggle__option" type="button" [class.type-toggle__option--active]="addForm.sellerType === 'company'" (click)="addForm.sellerType = 'company'"><span class="type-toggle__name">شركة / مورد</span><span class="type-toggle__desc">شركة أو مؤسسة</span></button>
@@ -658,20 +547,58 @@
         </div>
 
         <div class="form-block add-step-panel" *ngIf="addForm.sellerType === 'company'">
-          <div class="form-block__label"><span class="form-block__num">5</span>معلومات الشركة</div>
-          <div class="ffield" [class.ffield--error]="addErrors['companyName']">
-            <label class="flabel">اسم الشركة <span class="freq">*</span></label>
-            <input class="finput" [(ngModel)]="addForm.companyName" placeholder="مثال: SMSA Sfax" />
-            <span class="ferror" *ngIf="addErrors['companyName']">اكتب اسم الشركة</span>
+          <div class="form-block__label"><span class="form-block__num">2</span>معلومات الشركة</div>
+          <div class="fgrid fgrid--1">
+            <div class="ffield" [class.ffield--error]="addErrors['companyName']"><label class="flabel">اسم الشركة <span class="freq">*</span></label><input class="finput" [(ngModel)]="addForm.companyName" placeholder="مثال: SMSA Sfax" /><span class="ferror" *ngIf="addErrors['companyName']">الخانة مطلوبة</span></div>
           </div>
           <div class="ffield"><label class="flabel">وصف قصير</label><input class="finput" [(ngModel)]="addForm.companyTagline" placeholder="مثال: متخصصون في الأعلاف" /></div>
         </div>
+      </ng-container>
 
+      <ng-container *ngIf="addStep === 2">
+        <div class="form-block add-step-panel">
+          <div class="form-block__label"><span class="form-block__num">2</span>صورة البرودوي</div>
+          <div class="img-drop" [class.img-drop--filled]="addForm.imagePreview" (click)="prodFileInput.click()" (keydown.enter)="prodFileInput.click()" tabindex="0" role="button" aria-label="رفع صورة">
+            <input #prodFileInput type="file" accept="image/*" style="display:none" (change)="onProdFileSelect($event)" />
+            <ng-container *ngIf="!addForm.imagePreview"><div class="img-drop__icon"><i data-lucide="image-plus" width="30" height="30"></i></div><div class="img-drop__text">انقر لرفع صورة</div><div class="img-drop__hint">JPG أو PNG، حجم أقصى 2MB</div></ng-container>
+            <div *ngIf="addForm.imagePreview" class="img-drop__preview"><img [src]="addForm.imagePreview" alt="معاينة" /><button class="img-drop__remove" type="button" (click)="removeProductImg($event)" aria-label="حذف">×</button></div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="addStep === 3">
+        <div class="form-block add-step-panel">
+          <div class="form-block__label"><span class="form-block__num">3</span>أساسيات البرودوي</div>
+          <div class="ffield" [class.ffield--error]="addErrors['name']"><label class="flabel">اسم البرودوي <span class="freq">*</span></label><input class="finput" [(ngModel)]="addForm.name" placeholder="مثال: علف مركب للأغنام" /><span class="ferror" *ngIf="addErrors['name']">الخانة مطلوبة</span></div>
+          <div class="fgrid fgrid--2">
+            <div class="ffield"><label class="flabel">الفئة</label><select class="fselect" [(ngModel)]="addForm.category"><option *ngFor="let c of PROD_CATEGORIES.slice(1)">{{ c }}</option></select></div>
+            <div class="ffield"><label class="flabel">الولاية</label><select class="fselect" [(ngModel)]="addForm.wilaya"><option *ngFor="let w of WILAYAS">{{ w }}</option></select></div>
+          </div>
+          <div class="ffield"><label class="flabel">المنشأ</label><input class="finput" [(ngModel)]="addForm.origin" placeholder="تونس / أوروبا" /></div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="addStep === 4">
+        <div class="form-block add-step-panel">
+          <div class="form-block__label"><span class="form-block__num">4</span>السعر والكمية</div>
+          <div class="fgrid fgrid--2">
+            <div class="ffield" [class.ffield--error]="addErrors['price']"><label class="flabel">السعر (دت) <span class="freq">*</span></label><div class="finput-with-unit"><input type="number" min="0" class="finput" [(ngModel)]="addForm.price" placeholder="0" /><span class="finput-unit">دت</span></div><span class="ferror" *ngIf="addErrors['price']">اكتب سعر صحيح</span></div>
+            <div class="ffield"><label class="flabel">نوع السعر</label><select class="fselect" [(ngModel)]="addForm.priceType"><option value="FIXED">سوم ثابت</option><option value="NEGOTIABLE">قابل للنقاش</option><option value="PER_KG">للكيلو</option><option value="PER_TON">للطن</option><option value="PER_UNIT">للقطعة</option></select></div>
+          </div>
+          <div class="fgrid fgrid--2">
+            <div class="ffield"><label class="flabel">الوحدة</label><input class="finput" [(ngModel)]="addForm.unit" placeholder="كيس 25كغ" /></div>
+            <div class="ffield"><label class="flabel">الكمية</label><input class="finput" [(ngModel)]="addForm.quantity" placeholder="50 وحدة" /></div>
+          </div>
+          <div class="ffield"><label class="flabel">وصف</label><textarea class="ftextarea" [(ngModel)]="addForm.description" rows="3" placeholder="زيد تفاصيل تساعد الشاري..."></textarea></div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="addStep === 5">
         <div class="form-block add-step-panel">
           <div class="form-block__label"><span class="form-block__num">5</span>{{ addForm.sellerType === 'company' ? 'معلومات التواصل' : 'معلومات البائع' }}</div>
           <div class="fgrid fgrid--2">
-            <div class="ffield" *ngIf="addForm.sellerType === 'individual'" [class.ffield--error]="addErrors['sellerName']"><label class="flabel">الاسم <span class="freq">*</span></label><input class="finput" [(ngModel)]="addForm.sellerName" placeholder="اسمك الكامل" /><span class="ferror" *ngIf="addErrors['sellerName']">اكتب اسم البائع</span></div>
-            <div class="ffield" [class.ffield--error]="addErrors['phone']"><label class="flabel">رقم الهاتف / واتساب <span class="freq">*</span></label><div class="finput-with-unit"><span class="finput-prefix">+216</span><input class="finput" [(ngModel)]="addForm.phone" inputmode="tel" placeholder="55 123 456" dir="ltr" /></div><span class="ferror" *ngIf="addErrors['phone']">اكتب رقم الهاتف</span></div>
+            <div class="ffield" *ngIf="addForm.sellerType === 'individual'" [class.ffield--error]="addErrors['sellerName']"><label class="flabel">الاسم <span class="freq">*</span></label><input class="finput" [(ngModel)]="addForm.sellerName" placeholder="اسمك الكامل" /><span class="ferror" *ngIf="addErrors['sellerName']">الخانة مطلوبة</span></div>
+            <div class="ffield" [class.ffield--error]="addErrors['phone']"><label class="flabel">رقم الهاتف / واتساب <span class="freq">*</span></label><div class="finput-with-unit"><span class="finput-prefix">+216</span><input class="finput" [(ngModel)]="addForm.phone" placeholder="55 123 456" dir="ltr" /></div><span class="ferror" *ngIf="addErrors['phone']">الخانة مطلوبة</span></div>
             <div class="ffield" *ngIf="addForm.sellerType === 'company'"><label class="flabel">البريد الإلكتروني</label><input class="finput" type="email" [(ngModel)]="addForm.email" placeholder="contact@company.tn" dir="ltr" /></div>
           </div>
         </div>

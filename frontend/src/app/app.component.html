@@ -24,10 +24,7 @@
       <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
       <span id="publishHeaderLabel">نشر إعلان</span>
     </button>
-    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">
-      <i data-lucide="user-plus" width="15" aria-hidden="true"></i>
-      <span>Créer un compte</span>
-    </button>
+    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">تسجيل الدخول</button>
     <div class="user-menu-wrap auth-only">
     <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false">
       <span class="user-greeting-chip__avatar" id="userInitial">م</span>
@@ -150,22 +147,6 @@
   <a routerLink="/services" routerLinkActive="active" aria-label="مهن فلاحية"><i data-lucide="wrench" width="19" aria-hidden="true"></i><span>مهن</span></a>
   <button type="button" id="mobPublish" aria-label="نشر إعلان" (click)="goPublish()"><i data-lucide="plus-circle" width="21" aria-hidden="true"></i><span>نشر</span></button>
 </nav>
-
-<a class="whatsapp-help-fab" href="https://wa.me/21653159799?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%86%D8%AD%D8%A8%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%81%D9%8A%20AMANAFARM" target="_blank" rel="noopener" aria-label="Besoin d'aide ? WhatsApp">
-  <i data-lucide="message-circle" width="19" aria-hidden="true"></i>
-  <span>WhatsApp</span>
-</a>
-
-<div class="mobile-conversion-cta" aria-label="إجراءات سريعة">
-  <button type="button" (click)="goPublish()">
-    <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
-    أعلن مجاناً
-  </button>
-  <a href="https://wa.me/21653159799?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%86%D8%AD%D8%A8%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%81%D9%8A%20AMANAFARM" target="_blank" rel="noopener">
-    <i data-lucide="message-circle" width="18" aria-hidden="true"></i>
-    واتساب
-  </a>
-</div>
 
 <div class="publish-choice-overlay" *ngIf="showPublishChooser" (click)="closePublishChooser()" role="dialog" aria-modal="true" aria-labelledby="publishChoiceTitle">
   <section class="publish-choice" (click)="$event.stopPropagation()">
