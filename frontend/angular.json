@@ -34,7 +34,10 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css",
+              "src/farm-theme.css"
+            ],
             "scripts": []
           },
           "configurations": {

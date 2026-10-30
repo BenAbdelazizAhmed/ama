@@ -1,0 +1,358 @@
+<div class="ride-page" dir="rtl">
+  <div class="ride-breadcrumb">
+    <a routerLink="/">الرئيسية</a><span> / </span>نقل الحيوانات
+  </div>
+  <section class="ride-hero">
+    <div>
+      <span class="ride-kicker">نقل مشترك · COVOITURAGE</span>
+      <h1>نفس الطريق.<br /><em>خير يتقسم.</em></h1>
+      <p>
+        لقّى رحلة لحيواناتك في الاتجاه اللي يناسبك.<br />تواصل مع الناقل،
+        واتّفقوا على المساحة والمصاريف.
+      </p>
+      <button class="ride-primary" type="button" (click)="openForm()">
+        ＋ اقترح رحلة
+      </button>
+    </div>
+    <div class="ride-illustration" aria-hidden="true">
+      <span class="ride-route-label">من مزرعتك…</span>
+      <div>🐑 <span>🚚</span> 🌿</div>
+      <span class="ride-route-label">… للوجهة اللي تختارها</span
+      ><small>24 ولاية · تواصل مباشر · بلا وسيط</small>
+    </div>
+  </section>
+  <section class="ride-search" aria-label="البحث عن رحلة">
+    <div class="ride-search-fields">
+      <label
+        >منين؟<select [(ngModel)]="origin">
+          <option value="">كل الولايات</option>
+          <option *ngFor="let r of regions">{{ r }}</option>
+        </select></label
+      ><button
+        class="ride-swap"
+        type="button"
+        (click)="swap()"
+        aria-label="تبديل الانطلاق والوصول"
+      >
+        ⇄</button
+      ><label
+        >لوين؟<select [(ngModel)]="destination">
+          <option value="">كل الولايات</option>
+          <option *ngFor="let r of regions">{{ r }}</option>
+        </select></label
+      ><label
+        >وقتاش؟<input
+          type="date"
+          [(ngModel)]="date"
+          [min]="today"
+          aria-label="تاريخ الرحلة" /></label
+      ><label
+        >نوع الحيوان<select [(ngModel)]="animal">
+          <option value="">كل الحيوانات</option>
+          <option *ngFor="let a of animals">{{ a }}</option>
+        </select></label
+      >
+    </div>
+    <div class="ride-search-bottom">
+      <label
+        ><input type="checkbox" [(ngModel)]="accompanied" /> إمكانية مرافقة
+        الحيوان</label
+      ><button type="button" (click)="reset()">مسح الفلاتر ↺</button>
+    </div>
+  </section>
+  <p class="ride-notice" *ngIf="notice" role="status">✓ {{ notice }}</p>
+  <div class="ride-results-heading">
+    <div>
+      <span class="ride-kicker">الرحلات المتاحة</span>
+      <h2>لقّى الطريق المناسب</h2>
+      <p *ngIf="!loading && !error">{{ results.length }} رحلة تناسب بحثك</p>
+    </div>
+    <label
+      >ترتيب حسب
+      <select [(ngModel)]="sort">
+        <option value="soonest">أقرب موعد</option>
+        <option value="price">أقل سعر</option>
+      </select></label
+    >
+  </div>
+  <div class="ride-state" *ngIf="loading" role="status">
+    نلوّجولك على الرحلات…
+  </div>
+  <div class="ride-state" *ngIf="error" role="alert">
+    <span>↻</span>
+    <h3>ما نجّمناش نحمّلوا الرحلات</h3>
+    <p>{{ error }}</p>
+    <button class="ride-primary" type="button" (click)="load()">
+      عاود جرّب
+    </button>
+  </div>
+  <div class="ride-state" *ngIf="!loading && !error && !results.length">
+    <span>🚚</span>
+    <h3>ما فماش رحلات مطابقة توّا</h3>
+    <p>بدّل التاريخ أو الولايات، وإلا كون أول واحد يقترح رحلة.</p>
+    <button class="ride-primary" type="button" (click)="openForm()">
+      اقترح رحلة</button
+    ><button class="ride-text" type="button" (click)="reset()">
+      مسح الفلاتر
+    </button>
+  </div>
+  <div class="ride-grid" *ngIf="!loading && !error">
+    <article class="ride-card" *ngFor="let t of results">
+      <div class="ride-card-top">
+        <span class="ride-animal">{{ t.animalType }}</span
+        ><span>{{ t.capacity }} بلاصة متاحة</span>
+      </div>
+      <div class="ride-route">
+        <div>
+          <span class="ride-point"></span>
+          <div>
+            <small>الانطلاق</small>
+            <h3>{{ t.origin }}</h3>
+          </div>
+        </div>
+        <span class="ride-route-line"></span>
+        <div>
+          <span class="ride-point ride-point-end"></span>
+          <div>
+            <small>الوصول</small>
+            <h3>{{ t.destination }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="ride-meta">
+        <span>▦ {{ t.departure | date: "dd/MM/yyyy" }}</span
+        ><span>◷ {{ t.departure | date: "HH:mm" }}</span
+        ><span>{{ t.vehicle }}</span>
+      </div>
+      <div class="ride-card-driver">
+        <span class="ride-avatar">{{ t.driverName.charAt(0) }}</span
+        ><span>{{ t.driverName }}</span
+        ><span *ngIf="t.accompanied" class="ride-companion">مرافق ممكن</span>
+      </div>
+      <div class="ride-card-bottom">
+        <div>
+          <strong>{{ t.price | number: "1.0-2" }} <small>دت</small></strong
+          ><span>للحيوان الواحد</span>
+        </div>
+        <button type="button" (click)="showDetails(t)">
+          التفاصيل والتواصل ←
+        </button>
+      </div>
+    </article>
+  </div>
+  <section class="ride-guide">
+    <div>
+      <span>01</span>
+      <h3>اختار رحلتك</h3>
+      <p>تثبّت من التاريخ، المسار ونوع الحيوان المقبول.</p>
+    </div>
+    <div>
+      <span>02</span>
+      <h3>اتّفق مع الناقل</h3>
+      <p>وضّح العدد، الحجم، التجهيزات وإمكانية المرافقة.</p>
+    </div>
+    <div>
+      <span>03</span>
+      <h3>حضّر للنقل</h3>
+      <p>اتّفق على الوثائق اللازمة، مكان اللقاء وطريقة الخلاص.</p>
+    </div>
+  </section>
+  <p class="ride-footnote">
+    AMANAFARM تربط بين الناس. الاتفاق على النقل والسعر يكون مباشرة بينك وبين
+    صاحب الرحلة.
+  </p>
+</div>
+<div class="ride-overlay" *ngIf="showForm || selected" (click)="close()">
+  <section
+    #tripDialog
+    class="ride-dialog"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ride-dialog-title"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      class="ride-close"
+      type="button"
+      (click)="close()"
+      [disabled]="saving"
+      aria-label="إغلاق"
+    >
+      ×
+    </button>
+    <ng-container *ngIf="showForm"
+      ><span class="ride-kicker">شارك الطريق</span>
+      <h2 id="ride-dialog-title">اقترح رحلة نقل</h2>
+      <p class="ride-dialog-intro">
+        المعلومات الواضحة تعاون الناس يلقاو الرحلة المناسبة.
+      </p>
+      <form #tripForm="ngForm" (ngSubmit)="publish(tripForm)">
+        <div class="ride-form-grid">
+          <label
+            >ولاية الانطلاق<select
+              name="origin"
+              [(ngModel)]="draft.origin"
+              required
+            >
+              <option value="" disabled>اختار الولاية</option>
+              <option *ngFor="let r of regions">{{ r }}</option>
+            </select></label
+          ><label
+            >ولاية الوصول<select
+              name="destination"
+              [(ngModel)]="draft.destination"
+              required
+            >
+              <option value="" disabled>اختار الولاية</option>
+              <option *ngFor="let r of regions">{{ r }}</option>
+            </select></label
+          ><label class="ride-full"
+            >التاريخ والوقت <small>بتوقيت تونس</small
+            ><input
+              name="departure"
+              type="datetime-local"
+              [(ngModel)]="draft.departure"
+              [min]="minimumDeparture"
+              required /></label
+          ><label
+            >نوع الحيوان<select
+              name="animalType"
+              [(ngModel)]="draft.animalType"
+              required
+            >
+              <option *ngFor="let a of animals">{{ a }}</option>
+            </select></label
+          ><label
+            >عدد البلايص<input
+              name="capacity"
+              type="number"
+              min="1"
+              max="200"
+              step="1"
+              pattern="[0-9]+"
+              [(ngModel)]="draft.capacity"
+              required /></label
+          ><label
+            >السعر للحيوان (دت)<input
+              name="price"
+              type="number"
+              min="0"
+              max="10000"
+              step="0.01"
+              [(ngModel)]="draft.price"
+              required /></label
+          ><label
+            >وسيلة النقل<select
+              name="vehicle"
+              [(ngModel)]="draft.vehicle"
+              required
+            >
+              <option>شاحنة مهيّأة</option>
+              <option>شاحنة خفيفة</option>
+              <option>سيارة مع صندوق نقل</option>
+            </select></label
+          ><label class="ride-full"
+            >رقم الهاتف التونسي<input
+              name="contactPhone"
+              type="tel"
+              dir="ltr"
+              placeholder="XX XXX XXX"
+              pattern="[2459][0-9]{7}"
+              maxlength="8"
+              [(ngModel)]="draft.contactPhone"
+              required
+            /><small
+              >8 أرقام من غير +216. يظهر للناس المهتمة بالرحلة.</small
+            ></label
+          ><label class="ride-full"
+            >معلومات إضافية <small>اختياري</small
+            ><textarea
+              name="notes"
+              [(ngModel)]="draft.notes"
+              maxlength="1000"
+              rows="3"
+              placeholder="مكان اللقاء، تجهيزات النقل، الشروط…"
+            ></textarea></label
+          ><label class="ride-checkbox ride-full"
+            ><input
+              name="accompanied"
+              type="checkbox"
+              [(ngModel)]="draft.accompanied"
+            />
+            نجم ناخذ مرافق للحيوان</label
+          >
+        </div>
+        <p *ngIf="formError" class="ride-error" role="alert">{{ formError }}</p>
+        <button
+          class="ride-primary ride-submit"
+          type="submit"
+          [disabled]="saving"
+        >
+          {{ saving ? "جاري النشر…" : "انشر الرحلة" }}
+        </button>
+      </form></ng-container
+    >
+    <ng-container *ngIf="selected as t"
+      ><span class="ride-kicker">تفاصيل الرحلة</span>
+      <h2 id="ride-dialog-title">{{ t.origin }} ← {{ t.destination }}</h2>
+      <p class="ride-dialog-intro">
+        {{ t.departure | date: "dd/MM/yyyy" }} ·
+        {{ t.departure | date: "HH:mm" }} بتوقيت تونس
+      </p>
+      <dl class="ride-details">
+        <div>
+          <dt>صاحب الرحلة</dt>
+          <dd>{{ t.driverName }}</dd>
+        </div>
+        <div>
+          <dt>نوع الحيوان</dt>
+          <dd>{{ t.animalType }}</dd>
+        </div>
+        <div>
+          <dt>البلايص المتاحة</dt>
+          <dd>{{ t.capacity }}</dd>
+        </div>
+        <div>
+          <dt>وسيلة النقل</dt>
+          <dd>{{ t.vehicle }}</dd>
+        </div>
+        <div>
+          <dt>مرافق للحيوان</dt>
+          <dd>{{ t.accompanied ? "ممكن، بالاتفاق مع الناقل" : "غير متاح" }}</dd>
+        </div>
+        <div>
+          <dt>السعر للحيوان</dt>
+          <dd>{{ t.price | number: "1.0-2" }} دت</dd>
+        </div>
+      </dl>
+      <p class="ride-trip-notes" *ngIf="t.notes">{{ t.notes }}</p>
+      <p class="ride-footnote">
+        اتّفق مع الناقل على المكان، تجهيزات الحيوان والتفاصيل قبل الخلاص.
+      </p>
+      <div class="ride-contact">
+        <a
+          class="ride-primary"
+          [href]="whatsapp(t)"
+          target="_blank"
+          rel="noopener noreferrer"
+          >تواصل على واتساب ↗</a
+        ><a class="ride-secondary" [href]="'tel:+216' + phone(t)"
+          >اتّصل: {{ t.contactPhone }}</a
+        >
+      </div>
+      <button
+        *ngIf="t.ownerId === state.user()?.id"
+        class="ride-delete"
+        type="button"
+        [disabled]="saving"
+        (click)="deleteTrip(t)"
+      >
+        فسخ رحلتي
+      </button>
+      <p class="ride-error" *ngIf="formError" role="alert">
+        {{ formError }}
+      </p></ng-container
+    >
+  </section>
+</div>

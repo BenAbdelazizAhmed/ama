@@ -1,4 +1,4 @@
-﻿<div class="toast-wrap" #toastWrap aria-live="polite" aria-atomic="false"></div>
+<div class="toast-wrap" #toastWrap aria-live="polite" aria-atomic="false"></div>
 
 <a class="skip-link" href="#page-content">تجاوز إلى المحتوى</a>
 
@@ -8,7 +8,7 @@
   <span class="ann-badge">انشر إعلانك بثقة</span>
 </div>
 
-<header class="header" [class.scrolled]="isScrolled" role="banner">
+<header class="header farm-header" [class.scrolled]="isScrolled" role="banner">
   <a routerLink="/" class="logo" aria-label="AMANAFARM الرئيسية">
     <div class="logo-mark">
       <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="44" height="44">
@@ -52,7 +52,7 @@
   </div>
 </header>
 
-<nav class="navbar" aria-label="التنقل الرئيسي">
+<nav class="navbar farm-nav" aria-label="التنقل الرئيسي">
   <ul>
     <li>
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
@@ -68,6 +68,7 @@
       </a>
     </li>
 
+    <li><a routerLink="/carpool" routerLinkActive="active"><span aria-hidden="true">↔</span> نقل الحيوانات <span class="nav-new">جديد</span></a></li>
     <!-- PRODUCTS -->
     <li>
       <a routerLink="/products" routerLinkActive="active">
@@ -121,7 +122,7 @@
         <li><a routerLink="/animals">أغنام وخرفان</a></li>
         <li><a routerLink="/animals">أبقار وعجول</a></li>
         <li><a routerLink="/animals">دواجن وطيور</a></li>
-        <li><a routerLink="/products">أعلاف ومنتجات</a></li>
+        <li><a routerLink="/products">أعلاف ومنتجات</a></li><li><a routerLink="/carpool">نقل الحيوانات المشترك</a></li>
       </ul>
     </div>
     <div class="ft-col">
@@ -166,9 +167,9 @@
     <i data-lucide="plus" width="24" aria-hidden="true"></i>
     <span>نشر</span>
   </button>
-  <a routerLink="/products" routerLinkActive="active" aria-label="منتجات">
-    <i data-lucide="package" width="20" aria-hidden="true"></i>
-    <span>منتجات</span>
+  <a routerLink="/carpool" routerLinkActive="active" aria-label="نقل الحيوانات">
+    <i data-lucide="truck" width="20" aria-hidden="true"></i>
+    <span>النقل</span>
   </a>
   <a routerLink="/services" routerLinkActive="active" aria-label="خدمات">
     <i data-lucide="briefcase" width="20" aria-hidden="true"></i>

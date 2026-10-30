@@ -180,6 +180,7 @@ export class AppComponent implements AfterViewInit, OnInit, OnDestroy {
     this.setText('publishHeaderLabel', this.publishLabel);
   }
 
+  @HostListener('window:amanafarm-publish-request')
   goPublish(): void {
     if (!this.user) {
       this.showPublishChooser = true;

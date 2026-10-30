@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         window.dispatchEvent(new CustomEvent('amanafarm-forbidden'));
       }
 
-      if (error.status === 404 && router.url !== '/404') {
+      if (error.status === 404 && !req.url.includes('/api/trips') && router.url !== '/404') {
         void router.navigate(['/404']);
       }
 
