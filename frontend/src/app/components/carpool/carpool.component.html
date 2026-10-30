@@ -2,23 +2,44 @@
   <div class="ride-breadcrumb">
     <a routerLink="/">الرئيسية</a><span> / </span>نقل الحيوانات
   </div>
-  <section class="ride-hero">
-    <div>
-      <span class="ride-kicker">نقل مشترك · COVOITURAGE</span>
-      <h1>نفس الطريق.<br /><em>خير يتقسم.</em></h1>
+  <section class="ride-hero" aria-labelledby="ride-title">
+    <div class="ride-hero-copy">
+      <span class="ride-kicker"
+        ><app-icon name="truck"></app-icon> AMANAFARM TRANSPORT</span
+      >
+      <h1 id="ride-title">نفس الطريق.<br /><em>فرص أكثر للوصول.</em></h1>
       <p>
-        لقّى رحلة لحيواناتك في الاتجاه اللي يناسبك.<br />تواصل مع الناقل،
-        واتّفقوا على المساحة والمصاريف.
+        لقّى رحلة مناسبة لحيواناتك، في كامل تونس.<br />تواصل مباشرة مع الناقل
+        واتّفقوا على التفاصيل.
       </p>
       <button class="ride-primary" type="button" (click)="openForm()">
-        ＋ اقترح رحلة
-      </button>
+        <app-icon name="plus"></app-icon> اقترح رحلة</button
+      ><span class="ride-hero-footnote"
+        >نشر مجاني · تواصل مباشر · 24 ولاية</span
+      >
     </div>
-    <div class="ride-illustration" aria-hidden="true">
-      <span class="ride-route-label">من مزرعتك…</span>
-      <div>🐑 <span>🚚</span> 🌿</div>
-      <span class="ride-route-label">… للوجهة اللي تختارها</span
-      ><small>24 ولاية · تواصل مباشر · بلا وسيط</small>
+    <div class="ride-route-board" aria-hidden="true">
+      <div class="ride-board-heading">
+        <span><app-icon name="truck"></app-icon> النقل المشترك</span
+        ><span>من المزرعة، للوجهة.</span>
+      </div>
+      <div class="ride-board-stop">
+        <span class="ride-board-dot"></span>
+        <div>
+          <small>الانطلاق</small><strong>من الولاية اللي تختارها</strong>
+        </div>
+      </div>
+      <div class="ride-board-connector">
+        <span></span><app-icon name="truck"></app-icon><span></span>
+      </div>
+      <div class="ride-board-stop">
+        <span class="ride-board-dot ride-board-dot-end"></span>
+        <div><small>الوصول</small><strong>للوين يلزمك توصل</strong></div>
+      </div>
+      <div class="ride-board-note">
+        <app-icon name="message"></app-icon> المسار، المساحة والمصاريف بالاتفاق
+        مع الناقل.
+      </div>
     </div>
   </section>
   <section class="ride-search" aria-label="البحث عن رحلة">
@@ -34,7 +55,7 @@
         (click)="swap()"
         aria-label="تبديل الانطلاق والوصول"
       >
-        ⇄</button
+        <app-icon name="swap"></app-icon></button
       ><label
         >لوين؟<select [(ngModel)]="destination">
           <option value="">كل الولايات</option>
@@ -57,10 +78,14 @@
       <label
         ><input type="checkbox" [(ngModel)]="accompanied" /> إمكانية مرافقة
         الحيوان</label
-      ><button type="button" (click)="reset()">مسح الفلاتر ↺</button>
+      ><button type="button" (click)="reset()">
+        <app-icon name="refresh"></app-icon> مسح الفلاتر
+      </button>
     </div>
   </section>
-  <p class="ride-notice" *ngIf="notice" role="status">✓ {{ notice }}</p>
+  <p class="ride-notice" *ngIf="notice" role="status">
+    <app-icon name="check"></app-icon> {{ notice }}
+  </p>
   <div class="ride-results-heading">
     <div>
       <span class="ride-kicker">الرحلات المتاحة</span>
@@ -75,11 +100,18 @@
       </select></label
     >
   </div>
-  <div class="ride-state" *ngIf="loading" role="status">
-    نلوّجولك على الرحلات…
+  <div class="ride-loading" *ngIf="loading" role="status">
+    <span class="ride-sr">جاري تحميل الرحلات…</span>
+    <div
+      class="ride-loading-card"
+      *ngFor="let n of [1, 2, 3]"
+      aria-hidden="true"
+    >
+      <span></span><span></span><span></span><span></span>
+    </div>
   </div>
   <div class="ride-state" *ngIf="error" role="alert">
-    <span>↻</span>
+    <span class="ride-state-icon"><app-icon name="refresh"></app-icon></span>
     <h3>ما نجّمناش نحمّلوا الرحلات</h3>
     <p>{{ error }}</p>
     <button class="ride-primary" type="button" (click)="load()">
@@ -87,7 +119,7 @@
     </button>
   </div>
   <div class="ride-state" *ngIf="!loading && !error && !results.length">
-    <span>🚚</span>
+    <span class="ride-state-icon"><app-icon name="truck"></app-icon></span>
     <h3>ما فماش رحلات مطابقة توّا</h3>
     <p>بدّل التاريخ أو الولايات، وإلا كون أول واحد يقترح رحلة.</p>
     <button class="ride-primary" type="button" (click)="openForm()">
@@ -120,8 +152,12 @@
         </div>
       </div>
       <div class="ride-meta">
-        <span>▦ {{ t.departure | date: "dd/MM/yyyy" }}</span
-        ><span>◷ {{ t.departure | date: "HH:mm" }}</span
+        <span
+          ><app-icon name="calendar"></app-icon>
+          {{ t.departure | date: "dd/MM/yyyy" }}</span
+        ><span
+          ><app-icon name="clock"></app-icon>
+          {{ t.departure | date: "HH:mm" }}</span
         ><span>{{ t.vehicle }}</span>
       </div>
       <div class="ride-card-driver">
@@ -135,7 +171,7 @@
           ><span>للحيوان الواحد</span>
         </div>
         <button type="button" (click)="showDetails(t)">
-          التفاصيل والتواصل ←
+          التفاصيل والتواصل <app-icon name="arrow"></app-icon>
         </button>
       </div>
     </article>
@@ -179,7 +215,7 @@
       [disabled]="saving"
       aria-label="إغلاق"
     >
-      ×
+      <app-icon name="close"></app-icon>
     </button>
     <ng-container *ngIf="showForm"
       ><span class="ride-kicker">شارك الطريق</span>
@@ -336,7 +372,7 @@
           [href]="whatsapp(t)"
           target="_blank"
           rel="noopener noreferrer"
-          >تواصل على واتساب ↗</a
+          >تواصل على واتساب <app-icon name="message"></app-icon></a
         ><a class="ride-secondary" [href]="'tel:+216' + phone(t)"
           >اتّصل: {{ t.contactPhone }}</a
         >

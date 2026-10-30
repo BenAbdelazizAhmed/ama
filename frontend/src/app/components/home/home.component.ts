@@ -1,3 +1,4 @@
+import { IconComponent } from "../../shared/icon/icon.component";
 import { Component, computed } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -8,7 +9,7 @@ import { environment } from "../../../environments/environment";
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, FormsModule, RouterLink],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })
@@ -18,28 +19,28 @@ export class HomeComponent {
   filter = "all";
   readonly categories = [
     {
-      icon: "🐑",
+      icon: "animal",
       title: "حيوانات",
       sub: "أغنام، أبقار، دواجن",
       route: "/animals",
       color: "sand",
     },
     {
-      icon: "🌾",
+      icon: "grain",
       title: "منتجات فلاحية",
       sub: "أعلاف، بذور، معدات",
       route: "/products",
       color: "sage",
     },
     {
-      icon: "🧑‍🌾",
+      icon: "users",
       title: "مهن وخدمات",
       sub: "خبرة تعاونك في خدمتك",
       route: "/services",
       color: "peach",
     },
     {
-      icon: "🚚",
+      icon: "truck",
       title: "نقل الحيوانات",
       sub: "رحلة مشتركة، مصاريف أقل",
       route: "/carpool",
@@ -48,26 +49,22 @@ export class HomeComponent {
   ];
   readonly listings = computed(() =>
     [
-      ...this.state
-        .animals()
-        .map((a) => ({
-          id: a.id,
-          title: a.name,
-          price: a.price,
-          place: a.location,
-          image: a.imageUrl,
-          type: "animals",
-        })),
-      ...this.state
-        .products()
-        .map((p) => ({
-          id: p.id,
-          title: p.title,
-          price: p.price,
-          place: p.wilaya || p.location,
-          image: p.imageUrl,
-          type: "products",
-        })),
+      ...this.state.animals().map((a) => ({
+        id: a.id,
+        title: a.name,
+        price: a.price,
+        place: a.location,
+        image: a.imageUrl,
+        type: "animals",
+      })),
+      ...this.state.products().map((p) => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        place: p.wilaya || p.location,
+        image: p.imageUrl,
+        type: "products",
+      })),
     ].sort((a, b) => Number(b.id) - Number(a.id)),
   );
   get visibleListings() {
@@ -89,6 +86,9 @@ export class HomeComponent {
   }
   onImageError(event: Event) {
     (event.target as HTMLImageElement).style.display = "none";
+  }
+  retry() {
+    void this.state.retryMarketplace();
   }
   image(url?: string) {
     return url?.startsWith("uploads/")

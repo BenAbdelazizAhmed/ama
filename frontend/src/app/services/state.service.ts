@@ -172,6 +172,8 @@ export class StateService {
   readonly cart = signal<AnimalAd[]>([]);
   readonly favs = signal<number[]>([]);
   readonly notifs = signal<Notification[]>([]);
+  readonly marketLoading = signal(true);
+  readonly marketLoadError = signal(false);
   readonly animals = signal<AnimalAd[]>([]);
   readonly workers = signal<Worker[]>([]);
   readonly profiles = signal<ProfessionalProfile[]>([]);
@@ -310,21 +312,25 @@ export class StateService {
 
   private async loadAll() {
     await Promise.all([
-      this.fetchAnimals(),
-      this.fetchWorkers(),
-      this.fetchProfiles(),
-      this.fetchRequests(),
-      this.fetchJobs(),
-      this.fetchProducts(),
-      this.fetchWholesale(),
+      this.retryMarketplace(),
+      this.fetchWorkers(), this.fetchProfiles(), this.fetchRequests(),
+      this.fetchJobs(), this.fetchWholesale(),
     ]);
+  }
+
+  async retryMarketplace(): Promise<void> {
+    this.marketLoading.set(true);
+    this.marketLoadError.set(false);
+    const results = await Promise.all([this.fetchAnimals(), this.fetchProducts()]);
+    this.marketLoading.set(false);
+    this.marketLoadError.set(!results[0] || !results[1]);
   }
 
   /* ══ ANIMALS ══ */
   private async fetchAnimals() {
     try {
-      const res = await fetch(`${this.apiBase}/api/animals`);
-      if (!res.ok) return;
+      const res = await fetch(`${this.apiBase}/api/animals`, { signal: AbortSignal.timeout(12000) });
+      if (!res.ok) return false;
       const data = await res.json();
       const local = this.animals();
       const localMap = new Map(local.filter(a => a.imageUrl?.startsWith('data:')).map(a => [a.id, a.imageUrl]));
@@ -338,7 +344,8 @@ export class StateService {
       const merged = [...localOnly, ...mapped];
       this.animals.set(merged);
       LS.set(StateService.LS_ANIMALS, merged);
-    } catch {}
+      return true;
+    } catch { return false; }
   }
 
   private mapAnimal(a: any): AnimalAd {
@@ -538,8 +545,8 @@ export class StateService {
   /* ══ PRODUCTS ══ */
   private async fetchProducts() {
     try {
-      const res = await fetch(`${this.apiBase}/api/products`);
-      if (!res.ok) return;
+      const res = await fetch(`${this.apiBase}/api/products`, { signal: AbortSignal.timeout(12000) });
+      if (!res.ok) return false;
       const data: Product[] = await res.json();
       const mapped = data.map(p => ({
         ...p,
@@ -547,7 +554,8 @@ export class StateService {
         contactPhone: p.contactPhone || '',
       }));
       this.products.set(mapped);
-    } catch {}
+      return true;
+    } catch { return false; }
   }
 
   async addProduct(p: Product) {

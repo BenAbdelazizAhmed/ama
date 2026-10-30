@@ -43,7 +43,7 @@ Departure values are local Tunis times (`Africa/Tunis`); the form labels this ex
 ```bash
 cd frontend
 npm run build
-npm run test:carpool
+npm run test:frontend
 ```
 
 ```bash
@@ -51,8 +51,14 @@ cd backend
 ./mvnw -Dtest=CarpoolTripServiceTest,TripRequestTest test
 ```
 
-Completed here: Angular production build; 9 frontend behavior tests; 8 backend service tests; 5 request-validation tests. The backend was compiled with these tests. The frontend tests exercise actual component behavior with HTTP stubs, not a live browser. Browser screenshots and a live MySQL integration test could not be completed in the execution environment. Check the desktop/mobile layout and publish a trip with the running backend before production rollout.
+Completed here: Angular production build; 13 frontend behavior tests; 8 backend service tests; 5 request-validation tests. The backend was compiled with these tests. The frontend tests exercise actual component behavior with HTTP stubs, not a live browser. Browser screenshots and a live MySQL integration test could not be completed in the execution environment. Check the desktop/mobile layout and publish a trip with the running backend before production rollout.
 
 ## Styling
 
 The new home and transport views have their own component styles. `frontend/src/farm-theme.css` is loaded after the legacy stylesheet to restyle shared navigation, footer and existing marketplace pages without deleting the legacy modal/form rules. Its scoped overrides are a compatibility layer; a subsequent cleanup can remove redundant legacy declarations page by page.
+
+## Frontend refinement
+
+The shared shell, home page and transport view use a restrained forest-green identity, a typographic wordmark, locally bundled SVG icons, consistent cards and field styling, and responsive layouts. Header, footer, marketplace headings, auth dialogs and animal detail links share the same theme.
+
+The hero uses responsive WebP images (212 KB desktop / 66 KB small) instead of the original 2.7 MB PNG. Marketplace loading skeletons, recoverable error states and partial-failure notices are backed by real request status. Homepage search terms are applied when opening animals, products or services. Four additional frontend behavior tests cover loading, empty responses, partial failures, cached offers and retry recovery.

@@ -4,29 +4,27 @@
 
 <div class="ann-bar" role="status">
   <div class="ann-dot"></div>
-  <span>AMANAFARM · سوق فلاحي تونسي آمن للبيع والشراء في 24 ولاية</span>
-  <span class="ann-badge">انشر إعلانك بثقة</span>
+  <span>من المزرعة للسوق، تواصل مباشر في كامل تونس</span>
+  <a routerLink="/help" class="ann-badge">تحتاج مساعدة؟ <app-icon name="arrow"></app-icon></a>
 </div>
 
 <header class="header farm-header" [class.scrolled]="isScrolled" role="banner">
   <a routerLink="/" class="logo" aria-label="AMANAFARM الرئيسية">
-    <div class="logo-mark">
-      <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="44" height="44">
-    </div>
+    <div class="logo-mark brand-symbol" aria-hidden="true"><app-icon name="sprout"></app-icon></div>
     <div class="logo-texts">
       <div class="name">AMANAFARM</div>
-      <div class="tagline">منصة فلاحة موثوقة في تونس</div>
+      <div class="tagline">السوق الفلاحي التونسي</div>
     </div>
   </a>
-  <div class="search-wrap" role="search">
+  <div class="search-wrap header-search" role="search">
     <input id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" />
     <button class="search-btn" id="searchBtn" type="button" aria-label="تنفيذ البحث">
-      <i data-lucide="search" width="14" aria-hidden="true"></i> بحث
+      <app-icon name="search"></app-icon> بحث
     </button>
   </div>
   <div class="header-actions">
     <button class="btn-post-header" id="publishHeaderBtn" type="button" hidden>
-      <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
+      <app-icon name="plus"></app-icon>
       <span id="publishHeaderLabel">نشر إعلان</span>
     </button>
     <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">دخول</button>
@@ -56,37 +54,37 @@
   <ul>
     <li>
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <i data-lucide="home" width="14" aria-hidden="true"></i>
+        <app-icon name="home"></app-icon>
         الرئيسية
       </a>
     </li>
 
     <li>
       <a routerLink="/animals" routerLinkActive="active">
-        <i data-lucide="beef" width="14" aria-hidden="true"></i>
+        <app-icon name="animal"></app-icon>
         الحيوانات
       </a>
     </li>
 
-    <li><a routerLink="/carpool" routerLinkActive="active"><span aria-hidden="true">↔</span> نقل الحيوانات <span class="nav-new">جديد</span></a></li>
+    <li><a routerLink="/carpool" routerLinkActive="active"><app-icon name="truck"></app-icon> نقل الحيوانات <span class="nav-new">جديد</span></a></li>
     <!-- PRODUCTS -->
     <li>
       <a routerLink="/products" routerLinkActive="active">
-        <i data-lucide="package" width="14" aria-hidden="true"></i>
+        <app-icon name="package"></app-icon>
         المنتجات
       </a>
     </li>
 
     <li>
       <a routerLink="/services" routerLinkActive="active">
-        <i data-lucide="wrench" width="14" aria-hidden="true"></i>
+        <app-icon name="users"></app-icon>
         مهن فلاحية
       </a>
     </li>
 
     <li>
       <a routerLink="/about" routerLinkActive="active">
-        <i data-lucide="info" width="14" aria-hidden="true"></i>
+        <app-icon name="help"></app-icon>
         من نحن
       </a>
     </li>
@@ -102,10 +100,10 @@
   <div class="footer-grid">
     <div class="ft-brand">
       <div class="ft-logo-row">
-        <img src="assets/aza.png" alt="AMANAFARM" width="40" height="40" class="ft-logo-img" loading="lazy">
+        <span class="brand-symbol" aria-hidden="true"><app-icon name="sprout"></app-icon></span>
         <div class="ft-name">AMANAFARM</div>
       </div>
-      <div class="ft-tag">منصة الفلاحة الأولى في تونس</div>
+      <div class="ft-tag">الفلاحة التونسية، أقرب ليك</div>
       <p>سوق رقمي يربط المربين والمستثمرين بكل الخدمات الفلاحية في 24 ولاية.</p>
       <a class="ft-wa-btn" href="https://wa.me/21653159799" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg>
@@ -156,23 +154,23 @@
 
 <nav class="mobile-bottom-nav" aria-label="التنقل السفلي">
   <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-label="الرئيسية">
-    <i data-lucide="home" width="20" aria-hidden="true"></i>
+    <app-icon name="home"></app-icon>
     <span>الرئيسية</span>
   </a>
   <a routerLink="/animals" routerLinkActive="active" aria-label="تصفح">
-    <i data-lucide="search" width="20" aria-hidden="true"></i>
+    <app-icon name="search"></app-icon>
     <span>تصفح</span>
   </a>
   <button type="button" id="mobPublish" class="mob-publish-btn" aria-label="نشر إعلان" (click)="goPublish()">
-    <i data-lucide="plus" width="24" aria-hidden="true"></i>
+    <app-icon name="plus"></app-icon>
     <span>نشر</span>
   </button>
   <a routerLink="/carpool" routerLinkActive="active" aria-label="نقل الحيوانات">
-    <i data-lucide="truck" width="20" aria-hidden="true"></i>
+    <app-icon name="truck"></app-icon>
     <span>النقل</span>
   </a>
   <a routerLink="/services" routerLinkActive="active" aria-label="خدمات">
-    <i data-lucide="briefcase" width="20" aria-hidden="true"></i>
+    <app-icon name="users"></app-icon>
     <span>خدمات</span>
   </a>
 </nav>
@@ -181,7 +179,7 @@
   <section class="publish-choice" (click)="$event.stopPropagation()">
     <button class="publish-choice__close" type="button" (click)="closePublishChooser()" aria-label="إغلاق">×</button>
     <div class="publish-choice__head">
-      <span class="publish-choice__icon"><i data-lucide="plus-circle" width="22" aria-hidden="true"></i></span>
+      <span class="publish-choice__icon"><app-icon name="plus"></app-icon></span>
       <div>
         <h2 id="publishChoiceTitle">شنوة تحب تنشر؟</h2>
         <p>اختار نوع الإعلان، والفورم الموجود باش يفتح مباشرة.</p>
@@ -189,12 +187,12 @@
     </div>
     <div class="publish-choice__grid">
       <button class="publish-choice__card" type="button" (click)="openPublishTarget('animal')">
-        <i data-lucide="beef" width="26" aria-hidden="true"></i>
+        <app-icon name="animal"></app-icon>
         <strong>إعلان حيوان</strong>
         <span>بيع بالكعبة أو قطيع بالجملة</span>
       </button>
       <button class="publish-choice__card" type="button" (click)="openPublishTarget('product')">
-        <i data-lucide="package" width="26" aria-hidden="true"></i>
+        <app-icon name="package"></app-icon>
         <strong>إعلان منتج</strong>
         <span>علف، بذور، معدات، أو برودويات</span>
       </button>
@@ -273,9 +271,9 @@
         <div class="reg-step" id="regStep3">
           <p style="font-size:12.5px;font-weight:800;margin-bottom:10px">اختر تخصصك:</p>
           <div class="reg-cats" role="radiogroup" aria-label="التخصص">
-            <div class="reg-cat selected" data-cat="تربية الحيوانات" id="regCatAnimals" role="radio" aria-checked="true" tabindex="0"><i data-lucide="beef" width="22" aria-hidden="true"></i><div>تربية الحيوانات</div></div>
+            <div class="reg-cat selected" data-cat="تربية الحيوانات" id="regCatAnimals" role="radio" aria-checked="true" tabindex="0"><app-icon name="animal"></app-icon><div>تربية الحيوانات</div></div>
             <div class="reg-cat" data-cat="منتجات فلاحية" id="regCatProducts" role="radio" aria-checked="false" tabindex="0"><i data-lucide="wheat" width="22" aria-hidden="true"></i><div>منتجات فلاحية</div></div>
-            <div class="reg-cat" data-cat="نقل وخدمات" id="regCatServices" role="radio" aria-checked="false" tabindex="0"><i data-lucide="truck" width="22" aria-hidden="true"></i><div>نقل وخدمات</div></div>
+            <div class="reg-cat" data-cat="نقل وخدمات" id="regCatServices" role="radio" aria-checked="false" tabindex="0"><app-icon name="truck"></app-icon><div>نقل وخدمات</div></div>
           </div>
           <div class="step-nav"><button class="back-btn" id="regBackStep3Btn" type="button">← رجوع</button><button class="submit-btn" id="registerSubmitBtn" type="button">إنشاء الحساب</button></div>
         </div>
@@ -309,7 +307,7 @@
 
           <!-- Primary CTA: post first listing -->
           <button class="onboard-cta-btn" id="successPublishBtn" type="button">
-            <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
+            <app-icon name="plus"></app-icon>
             انشر أول إعلان — مجاناً وفي دقيقة
           </button>
 

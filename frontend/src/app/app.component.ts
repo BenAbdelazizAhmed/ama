@@ -1,3 +1,4 @@
+import { IconComponent } from './shared/icon/icon.component';
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener, effect } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
@@ -12,7 +13,7 @@ declare const FB: any;
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
+  imports: [IconComponent, RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

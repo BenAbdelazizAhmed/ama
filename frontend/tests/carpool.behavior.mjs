@@ -2,48 +2,11 @@
 import "@angular/compiler";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
-import { transpileModule, ModuleKind, ScriptTarget } from "typescript";
 import { of, throwError } from "rxjs";
-
-const moduleUrl = new URL(
-  `.carpool-behavior-${process.pid}.mjs`,
-  import.meta.url,
+import { loadSource } from "./load-source.mjs";
+const { CarpoolComponent } = await loadSource(
+  "../src/app/components/carpool/carpool.component.ts",
 );
-const source = readFileSync(
-  new URL(
-    "../src/app/components/carpool/carpool.component.ts",
-    import.meta.url,
-  ),
-  "utf8",
-);
-const environment = transpileModule(
-  readFileSync(
-    new URL("../src/environments/environment.ts", import.meta.url),
-    "utf8",
-  ),
-  { compilerOptions: { module: ModuleKind.ES2022 } },
-).outputText;
-const portableSource = source.replace(
-  /(["'])\.\.\/\.\.\/\.\.\/environments\/environment\1/,
-  JSON.stringify("data:text/javascript," + encodeURIComponent(environment)),
-);
-writeFileSync(
-  moduleUrl,
-  transpileModule(portableSource, {
-    compilerOptions: {
-      target: ScriptTarget.ES2022,
-      module: ModuleKind.ES2022,
-      experimentalDecorators: true,
-    },
-  }).outputText,
-);
-let CarpoolComponent;
-try {
-  ({ CarpoolComponent } = await import(moduleUrl.href));
-} finally {
-  unlinkSync(moduleUrl);
-}
 let dispatched;
 globalThis.window = {
   dispatchEvent: (event) => {

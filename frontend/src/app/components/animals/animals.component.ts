@@ -1,4 +1,4 @@
-﻿import {
+import {
   Component,
   ElementRef,
   ViewChild,
@@ -210,6 +210,10 @@ export class AnimalsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.loadFavs();
     this.route.queryParamMap.subscribe(params => {
+      this.searchQuery = params.get('q') || '';
+      const category = params.get('category');
+      if (category) this.activeCategory = category;
+      this.applyFilter();
       const publish = params.get('publish');
       const token = params.get('open') || publish || '';
       if (publish !== 'animal' && publish !== 'animal-bulk') return;

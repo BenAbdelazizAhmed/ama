@@ -1,21 +1,21 @@
 /* Shared visual language, layered over legacy marketplace styles. */
 :root {
-  --color-primary: #28583f;
-  --color-primary-dark: #1e432f;
-  --green: #28583f;
-  --green-dark: #1e432f;
+  --color-primary: #174f3d;
+  --color-primary-dark: #103b2e;
+  --green: #174f3d;
+  --green-dark: #103b2e;
   --green-mid: #577b4c;
   --green-light: #edf2e5;
   --green-xlight: #f5f7ef;
   --gold: #a17b38;
   --gold-light: #f7f0df;
-  --ink: #253c2e;
-  --text: #253c2e;
+  --ink: #192f26;
+  --text: #192f26;
   --text-2: #64725c;
   --muted: #839078;
-  --bg: #faf9f5;
+  --bg: #f7f8fa;
   --surface-soft: #f4f5ed;
-  --border: #e2e5d8;
+  --border: #e0e7e1;
   --border-2: #d2dbc4;
   --shadow-sm: 0 2px 9px #223c2505;
   --shadow-md: 0 8px 24px #223c250a;
@@ -23,15 +23,28 @@
   --radius: 12px;
   --radius-lg: 18px;
   --radius-xl: 24px;
-  --v4-green: #28583f;
-  --v4-green-d: #1e432f;
+  --v4-green: #174f3d;
+  --v4-green-d: #103b2e;
   --v4-green-s: #edf2e5;
   --v4-green-xs: #f5f7ef;
-  --v4-border: #e2e5d8;
+  --v4-border: #e0e7e1;
+  --af-primary: #174f3d;
+  --af-primary-hover: #103b2e;
+  --af-primary-soft: #eaf2ec;
+  --af-ink: #192f26;
+  --af-secondary: #607166;
+  --af-muted: #6c7c70;
+  --af-bg: #f7f8fa;
+  --af-surface: #fff;
+  --af-line: #e0e7e1;
+  --af-accent: #b6a16b;
+  --af-heading: "Readex Pro", "Cairo", sans-serif;
+  --af-radius: 12px;
+  --af-shadow: 0 8px 28px #163b2510;
 }
 body {
-  background: #faf9f5 !important;
-  color: #253c2e !important;
+  background: #f7f8fa !important;
+  color: #192f26 !important;
   font-family: "Cairo", "Segoe UI", sans-serif !important;
 }
 body :is(button, input, select, textarea) {
@@ -45,110 +58,127 @@ body :is(input, textarea) {
   cursor: text;
 }
 body .ann-bar {
-  height: 30px !important;
-  min-height: 30px !important;
-  background: #edf0e3 !important;
-  color: #5f744e !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  background: #173e30 !important;
+  color: #c5d5c8 !important;
   font-size: 10px !important;
   border: 0 !important;
   box-shadow: none !important;
   letter-spacing: 0 !important;
+  padding-inline: 40px !important;
+  justify-content: center !important;
+  gap: 10px !important;
 }
 body .ann-badge {
   font-size: 11px !important;
-  color: #6b8056 !important;
+  color: #c3d5c5 !important;
   background: transparent !important;
   border: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  font-weight: 400 !important;
+  margin-inline-start: 30px !important;
 }
 body .ann-dot {
-  background: #8b9f64 !important;
+  background: #cab67e !important;
   box-shadow: none !important;
   animation: none !important;
+  width: 4px !important;
+  height: 4px !important;
 }
 body .farm-header {
-  height: 84px !important;
-  min-height: 84px !important;
+  height: 82px !important;
+  min-height: 82px !important;
   max-width: none !important;
   width: 100% !important;
-  padding: 0 max(5%, calc((100% - 1260px) / 2)) !important;
-  background: #faf9f5 !important;
+  padding: 0 max(40px, calc((100% - 1264px) / 2)) !important;
+  background: #fff !important;
   border: 0 !important;
-  border-bottom: 1px solid #e8e9de !important;
+  border-bottom: 1px solid #edf0eb !important;
   box-shadow: none !important;
-  gap: 35px !important;
-  position: relative !important;
-  top: auto !important;
+  gap: 38px !important;
+  position: sticky !important;
+  top: 0 !important;
   transform: none !important;
+  z-index: 1200 !important;
 }
 body .farm-header.scrolled {
   box-shadow: none !important;
 }
 body .farm-header .logo {
-  gap: 10px !important;
+  gap: 12px !important;
   flex-shrink: 0 !important;
 }
 body .farm-header .logo-mark {
-  width: 43px !important;
-  height: 43px !important;
-  min-width: 43px !important;
-  min-height: 43px !important;
-  border-radius: 50% !important;
+  width: 41px !important;
+  height: 41px !important;
+  min-width: 41px !important;
+  min-height: 41px !important;
+  border-radius: 10px !important;
   box-shadow: none !important;
 }
 body .farm-header .logo-texts .name {
   font-family: "Plus Jakarta Sans", "Inter", sans-serif !important;
-  font-size: 20px !important;
+  font-size: 21px !important;
   font-weight: 800 !important;
   letter-spacing: -1px !important;
-  color: #28583f !important;
+  color: #193f2f !important;
+  line-height: 1.4 !important;
 }
 body .farm-header .tagline {
-  font-size: 11px !important;
-  font-weight: 400 !important;
-  color: #8b947f !important;
-  margin-top: 2px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  color: #607166 !important;
+  margin-top: 3px !important;
 }
 body .farm-header .search-wrap {
-  max-width: 440px !important;
+  max-width: 400px !important;
   flex: 1 !important;
-  border-radius: 9px !important;
-  border: 1px solid #e2e5d7 !important;
-  background: #f4f5ed !important;
+  border-radius: 8px !important;
+  border: 1px solid #e1e8df !important;
+  background: #f7f9f5 !important;
   box-shadow: none !important;
-  height: 41px !important;
+  height: 42px !important;
 }
 body .farm-header .search-wrap input {
   background: transparent !important;
-  font-size: 11px !important;
-  color: #586c4e !important;
+  font-size: 12px !important;
+  color: #405b43 !important;
 }
 body .farm-header .search-btn {
   background: transparent !important;
   color: #5f7950 !important;
   box-shadow: none !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   border: 0 !important;
+  gap: 7px !important;
 }
 body .farm-header .header-actions {
-  gap: 12px !important;
+  gap: 15px !important;
   margin-inline-start: auto !important;
 }
 body .farm-header .btn-post-header {
-  font-size: 11px !important;
-  background: #28583f !important;
-  border-radius: 8px !important;
+  font-size: 12px !important;
+  background: #174f3d !important;
+  border-radius: 7px !important;
   box-shadow: none !important;
-  padding: 10px 16px !important;
+  padding: 11px 18px !important;
   transform: none !important;
+  min-height: 42px !important;
+  gap: 8px !important;
 }
 body .farm-header .btn-login-header {
-  font-size: 11px !important;
+  font-size: 12px !important;
   border: 1px solid #dde3d2 !important;
-  background: transparent !important;
+  background: #fff !important;
   color: #45643c !important;
-  padding: 10px 17px !important;
-  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  border-radius: 7px !important;
   box-shadow: none !important;
+  font-weight: 600 !important;
+  min-height: 42px !important;
 }
 body .farm-header .user-greeting-chip {
   border: 1px solid #e0e5d7 !important;
@@ -161,19 +191,20 @@ body .farm-header .user-greeting-chip__avatar {
   color: #567143 !important;
 }
 body .farm-nav {
-  position: relative !important;
-  top: auto !important;
-  background: #faf9f5 !important;
+  position: sticky !important;
+  top: 82px !important;
+  background: #fff !important;
   border: 0 !important;
-  border-bottom: 1px solid #e8e9de !important;
+  border-bottom: 1px solid #edf0eb !important;
   box-shadow: none !important;
-  padding: 0 5% !important;
+  padding: 0 40px !important;
   min-height: 48px !important;
   transform: none !important;
+  z-index: 1190 !important;
 }
 body .farm-nav ul {
   justify-content: center !important;
-  gap: 26px !important;
+  gap: 30px !important;
   min-height: 48px !important;
   max-width: 1260px !important;
   margin: auto !important;
@@ -182,19 +213,19 @@ body .farm-nav a {
   height: auto !important;
   min-height: 48px !important;
   padding: 10px 6px !important;
-  color: #7b8771 !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
+  color: #607166 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   border-radius: 0 !important;
   border: 0 !important;
   border-bottom: 2px solid transparent !important;
   background: transparent !important;
   box-shadow: none !important;
-  gap: 6px !important;
+  gap: 8px !important;
 }
 body .farm-nav a.active,
 body .farm-nav a:hover {
-  color: #28583f !important;
+  color: #174f3d !important;
   border-bottom-color: #789457 !important;
   background: transparent !important;
 }
@@ -202,27 +233,29 @@ body .farm-nav a.active::after {
   display: none !important;
 }
 .nav-new {
-  font-size: 10px;
-  background: #e6edd9;
-  border-radius: 4px;
-  padding: 0 5px;
-  color: #6a8551;
+  font-size: 8px;
+  background: #f4eedc;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #8b733d;
+  line-height: 1.6;
+  border: 1px solid #e9dfc5;
 }
 body .app-main-shell {
   min-height: 50vh !important;
-  background: #faf9f5 !important;
+  background: #f7f8fa !important;
 }
 body footer {
-  background: #233c2d !important;
+  background: #133b2d !important;
   color: #e5ebda !important;
   border: 0 !important;
   margin-top: 0 !important;
 }
 body .footer-grid {
-  max-width: 1260px !important;
+  max-width: 1264px !important;
   margin: auto !important;
-  padding: 45px 30px 35px !important;
-  gap: 45px !important;
+  padding: 52px 30px 40px !important;
+  gap: 50px !important;
 }
 body .ft-name {
   font-family: "Plus Jakarta Sans", sans-serif !important;
@@ -239,7 +272,7 @@ body .ft-col h4 {
 body .ft-brand p,
 body .ft-col ul li a {
   font-size: 11px !important;
-  color: #aab99e !important;
+  color: #b5c9ac !important;
   line-height: 2 !important;
 }
 body .ft-col h4::after {
@@ -255,13 +288,13 @@ body .ft-wa-btn {
 body .ft-bottom {
   border-top: 1px solid #ffffff12 !important;
   background: transparent !important;
-  padding: 18px 5% !important;
-  color: #92a487 !important;
+  padding: 21px max(40px, calc((100% - 1204px) / 2)) !important;
+  color: #a7c09a !important;
 }
 body .copy,
 body .ft-bottom-links a {
   font-size: 10px !important;
-  color: #92a487 !important;
+  color: #a7c09a !important;
 }
 body
   :is(
@@ -274,19 +307,19 @@ body
     app-animal-detail,
     app-product-detail
   ) {
-  --green: #28583f;
-  --green-dark: #1e432f;
+  --green: #174f3d;
+  --green-dark: #103b2e;
   --green-light: #edf2e5;
-  --border: #e2e5d8;
-  --primary: #28583f;
-  --primary-dark: #1e432f;
-  --color-primary: #28583f;
-  --bg: #faf9f5;
-  --ink: #253c2e;
+  --border: #e0e7e1;
+  --primary: #174f3d;
+  --primary-dark: #103b2e;
+  --color-primary: #174f3d;
+  --bg: #f7f8fa;
+  --ink: #192f26;
   --muted: #839078;
-  --g-green: #28583f;
-  --g-green-dark: #1e432f;
-  background: #faf9f5 !important;
+  --g-green: #174f3d;
+  --g-green-dark: #103b2e;
+  background: #f7f8fa !important;
 }
 body
   :is(
@@ -297,7 +330,7 @@ body
     app-about .about-hero,
     app-help .hlp-hero
   ) {
-  background: #edf1e4 !important;
+  background: #edf3ee !important;
   background-image: none !important;
   color: #304b32 !important;
   border: 0 !important;
@@ -334,11 +367,12 @@ body
     app-help .hlp-hero h1
   ) {
   color: #2c4931 !important;
-  font-size: clamp(27px, 3.1vw, 42px) !important;
-  font-weight: 700 !important;
+  font-size: clamp(27px, 3vw, 39px) !important;
+  font-weight: 500 !important;
   line-height: 1.6 !important;
   letter-spacing: -1px !important;
   text-shadow: none !important;
+  font-family: var(--af-heading) !important;
 }
 body app-animals .g-hero__title em {
   color: #7d925b !important;
@@ -418,9 +452,9 @@ body
     app-products .mode-switch button.active,
     app-services .mode-switch button.active
   ) {
-  background: #28583f !important;
+  background: #174f3d !important;
   color: #fff !important;
-  border: 1px solid #28583f !important;
+  border: 1px solid #174f3d !important;
   box-shadow: none !important;
 }
 body app-animals .g-hero-actions > .g-btn:not(.g-btn--primary) {
@@ -482,7 +516,7 @@ body
   color: #354b32 !important;
 }
 body :is(app-animals .ad-price, app-products .pcard__price) {
-  color: #28583f !important;
+  color: #174f3d !important;
 }
 body :is(app-animals .ad-photo, app-products .pcard__media) {
   border-radius: 0 !important;
@@ -524,17 +558,20 @@ body :is(.publish-choice, .auth-modal) {
   box-shadow: 0 25px 80px #183b2330 !important;
 }
 body .mobile-bottom-nav {
-  background: #fafbf6f5 !important;
+  background: #fffffff5 !important;
   border-top: 1px solid #dfe5d3 !important;
   box-shadow: 0 -4px 15px #233d2405 !important;
   backdrop-filter: blur(12px);
+  min-height: 65px !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+  z-index: 1500 !important;
 }
 body .mobile-bottom-nav a.active {
-  color: #28583f !important;
+  color: #174f3d !important;
 }
 body .mobile-bottom-nav .mob-publish-btn svg {
-  background: #28583f !important;
-  box-shadow: 0 4px 12px #28583f25 !important;
+  background: #174f3d !important;
+  box-shadow: 0 4px 12px #174f3d25 !important;
 }
 @media (max-width: 900px) {
   body .farm-header {
@@ -665,7 +702,7 @@ body .farm-header .btn-post-header {
   margin-inline-start: auto;
 }
 body :is(app-animal-detail .adp-hero, app-product-detail .pdp-hero) {
-  background: #edf1e4 !important;
+  background: #edf3ee !important;
   border-color: #dfe6d3 !important;
 }
 body :is(app-animal-detail .adp-title, app-product-detail .pdp-title) {
@@ -698,5 +735,245 @@ body
   }
   .farm-detail-transport > span {
     font-size: 26px;
+  }
+}
+html {
+  scroll-padding-top: 138px;
+}
+body .brand-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 41px;
+  height: 41px;
+  background: #174f3d;
+  color: #f1f4df;
+  border: 1px solid #174f3d;
+  border-radius: 10px;
+}
+body .brand-symbol app-icon {
+  width: 22px;
+  height: 22px;
+}
+body .farm-nav app-icon {
+  font-size: 14px;
+  color: #6d8562;
+}
+body footer .brand-symbol {
+  width: 37px;
+  height: 37px;
+  background: #28513a;
+  border-color: #496c4b;
+  color: #d1dfbd;
+  border-radius: 8px;
+}
+body .ft-col ul {
+  display: grid !important;
+  gap: 9px !important;
+}
+body .ft-brand p,
+body .ft-col ul li a {
+  font-size: 12px !important;
+  color: #b5c9ac !important;
+}
+body .mobile-bottom-nav a > app-icon {
+  font-size: 19px;
+}
+body .mobile-bottom-nav .mob-publish-btn > app-icon {
+  width: 42px;
+  height: 36px;
+  border-radius: 9px;
+  background: #174f3d;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 2px;
+}
+body .ann-badge app-icon {
+  font-size: 11px;
+}
+body
+  :is(
+    app-animals .box-title,
+    app-products .swidget__head,
+    app-services .s-box-title
+  ) {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #405f30 !important;
+}
+body :is(app-animals .g-filter-chip, app-products .seller-filter__btn) {
+  border-radius: 6px !important;
+  font-size: 12px !important;
+}
+body
+  :is(
+    app-animals .market-layout,
+    app-products .layout,
+    app-services .services-layout
+  ) {
+  gap: 25px !important;
+  max-width: 1264px !important;
+}
+body
+  :is(
+    app-animals .g-hero-stat,
+    app-products .services-stats > div,
+    app-services .services-stats > div
+  ) {
+  background: transparent !important;
+  border: 0 !important;
+  border-inline-end: 1px solid #d0dfc8 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding-inline: 23px !important;
+}
+body :is(app-products .mode-switch, app-services .mode-switch) {
+  border-radius: 9px !important;
+  padding: 4px !important;
+}
+body :is(app-animals .g-hero-search__btn, app-animals .g-btn--primary) {
+  border-radius: 7px !important;
+}
+body :is(.modal-card, .pro-modal) {
+  border-radius: 14px !important;
+  box-shadow: 0 25px 80px #14351c30 !important;
+}
+body .auth-brand__image {
+  background:
+    linear-gradient(0deg, #0d3025d9, #174f3d90),
+    url("/assets/farm-hero.webp") center/cover no-repeat !important;
+}
+body .publish-choice__card {
+  border: 1px solid #dce7d2 !important;
+  background: #f8faf4 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+body .submit-btn {
+  background: #174f3d !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+body .submit-btn:hover {
+  background: #103b2e !important;
+  transform: none !important;
+}
+body .ft-soc {
+  background: transparent !important;
+  border: 1px solid #486b48 !important;
+  color: #bbd0a9 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: 115px;
+  }
+  body .farm-nav {
+    top: 68px !important;
+  }
+  body .farm-header .logo-texts .name {
+    font-size: 19px !important;
+  }
+  body .farm-header .header-actions {
+    gap: 10px !important;
+  }
+  body .ann-badge {
+    display: none !important;
+  }
+  body .farm-header .btn-post-header,
+  body .farm-header .btn-login-header {
+    min-height: 39px !important;
+  }
+  body .farm-nav a {
+    font-size: 11px !important;
+  }
+}
+@media (max-width: 600px) {
+  body .farm-header {
+    height: 65px !important;
+    min-height: 65px !important;
+    padding: 0 18px !important;
+    gap: 10px !important;
+  }
+  body .farm-nav {
+    top: 65px !important;
+    padding-inline: 18px !important;
+  }
+  body .farm-header .logo {
+    gap: 9px !important;
+  }
+  body .farm-header .logo-mark {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    border-radius: 8px !important;
+  }
+  body .farm-header .brand-symbol app-icon {
+    width: 20px;
+    height: 20px;
+  }
+  body .farm-header .logo-texts .name {
+    font-size: 16px !important;
+    letter-spacing: -0.7px !important;
+  }
+  body .farm-header .tagline {
+    display: none !important;
+  }
+  body .farm-header .header-actions {
+    gap: 8px !important;
+  }
+  body .farm-header .btn-post-header {
+    padding: 8px 11px !important;
+    font-size: 10px !important;
+    min-height: 36px !important;
+    gap: 5px !important;
+  }
+  body .farm-header .btn-post-header app-icon {
+    display: none;
+  }
+  body .farm-header .btn-login-header {
+    padding: 8px 10px !important;
+    min-height: 36px !important;
+    font-size: 10px !important;
+  }
+  body .farm-header .user-greeting-chip__body {
+    display: none !important;
+  }
+  body .farm-header .user-greeting-chip {
+    padding: 4px !important;
+    min-width: 0 !important;
+  }
+  body .farm-nav ul {
+    gap: 20px !important;
+  }
+  body .farm-nav a {
+    font-size: 10px !important;
+    gap: 5px !important;
+  }
+  body .footer-grid {
+    padding: 35px 22px !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px 20px !important;
+  }
+  body .ft-brand {
+    grid-column: 1/-1 !important;
+  }
+  body .ft-col h4 {
+    margin-bottom: 14px !important;
+    font-size: 12px !important;
+  }
+  body .ft-col ul li a {
+    font-size: 11px !important;
+  }
+  body .ft-bottom {
+    padding: 18px 22px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    text-align: center !important;
   }
 }

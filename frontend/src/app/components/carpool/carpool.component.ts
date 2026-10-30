@@ -1,3 +1,4 @@
+import { IconComponent } from '../../shared/icon/icon.component';
 import {
   Component,
   OnInit,
@@ -57,7 +58,7 @@ export const GOVERNORATES = [
 @Component({
   selector: "app-carpool",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, FormsModule, RouterLink],
   templateUrl: "./carpool.component.html",
   styleUrls: ["./carpool.component.scss"],
 })
