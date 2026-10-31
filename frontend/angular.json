@@ -36,7 +36,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/farm-theme.css"
+              "src/farm-theme.css",
+              "src/app/features/marketplace/marketplace.scss"
             ],
             "scripts": []
           },
@@ -77,6 +78,6 @@
     }
   },
   "cli": {
-    "analytics": "fa1c3b4c-938e-4e12-876f-a22d65eb4413"
+    "analytics": false
   }
 }

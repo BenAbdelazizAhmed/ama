@@ -7,9 +7,12 @@ public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userId;
+    private java.time.LocalDateTime createdAt;
 
     private String name;
     private String title;
+    private String category;
     private String location;
     private String experience;
 
@@ -59,8 +62,14 @@ public class Worker {
         this.description = description;
     }
 
+    public Long getUserId(){return userId;}
+    public void setUserId(Long value){userId=value;}
+    public java.time.LocalDateTime getCreatedAt(){return createdAt;}
+    @PrePersist public void created(){createdAt=java.time.LocalDateTime.now();}
     public Long getId() { return id; }
     public String getName() { return name; }
+    public String getCategory(){return category;}
+    public void setCategory(String value){category=value;}
     public String getTitle() { return title; }
     public String getLocation() { return location; }
     public String getExperience() { return experience; }

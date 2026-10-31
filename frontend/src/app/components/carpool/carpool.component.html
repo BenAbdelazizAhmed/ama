@@ -43,7 +43,7 @@
     </div>
   </section>
   <section class="ride-search" aria-label="البحث عن رحلة">
-    <div class="ride-search-fields">
+    <div class="ride-search-fields"><label class="ride-query">كلمة بحث<input type="search" [(ngModel)]="query" placeholder="ولاية، نوع الحيوان أو صاحب الرحلة"></label>
       <label
         >منين؟<select [(ngModel)]="origin">
           <option value="">كل الولايات</option>

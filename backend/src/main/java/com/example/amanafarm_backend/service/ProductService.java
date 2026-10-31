@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+    private final CurrentUser currentUser;
     private final ProductRepository productRepository;
 
     public ProductResponse createProduct(ProductRequest req) {
@@ -24,25 +25,27 @@ public class ProductService {
         p.setOrigin(req.getOrigin());
         p.setLocation(req.getLocation());
         p.setWilaya(req.getWilaya());
+        MediaService.validateUrl(req.getImageUrl());
         p.setImageUrl(req.getImageUrl());
         p.setContactPhone(req.getContactPhone());
         p.setInStock(req.getInStock());
-        p.setFeatured(req.getFeatured());
+        p.setFeatured(false);
         p.setDeliveryAvailable(req.getDeliveryAvailable());
         p.setCertified(req.getCertified());
         p.setSellerType(req.getSellerType());
         p.setCompanyName(req.getCompanyName());
         p.setCompanyTagline(req.getCompanyTagline());
-        p.setCompanyVerified(req.getCompanyVerified());
-        p.setSellerName(req.getSellerName());
-        p.setSellerVerified(req.getSellerVerified());
-        p.setSellerRating(req.getSellerRating());
-        p.setUserId(req.getUserId());
+        p.setCompanyVerified(false);
+        p.setSellerName(currentUser.name());
+        p.setSellerVerified(false);
+        p.setSellerRating(null);
+        p.setUserId(currentUser.require().getId());
         return mapToResponse(productRepository.save(p));
     }
 
     public ProductResponse updateProduct(Long id, ProductRequest req) {
-        Product p = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product p = productRepository.findById(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable"));
+        currentUser.assertOwner(p.getUserId());
         p.setTitle(req.getTitle());
         p.setCategory(req.getCategory());
         p.setDescription(req.getDescription());
@@ -53,19 +56,20 @@ public class ProductService {
         p.setOrigin(req.getOrigin());
         p.setLocation(req.getLocation());
         p.setWilaya(req.getWilaya());
+        MediaService.validateUrl(req.getImageUrl());
         p.setImageUrl(req.getImageUrl());
         p.setContactPhone(req.getContactPhone());
         p.setInStock(req.getInStock());
-        p.setFeatured(req.getFeatured());
+
         p.setDeliveryAvailable(req.getDeliveryAvailable());
         p.setCertified(req.getCertified());
         p.setSellerType(req.getSellerType());
         p.setCompanyName(req.getCompanyName());
         p.setCompanyTagline(req.getCompanyTagline());
-        p.setCompanyVerified(req.getCompanyVerified());
-        p.setSellerName(req.getSellerName());
-        p.setSellerVerified(req.getSellerVerified());
-        p.setSellerRating(req.getSellerRating());
+
+        p.setSellerName(currentUser.name());
+
+
         return mapToResponse(productRepository.save(p));
     }
 
@@ -74,11 +78,13 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long id) {
-        return mapToResponse(productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found")));
+        return mapToResponse(productRepository.findById(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable")));
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        var item = productRepository.findById(id).orElseThrow(()->new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable"));
+        currentUser.assertOwner(item.getUserId());
+        productRepository.delete(item);
     }
 
     private ProductResponse mapToResponse(Product p) {

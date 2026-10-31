@@ -1,0 +1,190 @@
+<div class="mk-page" dir="rtl">
+  <header class="mk-page-head">
+    <div>
+      <span class="mk-eyebrow">مساحتك على AMANAFARM</span>
+      <h1>أهلاً، {{ state.user()?.fullName }}.</h1>
+      <p>إعلاناتك، مفضّلتك ومعلوماتك، في بلاصة واحدة.</p>
+    </div>
+    <button class="mk-primary" type="button" (click)="publish()">
+      <app-icon name="plus" /> انشر إعلان
+    </button>
+  </header>
+  <nav class="mk-account-tabs" aria-label="الحساب">
+    <button
+      type="button"
+      [class.active]="tab === 'listings'"
+      (click)="select('listings')"
+    >
+      <app-icon name="grid" /> إعلاناتي</button
+    ><button
+      type="button"
+      [class.active]="tab === 'saved'"
+      (click)="select('saved')"
+    >
+      <app-icon name="heart" /> المفضّلة</button
+    ><button
+      type="button"
+      [class.active]="tab === 'settings'"
+      (click)="select('settings')"
+    >
+      <app-icon name="account" /> معلومات الحساب</button
+    ><button type="button" class="mk-logout" (click)="logout()">
+      تسجيل الخروج
+    </button>
+  </nav>
+  <p class="mk-notice" role="status" *ngIf="notice">{{ notice }}</p>
+  <p class="mk-error" role="alert" *ngIf="error">
+    {{ error }} <button type="button" (click)="load()">عاود جرّب</button>
+  </p>
+  <p class="mk-error" role="alert" *ngIf="favorites.error()">
+    {{ favorites.error() }}
+    <button type="button" (click)="favorites.load()">عاود جرّب</button>
+  </p>
+  <div class="mk-state" role="status" *ngIf="loading">
+    <span><app-icon name="refresh" /></span>
+    <h2>نحضّرولك مساحتك…</h2>
+  </div>
+  <section *ngIf="!loading && tab === 'listings'">
+    <div class="mk-section-heading">
+      <h2>الإعلانات المنشورة</h2>
+      <span class="mk-muted">{{ mine.length }} إعلان</span>
+    </div>
+    <div class="mk-grid">
+      <app-market-card *ngFor="let item of mine" [item]="item" />
+    </div>
+    <div class="mk-state" *ngIf="!mine.length && !error">
+      <span><app-icon name="plus" /></span>
+      <h3>أول إعلانك يبدأ من هنا.</h3>
+      <p>انشر الحيوان، المنتج، الخدمة ولا عرض الشغل اللي عندك.</p>
+      <button class="mk-primary" type="button" (click)="publish()">
+        انشر إعلان
+      </button>
+    </div>
+    <section class="mk-account-trips">
+      <div class="mk-section-heading">
+        <h2>رحلاتي القادمة</h2>
+        <a routerLink="/carpool">شوف الرحلات <app-icon name="arrow" /></a>
+      </div>
+      <a
+        class="mk-trip-row"
+        *ngFor="let trip of myTrips"
+        routerLink="/carpool"
+        [queryParams]="{ trip: trip.id }"
+        ><app-icon name="truck" />
+        <div>
+          <strong>{{ trip.origin }} ← {{ trip.destination }}</strong
+          ><span
+            >{{ trip.departure | date: "dd/MM/yyyy HH:mm" }} ·
+            {{ trip.animalType }}</span
+          >
+        </div>
+        <strong>{{ trip.price }} دت</strong><app-icon name="arrow"
+      /></a>
+      <p class="mk-muted" *ngIf="!myTrips.length">
+        ما عندكش رحلات قادمة منشورة توّا.
+      </p>
+    </section>
+  </section>
+  <section *ngIf="!loading && tab === 'saved'">
+    <div class="mk-section-heading">
+      <h2>إعلانات حفظتها لوقت آخر.</h2>
+      <span class="mk-muted">{{ saved.length }} إعلان</span>
+    </div>
+    <div class="mk-grid">
+      <app-market-card *ngFor="let item of saved" [item]="item" />
+    </div>
+    <div class="mk-state" *ngIf="!saved.length">
+      <span><app-icon name="heart" /></span>
+      <h3>إعلان شدّ انتباهك؟ احفظو هنا.</h3>
+      <p>
+        اضغط على القلب في أي إعلان باش ترجع له وقت تحب. الإعلانات المحذوفة ما
+        تظهرش.
+      </p>
+      <a class="mk-primary" routerLink="/animals">تصفّح السوق</a>
+    </div>
+  </section>
+  <section class="mk-settings-grid" *ngIf="!loading && tab === 'settings'">
+    <form
+      class="mk-settings-card"
+      #profileForm="ngForm"
+      (ngSubmit)="update(profileForm)"
+    >
+      <span class="mk-eyebrow">معلوماتك</span>
+      <h2>كيفاش الناس تتعرّف عليك.</h2>
+      <div class="mk-form-grid">
+        <label
+          >الاسم<input
+            name="firstName"
+            [(ngModel)]="firstName"
+            required
+            maxlength="50"
+            autocomplete="given-name" /></label
+        ><label
+          >اللقب<input
+            name="lastName"
+            [(ngModel)]="lastName"
+            required
+            maxlength="50"
+            autocomplete="family-name" /></label
+        ><label class="mk-wide"
+          >رقم الهاتف<input
+            name="phone"
+            [(ngModel)]="phone"
+            required
+            pattern="[2459][0-9]{7}"
+            maxlength="8"
+            type="tel"
+            dir="ltr"
+            autocomplete="tel" /></label
+        ><label class="mk-wide" *ngIf="showEmail"
+          >البريد الإلكتروني<input
+            [value]="state.user()?.email || ''"
+            readonly
+            type="email"
+          /><small>البريد مرتبط بتسجيل الدخول.</small></label
+        >
+      </div>
+      <button class="mk-primary" type="submit" [disabled]="saving">
+        {{ saving ? "جاري الحفظ…" : "حفظ المعلومات" }}
+      </button>
+    </form>
+    <form
+      class="mk-settings-card"
+      #passwordForm="ngForm"
+      (ngSubmit)="password(passwordForm)"
+    >
+      <span class="mk-eyebrow">أمان الحساب</span>
+      <h2>بدّل كلمة المرور.</h2>
+      <div class="mk-form-grid">
+        <label class="mk-wide"
+          >كلمة المرور الحالية<input
+            name="currentPassword"
+            type="password"
+            [(ngModel)]="currentPassword"
+            autocomplete="current-password"
+            required /></label
+        ><label class="mk-wide"
+          >كلمة مرور جديدة<input
+            name="newPassword"
+            type="password"
+            [(ngModel)]="newPassword"
+            minlength="8"
+            maxlength="72"
+            autocomplete="new-password"
+            required
+          /><small>8 أحرف على الأقل. ما تشاركها مع حدّ.</small></label
+        ><label class="mk-wide"
+          >أكّد كلمة المرور الجديدة<input
+            name="confirmPassword"
+            type="password"
+            [(ngModel)]="confirmPassword"
+            autocomplete="new-password"
+            required
+        /></label>
+      </div>
+      <button class="mk-primary" type="submit" [disabled]="changing">
+        {{ changing ? "جاري التغيير…" : "تغيير كلمة المرور" }}
+      </button>
+    </form>
+  </section>
+</div>

@@ -1,11 +1,13 @@
 package com.example.amanafarm_backend.auth;
 
+import jakarta.validation.constraints.*;
+
 public class RegisterRequest {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private String password;
+    @NotBlank @Size(max=50) private String firstName;
+    @NotBlank @Size(max=50) private String lastName;
+    @NotBlank @Email @Size(max=100) private String email;
+    @NotBlank @Pattern(regexp="(?:216)?[2459][0-9]{7}") private String phone;
+    @NotBlank @Size(min=8,max=72) private String password;
     private String avatar;
     private String profilePhoto;
     private String coverPhoto;

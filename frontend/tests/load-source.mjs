@@ -1,45 +1,53 @@
 import "@angular/compiler";
-import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
+import {
+  readFileSync,
+  writeFileSync,
+  mkdtempSync,
+  rmSync,
+  existsSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { transpileModule, ModuleKind, ScriptTarget } from "typescript";
-
-// Transpile real Angular source for behavior tests. Templates are checked by ng build.
+// Compile the real source graph into a short-lived test module tree.
 export async function loadSource(relativePath) {
-  const directory = mkdtempSync(
+  const dir = mkdtempSync(
     join(dirname(fileURLToPath(import.meta.url)), ".behavior-"),
   );
-  const options = {
-    compilerOptions: {
-      target: ScriptTarget.ES2022,
-      module: ModuleKind.ES2022,
-      experimentalDecorators: true,
-    },
+  const cache = new Map();
+  const compile = (url) => {
+    const key = url.href;
+    if (cache.has(key)) return cache.get(key);
+    const name = "module-" + cache.size + ".mjs";
+    cache.set(key, name);
+    const source = readFileSync(url, "utf8");
+    let code = transpileModule(source, {
+      compilerOptions: {
+        target: ScriptTarget.ES2022,
+        module: ModuleKind.ES2022,
+        experimentalDecorators: true,
+      },
+    }).outputText;
+    code = code.replace(
+      /(from\s+|import\s*)(["'])(\.[^"']+)\2/g,
+      (match, prefix, quote, path) => {
+        let target = new URL(path, url);
+        if (!existsSync(target)) target = new URL(path + ".ts", url);
+        if (!existsSync(target)) target = new URL(path + "/index.ts", url);
+        if (!existsSync(target))
+          throw new Error("Missing test import " + target);
+        return prefix + quote + "./" + compile(target) + quote;
+      },
+    );
+    writeFileSync(join(dir, name), code);
+    return name;
   };
-  const compile = (text) => transpileModule(text, options).outputText;
-  const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
   try {
-    writeFileSync(
-      join(directory, "environment.mjs"),
-      compile(read("../src/environments/environment.ts")),
+    return await import(
+      pathToFileURL(join(dir, compile(new URL(relativePath, import.meta.url))))
+        .href
     );
-    writeFileSync(
-      join(directory, "icon.mjs"),
-      compile(read("../src/app/shared/icon/icon.component.ts")),
-    );
-    const source = read(relativePath)
-      .replace(
-        /(["'])(?:\.\.\/)+environments\/environment\1/g,
-        "'./environment.mjs'",
-      )
-      .replace(
-        /(["'])(?:\.\.\/)+shared\/icon\/icon.component\1/g,
-        "'./icon.mjs'",
-      );
-    const path = join(directory, "component.mjs");
-    writeFileSync(path, compile(source));
-    return await import(pathToFileURL(path).href);
   } finally {
-    rmSync(directory, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true });
   }
 }

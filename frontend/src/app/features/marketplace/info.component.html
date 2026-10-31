@@ -1,0 +1,134 @@
+<div class="mk-page" dir="rtl">
+  <nav class="mk-breadcrumb">
+    <a routerLink="/">الرئيسية</a><app-icon name="arrow" /><span>{{
+      page === "help"
+        ? "المساعدة"
+        : page === "legal"
+          ? "الاستعمال والخصوصية"
+          : "على AMANAFARM"
+    }}</span>
+  </nav>
+  <section class="mk-info-intro">
+    <span class="mk-eyebrow">AMANAFARM · من أرضنا، لبعضنا</span>
+    <h1>
+      {{
+        page === "help"
+          ? "شنوة نعاونك فيه؟"
+          : page === "legal"
+            ? "استعمال واضح. معلومات مفهومة."
+            : "نقرّبوا الفلاحة التونسية من بعضها."
+      }}
+    </h1>
+    <p>
+      {{
+        page === "help"
+          ? "إجابات على النشر، الحساب، المفضّلة ونقل الحيوانات."
+          : page === "legal"
+            ? "كيفاش تخدم المنصة، وشنوة المعلومات اللي تستعملها."
+            : "سوق يربط الفلاح، المربّي، المورد ومقدم الخدمة. إعلانات واضحة، تواصل مباشر، ومن غير وسيط."
+      }}
+    </p>
+  </section>
+  <ng-container *ngIf="page === 'about'"
+    ><div class="mk-info-cards">
+      <article>
+        <app-icon name="search" />
+        <h2>تلقى اللي يلزمك.</h2>
+        <p>
+          بحث وفلاتر للحيوانات، المنتجات، عروض الجملة، الخدمات وفرص الشغل في
+          كامل تونس.
+        </p>
+      </article>
+      <article>
+        <app-icon name="message" />
+        <h2>تتواصل مباشرة.</h2>
+        <p>
+          الهاتف وواتساب يربطوك بصاحب الإعلان. تستفسر وتتفق معاه على التفاصيل.
+        </p>
+      </article>
+      <article>
+        <app-icon name="truck" />
+        <h2>وتكمّل طريقك.</h2>
+        <p>
+          رحلات نقل الحيوانات باش تلقى المسار المناسب وتتفق على مصاريف الطريق.
+        </p>
+      </article>
+    </div>
+    <div class="mk-info-contact">
+      <div>
+        <h2>خدمتك تبدأ من هنا.</h2>
+        <p>تصفّح السوق ولا انشر الإعلان المناسب لحاجتك.</p>
+      </div>
+      <a class="mk-primary" routerLink="/animals"
+        >اكتشف السوق <app-icon name="arrow"
+      /></a></div
+  ></ng-container>
+  <section class="mk-faq" *ngIf="page === 'help'">
+    <label class="mk-sr" for="faq-search">بحث في المساعدة</label
+    ><input
+      id="faq-search"
+      [(ngModel)]="query"
+      type="search"
+      placeholder="مثال: مفضّلة، كلمة المرور، نقل…"
+    />
+    <details *ngFor="let f of filtered">
+      <summary>{{ f.q }}</summary>
+      <p>{{ f.a }}</p>
+    </details>
+    <p class="mk-muted" *ngIf="!filtered.length">
+      ما لقيناش جواب مطابق. جرّب كلمة أخرى ولا تواصل مع الدعم.
+    </p>
+  </section>
+  <article class="mk-legal" *ngIf="page === 'legal'">
+    <h2>المنصة ودورها</h2>
+    <p>
+      AMANAFARM فضاء لعرض الإعلانات والتواصل بين أصحابها والمهتمين. البيع،
+      المعاينة، النقل والخلاص بالاتفاق المباشر بين الأطراف. الموقع ما يضمنش
+      إتمام الصفقة وما يستقبلش فلوس البيع.
+    </p>
+    <h2>المعلومات المنشورة</h2>
+    <p>
+      عنوان الإعلان، الوصف، الصور، السعر، الولاية ورقم التواصل اللي تختار تنشره
+      ينجموا يظهروا للزوار. انشر كان معلومات وصور عندك الحق تستعملهم، وما تحطّش
+      بيانات خاصة ما تحبّهاش تكون علنية.
+    </p>
+    <h2>الحساب والمفضّلة</h2>
+    <p>
+      معلومات الحساب تُستعمل للدخول وربط الإعلانات والمفضّلة بصاحبها. جلسة
+      الدخول تتخزّن في المتصفح. المفضّلة تتخزّن مع حسابك. تنجم تعدّل اسمك وهاتفك
+      وكلمة المرور من إعدادات الحساب.
+    </p>
+    <h2>إدارة إعلاناتك</h2>
+    <p>
+      إنت مسؤول على دقّة الإعلان وتحيينه. تنجم تعدّله ولا تفسخه من حسابك.
+      الإعلانات المحذوفة ما تظهرش في السوق ولا في المفضّلة المعروضة.
+    </p>
+    <h2>التواصل والدعم</h2>
+    <p>
+      للاستفسارات على الحساب أو البيانات،
+      <a
+        href="https://wa.me/21653159799"
+        target="_blank"
+        rel="noopener noreferrer"
+        >تواصل مع دعم AMANAFARM</a
+      >. ما تبعثش كلمة مرورك في رسالة.
+    </p>
+  </article>
+  <section class="mk-info-contact" *ngIf="page !== 'about'">
+    <div>
+      <h2>ما لقيتش اللي يلزمك؟</h2>
+      <p>تواصل مع الدعم على الهاتف أو واتساب.</p>
+    </div>
+    <div>
+      <a
+        class="mk-primary"
+        href="https://wa.me/21653159799"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><app-icon name="message" /> واتساب الدعم</a
+      ><a class="mk-secondary" href="tel:+21653159799"
+        ><app-icon name="phone" /> 53 159 799</a
+      >
+    </div>
+  </section>
+</div>

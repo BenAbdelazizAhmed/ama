@@ -1,98 +1,100 @@
-import { IconComponent } from "../../shared/icon/icon.component";
-import { Component, computed } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { StateService } from "../../services/state.service";
-import { environment } from "../../../environments/environment";
-
+import { IconComponent } from "../../shared/icon/icon.component";
+import { MarketApi } from "../../features/marketplace/market-api.service";
+import { FavoritesService } from "../../features/marketplace/favorites.service";
+import { MarketCardComponent } from "../../features/marketplace/listing-card.component";
+import {
+  MarketListing,
+  MarketKind,
+  REGIONS,
+  MARKETS,
+} from "../../features/marketplace/market.models";
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [IconComponent, CommonModule, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    IconComponent,
+    MarketCardComponent,
+  ],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })
-export class HomeComponent {
-  query = "";
+export class HomeComponent implements OnInit, OnDestroy {
   category = "animals";
+  query = "";
+  region = "";
   filter = "all";
+  items: MarketListing[] = [];
+  loading = true;
+  error = "";
+  readonly regions = REGIONS;
+  readonly markets = MARKETS;
   readonly categories = [
-    {
-      icon: "animal",
-      title: "حيوانات",
-      sub: "أغنام، أبقار، دواجن",
-      route: "/animals",
-      color: "sand",
-    },
-    {
-      icon: "grain",
-      title: "منتجات فلاحية",
-      sub: "أعلاف، بذور، معدات",
-      route: "/products",
-      color: "sage",
-    },
-    {
-      icon: "users",
-      title: "مهن وخدمات",
-      sub: "خبرة تعاونك في خدمتك",
-      route: "/services",
-      color: "peach",
-    },
-    {
-      icon: "truck",
-      title: "نقل الحيوانات",
-      sub: "رحلة مشتركة، مصاريف أقل",
-      route: "/carpool",
-      color: "blue",
-    },
+    { kind: "animals", icon: "animal", label: "الحيوانات" },
+    { kind: "products", icon: "grain", label: "المنتجات" },
+    { kind: "wholesale", icon: "package", label: "الجملة" },
+    { kind: "services", icon: "users", label: "المهن والخدمات" },
+    { kind: "carpool", icon: "truck", label: "نقل الحيوانات" },
   ];
-  readonly listings = computed(() =>
-    [
-      ...this.state.animals().map((a) => ({
-        id: a.id,
-        title: a.name,
-        price: a.price,
-        place: a.location,
-        image: a.imageUrl,
-        type: "animals",
-      })),
-      ...this.state.products().map((p) => ({
-        id: p.id,
-        title: p.title,
-        price: p.price,
-        place: p.wilaya || p.location,
-        image: p.imageUrl,
-        type: "products",
-      })),
-    ].sort((a, b) => Number(b.id) - Number(a.id)),
-  );
-  get visibleListings() {
-    return this.listings()
-      .filter((a) => this.filter === "all" || a.type === this.filter)
+  private alive = true;
+  constructor(
+    public api: MarketApi,
+    private router: Router,
+    public favorites: FavoritesService,
+  ) {}
+  get visible() {
+    return this.items
+      .filter((a) => this.filter === "all" || a.kind === this.filter)
       .slice(0, 8);
   }
-  constructor(
-    public state: StateService,
-    private router: Router,
-  ) {}
+  ngOnInit() {
+    void this.load();
+  }
+  async load() {
+    this.loading = true;
+    this.error = "";
+    const result = await Promise.allSettled([
+      this.api.list("animals"),
+      this.api.list("products"),
+    ]);
+    if (!this.alive) return;
+    this.items = result
+      .flatMap((r) => (r.status === "fulfilled" ? r.value : []))
+      .sort(
+        (a, b) =>
+          (Date.parse(b.createdAt) || b.id) - (Date.parse(a.createdAt) || a.id),
+      );
+    if (result.some((r) => r.status === "rejected"))
+      this.error = "تعذّر تحميل بعض الإعلانات. تثبّت من الاتصال وعاود جرّب.";
+    this.loading = false;
+  }
   search() {
+    if (this.category === "carpool") {
+      void this.router.navigate(["/carpool"], {
+        queryParams: {
+          from: this.region || null,
+          q: this.query.trim() || null,
+        },
+      });
+      return;
+    }
     void this.router.navigate(["/" + this.category], {
-      queryParams: this.query.trim() ? { q: this.query.trim() } : {},
+      queryParams: {
+        q: this.query.trim() || null,
+        region: this.region || null,
+      },
     });
   }
   publish() {
     window.dispatchEvent(new CustomEvent("amanafarm-publish-request"));
   }
-  onImageError(event: Event) {
-    (event.target as HTMLImageElement).style.display = "none";
-  }
-  retry() {
-    void this.state.retryMarketplace();
-  }
-  image(url?: string) {
-    return url?.startsWith("uploads/")
-      ? environment.apiBaseUrl + "/" + url
-      : url || "";
+  ngOnDestroy() {
+    this.alive = false;
   }
 }

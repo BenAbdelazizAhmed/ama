@@ -2,6 +2,18 @@ import { Component, Input } from "@angular/core";
 import { NgFor } from "@angular/common";
 
 const ICONS: Record<string, string[]> = {
+  heart: [
+    "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z",
+  ],
+  camera: ["M3 7h4l2-3h6l2 3h4v14H3Z", "M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"],
+  filters: ["M4 6h16M7 12h10M10 18h4"],
+  grid: ["M3 3h7v7H3ZM14 3h7v7h-7ZM3 14h7v7H3ZM14 14h7v7h-7Z"],
+  list: ["M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"],
+  edit: ["m15 4 5 5M3 21l4-1 14-14-4-4L3 16Z"],
+  trash: ["M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"],
+  share: ["M12 16V2m-5 5 5-5 5 5M5 13v8h14v-8"],
+  account: ["M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 21v-2a8 8 0 0 1 16 0v2"],
+
   search: [
     "M21 21l-4.5-4.5",
     "M19 10.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z",

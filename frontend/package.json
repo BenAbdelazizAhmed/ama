@@ -3,7 +3,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test:carpool": "node --test tests/carpool.behavior.mjs",
-    "test:frontend": "node --test tests/carpool.behavior.mjs tests/marketplace.behavior.mjs"
+    "test:frontend": "node --test tests/*.behavior.mjs"
   },
   "dependencies": {
     "@angular/animations": "^18.2.0",

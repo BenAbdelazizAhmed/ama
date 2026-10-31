@@ -977,3 +977,8 @@ body .ft-soc {
     text-align: center !important;
   }
 }
+
+/* Reauthentication stays above publishing dialogs without losing the draft. */
+body #authOverlay{z-index:8000!important}
+body .publish-choice__card app-icon{font-size:26px;color:#557b42}
+body .ud-item{display:flex;align-items:center;gap:9px;text-decoration:none}

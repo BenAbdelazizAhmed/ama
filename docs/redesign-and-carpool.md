@@ -1,19 +1,35 @@
-# AMANAFARM redesign and animal transport
+# AMANAFARM marketplace redesign
 
-The home page now puts marketplace search, the four main categories and recent listings first. A warm ivory / olive palette, simpler navigation, restrained cards and responsive layouts connect the existing animals, products, services and wholesale pages. The existing Angular/Spring architecture and authentication flow are retained.
+The Angular/Spring application now uses a consistent marketplace interface across animals, agricultural products, wholesale, services, jobs and animal transport. Search takes priority over the promotional content. Photo cards, category navigation, filters, saved listings, account pages and detail pages share the same forest-green identity and responsive layout. All active marketplace routes request real backend records; empty responses remain empty.
 
-The new `/carpool` page supports:
+Design references: the search/filter hierarchy of [Airbnb](https://www.airbnb.com/help/article/3740), listing clarity on [Leboncoin](https://www.leboncoin.fr/c/animaux), and route-based discovery on [BlaBlaCar](https://www.blablacar.fr/carpool). These inform interaction patterns; AMANAFARM retains its own branding, Arabic RTL content and Tunisian market conventions.
 
-- Published transport offers for all 24 Tunisian governorates.
-- Origin, destination, date, animal type and accompaniment filters; time / price sorting.
-- Signed-in publishing, client and server validation, and persistent MySQL storage.
-- A detail dialog, direct telephone / WhatsApp contact and owner-only deletion.
-- Loading, empty, retry and failed-submission states, keyboard focus trapping and Escape dismissal.
-- Entry points in desktop navigation, mobile navigation, the home page and animal detail pages.
+## Implemented journeys
 
-## Run locally
+| Area | Behavior |
+| --- | --- |
+| Home | Choose a market, search by text/governorate, open actual recent listings |
+| Catalogs | Search, categories, region, price interval, availability, sorting, pagination, grid/list view; filters persist in the URL |
+| Listings | Publish, edit and delete owned records; upload photos; real API validation; loading, empty, retry and failure states |
+| Details | Gallery and lightbox, share link, direct phone/WhatsApp contact, related records and transport link |
+| Favorites | Account-backed favorites for all five catalog types; guest intent resumes after login |
+| Account | Own listings, upcoming own trips, saved listings, profile editing and current-password-verified password change |
+| Transport | Origin/destination, date, animal and accompaniment filtering; signed-in publishing; direct contact; owner-only deletion |
+| Help | Searchable FAQ, support contact, about and legal pages |
 
-Start the existing MySQL database and backend as documented in the repository README. Hibernate's existing `ddl-auto=update` setting creates the new `carpool_trips` table. No old tables or data are removed. Deploy the updated backend alongside the frontend before using transport publishing.
+There is no online payment, booking or automatic capacity reservation. Transport prices are TND per animal, with departure times explicitly local to Tunisia (`Africa/Tunis`). Owners remove trips that are no longer available. Password recovery currently directs users to support; it does not pretend to send a reset email. Social sign-in remains dependent on the existing provider configuration. No fake reviews, listings, visitor totals or verification claims are added.
+
+## Backend and data
+
+New private endpoints are `/api/favorites`, `/api/users/me`, `/api/users/me/password` and POST `/api/media`. Public listing endpoints remain `/api/animals`, `/api/products`, `/api/wholesale`, `/api/workers`, `/api/jobs` and `/api/trips`. Owner identity is derived from the authenticated account; another user's update/delete returns 403. Missing listings return 404. Client-supplied owner IDs, ratings and verification flags cannot establish ownership or trust.
+
+Media accepts JPEG, PNG and WebP with signature checks, up to six files and 5 MB per file. The animal form supports six images; the other catalog forms support one. Upload filenames are generated on the server; uploaded files are served under `/uploads/`. Configure `app.upload.dir` to persistent storage and retain that directory across releases. Interrupted publication can leave uploaded files that have not yet been attached to a listing; automatic orphan cleanup is not implemented.
+
+Deploy frontend and backend together against the existing MySQL service. The existing Hibernate `ddl-auto=update` setting creates the favorites and transport tables and adds the owner/profile/listing fields. Back up the database before rollout and confirm the schema changes against the deployment database. Existing listings without owner IDs stay public and cannot be claimed or edited by arbitrary users.
+
+## Run and verify
+
+Use the repository's configured MySQL/environment settings, then:
 
 ```bash
 cd backend
@@ -26,39 +42,23 @@ npm ci
 npm start
 ```
 
-Visit `http://localhost:4200/carpool`. Trips start empty; no demonstration offers, ratings or verified-driver claims are inserted.
-
-## API
-
-| Method | Endpoint | Access | Behavior |
-| --- | --- | --- | --- |
-| GET | `/api/trips` | Public | Upcoming offers ordered by departure |
-| POST | `/api/trips` | Signed in | Validate and create; owner identity comes from the session |
-| DELETE | `/api/trips/{id}` | Owner | Delete own offer; another user's offer returns 403 |
-
-Departure values are local Tunis times (`Africa/Tunis`); the form labels this explicitly. Price is in TND per animal. The capacity is the driver's advertised capacity; this is a direct-contact listing service with no online booking, payment or automatic seat reservation. Owners can remove offers that are no longer available.
-
-## Validation
+Checks:
 
 ```bash
 cd frontend
-npm run build
+NG_CLI_ANALYTICS=false npm run build
 npm run test:frontend
 ```
 
 ```bash
 cd backend
-./mvnw -Dtest=CarpoolTripServiceTest,TripRequestTest test
+./mvnw test
 ```
 
-Completed here: Angular production build; 13 frontend behavior tests; 8 backend service tests; 5 request-validation tests. The backend was compiled with these tests. The frontend tests exercise actual component behavior with HTTP stubs, not a live browser. Browser screenshots and a live MySQL integration test could not be completed in the execution environment. Check the desktop/mobile layout and publish a trip with the running backend before production rollout.
+Completed: Angular production build, 26 frontend behavior tests and 26 backend tests. The frontend suite executes actual TypeScript behavior with controlled HTTP responses; Angular's build checks templates. The backend suite includes 12 Spring MockMvc/JPA integration tests using H2, plus transport, validation and context tests. It covers account privacy, ownership, publication/edit/deletion, favorites persistence, file validation/serving, profile updates and password verification.
 
-## Styling
+Browser visual/mobile interaction checks and integration with the deployed MySQL instance remain pending because those environments were unavailable here. Before production rollout, verify desktop/mobile layouts and the complete register/login, upload, favorites, edit/delete and transport journeys against the running deployment. The changes are delivered on the existing feature branch and draft PR; they have not been merged or deployed.
 
-The new home and transport views have their own component styles. `frontend/src/farm-theme.css` is loaded after the legacy stylesheet to restyle shared navigation, footer and existing marketplace pages without deleting the legacy modal/form rules. Its scoped overrides are a compatibility layer; a subsequent cleanup can remove redundant legacy declarations page by page.
+## Structure
 
-## Frontend refinement
-
-The shared shell, home page and transport view use a restrained forest-green identity, a typographic wordmark, locally bundled SVG icons, consistent cards and field styling, and responsive layouts. Header, footer, marketplace headings, auth dialogs and animal detail links share the same theme.
-
-The hero uses responsive WebP images (212 KB desktop / 66 KB small) instead of the original 2.7 MB PNG. Marketplace loading skeletons, recoverable error states and partial-failure notices are backed by real request status. Homepage search terms are applied when opening animals, products or services. Four additional frontend behavior tests cover loading, empty responses, partial failures, cached offers and retry recovery.
+The routed catalogs, detail views, account, info pages and shared form/cards live under `frontend/src/app/features/marketplace`. Their shared stylesheet is registered once in `angular.json`. Home and transport retain dedicated component styles. Shared shell styling lives in `frontend/src/farm-theme.css`. Legacy feature files remain for compatibility but the router uses the new marketplace views. The shared icon component contains local SVG paths; the Lucide CDN script is no longer needed.

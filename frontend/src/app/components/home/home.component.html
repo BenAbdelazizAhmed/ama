@@ -1,329 +1,183 @@
-<div class="farm-home" dir="rtl">
-  <section class="farm-hero" aria-labelledby="home-title">
-    <div class="farm-hero-copy">
-      <span class="farm-eyebrow"
-        ><span></span> AMANAFARM — من أرضنا، لبعضنا</span
+<div class="hm-page" dir="rtl">
+  <section class="hm-intro" aria-labelledby="home-title">
+    <span class="mk-eyebrow">السوق الفلاحي التونسي · من أرضنا، لبعضنا</span>
+    <h1 id="home-title">اللي يلزم مزرعتك،<em> تلقاه هنا.</em></h1>
+    <p>حيوانات، منتجات، خدمات ونقل. فرص حقيقية، وتواصل مباشر.</p>
+    <div class="hm-tabs" role="group" aria-label="نوع البحث">
+      <button
+        *ngFor="let c of categories"
+        type="button"
+        [class.active]="category === c.kind"
+        [attr.aria-pressed]="category === c.kind"
+        (click)="category = c.kind"
       >
-      <h1 id="home-title">أرضنا تجمعنا.<br /><em>سوقنا يقرّبنا.</em></h1>
-      <p>
-        كل ما يلزم الفلاح والمربّي، في بلاصة واحدة.<br />بيع، اشري، ولقّى الخدمة
-        والنقل المناسب ليك.
-      </p>
-      <div class="farm-hero-actions">
-        <a routerLink="/animals" class="farm-primary"
-          >اكتشف السوق <app-icon name="arrow"></app-icon></a
-        ><button type="button" class="farm-hero-publish" (click)="publish()">
-          انشر إعلانك <app-icon name="plus"></app-icon>
-        </button>
-      </div>
-      <div class="farm-hero-note">
-        <app-icon name="shield"></app-icon
-        ><span>تواصل مباشر. بدون وسيط ولا عمولة.</span>
-      </div>
-    </div>
-    <div class="farm-hero-visual">
-      <img
-        src="assets/farm-hero.webp"
-        srcset="assets/farm-hero-small.webp 640w, assets/farm-hero.webp 1280w"
-        sizes="(max-width: 600px) calc(100vw - 36px), 48vw"
-        width="1280"
-        height="720"
-        alt="قطيع أغنام بين التلال الخضراء عند الغروب"
-        fetchpriority="high"
-      />
-      <div class="farm-photo-label">
-        <span>من المزرعة، للسوق.</span><strong>خير تونس، أقرب ليك.</strong>
-      </div>
-      <span class="farm-photo-location"
-        ><app-icon name="pin"></app-icon> تونس · 24 ولاية</span
-      >
-    </div>
-  </section>
-  <div class="farm-search-shelf">
-    <div class="farm-search-intro">
-      <app-icon name="search"></app-icon>
-      <div>
-        <strong>شنوة تلوّج عليه اليوم؟</strong><span>البداية من هنا.</span>
-      </div>
-    </div>
-    <form class="farm-search" (ngSubmit)="search()" role="search">
-      <div class="farm-search-category">
-        <label for="home-category">القسم</label
-        ><select id="home-category" [(ngModel)]="category" name="category">
-          <option value="animals">الحيوانات</option>
-          <option value="products">المنتجات</option>
-          <option value="services">الخدمات</option>
-          <option value="carpool">نقل الحيوانات</option>
-        </select>
-      </div>
-      <div class="farm-search-query">
-        <label for="home-query">كلمة البحث</label
-        ><input
-          id="home-query"
-          name="query"
-          [(ngModel)]="query"
-          placeholder="خروف، علف، خدمة فلاحية…"
-          type="search"
-        />
-      </div>
-      <button type="submit">
-        <app-icon name="search"></app-icon><span>ابحث في السوق</span>
+        <app-icon [name]="c.icon" /><span>{{ c.label }}</span>
       </button>
-    </form>
-  </div>
-  <div class="farm-value-strip">
-    <span
-      ><app-icon name="message"></app-icon><b>تواصل مباشر</b> مع صاحب
-      الإعلان</span
-    ><span><app-icon name="pin"></app-icon><b>في كامل تونس</b> 24 ولاية</span
-    ><span
-      ><app-icon name="plus"></app-icon><b>انشر مجاناً</b> ومن غير تعقيد</span
-    >
-  </div>
-  <section class="farm-section" aria-labelledby="categories-title">
-    <div class="farm-section-heading">
-      <div>
-        <span class="farm-kicker">سوق واحد. برشة فرص.</span>
-        <h2 id="categories-title">كل ما تحتاجه لخدمتك</h2>
-      </div>
-      <p>من المزرعة للسوق، نسهّلوا عليك الطريق.</p>
     </div>
-    <div class="farm-category-grid">
-      <a
-        *ngFor="let c of categories; let i = index"
-        [routerLink]="c.route"
-        class="farm-category"
-        ><div class="farm-category-top">
-          <span class="farm-category-icon"
-            ><app-icon [name]="c.icon"></app-icon></span
-          ><span class="farm-category-index">0{{ i + 1 }}</span>
-        </div>
-        <h3>{{ c.title }}</h3>
-        <p>{{ c.sub }}</p>
-        <div class="farm-category-bottom">
-          <span>{{
-            c.route === "/carpool" ? "اكتشف النقل المشترك" : "تصفّح القسم"
-          }}</span
-          ><app-icon name="diagonal"></app-icon>
-        </div>
-        <span *ngIf="c.route === '/carpool'" class="farm-new">جديد</span></a
-      >
+    <form class="hm-search" (ngSubmit)="search()" role="search">
+      <label
+        ><span>شنوة تلوّج؟</span
+        ><input
+          type="search"
+          name="q"
+          [(ngModel)]="query"
+          [placeholder]="
+            category === 'carpool'
+              ? 'ولاية أو نوع الحيوان'
+              : 'خروف، علف، معدات، خدمة…'
+          " /></label
+      ><label class="hm-location"
+        ><span>وين؟</span
+        ><select name="region" [(ngModel)]="region">
+          <option value="">كل تونس</option>
+          <option *ngFor="let r of regions">{{ r }}</option>
+        </select></label
+      ><button type="submit"><app-icon name="search" /> ابحث</button>
+    </form>
+    <div class="hm-popular">
+      <span>الأكثر طلباً:</span
+      ><a routerLink="/animals" [queryParams]="{ category: 'أغنام' }">أغنام</a
+      ><a routerLink="/products" [queryParams]="{ category: 'علف' }">أعلاف</a
+      ><a routerLink="/services">مهن فلاحية</a
+      ><a routerLink="/carpool">نقل مشترك</a>
     </div>
   </section>
-  <section class="farm-section farm-market" aria-labelledby="market-title">
-    <div class="farm-section-heading">
+  <p class="mk-error" *ngIf="favorites.error()" role="alert">
+    {{ favorites.error() }}
+  </p>
+  <section class="hm-market" aria-labelledby="home-market">
+    <div class="mk-section-heading">
       <div>
-        <span class="farm-kicker">من السوق، ليك</span>
-        <h2 id="market-title">تفقّد آخر الإعلانات</h2>
+        <span class="mk-eyebrow">جديد السوق</span>
+        <h2 id="home-market">تفقّد آخر الإعلانات.</h2>
       </div>
-      <a class="farm-text-link" routerLink="/animals"
-        >كل الإعلانات <app-icon name="arrow"></app-icon
-      ></a>
+      <a routerLink="/animals">كل الإعلانات <app-icon name="arrow" /></a>
     </div>
-    <div class="farm-market-toolbar">
-      <div class="farm-filter-row" role="group" aria-label="نوع الإعلانات">
-        <button
-          type="button"
-          [class.selected]="filter === 'all'"
-          [attr.aria-pressed]="filter === 'all'"
-          (click)="filter = 'all'"
-        >
-          كل الإعلانات</button
-        ><button
-          type="button"
-          [class.selected]="filter === 'animals'"
-          [attr.aria-pressed]="filter === 'animals'"
-          (click)="filter = 'animals'"
-        >
-          الحيوانات</button
-        ><button
-          type="button"
-          [class.selected]="filter === 'products'"
-          [attr.aria-pressed]="filter === 'products'"
-          (click)="filter = 'products'"
-        >
-          المنتجات
-        </button>
-      </div>
-      <span class="farm-market-hint"><span></span> تواصل واتّفق مباشرة</span>
+    <div class="hm-market-tabs" role="group" aria-label="تصفية الإعلانات">
+      <button
+        type="button"
+        [class.active]="filter === 'all'"
+        [attr.aria-pressed]="filter === 'all'"
+        (click)="filter = 'all'"
+      >
+        الكل</button
+      ><button
+        type="button"
+        [class.active]="filter === 'animals'"
+        [attr.aria-pressed]="filter === 'animals'"
+        (click)="filter = 'animals'"
+      >
+        الحيوانات</button
+      ><button
+        type="button"
+        [class.active]="filter === 'products'"
+        [attr.aria-pressed]="filter === 'products'"
+        (click)="filter = 'products'"
+      >
+        المنتجات</button
+      ><span>تواصل مباشر مع صاحب الإعلان.</span>
     </div>
+    <p class="mk-error" *ngIf="error" role="alert">
+      {{ error }} <button type="button" (click)="load()">عاود جرّب</button>
+    </p>
     <div
-      *ngIf="state.marketLoading() && !listings().length"
-      class="farm-listings farm-skeletons"
+      class="mk-grid"
+      *ngIf="loading"
       role="status"
       aria-label="جاري تحميل الإعلانات"
     >
-      <div class="farm-skeleton" *ngFor="let n of [1, 2, 3, 4]">
+      <div
+        class="mk-skeleton"
+        *ngFor="let n of [1, 2, 3, 4]"
+        aria-hidden="true"
+      >
         <div></div>
         <span></span><span></span><span></span>
       </div>
     </div>
-    <div
-      class="farm-market-warning"
-      *ngIf="state.marketLoadError() && listings().length"
-      role="status"
-    >
-      تعذّر تحديث بعض الإعلانات. تنجم تتفقّد آخر إعلانات محفوظة.<button
-        type="button"
-        (click)="retry()"
-      >
-        عاود جرّب
-      </button>
+    <div class="mk-grid" *ngIf="!loading">
+      <app-market-card *ngFor="let item of visible" [item]="item" />
     </div>
-    <div class="farm-listings" *ngIf="visibleListings.length">
-      <a
-        class="farm-listing"
-        *ngFor="let item of visibleListings"
-        [routerLink]="['/' + item.type, item.id]"
-        ><div class="farm-listing-media">
-          <div class="farm-no-photo">
-            <app-icon
-              [name]="item.type === 'animals' ? 'animal' : 'grain'"
-            ></app-icon
-            ><span>الصورة غير متوفرة</span>
-          </div>
-          <img
-            *ngIf="item.image"
-            [src]="image(item.image)"
-            [alt]="item.title"
-            loading="lazy"
-            decoding="async"
-            (error)="onImageError($event)"
-          /><span class="farm-listing-tag">{{
-            item.type === "animals" ? "حيوانات" : "منتجات"
-          }}</span>
-        </div>
-        <div class="farm-listing-body">
-          <span class="farm-location"
-            ><app-icon name="pin"></app-icon>{{ item.place || "تونس" }}</span
-          >
-          <h3>{{ item.title }}</h3>
-          <div class="farm-listing-bottom">
-            <strong
-              >{{ state.fmtPrice(item.price || 0) }} <small>دت</small></strong
-            ><span class="farm-card-arrow"
-              ><app-icon name="diagonal"></app-icon
-            ></span>
-          </div></div
-      ></a>
-    </div>
-    <div
-      class="farm-empty"
-      *ngIf="!state.marketLoading() && !visibleListings.length"
-    >
-      <span class="farm-empty-icon"
-        ><app-icon
-          [name]="state.marketLoadError() ? 'refresh' : 'leaf'"
-        ></app-icon
-      ></span>
-      <h3>
-        {{
-          state.marketLoadError()
-            ? "تعذّر الاتصال بالسوق"
-            : "السوق يستنّى في إعلانك"
-        }}
-      </h3>
+    <div class="mk-state" *ngIf="!loading && !visible.length && !error">
+      <span><app-icon name="leaf" /></span>
+      <h3>السوق يستنّى في إعلانك.</h3>
       <p>
-        {{
-          state.marketLoadError()
-            ? "ما نجّمناش نحمّلوا الإعلانات. تثبّت من الاتصال وعاود جرّب."
-            : "ما فماش إعلانات متاحة في القسم هذا توّا. إعلانك ينجم يكون البداية."
-        }}
+        ما فماش إعلانات متاحة في القسم هذا توّا. انشر اللي عندك، وخلي الناس
+        تلقاك.
       </p>
-      <button
-        class="farm-primary"
-        type="button"
-        (click)="state.marketLoadError() ? retry() : publish()"
-      >
-        {{ state.marketLoadError() ? "عاود جرّب" : "انشر أول إعلان"
-        }}<app-icon
-          [name]="state.marketLoadError() ? 'refresh' : 'plus'"
-        ></app-icon>
+      <button class="mk-primary" type="button" (click)="publish()">
+        انشر إعلان مجاناً <app-icon name="plus" />
       </button>
     </div>
   </section>
-  <section class="farm-transport" aria-labelledby="transport-title">
-    <div class="farm-transport-copy">
-      <span class="farm-kicker"
-        ><app-icon name="truck"></app-icon> خدمة جديدة على AMANAFARM</span
-      >
-      <h2 id="transport-title">من الاتفاق،<br />للوصول.</h2>
-      <p>
-        شريت الحيوان وناقصك النقل؟ لقّى رحلة في نفس الاتجاه، تواصل مع الناقل
-        وشارك مصاريف الطريق.
-      </p>
-      <a routerLink="/carpool" class="farm-primary"
-        >اكتشف النقل المشترك <app-icon name="arrow"></app-icon></a
-      ><small>أغنام، أبقار، دواجن وحيوانات أليفة</small>
+  <section class="hm-feature">
+    <div class="hm-feature-photo">
+      <img
+        src="assets/farm-hero.webp"
+        srcset="assets/farm-hero-small.webp 640w, assets/farm-hero.webp 1280w"
+        sizes="(max-width:700px) 100vw,50vw"
+        width="1280"
+        height="720"
+        alt="قطيع أغنام في مزرعة بين التلال"
+        loading="lazy"
+      /><span>خير أرضنا، يجمعنا.</span>
     </div>
-    <div class="farm-route-visual" aria-hidden="true">
-      <div class="farm-route-top">
-        <span class="farm-route-logo"
-          ><app-icon name="sprout"></app-icon> AMANAFARM</span
-        ><span>TRANSPORT</span>
-      </div>
-      <div class="farm-route-path">
-        <div class="farm-route-stop">
-          <span></span>
-          <div><small>منين؟</small><strong>نقطة الانطلاق</strong></div>
-        </div>
-        <div class="farm-route-connector">
-          <span></span><app-icon name="truck"></app-icon><span></span>
-        </div>
-        <div class="farm-route-stop farm-route-stop-end">
-          <span></span>
-          <div><small>لوين؟</small><strong>الوجهة اللي تختارها</strong></div>
-        </div>
-      </div>
-      <div class="farm-route-bottom">
-        <span><app-icon name="users"></app-icon> مصاريف مشتركة</span
-        ><span><app-icon name="message"></app-icon> اتفاق مباشر</span>
-      </div>
+    <div class="hm-feature-copy">
+      <span class="mk-eyebrow">خدمتك تستاهل تتشاف</span>
+      <h2>من مزرعتك،<br />لسوق أوسع.</h2>
+      <p>
+        صوّر، اكتب التفاصيل وانشر. الناس المهتمة تتواصل معاك مباشرة، من غير وسيط
+        ولا عمولة.
+      </p>
+      <button class="mk-primary" type="button" (click)="publish()">
+        انشر إعلانك <app-icon name="plus" /></button
+      ><small>نشر مجاني · صور من جهازك · حساب يجمع إعلاناتك</small>
     </div>
   </section>
-  <section class="farm-section farm-how" aria-labelledby="how-title">
-    <div class="farm-section-heading">
+  <section class="hm-links">
+    <a routerLink="/carpool"
+      ><span class="hm-link-icon"><app-icon name="truck" /></span>
       <div>
-        <span class="farm-kicker">تجربة واضحة، من الأول للآخر</span>
-        <h2 id="how-title">خطوات قليلة. فرص أكثر.</h2>
+        <span class="mk-eyebrow">النقل المشترك</span>
+        <h2>لقّى طريق للحيوان.</h2>
+        <p>المسار، الموعد والسعر، في بلاصة واحدة.</p>
       </div>
-      <a class="farm-text-link" routerLink="/help"
-        >كيفاش نخدموا؟ <app-icon name="arrow"></app-icon
-      ></a>
-    </div>
-    <div class="farm-steps">
-      <article>
-        <div><span>01</span><app-icon name="search"></app-icon></div>
-        <h3>لقّى اللي يلزمك</h3>
-        <p>
-          اختار القسم وتفقّد الإعلانات باش تلقى الحيوان، المنتج ولا الخدمة
-          المناسبة.
-        </p>
-      </article>
-      <article>
-        <div><span>02</span><app-icon name="message"></app-icon></div>
-        <h3>احكي واتّفق مباشرة</h3>
-        <p>
-          اسأل صاحب الإعلان على التفاصيل، واتّفقوا على السعر ومكان المعاينة.
-        </p>
-      </article>
-      <article>
-        <div><span>03</span><app-icon name="shield"></app-icon></div>
-        <h3>كمّلها على ثقة</h3>
-        <p>
-          عاين قبل الخلاص، وثبّت التفاصيل. وإذا تحتاج نقل، تلقى الرحلات هنا.
-        </p>
-      </article>
-    </div>
+      <app-icon name="diagonal" /></a
+    ><a routerLink="/jobs"
+      ><span class="hm-link-icon"><app-icon name="users" /></span>
+      <div>
+        <span class="mk-eyebrow">فرص العمل</span>
+        <h2>خدمتك الجاية تبدأ هنا.</h2>
+        <p>فرص شغل ومهن في القطاع الفلاحي.</p>
+      </div>
+      <app-icon name="diagonal"
+    /></a>
   </section>
-  <section class="farm-seller-banner">
-    <div>
-      <span class="farm-kicker">فرصتك تبدأ بإعلان</span>
-      <h2>خدمتك تستاهل تتشاف.</h2>
-      <p>وصّل إعلانك للناس اللي تلوّج عليه، في كامل تونس.</p>
+  <section class="hm-region-section">
+    <div class="mk-section-heading">
+      <div>
+        <span class="mk-eyebrow">قريب ليك</span>
+        <h2>تصفّح السوق في ولايتك.</h2>
+      </div>
     </div>
-    <button class="farm-primary" type="button" (click)="publish()">
-      انشر إعلانك مجاناً <app-icon name="plus"></app-icon>
-    </button>
+    <div class="hm-region-links">
+      <a
+        *ngFor="
+          let r of [
+            'تونس',
+            'نابل',
+            'بنزرت',
+            'باجة',
+            'سوسة',
+            'صفاقس',
+            'القيروان',
+            'قابس',
+          ]
+        "
+        routerLink="/animals"
+        [queryParams]="{ region: r }"
+        ><app-icon name="pin" />{{ r }}<app-icon name="arrow"
+      /></a>
+    </div>
   </section>
 </div>

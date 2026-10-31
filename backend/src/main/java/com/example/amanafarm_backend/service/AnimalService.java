@@ -21,8 +21,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional
 public class AnimalService {
 
+    private final CurrentUser currentUser;
     private final AnimalRepository animalRepository;
     private final AnimalImageRepository animalImageRepository;
 
@@ -39,6 +41,7 @@ public class AnimalService {
     // CREATE
     // ──────────────────────────────────────────────
     public AnimalResponse createAnimal(AnimalRequest request) {
+        MediaService.validateUrls(request.getImages());
         Animal animal = Animal.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
@@ -54,10 +57,10 @@ public class AnimalService {
                 .contactMethod(request.getContactMethod())
                 .deliveryAvailable(Boolean.TRUE.equals(request.getDeliveryAvailable()))
                 .vetCertificate(Boolean.TRUE.equals(request.getVetCertificate()))
-                .featured(Boolean.TRUE.equals(request.getFeatured()))
-                .trustedSeller(Boolean.TRUE.equals(request.getTrustedSeller()))
+                .featured(false)
+                .trustedSeller(false)
                 .status("ACTIVE")
-                .userId(request.getUserId())
+                .userId(currentUser.require().getId())
                 .build();
 
         // Images passées en URL directement (ex: Unsplash, CDN)
@@ -91,6 +94,7 @@ public class AnimalService {
     public AnimalResponse getAnimalById(Long id) {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Animal not found: " + id));
+        if ("DELETED".equals(animal.getStatus())) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable");
         return mapToResponse(animal);
     }
 
@@ -101,6 +105,8 @@ public class AnimalService {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Animal not found: " + id));
 
+        currentUser.assertOwner(animal.getUserId());
+        MediaService.validateUrls(request.getImages());
         animal.setTitle(request.getTitle());
         animal.setDescription(request.getDescription());
         animal.setCategory(request.getCategory());
@@ -115,10 +121,9 @@ public class AnimalService {
         animal.setContactMethod(request.getContactMethod());
         animal.setDeliveryAvailable(Boolean.TRUE.equals(request.getDeliveryAvailable()));
         animal.setVetCertificate(Boolean.TRUE.equals(request.getVetCertificate()));
-        animal.setFeatured(Boolean.TRUE.equals(request.getFeatured()));
-        animal.setTrustedSeller(Boolean.TRUE.equals(request.getTrustedSeller()));
 
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
+
+        if (request.getImages() != null) {
             animal.getImages().clear();
             for (int i = 0; i < request.getImages().size(); i++) {
                 AnimalImage image = AnimalImage.builder()
@@ -139,6 +144,7 @@ public class AnimalService {
     public void deleteAnimal(Long id) {
         Animal animal = animalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Animal not found: " + id));
+        currentUser.assertOwner(animal.getUserId());
         animal.setStatus("DELETED");
         animalRepository.save(animal);
     }
@@ -151,6 +157,7 @@ public class AnimalService {
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(() -> new RuntimeException("Animal not found: " + animalId));
 
+        currentUser.assertOwner(animal.getUserId());
         // Créer le dossier uploads s'il n'existe pas
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
         try {

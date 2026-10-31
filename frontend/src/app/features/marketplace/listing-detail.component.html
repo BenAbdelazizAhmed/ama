@@ -1,0 +1,257 @@
+<div class="mk-page" dir="rtl">
+  <nav class="mk-breadcrumb">
+    <a routerLink="/">الرئيسية</a><app-icon name="arrow" /><a
+      [routerLink]="'/' + kind"
+      >{{ markets[kind].label }}</a
+    ><app-icon name="arrow" /><span>تفاصيل الإعلان</span>
+  </nav>
+  <div class="mk-state" *ngIf="loading" role="status">
+    <span><app-icon name="refresh" /></span>
+    <h2>جاري تحميل الإعلان…</h2>
+  </div>
+  <div class="mk-state" *ngIf="!loading && error" role="alert">
+    <span><app-icon name="search" /></span>
+    <h2>{{ error }}</h2>
+    <a class="mk-primary" [routerLink]="'/' + kind">ارجع للسوق</a
+    ><button
+      class="mk-secondary"
+      type="button"
+      (click)="load(+(route.snapshot.paramMap.get('id') || 0))"
+    >
+      عاود جرّب
+    </button>
+  </div>
+  <ng-container *ngIf="item as a"
+    ><header class="mk-detail-heading">
+      <div>
+        <span class="mk-eyebrow">{{ a.category || markets[kind].label }}</span>
+        <h1>{{ a.title }}</h1>
+        <p>
+          <app-icon name="pin" />{{ a.place || "تونس"
+          }}<span *ngIf="a.createdAt">
+            · {{ a.createdAt | date: "dd MMM yyyy" }}</span
+          >
+        </p>
+      </div>
+      <div class="mk-detail-tools">
+        <button class="mk-secondary" type="button" (click)="share()">
+          <app-icon name="share" /> مشاركة</button
+        ><button
+          class="mk-secondary"
+          type="button"
+          (click)="favorites.toggle(kind, a.id)"
+          [disabled]="favorites.busy(kind, a.id)"
+          [attr.aria-pressed]="favorites.has(kind, a.id)"
+        >
+          <app-icon name="heart" />
+          {{ favorites.has(kind, a.id) ? "محفوظ" : "حفظ" }}
+        </button>
+      </div>
+    </header>
+    <p class="mk-notice" *ngIf="notice" role="status">{{ notice }}</p>
+    <p class="mk-error" *ngIf="favorites.error()" role="alert">
+      {{ favorites.error() }}
+    </p>
+    <div class="mk-detail-layout">
+      <div class="mk-detail-main">
+        <div class="mk-gallery">
+          <div class="mk-gallery-empty">
+            <app-icon [name]="markets[kind].icon" /><span
+              >الصورة غير متوفرة</span
+            >
+          </div>
+          <button
+            class="mk-gallery-open"
+            *ngIf="a.images.length"
+            type="button"
+            (click)="lightbox = true"
+            aria-label="تكبير الصورة"
+          >
+            <img
+              [src]="api.image(a.images[selected])"
+              [alt]="a.title"
+              (error)="hideImage($event)"
+            /><span
+              ><app-icon name="camera" /> {{ selected + 1 }} /
+              {{ a.images.length }}</span
+            >
+          </button>
+        </div>
+        <div class="mk-thumbnails" *ngIf="a.images.length > 1">
+          <button
+            *ngFor="let img of a.images; let i = index"
+            type="button"
+            [class.active]="i === selected"
+            (click)="selected = i"
+            [attr.aria-label]="'الصورة ' + (i + 1)"
+          >
+            <img [src]="api.image(img)" alt="" />
+          </button>
+        </div>
+        <section class="mk-detail-section">
+          <h2>على الإعلان</h2>
+          <p class="mk-description">
+            {{ a.description || "صاحب الإعلان ما زادش تفاصيل أخرى." }}
+          </p>
+          <dl class="mk-specs">
+            <div>
+              <dt>القسم</dt>
+              <dd>{{ a.category || markets[kind].label }}</dd>
+            </div>
+            <div>
+              <dt>الولاية</dt>
+              <dd>{{ a.place || "غير محددة" }}</dd>
+            </div>
+            <div *ngIf="kind === 'animals' && a.raw['age']">
+              <dt>العمر</dt>
+              <dd>{{ a.raw["age"] }}</dd>
+            </div>
+            <div *ngIf="kind === 'animals' && a.raw['gender']">
+              <dt>الجنس</dt>
+              <dd>{{ a.raw["gender"] }}</dd>
+            </div>
+            <div *ngIf="kind === 'wholesale'">
+              <dt>الكمية الدنيا</dt>
+              <dd>{{ a.raw["minQuantity"] }}</dd>
+            </div>
+            <div *ngIf="kind === 'services' && a.raw['experience']">
+              <dt>الخبرة</dt>
+              <dd>{{ a.raw["experience"] }}</dd>
+            </div>
+            <div *ngIf="kind === 'jobs' && a.raw['deadline']">
+              <dt>آخر أجل</dt>
+              <dd>{{ a.raw["deadline"] }}</dd>
+            </div>
+            <div>
+              <dt>الحالة</dt>
+              <dd>{{ a.available ? "متاح" : "غير متاح حالياً" }}</dd>
+            </div>
+          </dl>
+        </section>
+        <a
+          routerLink="/carpool"
+          class="mk-transport-link"
+          *ngIf="kind === 'animals' || kind === 'wholesale'"
+          ><app-icon name="truck" />
+          <div>
+            <strong>تحتاج شكون ينقل الحيوان؟</strong
+            ><span>لقّى رحلة نقل مشترك في نفس الاتجاه.</span>
+          </div>
+          <app-icon name="arrow"
+        /></a>
+      </div>
+      <aside class="mk-seller-panel">
+        <span class="mk-eyebrow">السعر المعلن</span>
+        <div class="mk-detail-price">
+          {{ a.price ? (a.price | number: "1.0-2") : "بالاتفاق"
+          }}<small *ngIf="a.price"
+            >دت <span *ngIf="a.unit">/ {{ a.unit }}</span></small
+          >
+        </div>
+        <p class="mk-muted">
+          السعر والتفاصيل بالاتفاق المباشر مع صاحب الإعلان.
+        </p>
+        <div class="mk-seller">
+          <span>{{ a.ownerName.charAt(0) }}</span>
+          <div>
+            <strong>{{ a.ownerName }}</strong
+            ><small>صاحب الإعلان</small>
+          </div>
+        </div>
+        <ng-container *ngIf="canContact; else noPhone"
+          ><a
+            class="mk-primary mk-block"
+            [href]="whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><app-icon name="message" /> تواصل على واتساب</a
+          ><a class="mk-secondary mk-block" [href]="'tel:+216' + contactPhone"
+            ><app-icon name="phone" /> <bdi>{{ contactPhone }}</bdi></a
+          ></ng-container
+        ><ng-template #noPhone
+          ><p class="mk-error">
+            رقم التواصل غير متوفر في الإعلان هذا.
+          </p></ng-template
+        >
+        <p class="mk-safety">
+          <app-icon name="shield" /> عاين وتثبّت قبل الخلاص. AMANAFARM ما
+          تستخلصش فلوس البيع.
+        </p>
+        <div class="mk-owner-actions" *ngIf="mine">
+          <button type="button" class="mk-secondary" (click)="showForm = true">
+            <app-icon name="edit" /> تعديل</button
+          ><button
+            class="mk-danger"
+            type="button"
+            (click)="remove()"
+            [disabled]="deleting"
+          >
+            <app-icon name="trash" /> {{ deleting ? "جاري الفسخ…" : "فسخ" }}
+          </button>
+        </div>
+      </aside>
+    </div>
+    <section class="mk-similar" *ngIf="similar.length">
+      <div class="mk-section-heading">
+        <div>
+          <span class="mk-eyebrow">كمّل التفقّد</span>
+          <h2>إعلانات من نفس القسم</h2>
+        </div>
+        <a [routerLink]="'/' + kind" [queryParams]="{ category: a.category }"
+          >شوف الكل <app-icon name="arrow"
+        /></a>
+      </div>
+      <div class="mk-grid">
+        <app-market-card *ngFor="let l of similar" [item]="l" />
+      </div></section
+  ></ng-container>
+</div>
+<app-listing-form
+  *ngIf="showForm && item"
+  [kind]="kind"
+  [listing]="item"
+  (saved)="updated($event)"
+  (dismissed)="showForm = false"
+/>
+<div
+  class="mk-overlay mk-lightbox-overlay"
+  *ngIf="lightbox && item"
+  (click)="lightbox = false"
+>
+  <section
+    class="mk-lightbox"
+    appDialog
+    (appDialogClose)="lightbox = false"
+    role="dialog"
+    aria-modal="true"
+    aria-label="صور الإعلان"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      class="mk-lightbox-close mk-icon-button"
+      type="button"
+      (click)="lightbox = false"
+      aria-label="إغلاق"
+    >
+      <app-icon name="close" /></button
+    ><img [src]="api.image(item.images[selected])" [alt]="item.title" />
+    <div>
+      <button
+        class="mk-secondary"
+        type="button"
+        (click)="next(-1)"
+        [disabled]="item.images.length < 2"
+      >
+        السابق</button
+      ><span>{{ selected + 1 }} / {{ item.images.length }}</span
+      ><button
+        class="mk-secondary"
+        type="button"
+        (click)="next(1)"
+        [disabled]="item.images.length < 2"
+      >
+        التالي
+      </button>
+    </div>
+  </section>
+</div>

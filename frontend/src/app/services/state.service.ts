@@ -131,6 +131,9 @@ export interface WholesaleItem {
 export interface UserInfo {
   id?: number;
   fullName: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
   email: string;
   avatar: string;
   role: string;
@@ -215,7 +218,6 @@ export class StateService {
     this.notifs.set(LS.get<Notification[]>('af_notifs', []));
     const cached = LS.get<AnimalAd[]>(StateService.LS_ANIMALS, []);
     if (cached.length) this.animals.set(cached);
-    this.scheduleInitialLoad();
   }
 
   /** Décode le JWT (sans vérifier la signature) pour restaurer email/rôle après un rechargement */
@@ -229,6 +231,7 @@ export class StateService {
       if (!email) return null;
       const base = email.includes('@') ? email.split('@')[0] : email;
       return {
+        id: typeof payload['uid']==='number'?payload['uid']:undefined,
         fullName: base || 'مستخدم',
         email,
         avatar: '🌿',

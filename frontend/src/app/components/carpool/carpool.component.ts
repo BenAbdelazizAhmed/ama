@@ -72,12 +72,14 @@ export class CarpoolComponent implements OnInit {
   error = "";
   formError = "";
   notice = "";
+  query = "";
   origin = "";
   destination = "";
   date = "";
   animal = "";
   accompanied = false;
   sort = "soonest";
+  private pendingPublish=false;
   showForm = false;
   selected: Trip | null = null;
   draft = this.emptyDraft();
@@ -101,7 +103,8 @@ export class CarpoolComponent implements OnInit {
       .filter(
         (t) =>
           new Date(t.departure + "+01:00").getTime() > now &&
-          (!this.origin || t.origin === this.origin) &&
+          (!this.query || [t.origin,t.destination,t.animalType,t.driverName,t.vehicle].join(' ').includes(this.query.trim())) &&
+      (!this.origin || t.origin === this.origin) &&
           (!this.destination || t.destination === this.destination) &&
           (!this.date || t.departure.startsWith(this.date)) &&
           (!this.animal || t.animalType === this.animal) &&
@@ -120,8 +123,11 @@ export class CarpoolComponent implements OnInit {
   ) {}
   ngOnInit() {
     const q = this.route.snapshot.queryParamMap.get("q");
+    this.query=q&&!this.regions.includes(q)?q:'';
+    this.origin=this.route.snapshot.queryParamMap.get("from")||'';
     if (q && this.regions.includes(q)) this.origin = q;
     this.load();
+    if(this.route.snapshot.queryParamMap.get("publish"))this.openForm();
   }
   load() {
     this.loading = true;
@@ -132,6 +138,8 @@ export class CarpoolComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.trips = data;
+          const selectedId=Number(this.route.snapshot.queryParamMap.get("trip"));
+          if(selectedId){const trip=data.find(t=>t.id===selectedId);if(trip)this.showDetails(trip);else this.notice="الرحلة هاذي ما عادش متاحة.";}
           this.loading = false;
         },
         error: () => {
@@ -141,6 +149,7 @@ export class CarpoolComponent implements OnInit {
       });
   }
   reset() {
+    this.query = "";
     this.origin = "";
     this.destination = "";
     this.date = "";
@@ -152,6 +161,7 @@ export class CarpoolComponent implements OnInit {
   }
   openForm() {
     if (!this.state.isLoggedIn()) {
+      this.pendingPublish=true;
       window.dispatchEvent(new CustomEvent("amanafarm-login-required"));
       return;
     }
@@ -161,6 +171,8 @@ export class CarpoolComponent implements OnInit {
     this.showForm = true;
     this.focusDialog();
   }
+  @HostListener('window:amanafarm-authenticated')
+  resumePublish(){if(this.pendingPublish){this.pendingPublish=false;this.openForm();}}
   showDetails(trip: Trip) {
     this.formError = "";
     this.selected = trip;

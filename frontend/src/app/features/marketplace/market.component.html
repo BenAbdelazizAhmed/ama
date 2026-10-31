@@ -1,0 +1,285 @@
+<div class="mk-page" dir="rtl">
+  <nav class="mk-breadcrumb" aria-label="المسار">
+    <a routerLink="/">الرئيسية</a><app-icon name="arrow" /><span>{{
+      config.label
+    }}</span>
+  </nav>
+  <header class="mk-page-head">
+    <div>
+      <span class="mk-eyebrow">AMANAFARM MARKETPLACE</span>
+      <h1>{{ config.title }}</h1>
+      <p>{{ config.subtitle }}</p>
+    </div>
+    <button class="mk-primary" type="button" (click)="openPublish()">
+      <app-icon name="plus" /> انشر إعلانك
+    </button>
+  </header>
+  <div class="mk-service-tabs" *ngIf="kind === 'services' || kind === 'jobs'">
+    <a routerLink="/services" [class.active]="kind === 'services'"
+      ><app-icon name="users" /> نلوّج على مختص</a
+    ><a routerLink="/jobs" [class.active]="kind === 'jobs'"
+      ><app-icon name="search" /> نلوّج على خدمة</a
+    >
+  </div>
+  <form class="mk-searchbar" (ngSubmit)="apply()" role="search">
+    <label class="mk-search-input"
+      ><app-icon name="search" /><span class="mk-sr">كلمة البحث</span
+      ><input
+        name="q"
+        [(ngModel)]="filters.q"
+        placeholder="شنوة تلوّج عليه؟"
+        type="search" /></label
+    ><label class="mk-search-region"
+      ><app-icon name="pin" /><span class="mk-sr">الولاية</span
+      ><select name="region" [(ngModel)]="filters.region">
+        <option value="">كل تونس</option>
+        <option *ngFor="let r of regions">{{ r }}</option>
+      </select></label
+    ><button class="mk-primary" type="submit">
+      بحث <app-icon name="arrow" />
+    </button>
+  </form>
+  <div class="mk-category-rail" role="group" aria-label="القسم">
+    <button
+      type="button"
+      [class.active]="!filters.category"
+      [attr.aria-pressed]="!filters.category"
+      (click)="category('')"
+    >
+      الكل</button
+    ><button
+      *ngFor="let c of categories"
+      type="button"
+      [class.active]="filters.category === c"
+      [attr.aria-pressed]="filters.category === c"
+      (click)="category(c)"
+    >
+      {{ c }}
+    </button>
+  </div>
+  <section id="market-results" aria-labelledby="results-title">
+    <div class="mk-results-toolbar">
+      <div>
+        <h2 id="results-title">
+          {{ loading ? "جاري البحث…" : results.length + " إعلان" }}
+        </h2>
+        <span class="mk-muted" *ngIf="!loading">{{
+          filters.region || "في كامل تونس"
+        }}</span>
+      </div>
+      <div class="mk-toolbar-actions">
+        <button class="mk-filter-button" type="button" (click)="advanced()">
+          <app-icon name="filters" /> الفلاتر
+          <span *ngIf="filterCount">{{ filterCount }}</span></button
+        ><label class="mk-sort"
+          ><span class="mk-sr">ترتيب النتائج</span
+          ><select [(ngModel)]="filters.sort" (change)="apply()">
+            <option value="newest">الأحدث أولاً</option>
+            <option value="cheap">الأقل سعراً</option>
+            <option value="expensive">الأعلى سعراً</option>
+          </select></label
+        >
+        <div class="mk-view-toggle" role="group" aria-label="طريقة العرض">
+          <button
+            type="button"
+            [class.active]="view === 'grid'"
+            (click)="setView('grid')"
+            aria-label="شبكة"
+            [attr.aria-pressed]="view === 'grid'"
+          >
+            <app-icon name="grid" /></button
+          ><button
+            type="button"
+            [class.active]="view === 'list'"
+            (click)="setView('list')"
+            aria-label="قائمة"
+            [attr.aria-pressed]="view === 'list'"
+          >
+            <app-icon name="list" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mk-active-filters" *ngIf="filters.q || filterCount">
+      <span *ngIf="filters.q">بحث: {{ filters.q }}</span
+      ><span *ngIf="filters.region">{{ filters.region }}</span
+      ><span *ngIf="filters.category">{{ filters.category }}</span
+      ><span *ngIf="filters.min || filters.max"
+        >{{ filters.min || "0" }} — {{ filters.max || "∞" }} دت</span
+      ><span *ngIf="filters.available">المتاح فقط</span
+      ><button type="button" (click)="reset()">
+        مسح الكل <app-icon name="close" />
+      </button>
+    </div>
+    <p class="mk-error" role="alert" *ngIf="favorites.error()">
+      {{ favorites.error() }}
+      <button type="button" (click)="favorites.load()">عاود جرّب</button>
+    </p>
+    <div
+      class="mk-grid"
+      *ngIf="loading"
+      role="status"
+      aria-label="جاري تحميل الإعلانات"
+    >
+      <div
+        class="mk-skeleton"
+        *ngFor="let n of [1, 2, 3, 4, 5, 6, 7, 8]"
+        aria-hidden="true"
+      >
+        <div></div>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="mk-state" *ngIf="!loading && error" role="alert">
+      <span><app-icon name="refresh" /></span>
+      <h3>ما نجّمناش نحمّلوا السوق</h3>
+      <p>{{ error }}</p>
+      <button class="mk-primary" type="button" (click)="load()">
+        عاود جرّب
+      </button>
+    </div>
+    <div class="mk-state" *ngIf="!loading && !error && !results.length">
+      <span><app-icon [name]="config.icon" /></span>
+      <h3>
+        {{
+          filterCount || filters.q
+            ? "ما فماش إعلانات مطابقة"
+            : "كون أول واحد ينشر هنا."
+        }}
+      </h3>
+      <p>
+        {{
+          filterCount || filters.q
+            ? "جرّب كلمة أخرى ولا وسّع نطاق البحث."
+            : "السوق يعرض كان الإعلانات المنشورة فعلياً. إعلانك ينجم يكون البداية."
+        }}
+      </p>
+      <button
+        class="mk-primary"
+        type="button"
+        (click)="filterCount || filters.q ? reset() : openPublish()"
+      >
+        {{ filterCount || filters.q ? "مسح الفلاتر" : "انشر إعلان" }}
+      </button>
+    </div>
+    <div
+      class="mk-grid"
+      [class.mk-grid-list]="view === 'list'"
+      *ngIf="!loading && !error"
+    >
+      <app-market-card
+        *ngFor="let item of visible"
+        [item]="item"
+        [view]="view"
+      />
+    </div>
+    <nav
+      class="mk-pagination"
+      *ngIf="!loading && !error && pageCount > 1"
+      aria-label="صفحات النتائج"
+    >
+      <button
+        type="button"
+        [disabled]="currentPage === 1"
+        (click)="goPage(currentPage - 1)"
+      >
+        السابق</button
+      ><span>{{ currentPage }} / {{ pageCount }}</span
+      ><button
+        type="button"
+        [disabled]="currentPage === pageCount"
+        (click)="goPage(currentPage + 1)"
+      >
+        التالي
+      </button>
+    </nav>
+  </section>
+  <aside
+    class="mk-transport-link"
+    *ngIf="kind === 'animals' || kind === 'wholesale'"
+  >
+    <app-icon name="truck" />
+    <div>
+      <strong>لقيت اللي يلزمك؟ كمّل طريقو.</strong
+      ><span>تفقّد رحلات نقل الحيوانات واتّفق مع الناقل مباشرة.</span>
+    </div>
+    <a routerLink="/carpool">اكتشف الرحلات <app-icon name="arrow" /></a>
+  </aside>
+</div>
+<app-listing-form
+  *ngIf="showForm"
+  [kind]="kind"
+  (saved)="saved($event)"
+  (dismissed)="showForm = false"
+/>
+<div class="mk-overlay" *ngIf="showFilters" (click)="showFilters = false">
+  <section
+    class="mk-dialog mk-filter-dialog"
+    appDialog
+    (appDialogClose)="showFilters = false"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="filter-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="mk-dialog-head">
+      <h2 id="filter-title">فلتر على قدّ حاجتك.</h2>
+      <button
+        class="mk-icon-button"
+        type="button"
+        (click)="showFilters = false"
+        aria-label="إغلاق"
+      >
+        <app-icon name="close" />
+      </button>
+    </div>
+    <div class="mk-form-grid">
+      <label
+        >القسم<select [(ngModel)]="draftFilters.category">
+          <option value="">الكل</option>
+          <option *ngFor="let c of categories">{{ c }}</option>
+        </select></label
+      ><label
+        >الولاية<select [(ngModel)]="draftFilters.region">
+          <option value="">كل تونس</option>
+          <option *ngFor="let r of regions">{{ r }}</option>
+        </select></label
+      ><label
+        >أقل سعر (دت)<input
+          type="number"
+          min="0"
+          [(ngModel)]="draftFilters.min" /></label
+      ><label
+        >أعلى سعر (دت)<input
+          type="number"
+          min="0"
+          [(ngModel)]="draftFilters.max" /></label
+      ><label class="mk-check mk-wide"
+        ><input type="checkbox" [(ngModel)]="draftFilters.available" /> المتاح
+        حالياً فقط</label
+      >
+    </div>
+    <p class="mk-error" role="alert" *ngIf="filterError">{{ filterError }}</p>
+    <div class="mk-form-actions">
+      <button
+        class="mk-secondary"
+        type="button"
+        (click)="
+          draftFilters = {
+            q: filters.q,
+            category: '',
+            region: '',
+            min: '',
+            max: '',
+            sort: 'newest',
+            available: false,
+          }
+        "
+      >
+        مسح الفلاتر</button
+      ><button class="mk-primary" type="button" (click)="saveFilters()">
+        عرض النتائج <app-icon name="arrow" />
+      </button>
+    </div>
+  </section>
+</div>

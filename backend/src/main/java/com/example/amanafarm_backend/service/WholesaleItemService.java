@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WholesaleItemService {
+    private final CurrentUser currentUser;
     private final WholesaleItemRepository wholesaleItemRepository;
 
     public WholesaleItemResponse createItem(WholesaleItemRequest req) {
@@ -22,14 +23,16 @@ public class WholesaleItemService {
         w.setMinQuantity(req.getMinQuantity());
         w.setLocation(req.getLocation());
         w.setSupplierName(req.getSupplierName());
+        MediaService.validateUrl(req.getImageUrl());
         w.setImageUrl(req.getImageUrl());
         w.setContactPhone(req.getContactPhone());
-        w.setUserId(req.getUserId());
+        w.setUserId(currentUser.require().getId());
         return mapToResponse(wholesaleItemRepository.save(w));
     }
 
     public WholesaleItemResponse updateItem(Long id, WholesaleItemRequest req) {
-        WholesaleItem w = wholesaleItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+        WholesaleItem w = wholesaleItemRepository.findById(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable"));
+        currentUser.assertOwner(w.getUserId());
         w.setTitle(req.getTitle());
         w.setCategory(req.getCategory());
         w.setDescription(req.getDescription());
@@ -38,6 +41,7 @@ public class WholesaleItemService {
         w.setMinQuantity(req.getMinQuantity());
         w.setLocation(req.getLocation());
         w.setSupplierName(req.getSupplierName());
+        MediaService.validateUrl(req.getImageUrl());
         w.setImageUrl(req.getImageUrl());
         w.setContactPhone(req.getContactPhone());
         return mapToResponse(wholesaleItemRepository.save(w));
@@ -48,11 +52,13 @@ public class WholesaleItemService {
     }
 
     public WholesaleItemResponse getItemById(Long id) {
-        return mapToResponse(wholesaleItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found")));
+        return mapToResponse(wholesaleItemRepository.findById(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable")));
     }
 
     public void deleteItem(Long id) {
-        wholesaleItemRepository.deleteById(id);
+        var item = wholesaleItemRepository.findById(id).orElseThrow(()->new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND,"Annonce introuvable"));
+        currentUser.assertOwner(item.getUserId());
+        wholesaleItemRepository.delete(item);
     }
 
     private WholesaleItemResponse mapToResponse(WholesaleItem w) {
