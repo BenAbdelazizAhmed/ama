@@ -1,9 +1,9 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { StateService } from '../../services/state.service';
@@ -351,14 +351,22 @@ export class ServicesComponent implements OnInit, OnDestroy {
     { value: 'PRO', icon: '', name: 'محترف', price: '29 دت', feat: '30 يوم + ظهور مميز', best: true },
     { value: 'PREMIUM', icon: '', name: 'متميز', price: '59 دت', feat: '60 يوم أعلى النتائج', best: false },
   ];
-  constructor(private http: HttpClient, public state: StateService) {}
+  private searchRouteSub?: Subscription;
+  constructor(private http: HttpClient, public state: StateService, private route: ActivatedRoute) {}
 
   /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      LIFECYCLE
   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-  ngOnInit(): void { this.loadAll(); }
+  ngOnInit(): void {
+    this.searchRouteSub = this.route.queryParamMap.subscribe(params => {
+      this.searchQuery = params.get('q') || '';
+      this.applyFilters();
+    });
+    this.loadAll();
+  }
 
   ngOnDestroy(): void {
+    this.searchRouteSub?.unsubscribe();
     if (this.toastTimer) clearTimeout(this.toastTimer);
     document.body.style.overflow = '';
   }

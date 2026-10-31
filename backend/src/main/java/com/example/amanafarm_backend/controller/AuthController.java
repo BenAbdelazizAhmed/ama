@@ -6,6 +6,7 @@ import com.example.amanafarm_backend.auth.RegisterRequest;
 import com.example.amanafarm_backend.auth.SocialLoginRequest;
 import com.example.amanafarm_backend.service.AuthService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
     }
 

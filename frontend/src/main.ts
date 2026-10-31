@@ -2,7 +2,7 @@ import 'zone.js';
 
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { PreloadAllModules, provideRouter, withInMemoryScrolling, withPreloading } from "@angular/router";
+import { provideRouter, withInMemoryScrolling } from "@angular/router";
 import { AppComponent } from "./app/app.component";
 import { appRoutes } from "./app/app.routes";
 import { authInterceptor } from "./app/core/auth.interceptor";
@@ -15,7 +15,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(
       appRoutes,
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'top' }),
-      withPreloading(PreloadAllModules),
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
   ],

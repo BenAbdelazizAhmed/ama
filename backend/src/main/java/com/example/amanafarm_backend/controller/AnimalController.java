@@ -6,6 +6,7 @@ import com.example.amanafarm_backend.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class AnimalController {
     private final AnimalService animalService;
 
     @PostMapping
-    public AnimalResponse createAnimal(@RequestBody AnimalRequest request) {
+    public AnimalResponse createAnimal(@Valid @RequestBody AnimalRequest request) {
         return animalService.createAnimal(request);
     }
 
@@ -34,7 +35,7 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}")
-    public AnimalResponse updateAnimal(@PathVariable Long id, @RequestBody AnimalRequest request) {
+    public AnimalResponse updateAnimal(@PathVariable Long id, @Valid @RequestBody AnimalRequest request) {
         return animalService.updateAnimal(id, request);
     }
 

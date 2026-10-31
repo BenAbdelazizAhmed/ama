@@ -7,9 +7,12 @@ public class JobOffer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userId;
+    private java.time.LocalDateTime createdAt;
 
     private String title;
     private String employer;
+    private String phone;
     private String logo;
     private String location;
     private String jobType;
@@ -29,8 +32,14 @@ public class JobOffer {
     public JobOffer() {
     }
 
+    public Long getUserId(){return userId;}
+    public void setUserId(Long value){userId=value;}
+    public java.time.LocalDateTime getCreatedAt(){return createdAt;}
+    @PrePersist public void created(){createdAt=java.time.LocalDateTime.now();}
     public Long getId() { return id; }
     public String getTitle() { return title; }
+    public String getPhone(){return phone;}
+    public void setPhone(String value){phone=value;}
     public String getEmployer() { return employer; }
     public String getLogo() { return logo; }
     public String getLocation() { return location; }

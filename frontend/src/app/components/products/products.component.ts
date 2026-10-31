@@ -1,4 +1,4 @@
-﻿import {
+import {
   Component,
   OnInit,
   OnDestroy,
@@ -289,6 +289,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchSubject.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(() => this.applyFilter());
     this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      this.searchQuery = params.get('q') || '';
+      const category = params.get('category');
+      if (category) this.activeCategory = category;
+      this.applyFilter();
       const publish = params.get('publish');
       const token = params.get('open') || publish || '';
       if (publish !== 'product' && publish !== 'product-company') return;

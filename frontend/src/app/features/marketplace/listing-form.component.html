@@ -1,0 +1,202 @@
+<div class="mk-overlay" (click)="close()">
+  <section
+    class="mk-dialog"
+    appDialog
+    (appDialogClose)="close()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="listing-form-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="mk-dialog-head">
+      <div>
+        <span class="mk-eyebrow">{{ markets[kind].label }} · نشر مجاني</span>
+        <h2 id="listing-form-title">
+          {{ listing ? "تعديل الإعلان" : "خلّي إعلانك يتشاف." }}
+        </h2>
+      </div>
+      <button
+        class="mk-icon-button"
+        type="button"
+        (click)="close()"
+        [disabled]="saving"
+        aria-label="إغلاق"
+      >
+        <app-icon name="close" />
+      </button>
+    </div>
+    <p class="mk-muted">
+      معلومات واضحة وصور حقيقية تعاونك تلقى الناس المناسبة.
+    </p>
+    <form #form="ngForm" (ngSubmit)="submit(form)">
+      <fieldset [disabled]="saving">
+        <div class="mk-form-grid">
+          <label class="mk-wide"
+            >عنوان الإعلان<input
+              name="title"
+              [(ngModel)]="draft.title"
+              required
+              minlength="3"
+              maxlength="140"
+              placeholder="مثال: خروف للتربية في نابل" /></label
+          ><label
+            >القسم<select name="category" [(ngModel)]="draft.category" required>
+              <option value="" disabled>اختار القسم</option>
+              <option *ngFor="let c of categories">{{ c }}</option>
+            </select></label
+          ><label
+            >الولاية<select name="place" [(ngModel)]="draft.place" required>
+              <option value="" disabled>اختار الولاية</option>
+              <option *ngFor="let r of regions">{{ r }}</option>
+            </select></label
+          ><label
+            >السعر (دت)<input
+              type="number"
+              name="price"
+              [(ngModel)]="draft.price"
+              required
+              min="0"
+              max="100000000"
+              step="1"
+            /><small>0 إذا السعر بالاتفاق.</small></label
+          ><label *ngIf="kind !== 'animals'"
+            >وحدة السعر<select name="unit" [(ngModel)]="draft.unit">
+              <option value="">بدون وحدة</option>
+              <option>للكغ</option>
+              <option>للوحدة</option>
+              <option>للقنطار</option>
+              <option>للطّن</option>
+              <option>لليوم</option>
+              <option>للشهر</option>
+            </select></label
+          ><label *ngIf="kind === 'animals'"
+            >العمر<input
+              name="age"
+              [(ngModel)]="draft.age"
+              maxlength="40"
+              placeholder="مثال: 8 أشهر" /></label
+          ><label *ngIf="kind === 'animals'"
+            >الجنس<select name="gender" [(ngModel)]="draft.gender">
+              <option value="">غير محدد</option>
+              <option>ذكر</option>
+              <option>أنثى</option>
+            </select></label
+          ><label *ngIf="kind === 'wholesale'"
+            >الكمية الدنيا<input
+              type="number"
+              name="quantity"
+              [(ngModel)]="draft.quantity"
+              min="1"
+              max="1000000"
+              required
+              step="1" /></label
+          ><label *ngIf="kind === 'services'"
+            >الخبرة<input
+              name="experience"
+              [(ngModel)]="draft.age"
+              maxlength="80"
+              placeholder="مثال: 5 سنوات" /></label
+          ><label *ngIf="kind === 'jobs'"
+            >آخر أجل للتواصل (اختياري)<input
+              name="deadline"
+              type="date"
+              [(ngModel)]="draft.deadline" /></label
+          ><label
+            >رقم الهاتف<input
+              name="phone"
+              type="tel"
+              dir="ltr"
+              [(ngModel)]="draft.phone"
+              required
+              pattern="[2459][0-9]{7}"
+              maxlength="8"
+              placeholder="XX XXX XXX"
+            /><small>8 أرقام، يظهر للمهتمين بالإعلان.</small></label
+          ><label class="mk-wide"
+            >وصف الإعلان<textarea
+              name="description"
+              [(ngModel)]="draft.description"
+              required
+              minlength="10"
+              maxlength="2000"
+              rows="4"
+              placeholder="التفاصيل، الحالة، شروط البيع أو الخدمة…"
+            ></textarea>
+          </label>
+          <div class="mk-wide">
+            <span class="mk-field-label"
+              >الصور
+              <small>{{
+                kind === "animals" ? "حتى 6 صور" : "صورة واحدة"
+              }}</small></span
+            >
+            <div
+              class="mk-photo-grid"
+              *ngIf="draft.images.length || previews.length"
+            >
+              <div *ngFor="let url of draft.images; let i = index">
+                <img [src]="api.image(url)" alt="صورة الإعلان" /><button
+                  type="button"
+                  (click)="removePhoto(i)"
+                  aria-label="حذف الصورة"
+                  [disabled]="saving"
+                >
+                  <app-icon name="close" />
+                </button>
+              </div>
+              <div *ngFor="let url of previews">
+                <img [src]="url" alt="صورة جديدة" />
+              </div>
+            </div>
+            <label class="mk-upload"
+              ><app-icon name="camera" /><span>اختار صور من جهازك</span
+              ><small>JPEG، PNG أو WebP · حتى 5MB للصورة</small
+              ><input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                [multiple]="kind === 'animals'"
+                (change)="choose($event)"
+                [disabled]="saving" /></label
+            ><button
+              *ngIf="files.length"
+              type="button"
+              class="mk-text-button"
+              (click)="clearSelection()"
+            >
+              إلغاء الصور الجديدة
+            </button>
+          </div>
+          <label
+            class="mk-check mk-wide"
+            *ngIf="kind === 'products' || kind === 'services'"
+            ><input
+              type="checkbox"
+              name="available"
+              [(ngModel)]="draft.available"
+            />
+            {{ kind === "products" ? "المنتج متوفر" : "متاح للخدمة" }}</label
+          >
+        </div>
+        <p class="mk-error" *ngIf="error" role="alert">{{ error }}</p>
+        <div class="mk-form-actions">
+          <button
+            class="mk-secondary"
+            type="button"
+            (click)="close()"
+            [disabled]="saving"
+          >
+            إلغاء</button
+          ><button class="mk-primary" type="submit" [disabled]="saving">
+            {{
+              saving
+                ? "جاري الحفظ…"
+                : listing
+                  ? "حفظ التغييرات"
+                  : "انشر الإعلان"
+            }}<app-icon name="arrow" />
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+</div>

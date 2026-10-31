@@ -1,37 +1,62 @@
-﻿<div class="toast-wrap" #toastWrap aria-live="polite" aria-atomic="false"></div>
+<div class="toast-wrap" #toastWrap aria-live="polite" aria-atomic="false"></div>
 
 <a class="skip-link" href="#page-content">تجاوز إلى المحتوى</a>
 
 <div class="ann-bar" role="status">
   <div class="ann-dot"></div>
-  <span>AMANAFARM · سوق فلاحي تونسي آمن للبيع والشراء في 24 ولاية</span>
-  <span class="ann-badge">انشر إعلانك بثقة</span>
+  <span>من المزرعة للسوق، تواصل مباشر في كامل تونس</span>
+  <a routerLink="/help" class="ann-badge"
+    >تحتاج مساعدة؟ <app-icon name="arrow"></app-icon
+  ></a>
 </div>
 
-<header class="header" [class.scrolled]="isScrolled" role="banner">
+<header class="header farm-header" [class.scrolled]="isScrolled" role="banner">
   <a routerLink="/" class="logo" aria-label="AMANAFARM الرئيسية">
-    <div class="logo-mark">
-      <img src="assets/aza.png" alt="AMANAFARM" class="logo-img" width="44" height="44">
+    <div class="logo-mark brand-symbol" aria-hidden="true">
+      <app-icon name="sprout"></app-icon>
     </div>
     <div class="logo-texts">
       <div class="name">AMANAFARM</div>
-      <div class="tagline">منصة فلاحة موثوقة في تونس</div>
+      <div class="tagline">السوق الفلاحي التونسي</div>
     </div>
   </a>
-  <div class="search-wrap" role="search">
-    <input id="searchInput" type="search" placeholder="ابحث: خروف، بقرة، علف، بيطري..." aria-label="بحث في الإعلانات" />
-    <button class="search-btn" id="searchBtn" type="button" aria-label="تنفيذ البحث">
-      <i data-lucide="search" width="14" aria-hidden="true"></i> بحث
+  <div class="search-wrap header-search" role="search">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="ابحث: خروف، بقرة، علف، بيطري..."
+      aria-label="بحث في الإعلانات"
+    />
+    <button
+      class="search-btn"
+      id="searchBtn"
+      type="button"
+      aria-label="تنفيذ البحث"
+    >
+      <app-icon name="search"></app-icon> بحث
     </button>
   </div>
   <div class="header-actions">
     <button class="btn-post-header" id="publishHeaderBtn" type="button" hidden>
-      <i data-lucide="plus-circle" width="15" aria-hidden="true"></i>
+      <app-icon name="plus"></app-icon>
       <span id="publishHeaderLabel">نشر إعلان</span>
     </button>
-    <button class="btn-login-header guest-only" id="btnLoginHeader" type="button">دخول</button>
+    <button
+      class="btn-login-header guest-only"
+      id="btnLoginHeader"
+      type="button"
+    >
+      دخول
+    </button>
     <div class="user-menu-wrap auth-only">
-      <button class="user-greeting-chip" id="userAction" type="button" aria-label="حسابي" aria-haspopup="menu" aria-expanded="false">
+      <button
+        class="user-greeting-chip"
+        id="userAction"
+        type="button"
+        aria-label="حسابي"
+        aria-haspopup="menu"
+        aria-expanded="false"
+      >
         <span class="user-greeting-chip__avatar" id="userInitial">م</span>
         <span class="user-greeting-chip__body">
           <small>أهلاً</small>
@@ -46,51 +71,87 @@
             <div class="ud-email" id="udEmail"></div>
           </div>
         </div>
-        <button class="ud-item danger" id="logoutBtn" type="button" role="menuitem">تسجيل الخروج</button>
+        <a
+          class="ud-item"
+          routerLink="/account"
+          (click)="closeDropdown()"
+          role="menuitem"
+          ><app-icon name="account" /> حسابي وإعلاناتي</a
+        >
+        <a
+          class="ud-item"
+          routerLink="/account"
+          [queryParams]="{ tab: 'saved' }"
+          (click)="closeDropdown()"
+          role="menuitem"
+          ><app-icon name="heart" /> المفضّلة</a
+        >
+        <button
+          class="ud-item danger"
+          id="logoutBtn"
+          type="button"
+          role="menuitem"
+        >
+          تسجيل الخروج
+        </button>
       </div>
     </div>
   </div>
 </header>
 
-<nav class="navbar" aria-label="التنقل الرئيسي">
+<nav class="navbar farm-nav" aria-label="التنقل الرئيسي">
   <ul>
     <li>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <i data-lucide="home" width="14" aria-hidden="true"></i>
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <app-icon name="home"></app-icon>
         الرئيسية
       </a>
     </li>
 
     <li>
       <a routerLink="/animals" routerLinkActive="active">
-        <i data-lucide="beef" width="14" aria-hidden="true"></i>
+        <app-icon name="animal"></app-icon>
         الحيوانات
       </a>
     </li>
 
+    <li>
+      <a routerLink="/carpool" routerLinkActive="active"
+        ><app-icon name="truck"></app-icon> نقل الحيوانات
+        <span class="nav-new">جديد</span></a
+      >
+    </li>
+    <li>
+      <a routerLink="/wholesale" routerLinkActive="active"
+        ><app-icon name="package" /> سوق الجملة</a
+      >
+    </li>
     <!-- PRODUCTS -->
     <li>
       <a routerLink="/products" routerLinkActive="active">
-        <i data-lucide="package" width="14" aria-hidden="true"></i>
+        <app-icon name="package"></app-icon>
         المنتجات
       </a>
     </li>
 
     <li>
       <a routerLink="/services" routerLinkActive="active">
-        <i data-lucide="wrench" width="14" aria-hidden="true"></i>
+        <app-icon name="users"></app-icon>
         مهن فلاحية
       </a>
     </li>
 
     <li>
       <a routerLink="/about" routerLinkActive="active">
-        <i data-lucide="info" width="14" aria-hidden="true"></i>
+        <app-icon name="help"></app-icon>
         من نحن
       </a>
     </li>
   </ul>
-
 </nav>
 
 <main id="page-content" class="app-main-shell" tabindex="-1">
@@ -101,18 +162,67 @@
   <div class="footer-grid">
     <div class="ft-brand">
       <div class="ft-logo-row">
-        <img src="assets/aza.png" alt="AMANAFARM" width="40" height="40" class="ft-logo-img" loading="lazy">
+        <span class="brand-symbol" aria-hidden="true"
+          ><app-icon name="sprout"></app-icon
+        ></span>
         <div class="ft-name">AMANAFARM</div>
       </div>
-      <div class="ft-tag">منصة الفلاحة الأولى في تونس</div>
+      <div class="ft-tag">الفلاحة التونسية، أقرب ليك</div>
       <p>سوق رقمي يربط المربين والمستثمرين بكل الخدمات الفلاحية في 24 ولاية.</p>
-      <a class="ft-wa-btn" href="https://wa.me/21653159799" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg>
+      <a
+        class="ft-wa-btn"
+        href="https://wa.me/21653159799"
+        target="_blank"
+        rel="noopener"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          aria-hidden="true"
+          fill="currentColor"
+        >
+          <path
+            d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <path
+            d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"
+          />
+        </svg>
         واتساب الدعم: 53 159 799
       </a>
       <div class="ft-social">
-        <a class="ft-soc" href="https://www.facebook.com/profile.php?id=61588939604056" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
-        <a class="ft-soc" href="https://wa.me/21653159799" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"/></svg></a>
+        <a
+          class="ft-soc"
+          href="https://www.facebook.com/profile.php?id=61588939604056"
+          target="_blank"
+          rel="noopener"
+          aria-label="Facebook"
+          ><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path
+              d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+            /></svg
+        ></a>
+        <a
+          class="ft-soc"
+          href="https://wa.me/21653159799"
+          target="_blank"
+          rel="noopener"
+          aria-label="WhatsApp"
+          ><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path
+              d="M20.5 3.5A10 10 0 0 0 3.2 14.1L2 22l8-1.2A10 10 0 0 0 20.5 3.5z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M8.4 7.7c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .6.4.8 1.1 1.5 2 2 .3.2.4.1.6-.1l.6-.7c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.6 0 .6-.3 1.2-.7 1.6-.5.5-1.6.8-3.6-.1-2.8-1.2-4.7-3.9-5-5.3-.3-1.2.4-1.8.9-2z"
+            /></svg
+        ></a>
       </div>
     </div>
     <div class="ft-col">
@@ -122,6 +232,7 @@
         <li><a routerLink="/animals">أبقار وعجول</a></li>
         <li><a routerLink="/animals">دواجن وطيور</a></li>
         <li><a routerLink="/products">أعلاف ومنتجات</a></li>
+        <li><a routerLink="/carpool">نقل الحيوانات المشترك</a></li>
       </ul>
     </div>
     <div class="ft-col">
@@ -138,145 +249,487 @@
       <ul>
         <li><a routerLink="/about">من نحن</a></li>
         <li><a routerLink="/help">مساعدة / FAQ</a></li>
-        <li><a routerLink="/about">اتصل بنا</a></li>
-        <li><a routerLink="/about">الشروط والخصوصية</a></li>
+        <li><a routerLink="/help">اتصل بنا</a></li>
+        <li><a routerLink="/legal">الاستعمال والخصوصية</a></li>
       </ul>
     </div>
   </div>
   <div class="ft-bottom">
     <div class="copy">© 2026 AMANAFARM — جميع الحقوق محفوظة</div>
     <div class="ft-bottom-links">
-      <a routerLink="/about">الشروط</a>
-      <a routerLink="/about">الخصوصية</a>
-      <a routerLink="/about">الدعم</a>
+      <a routerLink="/legal">الشروط</a>
+      <a routerLink="/legal">الخصوصية</a>
+      <a routerLink="/help">الدعم</a>
     </div>
   </div>
 </footer>
 
 <nav class="mobile-bottom-nav" aria-label="التنقل السفلي">
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-label="الرئيسية">
-    <i data-lucide="home" width="20" aria-hidden="true"></i>
+  <a
+    routerLink="/"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    aria-label="الرئيسية"
+  >
+    <app-icon name="home"></app-icon>
     <span>الرئيسية</span>
   </a>
   <a routerLink="/animals" routerLinkActive="active" aria-label="تصفح">
-    <i data-lucide="search" width="20" aria-hidden="true"></i>
+    <app-icon name="search"></app-icon>
     <span>تصفح</span>
   </a>
-  <button type="button" id="mobPublish" class="mob-publish-btn" aria-label="نشر إعلان" (click)="goPublish()">
-    <i data-lucide="plus" width="24" aria-hidden="true"></i>
+  <button
+    type="button"
+    id="mobPublish"
+    class="mob-publish-btn"
+    aria-label="نشر إعلان"
+    (click)="goPublish()"
+  >
+    <app-icon name="plus"></app-icon>
     <span>نشر</span>
   </button>
-  <a routerLink="/products" routerLinkActive="active" aria-label="منتجات">
-    <i data-lucide="package" width="20" aria-hidden="true"></i>
-    <span>منتجات</span>
+  <a routerLink="/carpool" routerLinkActive="active" aria-label="نقل الحيوانات">
+    <app-icon name="truck"></app-icon>
+    <span>النقل</span>
   </a>
   <a routerLink="/services" routerLinkActive="active" aria-label="خدمات">
-    <i data-lucide="briefcase" width="20" aria-hidden="true"></i>
+    <app-icon name="users"></app-icon>
     <span>خدمات</span>
   </a>
 </nav>
 
-<div class="publish-choice-overlay" *ngIf="showPublishChooser" (click)="closePublishChooser()" role="dialog" aria-modal="true" aria-labelledby="publishChoiceTitle">
-  <section class="publish-choice" (click)="$event.stopPropagation()">
-    <button class="publish-choice__close" type="button" (click)="closePublishChooser()" aria-label="إغلاق">×</button>
+<div
+  class="publish-choice-overlay"
+  *ngIf="showPublishChooser"
+  (click)="closePublishChooser()"
+>
+  <section
+    class="publish-choice"
+    appDialog
+    (appDialogClose)="closePublishChooser()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="publishChoiceTitle"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      class="publish-choice__close"
+      type="button"
+      (click)="closePublishChooser()"
+      aria-label="إغلاق"
+    >
+      ×
+    </button>
     <div class="publish-choice__head">
-      <span class="publish-choice__icon"><i data-lucide="plus-circle" width="22" aria-hidden="true"></i></span>
+      <span class="publish-choice__icon"
+        ><app-icon name="plus"></app-icon
+      ></span>
       <div>
         <h2 id="publishChoiceTitle">شنوة تحب تنشر؟</h2>
         <p>اختار نوع الإعلان، والفورم الموجود باش يفتح مباشرة.</p>
       </div>
     </div>
     <div class="publish-choice__grid">
-      <button class="publish-choice__card" type="button" (click)="openPublishTarget('animal')">
-        <i data-lucide="beef" width="26" aria-hidden="true"></i>
-        <strong>إعلان حيوان</strong>
-        <span>بيع بالكعبة أو قطيع بالجملة</span>
-      </button>
-      <button class="publish-choice__card" type="button" (click)="openPublishTarget('product')">
-        <i data-lucide="package" width="26" aria-hidden="true"></i>
-        <strong>إعلان منتج</strong>
-        <span>علف، بذور، معدات، أو برودويات</span>
+      <button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('animal')"
+      >
+        <app-icon name="animal" /><strong>إعلان حيوان</strong
+        ><span>بيع فردي أو قطيع</span></button
+      ><button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('product')"
+      >
+        <app-icon name="grain" /><strong>منتج فلاحي</strong
+        ><span>علف، بذور أو معدات</span></button
+      ><button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('wholesale')"
+      >
+        <app-icon name="package" /><strong>عرض جملة</strong
+        ><span>كمية دنيا وسعر واضح</span></button
+      ><button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('services')"
+      >
+        <app-icon name="users" /><strong>خدمة فلاحية</strong
+        ><span>اعرض خبرتك وخدماتك</span></button
+      ><button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('jobs')"
+      >
+        <app-icon name="users" /><strong>عرض شغل</strong
+        ><span>لقّى الناس المناسبة لخدمتك</span></button
+      ><button
+        class="publish-choice__card"
+        type="button"
+        (click)="openPublishTarget('carpool')"
+      >
+        <app-icon name="truck" /><strong>رحلة نقل</strong
+        ><span>شارك الطريق والمصاريف</span>
       </button>
     </div>
   </section>
 </div>
 
-<div class="overlay" #authOverlay id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authModalHeading">
+<div
+  class="overlay"
+  #authOverlay
+  id="authOverlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="authModalHeading"
+>
   <div class="auth-modal">
     <aside class="auth-brand">
       <div class="auth-brand__image" aria-hidden="true"></div>
       <div class="auth-brand__content">
         <div class="auth-brand__logo">
-          <img src="assets/aza.png" alt="AMANAFARM" class="auth-brand__mark" width="58" height="58" loading="lazy" decoding="async" />
+          <img
+            src="assets/aza.png"
+            alt="AMANAFARM"
+            class="auth-brand__mark"
+            width="58"
+            height="58"
+            loading="lazy"
+            decoding="async"
+          />
           <div id="authModalHeading">
             <strong>AMANAFARM</strong>
             <small>سوق فلاحي آمن في كامل تونس</small>
           </div>
         </div>
         <h2>بيع، اشري، وتواصل بثقة.</h2>
-        <p>منصة مبنية للفلاحين والمربين والتجار: إعلانات موثوقة، تواصل مباشر، وتجربة بسيطة من الهاتف.</p>
+        <p>
+          منصة مبنية للفلاحين والمربين والتجار: إعلانات موثوقة، تواصل مباشر،
+          وتجربة بسيطة من الهاتف.
+        </p>
         <div class="auth-brand__stats">
-          <div><strong id="authPublishedAdsStat">0</strong><span>إعلان منشور</span></div>
-          <div><strong id="authSiteVisitsStat">0</strong><span>زيارة للموقع</span></div>
-          <div><strong id="authRegisteredUsersStat">0</strong><span>مستخدم مسجل</span></div>
+          <div><strong>24</strong><span>ولاية تونسية</span></div>
+          <div><strong>مجاني</strong><span>نشر الإعلانات</span></div>
+          <div><strong>مباشر</strong><span>التواصل مع المعلن</span></div>
         </div>
       </div>
     </aside>
 
     <section class="auth-card">
-      <button class="close-auth" id="closeAuthBtn" type="button" aria-label="إغلاق نافذة تسجيل الدخول">×</button>
+      <button
+        class="close-auth"
+        id="closeAuthBtn"
+        type="button"
+        aria-label="إغلاق نافذة تسجيل الدخول"
+      >
+        ×
+      </button>
       <div class="auth-tabs" role="tablist">
-        <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin">دخول</button>
-        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister">حساب جديد</button>
+        <button
+          class="auth-tab active"
+          id="tabLogin"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panelLogin"
+        >
+          دخول
+        </button>
+        <button
+          class="auth-tab"
+          id="tabRegister"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelRegister"
+        >
+          حساب جديد
+        </button>
       </div>
 
-      <div class="tab-panel active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
+      <div
+        class="tab-panel active"
+        id="panelLogin"
+        role="tabpanel"
+        aria-labelledby="tabLogin"
+      >
         <div class="auth-panel-head">
           <h2>أهلاً بعودتك</h2>
           <p>سجّل الدخول للوصول إلى حسابك وإدارة إعلاناتك بسهولة.</p>
         </div>
-        <div class="rate-notice" id="loginRateNotice" role="alert">⏳ محاولات كثيرة — يرجى الانتظار دقيقة.</div>
-        <div class="social-btns" id="socialLoginBtns" hidden>
-          <button class="social-btn social-btn-google" id="googleLoginBtn" type="button" hidden>Google</button>
-          <button class="social-btn social-btn-facebook" id="facebookLoginBtn" type="button" hidden>Facebook</button>
+        <div class="rate-notice" id="loginRateNotice" role="alert">
+          ⏳ محاولات كثيرة — يرجى الانتظار دقيقة.
         </div>
-        <div class="or-divider" id="socialLoginDivider" hidden><span>أو بالبريد الإلكتروني</span></div>
-        <div class="field-auth"><label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label><div class="field-wrap"><span class="field-icon">✉</span><input type="text" id="loginEmail" placeholder="exemple@email.com" autocomplete="username" /></div><div class="err-msg" id="loginEmailErr" role="alert">يرجى إدخال بريد أو هاتف صحيح</div></div>
-        <div class="field-auth"><label for="loginPassword">كلمة المرور</label><div class="field-wrap field-wrap--password"><span class="field-icon">●</span><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" /><button class="password-toggle" type="button" data-target="loginPassword" aria-label="إظهار كلمة المرور">إظهار</button></div><div class="err-msg" id="loginPasswordErr" role="alert">كلمة المرور مطلوبة</div></div>
-        <div class="form-extras"><label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="rememberMe" style="accent-color:var(--green)" /> تذكرني (30 يوم)</label><span class="forgot-link" id="forgotLink" role="button" tabindex="0">نسيت كلمة المرور؟</span></div>
-        <button class="submit-btn" id="loginBtn" type="button">تسجيل الدخول</button>
-        <div class="terms-note">بتسجيل الدخول أنت توافق على <a routerLink="/about">شروط الاستخدام</a></div>
+        <div class="social-btns" id="socialLoginBtns" hidden>
+          <button
+            class="social-btn social-btn-google"
+            id="googleLoginBtn"
+            type="button"
+            hidden
+          >
+            Google
+          </button>
+          <button
+            class="social-btn social-btn-facebook"
+            id="facebookLoginBtn"
+            type="button"
+            hidden
+          >
+            Facebook
+          </button>
+        </div>
+        <div class="or-divider" id="socialLoginDivider" hidden>
+          <span>أو بالبريد الإلكتروني</span>
+        </div>
+        <div class="field-auth">
+          <label for="loginEmail">البريد الإلكتروني أو رقم الهاتف</label>
+          <div class="field-wrap">
+            <span class="field-icon">✉</span
+            ><input
+              type="text"
+              id="loginEmail"
+              placeholder="exemple@email.com"
+              autocomplete="username"
+            />
+          </div>
+          <div class="err-msg" id="loginEmailErr" role="alert">
+            يرجى إدخال بريد أو هاتف صحيح
+          </div>
+        </div>
+        <div class="field-auth">
+          <label for="loginPassword">كلمة المرور</label>
+          <div class="field-wrap field-wrap--password">
+            <span class="field-icon">●</span
+            ><input
+              type="password"
+              id="loginPassword"
+              placeholder="أدخل كلمة المرور"
+              autocomplete="current-password"
+            /><button
+              class="password-toggle"
+              type="button"
+              data-target="loginPassword"
+              aria-label="إظهار كلمة المرور"
+            >
+              إظهار
+            </button>
+          </div>
+          <div class="err-msg" id="loginPasswordErr" role="alert">
+            كلمة المرور مطلوبة
+          </div>
+        </div>
+        <div class="form-extras">
+          <label
+            style="
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              cursor: pointer;
+            "
+            ><input
+              type="checkbox"
+              id="rememberMe"
+              style="accent-color: var(--green)"
+            />
+            تذكرني (30 يوم)</label
+          ><button class="forgot-link" id="forgotLink" type="button">
+            نسيت كلمة المرور؟
+          </button>
+        </div>
+        <button class="submit-btn" id="loginBtn" type="button">
+          تسجيل الدخول
+        </button>
+        <div class="terms-note">
+          بتسجيل الدخول أنت توافق على <a routerLink="/legal">شروط الاستخدام</a>
+        </div>
       </div>
 
-      <div class="tab-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
+      <div
+        class="tab-panel"
+        id="panelRegister"
+        role="tabpanel"
+        aria-labelledby="tabRegister"
+      >
         <div class="auth-panel-head">
           <h2>كمّل التسجيل في 30 ثانية</h2>
           <p>باش نحفظوا إعلانك ونخليوا المشترين يتصلوا بيك على طول.</p>
         </div>
         <div class="steps-indicator" aria-label="مراحل التسجيل">
-          <div class="step-item-r active" id="si1"><div class="step-dot" aria-current="step">1</div><div>معلوماتك</div></div><div class="step-line" id="sl1"></div>
-          <div class="step-item-r" id="si2"><div class="step-dot">2</div><div>الأمان</div></div><div class="step-line" id="sl2"></div>
-          <div class="step-item-r" id="si3"><div class="step-dot">3</div><div>تخصيص</div></div>
+          <div class="step-item-r active" id="si1">
+            <div class="step-dot" aria-current="step">1</div>
+            <div>معلوماتك</div>
+          </div>
+          <div class="step-line" id="sl1"></div>
+          <div class="step-item-r" id="si2">
+            <div class="step-dot">2</div>
+            <div>الأمان</div>
+          </div>
+          <div class="step-line" id="sl2"></div>
+          <div class="step-item-r" id="si3">
+            <div class="step-dot">3</div>
+            <div>تخصيص</div>
+          </div>
         </div>
         <div class="reg-step active" id="regStep1">
-          <div class="fields-row"><div class="field-auth"><label for="regFirst">الاسم الأول</label><input type="text" id="regFirst" placeholder="محمد" autocomplete="given-name" /><div class="err-msg" id="regFirstErr">الاسم مطلوب</div></div><div class="field-auth"><label for="regLast">اسم العائلة</label><input type="text" id="regLast" placeholder="البراهمي" autocomplete="family-name" /><div class="err-msg" id="regLastErr">اسم العائلة مطلوب</div></div></div>
-          <div class="field-auth"><label for="regEmail">البريد الإلكتروني (اختياري)</label><input type="email" id="regEmail" placeholder="exemple@email.com" autocomplete="email" /><div class="err-msg" id="regEmailErr">بريد غير صحيح</div></div>
-          <div class="field-auth"><label for="regPhone">رقم الهاتف</label><div class="phone-wrap"><div class="phone-prefix">🇹🇳 +216</div><input type="tel" id="regPhone" placeholder="XX XXX XXX" autocomplete="tel" /></div><div class="err-msg" id="regPhoneErr">رقم غير صحيح</div></div>
-          <div class="step-nav"><button class="submit-btn" id="regNextStep1Btn" type="button">التالي ←</button></div>
+          <div class="fields-row">
+            <div class="field-auth">
+              <label for="regFirst">الاسم الأول</label
+              ><input
+                type="text"
+                id="regFirst"
+                placeholder="محمد"
+                autocomplete="given-name"
+              />
+              <div class="err-msg" id="regFirstErr">الاسم مطلوب</div>
+            </div>
+            <div class="field-auth">
+              <label for="regLast">اسم العائلة</label
+              ><input
+                type="text"
+                id="regLast"
+                placeholder="البراهمي"
+                autocomplete="family-name"
+              />
+              <div class="err-msg" id="regLastErr">اسم العائلة مطلوب</div>
+            </div>
+          </div>
+          <div class="field-auth">
+            <label for="regEmail">البريد الإلكتروني (اختياري)</label
+            ><input
+              type="email"
+              id="regEmail"
+              placeholder="exemple@email.com"
+              autocomplete="email"
+            />
+            <div class="err-msg" id="regEmailErr">بريد غير صحيح</div>
+          </div>
+          <div class="field-auth">
+            <label for="regPhone">رقم الهاتف</label>
+            <div class="phone-wrap">
+              <div class="phone-prefix">🇹🇳 +216</div>
+              <input
+                type="tel"
+                id="regPhone"
+                placeholder="XX XXX XXX"
+                autocomplete="tel"
+              />
+            </div>
+            <div class="err-msg" id="regPhoneErr">رقم غير صحيح</div>
+          </div>
+          <div class="step-nav">
+            <button class="submit-btn" id="regNextStep1Btn" type="button">
+              التالي ←
+            </button>
+          </div>
         </div>
         <div class="reg-step" id="regStep2">
-          <div class="field-auth"><label for="regPassword">كلمة المرور</label><div class="field-wrap field-wrap--password"><input type="password" id="regPassword" placeholder="8 أحرف على الأقل" autocomplete="new-password" /><button class="password-toggle" type="button" data-target="regPassword" aria-label="إظهار كلمة المرور">إظهار</button></div><div class="pw-strength-wrap" role="meter" aria-label="قوة كلمة المرور"><div class="pw-strength-bar" id="pwBar"></div></div><div class="pw-strength-label" id="pwLabel"></div><div class="err-msg" id="regPasswordErr">كلمة المرور لازم تكون 8 أحرف على الأقل</div></div>
-          <div class="field-auth"><label for="regConfirm">تأكيد كلمة المرور</label><div class="field-wrap field-wrap--password"><input type="password" id="regConfirm" placeholder="أعد كلمة المرور" autocomplete="new-password" /><button class="password-toggle" type="button" data-target="regConfirm" aria-label="إظهار كلمة المرور">إظهار</button></div><div class="err-msg" id="regConfirmErr">كلمتا المرور غير متطابقتين</div></div>
-          <div class="step-nav"><button class="back-btn" id="regBackStep2Btn" type="button">← رجوع</button><button class="submit-btn" id="regNextStep2Btn" type="button">التالي ←</button></div>
+          <div class="field-auth">
+            <label for="regPassword">كلمة المرور</label>
+            <div class="field-wrap field-wrap--password">
+              <input
+                type="password"
+                id="regPassword"
+                placeholder="8 أحرف على الأقل"
+                autocomplete="new-password"
+              /><button
+                class="password-toggle"
+                type="button"
+                data-target="regPassword"
+                aria-label="إظهار كلمة المرور"
+              >
+                إظهار
+              </button>
+            </div>
+            <div
+              class="pw-strength-wrap"
+              role="meter"
+              aria-label="قوة كلمة المرور"
+            >
+              <div class="pw-strength-bar" id="pwBar"></div>
+            </div>
+            <div class="pw-strength-label" id="pwLabel"></div>
+            <div class="err-msg" id="regPasswordErr">
+              كلمة المرور لازم تكون 8 أحرف على الأقل
+            </div>
+          </div>
+          <div class="field-auth">
+            <label for="regConfirm">تأكيد كلمة المرور</label>
+            <div class="field-wrap field-wrap--password">
+              <input
+                type="password"
+                id="regConfirm"
+                placeholder="أعد كلمة المرور"
+                autocomplete="new-password"
+              /><button
+                class="password-toggle"
+                type="button"
+                data-target="regConfirm"
+                aria-label="إظهار كلمة المرور"
+              >
+                إظهار
+              </button>
+            </div>
+            <div class="err-msg" id="regConfirmErr">
+              كلمتا المرور غير متطابقتين
+            </div>
+          </div>
+          <div class="step-nav">
+            <button class="back-btn" id="regBackStep2Btn" type="button">
+              ← رجوع</button
+            ><button class="submit-btn" id="regNextStep2Btn" type="button">
+              التالي ←
+            </button>
+          </div>
         </div>
         <div class="reg-step" id="regStep3">
-          <p style="font-size:12.5px;font-weight:800;margin-bottom:10px">اختر تخصصك:</p>
+          <p style="font-size: 12.5px; font-weight: 800; margin-bottom: 10px">
+            اختر تخصصك:
+          </p>
           <div class="reg-cats" role="radiogroup" aria-label="التخصص">
-            <div class="reg-cat selected" data-cat="تربية الحيوانات" id="regCatAnimals" role="radio" aria-checked="true" tabindex="0"><i data-lucide="beef" width="22" aria-hidden="true"></i><div>تربية الحيوانات</div></div>
-            <div class="reg-cat" data-cat="منتجات فلاحية" id="regCatProducts" role="radio" aria-checked="false" tabindex="0"><i data-lucide="wheat" width="22" aria-hidden="true"></i><div>منتجات فلاحية</div></div>
-            <div class="reg-cat" data-cat="نقل وخدمات" id="regCatServices" role="radio" aria-checked="false" tabindex="0"><i data-lucide="truck" width="22" aria-hidden="true"></i><div>نقل وخدمات</div></div>
+            <div
+              class="reg-cat selected"
+              data-cat="تربية الحيوانات"
+              id="regCatAnimals"
+              role="radio"
+              aria-checked="true"
+              tabindex="0"
+            >
+              <app-icon name="animal"></app-icon>
+              <div>تربية الحيوانات</div>
+            </div>
+            <div
+              class="reg-cat"
+              data-cat="منتجات فلاحية"
+              id="regCatProducts"
+              role="radio"
+              aria-checked="false"
+              tabindex="0"
+            >
+              <app-icon
+                name="grain"
+                style="width: 22px; height: 22px"
+              ></app-icon>
+              <div>منتجات فلاحية</div>
+            </div>
+            <div
+              class="reg-cat"
+              data-cat="نقل وخدمات"
+              id="regCatServices"
+              role="radio"
+              aria-checked="false"
+              tabindex="0"
+            >
+              <app-icon name="truck"></app-icon>
+              <div>نقل وخدمات</div>
+            </div>
           </div>
-          <div class="step-nav"><button class="back-btn" id="regBackStep3Btn" type="button">← رجوع</button><button class="submit-btn" id="registerSubmitBtn" type="button">إنشاء الحساب</button></div>
+          <div class="step-nav">
+            <button class="back-btn" id="regBackStep3Btn" type="button">
+              ← رجوع</button
+            ><button class="submit-btn" id="registerSubmitBtn" type="button">
+              إنشاء الحساب
+            </button>
+          </div>
         </div>
       </div>
       <div class="tab-panel" id="panelSuccess">
@@ -286,7 +739,9 @@
 
           <!-- Personalized greeting (filled by JS) -->
           <h2 class="onboard-success__title" id="successTitle">مرحباً بك!</h2>
-          <p class="onboard-success__sub" id="successSub">تم إنشاء حسابك بنجاح.</p>
+          <p class="onboard-success__sub" id="successSub">
+            تم إنشاء حسابك بنجاح.
+          </p>
 
           <!-- Onboarding progress bar -->
           <div class="onboard-progress" role="list" aria-label="مراحل البدء">
@@ -308,22 +763,42 @@
 
           <!-- Primary CTA: post first listing -->
           <button class="onboard-cta-btn" id="successPublishBtn" type="button">
-            <i data-lucide="plus-circle" width="18" aria-hidden="true"></i>
+            <app-icon name="plus"></app-icon>
             انشر أول إعلان — مجاناً وفي دقيقة
           </button>
 
           <!-- Social proof -->
-          <p class="onboard-social-proof">+500 إعلان نُشر هذا الشهر · إعلانات الأعضاء الجدد تظهر أولاً لـ 7 أيام</p>
+          <p class="onboard-social-proof">إعلاناتك ومفضّلتك تلقاهم في حسابك.</p>
 
           <!-- Secondary: just browse -->
-          <button class="onboard-skip-btn" id="successCloseBtn" type="button">تصفح الإعلانات أولاً ←</button>
+          <button class="onboard-skip-btn" id="successCloseBtn" type="button">
+            تصفح الإعلانات أولاً ←
+          </button>
         </div>
       </div>
       <div class="tab-panel" id="panelForgot">
-        <div style="text-align:center;margin-bottom:16px"><div class="auth-state-icon auth-state-icon--small"><i data-lucide="key-round" width="26" aria-hidden="true"></i></div><h3 style="margin-top:7px">استعادة كلمة المرور</h3><p style="font-size:12px;color:var(--muted);margin-top:3px">سنرسل لك رابط الاستعادة</p></div>
-        <div class="field-auth"><label for="forgotInput">البريد الإلكتروني أو الهاتف</label><input type="text" id="forgotInput" placeholder="exemple@email.com" autocomplete="email" /></div>
-        <button class="submit-btn" id="forgotSubmitBtn" type="button">إرسال رابط الاستعادة</button>
-        <div style="text-align:center;margin-top:13px"><span class="forgot-link" id="forgotBackLoginLink" role="button" tabindex="0">← رجوع للدخول</span></div>
+        <div class="auth-panel-head">
+          <h2>مساعدة في الدخول</h2>
+          <p>
+            إذا نسيت كلمة المرور، تواصل مع الدعم لمراجعة حسابك. ما تبعثش كلمة
+            مرورك في الرسالة.
+          </p>
+        </div>
+        <a
+          class="submit-btn"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+          "
+          href="https://wa.me/21653159799"
+          target="_blank"
+          rel="noopener noreferrer"
+          >تواصل مع الدعم</a
+        ><button class="forgot-link" id="forgotBackLoginLink" type="button">
+          ارجع لتسجيل الدخول
+        </button>
       </div>
     </section>
   </div>

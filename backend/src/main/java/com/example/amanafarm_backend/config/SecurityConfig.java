@@ -30,13 +30,16 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/stats/**").permitAll()
+                .requestMatchers("/api/users/**", "/api/favorites/**").authenticated()
+                .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/animals/**", "/api/products/**", "/api/workers/**", "/api/profiles/**", "/api/jobs/**", "/api/service-requests/**", "/api/wholesale/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/animals/**", "/api/products/**", "/api/workers/**", "/api/profiles/**", "/api/jobs/**", "/api/service-requests/**", "/api/wholesale/**", "/api/trips/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                 .anyRequest().authenticated()
             )
+            .exceptionHandling(errors->errors.authenticationEntryPoint((req,res,ex)->{res.setStatus(401);res.setContentType("application/json");res.getWriter().write("{\"error\":\"Authentification requise\"}");}).accessDeniedHandler((req,res,ex)->{res.setStatus(403);res.setContentType("application/json");res.getWriter().write("{\"error\":\"Acces refuse\"}");}))
             .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

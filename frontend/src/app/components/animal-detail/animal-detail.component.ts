@@ -1,3 +1,4 @@
+import { IconComponent } from '../../shared/icon/icon.component';
 import { CommonModule, Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -53,7 +54,7 @@ interface Toast {
 @Component({
   selector: 'app-animal-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, IconComponent],
   templateUrl: './animal-detail.component.html',
   styleUrls: ['./animal-detail.component.css'],
 })

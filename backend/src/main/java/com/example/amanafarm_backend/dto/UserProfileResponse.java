@@ -11,7 +11,9 @@ public record UserProfileResponse(
         String role,
         String avatar,
         String profilePhoto,
-        String coverPhoto
+        String coverPhoto,
+        String firstName,
+        String lastName
 ) {
     public static UserProfileResponse from(User user) {
         String fullName = ((user.getFirstName() == null ? "" : user.getFirstName()) + " " +
@@ -26,7 +28,9 @@ public record UserProfileResponse(
                 UserRole.normalize(user.getRole()),
                 user.getAvatar(),
                 user.getProfilePhoto(),
-                user.getCoverPhoto()
+                user.getCoverPhoto(),
+                user.getFirstName(),
+                user.getLastName()
         );
     }
 }

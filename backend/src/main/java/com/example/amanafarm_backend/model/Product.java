@@ -9,6 +9,7 @@ public class Product {
     private Long id;
     private String title;
     private String category;
+    @Column(length=4000)
     private String description;
     private Double price;
     private String priceType;
